@@ -18,6 +18,7 @@ Defined in the `@theme` block of `src/app/globals.css`. Reference in components 
 |---|---|---|
 | `--color-red-primary` | `#B91C1C` | Primary action backgrounds, active toggle, uphill elevation delta |
 | `--color-red-deep` | `#7F1D1D` | Primary action hover state |
+| `--color-green-primary` | `#15803D` | Faster-than-goal weather delta ONLY — as reserved as red; never decoration |
 | `--color-bg-page` | `#FFFFFF` | Page background (set on `html`) |
 | `--color-bg-surface` | `#FFFFFF` | Card / surface background |
 | `--color-bg-elevated` | `#FAFAFA` | Table header, hover fill, chart area fill |
@@ -64,14 +65,37 @@ classes defined in `globals.css`.
 
 - **Card:** `rounded-2xl border border-[var(--color-border)] bg-white p-8 space-y-8`. No shadow.
 - **Primary button:** `w-full rounded-lg bg-[var(--color-red-primary)] hover:bg-[var(--color-red-deep)] disabled:bg-[var(--color-border)] disabled:text-[var(--color-text-tertiary)] text-white py-4 text-base font-semibold transition-colors`.
-- **Secondary toggle (pill group):** container `inline-flex rounded-lg border border-[var(--color-border)] overflow-hidden`; active button `bg-[var(--color-red-primary)] text-white`, inactive `bg-white text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-elevated)]`; each `px-6 py-2.5 text-sm font-medium transition-colors`.
+- **Secondary toggle (pill group):** container `inline-flex rounded-lg border border-[var(--color-border)] overflow-hidden`; active button `bg-[var(--color-red-primary)] text-white`, inactive `bg-white text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-elevated)]`; each `px-6 py-2.5 text-sm font-medium transition-colors`. Reserved for consequential switches — currently only the weather On/Off.
+- **Micro unit toggle (`UnitToggle`):** for picking a field's display unit inline beside its label. Container `inline-flex rounded-md border border-[var(--color-border)] overflow-hidden`; buttons `px-2 py-0.5 text-xs font-medium`; active `bg-[var(--color-bg-elevated)] text-[var(--color-text-primary)]`, inactive `text-[var(--color-text-tertiary)]`. **Neutral, never red** — several appear at once, so red here would break "keep red rare" even though red-on-active-toggle is otherwise sanctioned.
 - **Form inputs:** `rounded-lg border border-[var(--color-border)] px-3 py-3 focus:border-[var(--color-border-focus)] focus:outline-none transition-colors`. Numeric inputs add `text-center text-xl font-tabular font-medium`.
+- **Range slider (`RangeField`):** for a bounded setting that reads as a dial rather than a typed value — currently only the fueling carbs/hour target. Apply the `.range-input` class defined in `globals.css`; the track and thumb sit behind vendor pseudo-elements (`::-webkit-slider-runnable-track`, `::-moz-range-thumb`, …) that Tailwind utilities cannot reach, so this one control is styled there rather than inline. Track `0.25rem` in `--color-border`, thumb `1rem` in `--color-red-primary` (greying to `--color-text-tertiary` when disabled). Red is sanctioned here for the same reason as the primary toggle: it's a single instance, not a repeated one. Pair it with a `font-tabular` value readout beside the label and a plain-language hint below the track.
 - **Data tables:** wrapper `overflow-x-auto rounded-2xl border border-[var(--color-border)]`; header row `bg-[var(--color-bg-elevated)]` with eyebrow-styled cells; body rows separated by `border-t border-[var(--color-border)]` (no zebra); numeric cells `font-tabular` right-aligned.
 - **Stat blocks:** eyebrow label (column-header style) + value `text-2xl font-tabular font-medium text-[var(--color-text-primary)]`, arranged in a `grid grid-cols-3` row bounded by `border-t border-b`.
+- **Disclosure toggle:** a `<button>` styled as an eyebrow (`text-xs font-medium uppercase tracking-wider text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]`) with `flex items-center gap-1.5`, prefixed by a chevron — never a `+`/`−` glyph. The chevron is a `1.75`-stroke inline SVG (`viewBox="0 0 20 20"`, path `M7.5 4.5 13 10l-5.5 5.5`, `h-3.5 w-3.5`), matching the stroke weight used in `DatePicker`'s calendar-nav arrows. It points right (`M7.5 4.5 13 10l-5.5 5.5` as drawn) when collapsed and rotates to point down via `rotate-90 transition-transform duration-150` when expanded (driven by `aria-expanded`). Avoid appending a numeric value summary to the collapsed label (e.g. no "(120 g/hr)"); a plain on/off state suffix like " (on)" is acceptable where the section has a binary enabled state. Used for the Weather & Wind and Fueling Strategy disclosures in `InputForm`.
+
+## Printed paceband (`PaceBand.tsx` + `@media print` in `globals.css`)
+
+The only printed surface. Reference dimensions were taken by measuring
+paceband.org's print PDF against ours (Aug 2026, both printed from Chrome on
+US Letter) — theirs is the wrist-band size runners actually wear:
+
+- **Strip width: 1.3in** (paceband.org measures ≈1.28in; our first pass at
+  1.7in printed noticeably too wide to wrap a wrist band).
+- **Row height ≈ 11.5pt, 7pt tabular type** — 43 km rows plus wordmark bars
+  land at ≈7.4in tall, close to their ≈7.2in. Height only needs to be
+  "roughly the same"; width is the constraint that matters for wearing it.
+- Wordmark bars top and bottom print in `--color-text-primary` with
+  `print-color-adjust: exact`; hairline row borders, no zebra (their
+  navy/yellow banding is their brand, not ours).
+- The gel cue is a **droplet** icon in `--color-red-primary` (mirrors
+  paceband.org's droplet service icons), one per row that carries a
+  `FuelingCue`; the column disappears entirely when fueling is off.
+- All sizing lives in pt/in inside the `@media print` block so the printed
+  scale is independent of screen rem.
 
 ## What NOT to do
 
-- Do not introduce new colors. Three colors only: red, white, black (plus grayscale neutrals).
+- Do not introduce new colors. Red, white, black (plus grayscale neutrals), and the single reserved semantic green for faster-than-goal deltas.
 - Do not use shadows beyond the system default.
 - Do not use red for decoration (backgrounds, hover states on non-interactive elements, etc.).
 - Do not introduce new font sizes outside the typography scale.

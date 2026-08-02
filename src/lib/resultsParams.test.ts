@@ -66,9 +66,37 @@ describe("resultsParams", () => {
       raceStartTime: "08:00",
       weather: { tempC: 18, humidity: 60, windSpeed: 5, windDirection: 270 },
       body: { massKg: 72, heightCm: 178 },
+      fueling: { carbsPerHour: 80 },
     };
     const parsed = parseResultsParams(paramsFromHref(buildResultsHref(full)));
     expect(parsed).toEqual({ ok: true, input: full });
+  });
+
+  it("treats an absent carbs param as fueling off", () => {
+    const r = parseResultsParams({
+      courseId: "berlin",
+      unit: "km",
+      goalTimeSeconds: "14400",
+    });
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.input.fueling).toBeUndefined();
+  });
+
+  it("ignores a carbs value outside the slider range", () => {
+    for (const carbs of ["25", "150", "abc"]) {
+      const r = parseResultsParams({
+        courseId: "berlin",
+        unit: "km",
+        goalTimeSeconds: "14400",
+        carbs,
+      });
+      expect(r.ok).toBe(true);
+      if (r.ok) expect(r.input.fueling).toBeUndefined();
+    }
+  });
+
+  it("omits the carbs param entirely when fueling is off", () => {
+    expect(buildResultsHref(input)).not.toContain("carbs");
   });
 
   it("ignores partial weather (needs all four fields)", () => {

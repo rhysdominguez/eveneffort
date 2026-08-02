@@ -45,9 +45,10 @@ export function computePaceChart(
   return segments.map((seg, i) => {
     // Phase 2: weather multipliers are applied AFTER goal-normalization and are
     // deliberately NOT re-normalized, so heat/wind extend the finish beyond the
-    // ideal goal. With no weather, this is byte-identical to the Phase 1 path.
+    // ideal goal. Both arrays are per-segment (conditions at the time the
+    // runner passes through). With no weather, byte-identical to Phase 1.
     const duration = weather
-      ? durations[i] * weather.heatMultiplier * weather.windMultipliers[i]
+      ? durations[i] * weather.heatMultipliers[i] * weather.windMultipliers[i]
       : durations[i];
     cumulative += duration;
 

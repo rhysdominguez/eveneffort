@@ -36,38 +36,63 @@ export function buildForecastUrl(
   return `${TOMORROW_FORECAST_ENDPOINT}?${params.toString()}`;
 }
 
+const toConditions = (entry: HourlyEntry): WeatherConditions => ({
+  tempC: entry.values.temperature ?? 0,
+  humidity: entry.values.humidity ?? 0,
+  windSpeed: entry.values.windSpeed ?? 0,
+  windDirection: entry.values.windDirection ?? 0,
+});
+
 /**
- * Pick the hourly entry nearest `targetISO` (or the first entry when no target
- * is given) and map it to our WeatherConditions. Returns null when the payload
- * has no usable hourly data. Missing individual fields default to 0.
+ * How far the nearest hourly entry may sit from the requested start before the
+ * window is rejected. Tomorrow.io's hourly timeline only reaches ~120 h ahead,
+ * so a race months out returns a payload whose "nearest" entry is the last
+ * available hour — days from race day. Without this bound that stale hour
+ * would be served as race-day weather, silently and confidently wrong.
+ * One hour of slack is enough to absorb rounding to the hourly grid.
  */
-export function selectHourlyConditions(
+export const MAX_TARGET_DELTA_HOURS = 1;
+
+/**
+ * Select a race-long window of hourly conditions: starting at the entry
+ * nearest `targetISO` (or the first entry when no target is given), take up to
+ * `windowHours` consecutive hours. Index i of the result is i hours after the
+ * race start — the shape `conditionsAtElapsed` interpolates over. Missing
+ * fields default to 0.
+ *
+ * `targetISO` must be an absolute instant (with `Z` or a UTC offset) — see
+ * `zonedWallClockToUTC`. A naive local string would be parsed in the runtime's
+ * own zone and select the wrong hours.
+ *
+ * Returns null when the payload has no usable hourly data, or when race day
+ * lies beyond the forecast horizon (see `MAX_TARGET_DELTA_HOURS`).
+ */
+export function selectHourlyWindow(
   data: ForecastResponse,
   targetISO?: string,
-): WeatherConditions | null {
+  windowHours: number = 8,
+  maxDeltaHours: number = MAX_TARGET_DELTA_HOURS,
+): WeatherConditions[] | null {
   const hourly = data.timelines?.hourly;
   if (!hourly || hourly.length === 0) return null;
 
-  let chosen = hourly[0];
+  let startIdx = 0;
   if (targetISO) {
     const target = new Date(targetISO).getTime();
     if (Number.isFinite(target)) {
       let best = Infinity;
-      for (const entry of hourly) {
-        const delta = Math.abs(new Date(entry.time).getTime() - target);
+      for (let i = 0; i < hourly.length; i++) {
+        const delta = Math.abs(new Date(hourly[i].time).getTime() - target);
         if (delta < best) {
           best = delta;
-          chosen = entry;
+          startIdx = i;
         }
       }
+      // Out of forecast range — report "no data" rather than the closest
+      // hour we happen to hold, which could be days away.
+      if (best > maxDeltaHours * 3_600_000) return null;
     }
   }
 
-  const v = chosen.values;
-  return {
-    tempC: v.temperature ?? 0,
-    humidity: v.humidity ?? 0,
-    windSpeed: v.windSpeed ?? 0,
-    windDirection: v.windDirection ?? 0,
-  };
+  return hourly.slice(startIdx, startIdx + windowHours).map(toConditions);
 }

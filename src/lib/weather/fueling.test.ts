@@ -3,6 +3,7 @@ import type { PaceChartRow } from "@/types";
 import {
   applyFuelingToRows,
   buildFuelingPlan,
+  gelIntervalSeconds,
   GEL_INTERVAL_SECONDS,
 } from "./fueling";
 
@@ -40,6 +41,39 @@ describe("buildFuelingPlan", () => {
   it("returns nothing for an empty chart or a sub-25-minute race", () => {
     expect(buildFuelingPlan(4 * 3600, [])).toEqual([]);
     expect(buildFuelingPlan(1000, fourHourRows())).toEqual([]);
+  });
+
+  it("spaces gels by the intake target", () => {
+    const total = 4 * 3600;
+    // 25 g gels: 30 g/hr ⇒ every 50 min, 100 g/hr ⇒ every 15 min.
+    expect(buildFuelingPlan(total, fourHourRows(), 30)).toHaveLength(4);
+    expect(buildFuelingPlan(total, fourHourRows(), 60)).toHaveLength(9);
+    expect(buildFuelingPlan(total, fourHourRows(), 100)).toHaveLength(16);
+
+    const slow = buildFuelingPlan(total, fourHourRows(), 30);
+    expect(slow[0].atSeconds).toBe(3000);
+    expect(slow[1].atSeconds).toBe(6000);
+  });
+
+  it("keeps fractional intervals from drifting across the race", () => {
+    // 35 g/hr ⇒ 2571.43 s, which repeated addition would accumulate error on.
+    const interval = gelIntervalSeconds(35);
+    const cues = buildFuelingPlan(4 * 3600, fourHourRows(), 35);
+    cues.forEach((cue, i) => {
+      expect(cue.atSeconds).toBeCloseTo((i + 1) * interval, 9);
+    });
+  });
+
+  it("ignores a non-positive intake target rather than looping forever", () => {
+    expect(buildFuelingPlan(4 * 3600, fourHourRows(), 0)).toEqual([]);
+  });
+});
+
+describe("gelIntervalSeconds", () => {
+  it("is how long one 25 g gel lasts at the given rate", () => {
+    expect(gelIntervalSeconds(30)).toBe(3000); // 50 min
+    expect(gelIntervalSeconds(60)).toBe(GEL_INTERVAL_SECONDS); // 25 min
+    expect(gelIntervalSeconds(100)).toBe(900); // 15 min
   });
 });
 

@@ -1,70 +1,48 @@
 "use client";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { InputForm } from "@/components/InputForm";
 import { buildResultsHref } from "@/lib/resultsParams";
 
-// Compatible devices/platforms shown in the logo strip. Each *.norm.png
-// is pre-processed (whitespace trimmed, rendered to an identical 64px
-// content height) so a single uniform CSS height makes them all appear
-// the same size and vertically aligned. Regenerate with
-// `node scripts/normalize_logos.mjs` if a source logo changes.
-const LOGOS: { name: string; src: string }[] = [
-  { name: "Strava", src: "/logos/strava.norm.png" },
-  { name: "Garmin", src: "/logos/garmin.norm.png" },
-  { name: "Coros", src: "/logos/coros.norm.png" },
-  { name: "Apple Watch", src: "/logos/apple-watch.norm.png" },
-  { name: "Suunto", src: "/logos/suunto.norm.png" },
-];
-
 // Marketing shell — scaffolding only. Sections are full-bleed bands (edge
 // to edge, like the Macmillan reference); inner content stays in a
-// centered max-width column for readability. Real copy/imagery comes
+// centered max-width column for readability. Real headline copy comes
 // later. Calculate navigates to the standalone /results route.
 export default function Page() {
   const router = useRouter();
 
   return (
     <main className="w-full flex-1">
-      {/* Hero band — full-bleed; image/headline TBD. Holds the real form. */}
-      <section className="w-full border-b border-dashed border-[var(--color-border)] bg-[var(--color-bg-elevated)]">
-        <div className="mx-auto max-w-7xl px-6 py-16">
-          <p className="text-xs uppercase tracking-wider text-[var(--color-text-tertiary)] font-medium">
-            Hero section — full-bleed image / headline TBD
-          </p>
-          <div className="mt-8 grid items-center gap-12 lg:grid-cols-2">
-            <div className="flex min-h-[16rem] items-center justify-center rounded-xl border border-dashed border-[var(--color-border)] p-8">
-              <p className="text-sm text-[var(--color-text-tertiary)]">
-                Hero headline &amp; supporting copy go here
-              </p>
-            </div>
+      {/* Hero band — full-bleed photo behind the whole section, edge to edge
+          (the Macmillan reference), with the form floating on top. The
+          source photo has the runner right-of-frame, which sat directly
+          behind the form — mirrored horizontally so he lands on the left,
+          in the empty column, and stays clear of the card. Headline copy
+          TBD — the left column is reserved for it. */}
+      {/* No overflow-hidden: it clipped the date/time popovers at the band's
+          edge. The fill image is inset-0 with object-cover, so it crops
+          itself and never needed clipping in the first place. */}
+      <section className="relative w-full min-h-[30rem] lg:min-h-[44rem]">
+        <Image
+          src="/hero-runner1.jpg"
+          alt="A runner mid-stride, motion-blurred, passing a sunlit fountain"
+          fill
+          priority
+          sizes="100vw"
+          className="scale-x-[-1] object-cover"
+          style={{ objectPosition: "50% 39%" }}
+        />
+        {/* Veils the form's half of the photo so the type holds without
+            putting a card back on top of the image. */}
+        <div className="hero-scrim absolute inset-0" />
+        <div className="relative mx-auto max-w-7xl px-6 py-16">
+          <div className="grid items-center gap-12 lg:grid-cols-2">
+            <div />
             <InputForm
               title="Pacing Calculator"
+              subtitle="Elevation-adjusted splits for your goal time, course, and conditions."
               onCalculate={(input) => router.push(buildResultsHref(input))}
             />
-          </div>
-        </div>
-      </section>
-
-      {/* Logo-cloud band — full-bleed; partner / sponsor logos TBD */}
-      <section className="w-full border-b border-dashed border-[var(--color-border)]">
-        <div className="mx-auto max-w-7xl px-6 py-16">
-          <p className="font-display font-bold text-xl tracking-tight text-[var(--color-text-primary)]">
-            Compatible With
-          </p>
-          <div className="mt-8 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
-            {LOGOS.map(({ name, src }) => (
-              <div
-                key={name}
-                className="flex h-20 items-center justify-center px-6"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={src}
-                  alt={name}
-                  className="h-8 w-auto max-w-full object-contain"
-                />
-              </div>
-            ))}
           </div>
         </div>
       </section>

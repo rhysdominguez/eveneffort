@@ -8,6 +8,10 @@ const courseFrom = (elevations: number[]): Course => ({
   displayName: "Test Marathon",
   city: "Testville",
   elevations,
+  profile: [],
+  coords: Array.from({ length: 44 }, (_, i) => [0, i * 0.009]),
+  start: { lat: 0, lon: 0 },
+  timezone: "UTC",
 });
 
 const flat44 = (): number[] => new Array(44).fill(0);
@@ -125,15 +129,15 @@ describe("computePaceChart — Phase 2 weather layer", () => {
   it("identity weather (×1 everywhere) is byte-identical to no weather", () => {
     const base = computePaceChart(input, course);
     const identity: WeatherAdjustments = {
-      heatMultiplier: 1,
+      heatMultipliers: new Array(segCount).fill(1),
       windMultipliers: new Array(segCount).fill(1),
     };
     expect(computePaceChart(input, course, identity)).toEqual(base);
   });
 
-  it("a global heat multiplier extends the finish proportionally and is NOT re-normalized", () => {
+  it("a uniform heat multiplier extends the finish proportionally and is NOT re-normalized", () => {
     const heat: WeatherAdjustments = {
-      heatMultiplier: 1.05,
+      heatMultipliers: new Array(segCount).fill(1.05),
       windMultipliers: new Array(segCount).fill(1),
     };
     const rows = computePaceChart(input, course, heat);
@@ -146,10 +150,40 @@ describe("computePaceChart — Phase 2 weather layer", () => {
     );
   });
 
+  it("progressive heat: rising per-segment multipliers slow later km more", () => {
+    const base = computePaceChart(input, course);
+    // Linear ramp 1.00 → 1.08 across the race, like a warming fall morning.
+    const heatMultipliers = Array.from(
+      { length: segCount },
+      (_, i) => 1 + (0.08 * i) / (segCount - 1),
+    );
+    const rows = computePaceChart(input, course, {
+      heatMultipliers,
+      windMultipliers: new Array(segCount).fill(1),
+    });
+    // First segment untouched, last slowed by the full 8%.
+    expect(rows[0].adjustedPaceSecPerUnit).toBeCloseTo(
+      base[0].adjustedPaceSecPerUnit,
+      6,
+    );
+    expect(rows[segCount - 1].adjustedPaceSecPerUnit).toBeCloseTo(
+      base[segCount - 1].adjustedPaceSecPerUnit * 1.08,
+      6,
+    );
+    // The relative slowdown vs the elevation-only band grows monotonically.
+    for (let i = 1; i < segCount; i++) {
+      const prev =
+        rows[i - 1].adjustedPaceSecPerUnit / base[i - 1].adjustedPaceSecPerUnit;
+      const curr =
+        rows[i].adjustedPaceSecPerUnit / base[i].adjustedPaceSecPerUnit;
+      expect(curr).toBeGreaterThan(prev);
+    }
+  });
+
   it("per-segment wind multipliers scale each segment's pace independently", () => {
     const base = computePaceChart(input, course);
     const wind: WeatherAdjustments = {
-      heatMultiplier: 1,
+      heatMultipliers: new Array(segCount).fill(1),
       windMultipliers: Array.from({ length: segCount }, (_, i) =>
         i === 0 ? 1.2 : 1,
       ),

@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { DEFAULT_BODY } from "@/types";
 import { buildSegments } from "@/lib/pacing/segments";
 import {
+  airDensityKgM3,
   buildWindMultipliers,
   coordAt,
   headwindComponent,
@@ -38,11 +39,38 @@ describe("headwindComponent", () => {
   });
 });
 
+describe("airDensityKgM3", () => {
+  it("reproduces the ISA standard 1.225 kg/m³ at 15 °C", () => {
+    expect(airDensityKgM3(15)).toBeCloseTo(1.225, 3);
+  });
+
+  it("is thinner when warm, denser when cold", () => {
+    expect(airDensityKgM3(30)).toBeLessThan(airDensityKgM3(15));
+    expect(airDensityKgM3(0)).toBeGreaterThan(airDensityKgM3(15));
+    // ~5% thinner at 30 °C than at 15 °C.
+    expect(airDensityKgM3(30) / airDensityKgM3(15)).toBeCloseTo(0.95, 2);
+  });
+});
+
 describe("windMultiplier", () => {
   const speed = 3.5; // m/s, ~4:46 /km
 
   it("is exactly 1.0 in still air", () => {
     expect(windMultiplier(DEFAULT_BODY, speed, 0, 0, 0)).toBe(1);
+  });
+
+  it("charges a smaller headwind penalty in hot (thin) air than cold air", () => {
+    const hot = windMultiplier(DEFAULT_BODY, speed, 0, 10, 0, 30);
+    const cold = windMultiplier(DEFAULT_BODY, speed, 0, 10, 0, 0);
+    expect(hot).toBeGreaterThan(1);
+    expect(cold).toBeGreaterThan(hot);
+  });
+
+  it("defaults to 15 °C density when no temperature is passed", () => {
+    expect(windMultiplier(DEFAULT_BODY, speed, 0, 10, 0)).toBeCloseTo(
+      windMultiplier(DEFAULT_BODY, speed, 0, 10, 0, 15),
+      12,
+    );
   });
 
   it("a headwind slows (>1), a tailwind helps (<1)", () => {
@@ -81,14 +109,39 @@ describe("buildWindMultipliers", () => {
   ]);
   const speeds = segments.map(() => 3.5);
 
+  const still = {
+    tempC: 15,
+    humidity: 50,
+    windSpeed: 0,
+    windDirection: 0,
+  };
+
   it("returns one multiplier per segment, all 1.0 with no wind", () => {
-    const m = buildWindMultipliers(segments, coords, DEFAULT_BODY, speeds, {
-      tempC: 15,
-      humidity: 50,
-      windSpeed: 0,
-      windDirection: 0,
-    });
+    const m = buildWindMultipliers(
+      segments,
+      coords,
+      DEFAULT_BODY,
+      speeds,
+      segments.map(() => still),
+    );
     expect(m).toHaveLength(segments.length);
     for (const v of m) expect(v).toBeCloseTo(1, 10);
+  });
+
+  it("applies each segment's own conditions (wind arriving mid-race)", () => {
+    // Calm for the first half, a headwind (from due east, into the eastward
+    // course) for the second half.
+    const weatherBySegment = segments.map((_, i) =>
+      i < 20 ? still : { ...still, windSpeed: 8, windDirection: 90 },
+    );
+    const m = buildWindMultipliers(
+      segments,
+      coords,
+      DEFAULT_BODY,
+      speeds,
+      weatherBySegment,
+    );
+    expect(m[0]).toBeCloseTo(1, 10);
+    expect(m[25]).toBeGreaterThan(1);
   });
 });

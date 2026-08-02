@@ -5,6 +5,9 @@
   --color-red-primary: #B91C1C;
   --color-red-deep: #7F1D1D;
 
+  /* Semantic green — faster-than-goal deltas only; keep it as rare as red */
+  --color-green-primary: #15803D;
+
   /* Neutrals — white-dominant */
   --color-bg-page: #FFFFFF;
   --color-bg-surface: #FFFFFF;
@@ -50,4 +53,196 @@ html {
 .font-wordmark {
   font-family: var(--font-wordmark);
   font-weight: 500;
+}
+
+/* Hero photo scrim — the pacing form sits directly on the photograph with no
+   card behind it, so the side it occupies has to be calmed or the motion-blur
+   streaks fight the text. A gradient veil does that while leaving the runner
+   at the opposite edge untouched; a flat panel would just be the card again.
+   Gradient geometry only — every color still comes from a token. */
+.hero-scrim {
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    transparent 30%,
+    color-mix(in srgb, var(--color-bg-page) 70%, transparent) 55%,
+    color-mix(in srgb, var(--color-bg-page) 90%, transparent) 100%
+  );
+}
+
+/* Stacked layout — the form covers the photo rather than sitting beside it,
+   so the veil runs top-to-bottom and starts already partly opaque: the title
+   and subtitle land near the top, and there is no runner left to protect at
+   this width (the form is over him). */
+@media (max-width: 1023px) {
+  .hero-scrim {
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-bg-page) 45%, transparent) 0%,
+      color-mix(in srgb, var(--color-bg-page) 78%, transparent) 45%,
+      color-mix(in srgb, var(--color-bg-page) 95%, transparent) 100%
+    );
+  }
+}
+
+/* Printable paceband — the wrist strip PaceBand.tsx renders. Screen never
+   shows it (Tailwind `hidden print:block` on the component); under print it
+   is the only visible content, since the nav and the dashboard grid carry
+   `print:hidden`. Geometry only lives here — pt/in units so the strip prints
+   at true wrist scale — while every color stays on the tokens above. */
+@media print {
+  @page {
+    margin: 0.4in;
+  }
+
+  .paceband {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* Strip width 1.3in and ~11.5pt rows — measured against paceband.org's
+     print PDF (≈1.28in wide, ≈7.2in tall); see DESIGN.md "Printed paceband". */
+  .paceband-strip {
+    width: 1.3in;
+    border-radius: 0;
+  }
+
+  .paceband-bar {
+    padding: 3pt 0;
+    text-align: center;
+    font-size: 8.5pt;
+    line-height: 1;
+  }
+
+  .paceband-course {
+    padding: 2.5pt 0;
+    text-align: center;
+    font-size: 7pt;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .paceband-row {
+    display: flex;
+    align-items: center;
+    height: 11.5pt;
+    padding: 0 3pt;
+    font-size: 7pt;
+    line-height: 1;
+  }
+
+  /* split # | pace | cumulative | (gel) — pace and cumulative right-aligned
+     like the on-screen table; the gel slot is a fixed stub so rows without a
+     cue keep the numbers aligned. */
+  .paceband-row > span:nth-child(1) {
+    width: 0.22in;
+    font-weight: 600;
+  }
+  .paceband-row > span:nth-child(2) {
+    flex: 1;
+    text-align: right;
+  }
+  .paceband-row > span:nth-child(3) {
+    flex: 1.4;
+    text-align: right;
+  }
+  .paceband-gelcell,
+  .paceband-head > span:nth-child(4) {
+    width: 0.13in;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .paceband-head {
+    height: 10pt;
+    border-top: none;
+    font-size: 5.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .paceband-gel {
+    width: 6pt;
+    height: 6pt;
+  }
+
+  .paceband-fold {
+    width: 1.3in;
+    margin-top: 6pt;
+    padding: 12pt 0;
+    text-align: center;
+    font-size: 7pt;
+  }
+}
+
+/* Range slider — the track and thumb live behind vendor pseudo-elements that
+   Tailwind utilities can't reach, so the whole control is defined here rather
+   than on the component. Colors still come from tokens only. */
+.range-input {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 1rem;
+  background: transparent;
+  cursor: pointer;
+}
+
+.range-input:disabled {
+  cursor: default;
+}
+
+.range-input::-webkit-slider-runnable-track {
+  height: 0.25rem;
+  border-radius: 9999px;
+  background: var(--color-border);
+}
+
+.range-input::-moz-range-track {
+  height: 0.25rem;
+  border-radius: 9999px;
+  background: var(--color-border);
+}
+
+/* Thumb is centred on the track by hand: (track 0.25rem − thumb 1rem) / 2. */
+.range-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -0.375rem;
+  height: 1rem;
+  width: 1rem;
+  border-radius: 9999px;
+  background: var(--color-red-primary);
+  transition: background-color 150ms ease-out;
+}
+
+.range-input::-moz-range-thumb {
+  height: 1rem;
+  width: 1rem;
+  border: none;
+  border-radius: 9999px;
+  background: var(--color-red-primary);
+  transition: background-color 150ms ease-out;
+}
+
+.range-input:disabled::-webkit-slider-thumb {
+  background: var(--color-text-tertiary);
+}
+
+.range-input:disabled::-moz-range-thumb {
+  background: var(--color-text-tertiary);
+}
+
+.range-input:focus {
+  outline: none;
+}
+
+.range-input:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
+.range-input:focus-visible::-moz-range-thumb {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
 }

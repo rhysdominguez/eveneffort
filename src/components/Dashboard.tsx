@@ -1,85 +1,73 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import type { PacingInput } from "@/types";
+import type { PacingInput, WeatherConditions } from "@/types";
 import { usePacingChart } from "@/hooks/usePacingChart";
-import { useWeather } from "@/hooks/useWeather";
 import { getCourse } from "@/data/courses";
 import { buildResultsHref } from "@/lib/resultsParams";
 import { InputForm } from "@/components/InputForm";
 import { SummaryHeader } from "@/components/SummaryHeader";
 import { ElevationChart } from "@/components/ElevationChart";
-import { WeatherPanel } from "@/components/WeatherPanel";
 import { PaceChartTable } from "@/components/PaceChartTable";
-import { PlaceholderPanel } from "@/components/PlaceholderPanel";
+import { PaceBand } from "@/components/PaceBand";
 
 // Paceband-style split dashboard: config on the left, live outputs on the
 // right. Reuses the locked pacing engine via usePacingChart so the math
 // path is identical to the previous /results flow, and layers Phase 2
 // weather + fueling on top. `input` is the server-parsed PacingInput from the
 // URL and seeds the initial state.
-const ROADMAP: { title: string; note: string }[] = [
-  { title: "Wearable sync", note: "Garmin / Apple Health via Terra — coming soon" },
-  {
-    title: "Smartwatch export",
-    note: ".FIT workout export + paceband preview — coming soon",
-  },
-];
 
 export function Dashboard({ input }: { input: PacingInput }) {
   const router = useRouter();
   const { result, error, calculate } = usePacingChart();
   const [current, setCurrent] = useState<PacingInput>(input);
+  // Captured from InputForm's own weather hook via onHourlyChange — the live
+  // forecast series (or null in manual mode) driving per-segment sampling.
+  const [hourly, setHourly] = useState<WeatherConditions[] | null>(null);
 
-  const course = getCourse(current.courseId);
-  const weather = useWeather(
-    course.start,
-    current.raceDateISO,
-    current.raceStartTime,
-  );
-  const { conditions } = weather;
-  const hasTiming = Boolean(current.raceDateISO && current.raceStartTime);
-
-  // The full input fed to the pacing engine merges the form state with the
-  // active weather conditions (forecast or manual).
-  const merged = useMemo<PacingInput>(
-    () => ({ ...current, weather: conditions ?? undefined }),
-    [current, conditions],
-  );
-
-  // Recompute on every config or weather change (same elevation math path).
+  // `current` already carries `weather` when InputForm's toggle is on (built
+  // the same way `body` is) — no separate merge needed here.
   useEffect(() => {
-    calculate(merged);
-  }, [calculate, merged]);
+    calculate(current, hourly);
+  }, [calculate, current, hourly]);
 
   // Keep the URL shareable without flooding history. Debounced so rapid
   // typing in the goal-time inputs doesn't thrash navigation.
   useEffect(() => {
     const id = setTimeout(() => {
-      router.replace(buildResultsHref(merged), { scroll: false });
+      router.replace(buildResultsHref(current), { scroll: false });
     }, 300);
     return () => clearTimeout(id);
-  }, [router, merged]);
+  }, [router, current]);
 
   return (
-    <main className="mx-auto w-full max-w-7xl flex-1 px-6 py-12">
+    // Ordinary document flow: the page is the only scroller. Wherever the
+    // pointer sits — setup panel, chart, splits table — the wheel scrolls the
+    // whole page, because no section is an overflow container.
+    // print:p-0 — the screen padding otherwise pushes the paceband + fold
+    // guide past one printed page.
+    <main className="mx-auto w-full max-w-7xl flex-1 px-6 py-12 print:p-0">
       <Link
         href="/"
-        className="text-sm font-medium text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-primary)]"
+        className="text-sm font-medium text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-primary)] print:hidden"
       >
         ← Back to start
       </Link>
 
-      <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(320px,380px)_1fr]">
-        <div className="lg:sticky lg:top-12 lg:self-start">
-          <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-surface)] p-8">
-            <InputForm
-              title="Race setup"
-              initial={input}
-              onChange={setCurrent}
-            />
-          </div>
+      {/* print:hidden on the whole grid so the paceband below is the only
+          content the printer sees. */}
+      <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(320px,380px)_1fr] print:hidden">
+        {/* self-start keeps the card at its content height — grid items
+            stretch by default, which would otherwise pull this bordered box
+            down to match the much taller results column. */}
+        <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-surface)] p-8 lg:self-start">
+          <InputForm
+            title="Race setup"
+            initial={input}
+            onChange={setCurrent}
+            onHourlyChange={setHourly}
+          />
         </div>
 
         <div className="space-y-10">
@@ -92,27 +80,23 @@ export function Dashboard({ input }: { input: PacingInput }) {
                 result={result}
                 courseName={getCourse(result.input.courseId).displayName}
               />
-              <WeatherPanel
-                weather={weather}
-                goalSeconds={result.input.goalTimeSeconds}
-                adjustedFinishSeconds={result.adjustedFinishSeconds}
-                weatherApplied={result.weatherApplied}
-                hasTiming={hasTiming}
-              />
               <ElevationChart
                 profile={getCourse(result.input.courseId).profile}
                 unit={result.input.unit}
+                rows={result.rows}
               />
               <PaceChartTable result={result} />
             </>
           )}
-          <div className="grid gap-4 sm:grid-cols-2">
-            {ROADMAP.map((p) => (
-              <PlaceholderPanel key={p.title} title={p.title} note={p.note} />
-            ))}
-          </div>
         </div>
       </div>
+
+      {result && (
+        <PaceBand
+          result={result}
+          courseName={getCourse(result.input.courseId).displayName}
+        />
+      )}
     </main>
   );
 }

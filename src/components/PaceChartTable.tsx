@@ -9,6 +9,8 @@ const headerClass =
 
 export function PaceChartTable({ result }: Props) {
   const unitLabel = result.input.unit === "km" ? "Km" : "Mile";
+  // With fueling switched off the column would be 43 em-dashes, so drop it.
+  const hasFueling = result.rows.some((row) => row.fueling);
 
   return (
     <div className="overflow-x-auto rounded-2xl border border-[var(--color-border)]">
@@ -18,7 +20,9 @@ export function PaceChartTable({ result }: Props) {
             <th className={`${headerClass} text-left`}>{unitLabel}</th>
             <th className={`${headerClass} text-right`}>Target Pace</th>
             <th className={`${headerClass} text-right`}>Cumulative Split</th>
-            <th className={`${headerClass} text-right`}>Fueling</th>
+            {hasFueling && (
+              <th className={`${headerClass} text-right`}>Fueling</th>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -36,15 +40,17 @@ export function PaceChartTable({ result }: Props) {
               <td className="px-4 py-3 text-right font-tabular text-[var(--color-text-primary)]">
                 {row.cumulativeSplitLabel}
               </td>
-              <td className="px-4 py-3 text-right">
-                {row.fueling ? (
-                  <span className="inline-flex items-center gap-1 rounded-md bg-[var(--color-bg-elevated)] px-2 py-1 text-xs font-medium text-[var(--color-red-primary)]">
-                    {row.fueling.label}
-                  </span>
-                ) : (
-                  <span className="text-[var(--color-text-tertiary)]">—</span>
-                )}
-              </td>
+              {hasFueling && (
+                <td className="px-4 py-3 text-right">
+                  {row.fueling ? (
+                    <span className="inline-flex items-center gap-1 rounded-md bg-[var(--color-bg-elevated)] px-2 py-1 text-xs font-medium text-[var(--color-red-primary)]">
+                      {row.fueling.label}
+                    </span>
+                  ) : (
+                    <span className="text-[var(--color-text-tertiary)]">—</span>
+                  )}
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

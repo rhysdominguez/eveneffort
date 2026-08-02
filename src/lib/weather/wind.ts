@@ -8,7 +8,10 @@ import type { BodyMetrics, Segment, WeatherConditions } from "@/types";
 import { MARATHON_KM } from "@/lib/pacing/segments";
 import { frontalArea } from "./bsa";
 
-const AIR_DENSITY = 1.225; // kg/m³
+// Sea-level standard pressure and specific gas constant for dry air; density
+// is derived from temperature via the ideal gas law (15 °C → 1.225 kg/m³).
+const SEA_LEVEL_PRESSURE_PA = 101325;
+const GAS_CONSTANT_DRY_AIR = 287.05; // J·kg⁻¹·K⁻¹
 const DRAG_COEFFICIENT = 0.8; // C_d for a runner
 const GRAVITY = 9.81; // m/s²
 // Wind-profile power law: station height 10 m → runner height 1.5 m, α = 0.30.
@@ -17,6 +20,15 @@ const RUNNER_HEIGHT_M = 1.5;
 const WIND_PROFILE_ALPHA = 0.3;
 // Metabolic cost rises ~6.13 % per 1 % of bodyweight of impeding force.
 const COST_PER_PCT_BODYWEIGHT = 0.0613;
+
+/**
+ * Air density (kg/m³) at sea-level pressure for a given air temperature (°C),
+ * via the ideal gas law: ρ = P / (R·T). 15 °C gives the ISA standard 1.225;
+ * warm race-day air is measurably thinner (≈ −5 % at 30 °C), reducing drag.
+ */
+export function airDensityKgM3(tempC: number): number {
+  return SEA_LEVEL_PRESSURE_PA / (GAS_CONSTANT_DRY_AIR * (273.15 + tempC));
+}
 
 const toRad = (deg: number): number => (deg * Math.PI) / 180;
 const toDeg = (rad: number): number => (rad * 180) / Math.PI;
@@ -65,10 +77,14 @@ export function headwindComponent(
 
 // Signed drag force (N) along the direction of motion: positive impedes the
 // runner, negative aids. F = 0.5·ρ·C_d·A_p·v_rel·|v_rel| keeps drag's sign.
-function signedDrag(vRel: number, frontalAreaM2: number): number {
+function signedDrag(
+  vRel: number,
+  frontalAreaM2: number,
+  airDensity: number,
+): number {
   return (
     0.5 *
-    AIR_DENSITY *
+    airDensity *
     DRAG_COEFFICIENT *
     frontalAreaM2 *
     vRel *
@@ -89,9 +105,11 @@ export function windMultiplier(
   travelBearing: number,
   windSpeed10m: number,
   windFromDirection: number,
+  tempC: number = 15,
 ): number {
   if (runnerSpeedMS <= 0) return 1;
   const Ap = frontalArea(body.massKg, body.heightCm);
+  const rho = airDensityKgM3(tempC);
   const windRunner = windAtRunnerHeight(windSpeed10m);
   const headwind = headwindComponent(
     travelBearing,
@@ -103,8 +121,8 @@ export function windMultiplier(
   const bodyWeightN = body.massKg * GRAVITY;
 
   // Force as a fraction of bodyweight, still-air baseline subtracted.
-  const pctRel = signedDrag(vRel, Ap) / bodyWeightN;
-  const pctStill = signedDrag(runnerSpeedMS, Ap) / bodyWeightN;
+  const pctRel = signedDrag(vRel, Ap, rho) / bodyWeightN;
+  const pctStill = signedDrag(runnerSpeedMS, Ap, rho) / bodyWeightN;
 
   // pct values are fractions of bodyweight; ×100 converts to "% bodyweight",
   // matching the 6.13 %-cost-per-1 %-bodyweight empirical constant.
@@ -141,26 +159,29 @@ export function coordAt(
 
 /**
  * Build the per-segment wind multipliers for a course. `segmentSpeedsMS[i]` is
- * the runner's elevation-adjusted ground speed for segment i. Returns an array
- * aligned 1:1 with `segments`.
+ * the runner's elevation-adjusted ground speed for segment i, and
+ * `weatherBySegment[i]` the conditions at the time the runner passes through
+ * it (hourly-sampled). Returns an array aligned 1:1 with `segments`.
  */
 export function buildWindMultipliers(
   segments: Segment[],
   coords: [number, number][],
   body: BodyMetrics,
   segmentSpeedsMS: number[],
-  weather: WeatherConditions,
+  weatherBySegment: WeatherConditions[],
 ): number[] {
   return segments.map((seg, i) => {
     const [lat1, lon1] = coordAt(coords, seg.startDistanceKm);
     const [lat2, lon2] = coordAt(coords, seg.endDistanceKm);
     const bearing = segmentBearing(lat1, lon1, lat2, lon2);
+    const weather = weatherBySegment[i];
     return windMultiplier(
       body,
       segmentSpeedsMS[i],
       bearing,
       weather.windSpeed,
       weather.windDirection,
+      weather.tempC,
     );
   });
 }

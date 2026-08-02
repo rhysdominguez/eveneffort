@@ -8,11 +8,13 @@
 import type {
   BodyMetrics,
   CourseId,
+  FuelingStrategy,
   PacingInput,
   Unit,
   WeatherConditions,
 } from "@/types";
 import { COURSES } from "@/data/courses";
+import { CARBS_PER_HOUR_MAX, CARBS_PER_HOUR_MIN } from "@/lib/weather/fueling";
 
 const UNITS: readonly Unit[] = ["km", "miles"];
 
@@ -36,6 +38,11 @@ export function buildResultsHref(input: PacingInput): string {
   if (input.body) {
     params.set("mass", String(input.body.massKg));
     params.set("height", String(input.body.heightCm));
+  }
+
+  // Omitted entirely when fueling is off — absence is the off signal.
+  if (input.fueling) {
+    params.set("carbs", String(input.fueling.carbsPerHour));
   }
 
   return `/results?${params.toString()}`;
@@ -85,6 +92,9 @@ export function parseResultsParams(
   const body = parseBody(params);
   if (body) input.body = body;
 
+  const fueling = parseFueling(params);
+  if (fueling) input.fueling = fueling;
+
   return { ok: true, input };
 }
 
@@ -117,6 +127,24 @@ function parseBody(
     return null;
   }
   return { massKg, heightCm };
+}
+
+/**
+ * Parse the carb-intake target. Absent (or out of slider range) means no
+ * fueling cues — the same "present ⇒ on" convention weather and body follow.
+ */
+function parseFueling(
+  params: Record<string, string | string[] | undefined>,
+): FuelingStrategy | null {
+  const carbsPerHour = num(first(params.carbs));
+  if (
+    carbsPerHour === null ||
+    carbsPerHour < CARBS_PER_HOUR_MIN ||
+    carbsPerHour > CARBS_PER_HOUR_MAX
+  ) {
+    return null;
+  }
+  return { carbsPerHour };
 }
 
 function num(v: string | undefined): number | null {

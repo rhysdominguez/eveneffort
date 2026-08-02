@@ -33,6 +33,7 @@ function makeCourse(
   elevations: number[],
   profile: Profile,
   coords: Coords,
+  timezone: string,
 ): Course {
   return {
     id,
@@ -42,17 +43,18 @@ function makeCourse(
     profile,
     coords,
     start: { lat: coords[0][0], lon: coords[0][1] },
+    timezone,
   };
 }
 
 export const COURSES: Record<CourseId, Course> = {
-  berlin: makeCourse("berlin", "Berlin Marathon", "Berlin", berlinElev, berlinProfile as Profile, berlinCoords as Coords),
-  chicago: makeCourse("chicago", "Chicago Marathon", "Chicago", chicagoElev, chicagoProfile as Profile, chicagoCoords as Coords),
-  london: makeCourse("london", "London Marathon", "London", londonElev, londonProfile as Profile, londonCoords as Coords),
-  tokyo: makeCourse("tokyo", "Tokyo Marathon", "Tokyo", tokyoElev, tokyoProfile as Profile, tokyoCoords as Coords),
-  sydney: makeCourse("sydney", "Sydney Marathon", "Sydney", sydneyElev, sydneyProfile as Profile, sydneyCoords as Coords),
-  newyork: makeCourse("newyork", "New York City Marathon", "New York", newyorkElev, newyorkProfile as Profile, newyorkCoords as Coords),
-  boston: makeCourse("boston", "Boston Marathon", "Boston", bostonElev, bostonProfile as Profile, bostonCoords as Coords),
+  berlin: makeCourse("berlin", "Berlin Marathon", "Berlin", berlinElev, berlinProfile as Profile, berlinCoords as Coords, "Europe/Berlin"),
+  chicago: makeCourse("chicago", "Chicago Marathon", "Chicago", chicagoElev, chicagoProfile as Profile, chicagoCoords as Coords, "America/Chicago"),
+  london: makeCourse("london", "London Marathon", "London", londonElev, londonProfile as Profile, londonCoords as Coords, "Europe/London"),
+  tokyo: makeCourse("tokyo", "Tokyo Marathon", "Tokyo", tokyoElev, tokyoProfile as Profile, tokyoCoords as Coords, "Asia/Tokyo"),
+  sydney: makeCourse("sydney", "Sydney Marathon", "Sydney", sydneyElev, sydneyProfile as Profile, sydneyCoords as Coords, "Australia/Sydney"),
+  newyork: makeCourse("newyork", "New York City Marathon", "New York", newyorkElev, newyorkProfile as Profile, newyorkCoords as Coords, "America/New_York"),
+  boston: makeCourse("boston", "Boston Marathon", "Boston", bostonElev, bostonProfile as Profile, bostonCoords as Coords, "America/New_York"),
 };
 
 export function getCourse(id: CourseId): Course {
