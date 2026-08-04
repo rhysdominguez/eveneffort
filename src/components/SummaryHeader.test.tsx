@@ -3,6 +3,12 @@ import { render, fireEvent } from "@testing-library/react";
 import { SummaryHeader } from "./SummaryHeader";
 import type { PacingResult } from "@/hooks/usePacingChart";
 import type { PacingInput } from "@/types";
+import { startCheckout } from "@/lib/checkout";
+
+// Opening the modal now fires a beacon and can start a Stripe redirect —
+// neither of which jsdom can do. Stub both at the module boundary.
+vi.mock("@/lib/analytics", () => ({ track: vi.fn() }));
+vi.mock("@/lib/checkout", () => ({ startCheckout: vi.fn() }));
 
 // The results column is client-rendered, so this is the only way to assert the
 // adjusted-finish stat actually appears (and only when weather is applied).
@@ -86,15 +92,44 @@ describe("SummaryHeader", () => {
     expect(text).not.toContain("vs goal");
   });
 
-  it("offers a Print band button that opens the browser print dialog", () => {
+  it("opens the support modal rather than printing straight away", () => {
     // jsdom has no real window.print — assign a spy outright.
     const spy = vi.fn();
     window.print = spy;
-    const { getByText } = render(
+    const { getByText, queryByRole, getByRole } = render(
+      <SummaryHeader result={resultWith()} courseName="Boston Marathon" />,
+    );
+    expect(queryByRole("dialog")).toBeNull();
+    fireEvent.click(getByText("Print band"));
+    expect(getByRole("dialog")).not.toBeNull();
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  it("prints and closes when the modal's Print button is used", () => {
+    const spy = vi.fn();
+    window.print = spy;
+    const { getByText, getByRole, queryByRole } = render(
       <SummaryHeader result={resultWith()} courseName="Boston Marathon" />,
     );
     fireEvent.click(getByText("Print band"));
+    fireEvent.click(getByRole("button", { name: "Print" }));
     expect(spy).toHaveBeenCalledTimes(1);
+    expect(queryByRole("dialog")).toBeNull();
+  });
+
+  it("hands the modal a results query describing this exact band", () => {
+    vi.mocked(startCheckout).mockResolvedValue(undefined);
+    const { getByText, getByRole } = render(
+      <SummaryHeader result={resultWith()} courseName="Boston Marathon" />,
+    );
+    fireEvent.click(getByText("Order band"));
+    fireEvent.click(getByRole("button", { name: "Order for $9.99" }));
+
+    const query = vi.mocked(startCheckout).mock.calls[0][0];
+    const params = new URLSearchParams(query);
+    expect(params.get("courseId")).toBe("boston");
+    expect(params.get("goalTimeSeconds")).toBe("10800");
+    expect(params.get("unit")).toBe("km");
   });
 
   it("switches distance and pace units with the imperial toggle", () => {

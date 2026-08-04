@@ -1,4 +1,12 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Why even effort, not even pace",
+  description:
+    "How eveneffort turns a goal time into splits: the Minetti (2002) energy cost curve, grade-adjusted pace, and race-day weather.",
+  alternates: { canonical: "/methodology" },
+};
 
 // Static marketing/content page — no client state, no data fetching.
 // Long-form copy, so it reads as prose rather than app UI: single centered

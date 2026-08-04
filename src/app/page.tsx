@@ -1,51 +1,72 @@
-"use client";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { InputForm } from "@/components/InputForm";
-import { buildResultsHref } from "@/lib/resultsParams";
+import { ElevationChart } from "@/components/ElevationChart";
+import { HeroSection } from "@/components/home/HeroSection";
+import { CourseLibrary } from "@/components/home/CourseLibrary";
+import { FeatureRow } from "@/components/home/FeatureRow";
+import { PaceBandPreview } from "@/components/home/PaceBandPreview";
+import { WeatherStatBlock } from "@/components/home/WeatherStatBlock";
+import { ClosingCta } from "@/components/home/ClosingCta";
+import { DEMO_COURSE, demoResult } from "@/components/home/demoResult";
 
-// Marketing shell — scaffolding only. Sections are full-bleed bands (edge
-// to edge, like the Macmillan reference); inner content stays in a
-// centered max-width column for readability. Real headline copy comes
-// later. Calculate navigates to the standalone /results route.
+// Marketing home page. Sections are full-bleed bands (edge to edge, like the
+// Macmillan reference); inner content stays in a centered max-width column for
+// readability.
+//
+// A SERVER component — the only client island is HeroSection, which owns the
+// router. That means the demo pace chart driving the feature rows is computed
+// at build time and ships as static markup, and the feature media can be the
+// real product components rather than screenshots that go stale.
 export default function Page() {
-  const router = useRouter();
-
   return (
     <main className="w-full flex-1">
-      {/* Hero band — full-bleed photo behind the whole section, edge to edge
-          (the Macmillan reference), with the form floating on top. The
-          source photo has the runner right-of-frame, which sat directly
-          behind the form — mirrored horizontally so he lands on the left,
-          in the empty column, and stays clear of the card. Headline copy
-          TBD — the left column is reserved for it. */}
-      {/* No overflow-hidden: it clipped the date/time popovers at the band's
-          edge. The fill image is inset-0 with object-cover, so it crops
-          itself and never needed clipping in the first place. */}
-      <section className="relative w-full min-h-[30rem] lg:min-h-[44rem]">
-        <Image
-          src="/hero-runner1.jpg"
-          alt="A runner mid-stride, motion-blurred, passing a sunlit fountain"
-          fill
-          priority
-          sizes="100vw"
-          className="scale-x-[-1] object-cover"
-          style={{ objectPosition: "50% 39%" }}
-        />
-        {/* Veils the form's half of the photo so the type holds without
-            putting a card back on top of the image. */}
-        <div className="hero-scrim absolute inset-0" />
-        <div className="relative mx-auto max-w-7xl px-6 py-16">
-          <div className="grid items-center gap-12 lg:grid-cols-2">
-            <div />
-            <InputForm
-              title="Pacing Calculator"
-              subtitle="Elevation-adjusted splits for your goal time, course, and conditions."
-              onCalculate={(input) => router.push(buildResultsHref(input))}
-            />
-          </div>
+      <HeroSection />
+
+      <CourseLibrary />
+
+      <section className="w-full">
+        <div className="mx-auto max-w-7xl space-y-24 px-6 py-20 lg:space-y-32">
+          <FeatureRow
+            eyebrow="Elevation"
+            title="Splits shaped by the course, not a calculator's average"
+            bullets={[
+              "Built from the official elevation profile — every climb and descent where the race actually puts it.",
+              "Paces ease on the way up and pick up on the way down, so the effort stays level even though the ground doesn't.",
+              "Your goal finish time never changes. Only the way you spend it does.",
+            ]}
+            media={
+              <ElevationChart
+                profile={DEMO_COURSE.profile}
+                unit="miles"
+                rows={demoResult.rows}
+              />
+            }
+          />
+
+          <FeatureRow
+            reverse
+            eyebrow="Weather"
+            title="The forecast, already priced into your plan"
+            bullets={[
+              "Heat, humidity and wind all change what a given pace costs you — and none of them settle until race week.",
+              "We pull the hourly forecast for your start time and location, then layer it onto the elevation-adjusted plan.",
+              "Heat that builds through the back half gets worked into your splits the same way a hill does.",
+            ]}
+            media={<WeatherStatBlock />}
+          />
+
+          <FeatureRow
+            eyebrow="Race day"
+            title="A band for your wrist, not a PDF for your phone"
+            bullets={[
+              "Every split printed at true wrist scale, ready to fold and wear.",
+              "Fueling cues marked on the rows where they land, so you're not doing arithmetic at mile 20.",
+              "Print it yourself for free, or order one on waterproof stock.",
+            ]}
+            media={<PaceBandPreview />}
+          />
         </div>
       </section>
+
+      <ClosingCta />
     </main>
   );
 }

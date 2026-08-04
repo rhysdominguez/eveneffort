@@ -1,0 +1,20 @@
+<!--
+  Browser-tab mark: the lowercase "e" from the eveneffort wordmark on a white
+  chip. The glyph is Fraunces at weight 500, the exact face and weight the
+  .font-wordmark utility renders, converted to outlines here because a favicon
+  cannot depend on a webfont being loaded.
+
+  An SVG cannot read globals.css tokens, so the two colours are the literal
+  values of the color-bg-surface (#FFFFFF) and color-text-primary (#0A0A0A)
+  tokens. If either token changes, change it here too.
+
+  Glyph transform: Fraunces is a 2000-upem font and its "e" spans
+  x 75.5..978.5, y -24..965. The scale/translate below maps that box to an
+  20px-tall glyph centred in the 32px chip, flipping the y axis (font units
+  run upwards, SVG units downwards). 20px rather than something smaller
+  because a tab favicon is drawn at 16px and the thinner setting muddied.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <rect width="32" height="32" rx="7" fill="#FFFFFF"/>
+  <path transform="translate(5.343 26) scale(0.020222 -0.020222)" fill="#0A0A0A" d="M978.5 587.5Q978.5 538.5 950.0 511.75Q921.5 485 866 485H235.5V555.5H680Q730 555.5 730 600Q730 733 676.75 804.75Q623.5 876.5 535.5 876.5Q466 876.5 413.0 836.0Q360 795.5 330.25 720.25Q300.5 645 300.5 541.5Q300.5 345 393.5 245.5Q486.5 146 639 146Q732.5 146 802.25 185.75Q872 225.5 906 294.5Q920.5 313.5 930.0 319.75Q939.5 326 950.5 326Q965.5 326 972.0 313.0Q978.5 300 978 282.5Q972.5 199 918.0 128.75Q863.5 58.5 771.5 17.25Q679.5 -24 560.5 -24Q418.5 -24 309.0 35.25Q199.5 94.5 137.5 201.5Q75.5 308.5 75.5 452.5Q75.5 601 135.0 716.5Q194.5 832 304.75 898.5Q415 965 567.5 965Q696 965 787.75 917.0Q879.5 869 929.0 783.75Q978.5 698.5 978.5 587.5Z"/>
+</svg>

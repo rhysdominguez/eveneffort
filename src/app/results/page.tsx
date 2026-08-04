@@ -1,6 +1,16 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { parseResultsParams } from "@/lib/resultsParams";
 import { Dashboard } from "@/components/Dashboard";
+
+// A results page is a pure function of its query string, so every share of a
+// pacing chart would otherwise mint another near-duplicate URL for Google to
+// crawl. Noindex keeps the index to the three real pages (see sitemap.ts);
+// `follow` still lets crawlers walk the links back out to them.
+export const metadata: Metadata = {
+  title: "Your pacing chart",
+  robots: { index: false, follow: true },
+};
 
 // Server component. In Next 16 `searchParams` is a promise — must be
 // awaited. Inputs are validated here; the heavy lifting (compute + render)

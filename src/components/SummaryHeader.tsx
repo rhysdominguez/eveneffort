@@ -1,7 +1,13 @@
+"use client";
+import { usePopover } from "@/hooks/usePopover";
+import { PrintModal } from "@/components/PrintModal";
+import { OrderModal } from "@/components/OrderModal";
 import type { PacingResult } from "@/hooks/usePacingChart";
 import { formatHMS } from "@/lib/units/time";
 import { formatPace } from "@/lib/units/pace";
 import { MARATHON_KM, MILE_IN_KM } from "@/lib/pacing/segments";
+import { buildResultsQuery } from "@/lib/resultsParams";
+import { track } from "@/lib/analytics";
 
 interface Props {
   result: PacingResult;
@@ -34,6 +40,8 @@ function Stat({
 }
 
 export function SummaryHeader({ result, courseName }: Props) {
+  const printPopover = usePopover();
+  const orderPopover = usePopover();
   const { goalTimeSeconds, unit } = result.input;
   const { adjustedFinishSeconds, weatherApplied } = result;
   const distance = unit === "km" ? MARATHON_KM : MARATHON_MILES;
@@ -52,27 +60,51 @@ export function SummaryHeader({ result, courseName }: Props) {
         <h2 className="text-3xl font-display tracking-tight text-[var(--color-text-primary)]">
           {courseName}
         </h2>
-        {/* Prints the wrist paceband (PaceBand.tsx) — everything else is
-            print:hidden, so the browser dialog shows just the strip. Neutral
-            chrome: red stays reserved for primary actions like Calculate. */}
-        <button
-          type="button"
-          onClick={() => window.print()}
-          className="flex shrink-0 items-center gap-2 rounded-lg border border-[var(--color-border)] px-4 py-2 text-sm font-medium text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-elevated)] hover:text-[var(--color-text-primary)]"
-        >
-          <svg
-            viewBox="0 0 20 20"
-            aria-hidden="true"
-            className="h-4 w-4 shrink-0"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
+        {/* Two peer entry points to the paceband, each opening its own small
+            modal instead of one dialog stacking both options: order the
+            printed one, or print it here (PaceBand.tsx — everything else is
+            print:hidden, so the browser dialog shows just the strip). Order
+            is the paid CTA, so it gets the primary red treatment; print stays
+            neutral chrome. */}
+        <div className="flex shrink-0 items-center gap-2">
+          <button
+            ref={printPopover.triggerRef}
+            type="button"
+            onClick={() => {
+              track("print_modal_opened");
+              printPopover.setOpen(true);
+            }}
+            aria-haspopup="dialog"
+            aria-expanded={printPopover.open}
+            className="flex items-center gap-2 rounded-lg border border-[var(--color-border)] px-4 py-2 text-sm font-medium text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-elevated)] hover:text-[var(--color-text-primary)]"
           >
-            <path d="M5.5 7V3.5h9V7M5.5 14.5H4a1.5 1.5 0 0 1-1.5-1.5V8.5A1.5 1.5 0 0 1 4 7h12a1.5 1.5 0 0 1 1.5 1.5V13a1.5 1.5 0 0 1-1.5 1.5h-1.5" />
-            <rect x="5.5" y="11.5" width="9" height="5" rx="0.5" />
-          </svg>
-          Print band
-        </button>
+            <svg
+              viewBox="0 0 20 20"
+              aria-hidden="true"
+              className="h-4 w-4 shrink-0"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            >
+              <path d="M5.5 7V3.5h9V7M5.5 14.5H4a1.5 1.5 0 0 1-1.5-1.5V8.5A1.5 1.5 0 0 1 4 7h12a1.5 1.5 0 0 1 1.5 1.5V13a1.5 1.5 0 0 1-1.5 1.5h-1.5" />
+              <rect x="5.5" y="11.5" width="9" height="5" rx="0.5" />
+            </svg>
+            Print band
+          </button>
+          <button
+            ref={orderPopover.triggerRef}
+            type="button"
+            onClick={() => {
+              track("order_modal_opened");
+              orderPopover.setOpen(true);
+            }}
+            aria-haspopup="dialog"
+            aria-expanded={orderPopover.open}
+            className="flex items-center gap-2 rounded-lg bg-[var(--color-red-primary)] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[var(--color-red-deep)]"
+          >
+            Order band
+          </button>
+        </div>
       </div>
       <div
         className={`grid gap-6 border-t border-b border-[var(--color-border)] py-6 ${
@@ -107,6 +139,21 @@ export function SummaryHeader({ result, courseName }: Props) {
         <Stat label="Average pace" value={formatPace(avgPace, unit)} />
         <Stat label="Distance" value={distanceLabel} />
       </div>
+      <PrintModal
+        open={printPopover.open}
+        panelRef={printPopover.containerRef}
+        onClose={() => printPopover.close(true)}
+        onPrint={() => {
+          printPopover.close(true);
+          window.print();
+        }}
+      />
+      <OrderModal
+        open={orderPopover.open}
+        panelRef={orderPopover.containerRef}
+        resultsQuery={buildResultsQuery(result.input)}
+        onClose={() => orderPopover.close(true)}
+      />
     </header>
   );
 }

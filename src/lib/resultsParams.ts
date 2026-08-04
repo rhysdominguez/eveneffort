@@ -19,6 +19,15 @@ import { CARBS_PER_HOUR_MAX, CARBS_PER_HOUR_MIN } from "@/lib/weather/fueling";
 const UNITS: readonly Unit[] = ["km", "miles"];
 
 export function buildResultsHref(input: PacingInput): string {
+  return `/results?${buildResultsQuery(input)}`;
+}
+
+/**
+ * The query string alone, without the `/results?` prefix. The paceband order
+ * flow posts this to /api/checkout, which feeds it straight back through
+ * parseResultsParams — so serialization stays in exactly one place.
+ */
+export function buildResultsQuery(input: PacingInput): string {
   const params = new URLSearchParams({
     courseId: input.courseId,
     unit: input.unit,
@@ -45,7 +54,7 @@ export function buildResultsHref(input: PacingInput): string {
     params.set("carbs", String(input.fueling.carbsPerHour));
   }
 
-  return `/results?${params.toString()}`;
+  return params.toString();
 }
 
 type ParseResult =
