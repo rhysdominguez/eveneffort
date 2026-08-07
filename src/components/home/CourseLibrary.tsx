@@ -52,11 +52,6 @@ export function CourseLibrary({ catalog }: { catalog: CourseSummary[] }) {
               onSelectCourse={(courseId) => selection?.requestCourse(courseId)}
             />
 
-            <p className="text-sm text-[var(--color-text-secondary)]">
-              {catalog.length} marathon{catalog.length === 1 ? "" : "s"} on the
-              map, with more landing as their profiles are verified.
-            </p>
-
             {/* The pins are drawn on a WebGL canvas: unreachable by keyboard,
                 invisible to a screen reader. This list is the map's text
                 equivalent, so the catalogue is still readable without it, and

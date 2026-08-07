@@ -60,6 +60,13 @@ export interface CheckoutSessionParams {
     text: { maximum_length: number };
   }[];
   metadata: Record<string, string>;
+  /**
+   * The same metadata again. Session metadata does not surface in the Payment's
+   * own metadata block in the Stripe dashboard, and the dashboard is the entire
+   * order-intake system (docs/FULFILLMENT.md) — so the PaymentIntent carries a
+   * copy and `resultsUrl` is readable straight off the payment.
+   */
+  payment_intent_data: { metadata: Record<string, string> };
   success_url: string;
   cancel_url: string;
 }
@@ -83,6 +90,14 @@ export function buildCheckoutSessionParams(
   const query = buildResultsQuery(input);
   const resultsUrl = `${origin}/results?${query}`;
 
+  const metadata = {
+    courseId: input.courseId,
+    courseName: clamp(courseName),
+    unit: input.unit,
+    goalTime: formatHMS(input.goalTimeSeconds),
+    resultsUrl: clamp(resultsUrl),
+  };
+
   return {
     mode: "payment",
     line_items: [{ price: priceId, quantity: 1 }],
@@ -96,13 +111,8 @@ export function buildCheckoutSessionParams(
         text: { maximum_length: NAME_ON_BAND_MAX },
       },
     ],
-    metadata: {
-      courseId: input.courseId,
-      courseName: clamp(courseName),
-      unit: input.unit,
-      goalTime: formatHMS(input.goalTimeSeconds),
-      resultsUrl: clamp(resultsUrl),
-    },
+    metadata,
+    payment_intent_data: { metadata },
     // Stripe substitutes {CHECKOUT_SESSION_ID}; the braces must survive intact.
     success_url: `${origin}/order/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: resultsUrl,

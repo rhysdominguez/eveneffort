@@ -55,6 +55,18 @@ describe("buildCheckoutSessionParams", () => {
     expect(metadata.unit).toBe("km");
   });
 
+  it("copies that summary onto the PaymentIntent so it shows on the payment", () => {
+    // Fulfillment reads the dashboard's Payment page, which does not display
+    // session metadata — without this copy resultsUrl is invisible there.
+    const params = buildCheckoutSessionParams(
+      baseInput,
+      ORIGIN,
+      PRICE_ID,
+      COURSE_NAME,
+    );
+    expect(params.payment_intent_data.metadata).toEqual(params.metadata);
+  });
+
   it("keeps every metadata value inside Stripe's 500-char cap", () => {
     // The heaviest possible input: weather, body metrics and fueling all set.
     const fat: PacingInput = {

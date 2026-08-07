@@ -1,7 +1,13 @@
-// Counts the two in-app funnel steps for the paceband smoke test by writing a
+// Counts the in-app funnel steps for the paceband smoke test by writing a
 // single JSON line per event to the server log (readable in Vercel's log view
 // or a drain). No storage, no identifiers, no third party — see lib/analytics.ts.
-const ALLOWED = new Set(["print_modal_opened", "order_clicked"]);
+// Must stay in step with the event names lib/analytics.ts emits: anything not
+// listed here is silently dropped.
+const ALLOWED = new Set([
+  "print_modal_opened",
+  "order_modal_opened",
+  "order_clicked",
+]);
 
 export async function POST(request: Request): Promise<Response> {
   try {

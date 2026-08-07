@@ -56,7 +56,10 @@ export async function POST(request: Request): Promise<Response> {
     new URL(request.url).origin;
 
   try {
-    const stripe = new Stripe(secretKey);
+    // Pinned, not left to Stripe's account default: an unpinned client silently
+    // picks up API changes. This is the version stripe@22.4.0 was generated
+    // against, so bump it only together with the package.
+    const stripe = new Stripe(secretKey, { apiVersion: "2026-07-29.dahlia" });
     // orders.ts stays free of Stripe types so it can be unit-tested; the cast
     // is the single seam between our plain object and the SDK's enums.
     const session = await stripe.checkout.sessions.create(

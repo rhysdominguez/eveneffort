@@ -26,11 +26,10 @@ beforeAll(() => {
 });
 
 describe("CourseLibrary", () => {
-  it("renders the band heading and course count", () => {
+  it("renders the band heading", () => {
     const { container } = render(<CourseLibrary catalog={FIXTURE_CATALOG} />);
     const text = container.textContent ?? "";
     expect(text).toContain("Find your race on the map");
-    expect(text).toContain(`${FIXTURE_CATALOG.length} marathons on the map`);
   });
 
   it("renders the map region with a Near me control", () => {

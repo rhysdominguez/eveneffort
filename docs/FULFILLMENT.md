@@ -7,11 +7,17 @@ teaches us what fulfillment actually costs before we automate anything.
 
 ## Per order
 
+0. Stripe emails the account address on every successful payment (Settings →
+   Notifications). That email is the only order alert there is — treat it as the
+   inbox.
 1. **Stripe dashboard → Payments** → open the succeeded payment.
-2. Read its **metadata**:
+2. Read its **Metadata** panel — the route copies the order record onto the
+   PaymentIntent precisely so it is visible here (session metadata is not):
    - `resultsUrl` — open it. This reproduces the runner's exact band.
    - `courseName`, `goalTime`, `unit` — a sanity check that the link loaded right.
-   - Custom field `name_on_band` (optional) — the name to print, if they gave one.
+   - `name_on_band` (optional) — the name to print, if they gave one. This one is
+     **not** in Metadata: it is a Checkout custom field, shown further down the
+     same page under **Checkout summary**, next to the shipping address.
 3. On that page click **Print band** → **Print it yourself** → **Print**.
    Everything except the paceband strip is `print:hidden`, so the dialog shows
    just the band.
@@ -39,6 +45,11 @@ Ship within **3–5 business days** of payment — that is the promise made on
 
 Labour is not counted. If fulfillment stops being fun, that is itself a result.
 
+**No sales tax is collected.** $9.99 is the whole price, Stripe Tax is off, and
+`automatic_tax` is deliberately absent from the session. At smoke-test volume no
+state's economic nexus threshold is anywhere near met, so there is nothing to
+register for and nothing to remit. Revisit if this ever sells in real numbers.
+
 ## Refunds
 
 Full refund on request before shipping; replacement or refund if it arrives
@@ -51,6 +62,7 @@ dashboard. See [`/policies`](../src/app/policies/page.tsx) for the customer-faci
 |---|---|
 | `/results` viewed | Vercel Web Analytics (page views) |
 | Print modal opened | Vercel logs: `{"type":"app_event","event":"print_modal_opened"}` |
+| Order modal opened | Vercel logs: `{"type":"app_event","event":"order_modal_opened"}` |
 | Order clicked | Vercel logs: `{"type":"app_event","event":"order_clicked"}` |
 | Checkout session created | Stripe dashboard |
 | **Paid** | Stripe dashboard |
