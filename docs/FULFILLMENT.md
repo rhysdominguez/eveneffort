@@ -15,9 +15,6 @@ teaches us what fulfillment actually costs before we automate anything.
    PaymentIntent precisely so it is visible here (session metadata is not):
    - `resultsUrl` — open it. This reproduces the runner's exact band.
    - `courseName`, `goalTime`, `unit` — a sanity check that the link loaded right.
-   - `name_on_band` (optional) — the name to print, if they gave one. This one is
-     **not** in Metadata: it is a Checkout custom field, shown further down the
-     same page under **Checkout summary**, next to the shipping address.
 3. On that page click **Print band** → **Print it yourself** → **Print**.
    Everything except the paceband strip is `print:hidden`, so the dialog shows
    just the band.

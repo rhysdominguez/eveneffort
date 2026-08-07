@@ -30,18 +30,6 @@ describe("buildCheckoutSessionParams", () => {
     );
   });
 
-  it("offers an optional name-on-band field", () => {
-    const { custom_fields } = buildCheckoutSessionParams(
-      baseInput,
-      ORIGIN,
-      PRICE_ID,
-      COURSE_NAME,
-    );
-    expect(custom_fields).toHaveLength(1);
-    expect(custom_fields[0].key).toBe("name_on_band");
-    expect(custom_fields[0].optional).toBe(true);
-  });
-
   it("records a human-readable order summary in metadata", () => {
     const { metadata } = buildCheckoutSessionParams(
       baseInput,

@@ -22,9 +22,6 @@ export const FULFILLMENT_WINDOW = "3–5 business days";
  */
 export const SHIPPING_COUNTRIES = ["US"] as const;
 
-/** Max characters for the optional name printed on the band. */
-export const NAME_ON_BAND_MAX = 20;
-
 export const SUPPORT_EMAIL = "morenog150@gmail.com";
 
 /** Everything the customer is promised, in one place so no surface drifts. */
@@ -52,13 +49,6 @@ export interface CheckoutSessionParams {
   mode: "payment";
   line_items: { price: string; quantity: number }[];
   shipping_address_collection: { allowed_countries: readonly string[] };
-  custom_fields: {
-    key: string;
-    label: { type: "custom"; custom: string };
-    type: "text";
-    optional: true;
-    text: { maximum_length: number };
-  }[];
   metadata: Record<string, string>;
   /**
    * The same metadata again. Session metadata does not surface in the Payment's
@@ -102,15 +92,6 @@ export function buildCheckoutSessionParams(
     mode: "payment",
     line_items: [{ price: priceId, quantity: 1 }],
     shipping_address_collection: { allowed_countries: SHIPPING_COUNTRIES },
-    custom_fields: [
-      {
-        key: "name_on_band",
-        label: { type: "custom", custom: "Name to print on the band" },
-        type: "text",
-        optional: true,
-        text: { maximum_length: NAME_ON_BAND_MAX },
-      },
-    ],
     metadata,
     payment_intent_data: { metadata },
     // Stripe substitutes {CHECKOUT_SESSION_ID}; the braces must survive intact.
