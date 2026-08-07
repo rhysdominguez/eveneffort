@@ -1,9 +1,9 @@
 ---
-name: localhost
-description: Launch this project's Next.js dev server and confirm it's serving on localhost. Use when the user asks to "launch localhost", "start the dev server", "run the app locally", or similar.
+name: launch-localhost
+description: Launch this project's Next.js dev server and confirm it's serving on localhost:3000. Use when the user asks to "launch localhost", "start the dev server", "run the app locally", or similar.
 ---
 
-# localhost — run the eveneffort dev server
+# launch-localhost — run the eveneffort dev server
 
 This project is a Next.js (Turbopack) app. The dev server is started with `npm run dev` and defaults to port 3000.
 
