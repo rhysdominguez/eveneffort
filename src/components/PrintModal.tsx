@@ -92,15 +92,21 @@ export function PrintModal({ open, panelRef, onClose, onPrint }: Props) {
             </span>
             <AdSlot />
           </div>
-          <button
-            ref={printRef}
-            type="button"
-            onClick={onPrint}
-            className="flex w-full items-center justify-center gap-2 rounded-lg border border-[var(--color-border)] px-6 py-2.5 text-sm font-medium text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-elevated)] hover:text-[var(--color-text-primary)]"
-          >
-            <PrinterIcon className="h-4 w-4 shrink-0" />
-            Print
-          </button>
+          {/* Deliberate gap + rule between the ad and the Print button. AdSense
+              treats a control butted up against an ad as an accidental-click
+              layout, which is an account-level policy risk rather than a
+              warning — the separation has to stay visible. */}
+          <div className="mt-2 border-t border-[var(--color-border)] pt-6">
+            <button
+              ref={printRef}
+              type="button"
+              onClick={onPrint}
+              className="flex w-full items-center justify-center gap-2 rounded-lg border border-[var(--color-border)] px-6 py-2.5 text-sm font-medium text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-elevated)] hover:text-[var(--color-text-primary)]"
+            >
+              <PrinterIcon className="h-4 w-4 shrink-0" />
+              Print
+            </button>
+          </div>
         </div>
       </div>
     </div>
