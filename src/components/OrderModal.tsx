@@ -85,18 +85,17 @@ export function OrderModal({ open, panelRef, resultsQuery, onClose }: Props) {
           </div>
           {/* Drop the photo at public/paceband-product.jpg. Until it exists
               the frame hides itself rather than showing a broken box, so the
-              order flow can ship ahead of the photography. Fixed height +
-              object-cover keeps the modal compact regardless of the photo's
-              native aspect ratio. */}
+              order flow can ship ahead of the photography. Aspect-ratio box
+              shows the photo at full size instead of cropping it. */}
           {!imageFailed && (
-            <div className="relative h-40 w-full overflow-hidden rounded-lg border border-[var(--color-border)] sm:h-48">
+            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg border border-[var(--color-border)]">
               <Image
                 src="/paceband-product.jpg"
                 alt="A printed eveneffort paceband worn on a runner's wrist"
                 fill
                 sizes="(min-width: 640px) 448px, 100vw"
                 onError={() => setImageFailed(true)}
-                className="object-cover"
+                className="object-contain"
               />
             </div>
           )}

@@ -3,7 +3,7 @@
 // up to it. Keeping it to one keeps red rare (DESIGN.md principle 2).
 export function ClosingCta() {
   return (
-    <section className="w-full border-t border-[var(--color-border)]">
+    <section className="w-full border-t border-[var(--color-border)] bg-[var(--color-bg-elevated)]">
       <div className="mx-auto max-w-3xl px-6 py-24 text-center">
         <h2 className="font-display text-3xl tracking-tight text-[var(--color-text-primary)] sm:text-4xl">
           Even effort. The finish you planned for.

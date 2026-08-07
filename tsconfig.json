@@ -10,6 +10,10 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
+    // scripts/seed.ts runs under Node's native type stripping, which requires
+    // explicit .ts import specifiers. Harmless here: noEmit is on, so nothing
+    // is ever rewritten.
+    "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,

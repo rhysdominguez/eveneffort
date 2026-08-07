@@ -16,7 +16,7 @@
 // alter a runner's band by a meaningful amount.
 import { describe, it, expect } from "vitest";
 import { computePaceChart } from "./index";
-import { getCourse } from "@/data/courses";
+import { fixtureCourse } from "@/data/courses.fixture";
 import type { PacingInput } from "@/types";
 
 const GOAL_SECONDS = 3 * 3600; // 3:00:00
@@ -66,7 +66,7 @@ describe("Boston 3:00:00 vs FindMyMarathon reference band", () => {
     goalTimeSeconds: GOAL_SECONDS,
     unit: "km",
   };
-  const rows = computePaceChart(input, getCourse("boston"));
+  const rows = computePaceChart(input, fixtureCourse("boston"));
 
   it("matches every FMM cumulative checkpoint within ±15 s", () => {
     for (const [km, hms] of FMM_ELAPSED) {

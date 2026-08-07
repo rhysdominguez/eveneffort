@@ -17,3 +17,14 @@ export const SITE_NAME = "eveneffort";
 // truncate it in the SERP.
 export const SITE_DESCRIPTION =
   "Free elevation- and weather-adjusted marathon pacing charts. Even effort, not even splits — built on the Minetti (2002) energy cost model.";
+
+// Shown on /privacy and /terms. One constant so the two pages can never claim
+// different revision dates. Bump it whenever either page's substance changes —
+// not for typo fixes, which would make the date meaningless.
+export const LEGAL_LAST_UPDATED = "3 August 2026";
+
+// Governing law for /terms. Deliberately left at the country level because the
+// operating entity's home state has not been settled — SET THIS to the actual
+// state (e.g. "the State of California, USA") before relying on the terms in a
+// dispute. A governing-law clause that names no forum is weak, not neutral.
+export const LEGAL_JURISDICTION = "the United States";

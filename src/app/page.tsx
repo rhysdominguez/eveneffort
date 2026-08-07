@@ -1,30 +1,48 @@
 import { ElevationChart } from "@/components/ElevationChart";
 import { HeroSection } from "@/components/home/HeroSection";
 import { CourseLibrary } from "@/components/home/CourseLibrary";
+import { RaceCalendar } from "@/components/home/RaceCalendar";
 import { FeatureRow } from "@/components/home/FeatureRow";
 import { PaceBandPreview } from "@/components/home/PaceBandPreview";
 import { WeatherStatBlock } from "@/components/home/WeatherStatBlock";
 import { ClosingCta } from "@/components/home/ClosingCta";
+import { HomeSelectionProvider } from "@/components/home/HomeSelectionProvider";
 import { DEMO_COURSE, demoResult } from "@/components/home/demoResult";
+import { getCourseCatalog, getEventCalendar } from "@/db/queries";
+import { todayISO } from "@/lib/units/date";
 
 // Marketing home page. Sections are full-bleed bands (edge to edge, like the
 // Macmillan reference); inner content stays in a centered max-width column for
 // readability.
 //
-// A SERVER component — the only client island is HeroSection, which owns the
-// router. That means the demo pace chart driving the feature rows is computed
-// at build time and ships as static markup, and the feature media can be the
-// real product components rather than screenshots that go stale.
-export default function Page() {
+// Still a SERVER component. The client islands are HeroSection (which owns the
+// router) and CourseLibrary (which owns the map), joined by HomeSelectionProvider
+// so a pin click lands in the hero's form. Wrapping the tree in that provider
+// does NOT make its children client components — the feature rows below are
+// passed through as `children` and stay server-rendered, so the demo pace chart
+// is still computed at build time and the feature media can be the real product
+// components rather than screenshots that go stale.
+export default async function Page() {
+  const [catalog, editions] = await Promise.all([
+    getCourseCatalog(),
+    getEventCalendar(),
+  ]);
+
   return (
+    <HomeSelectionProvider>
     <main className="w-full flex-1">
-      <HeroSection />
+      <HeroSection catalog={catalog} />
 
-      <CourseLibrary />
+      <CourseLibrary catalog={catalog} />
 
-      <section className="w-full">
+      {/* RaceCalendar corrects this to the visitor's own date on mount — it is
+          only the seed for a matching first render, since this page prerenders. */}
+      <RaceCalendar editions={editions} todayISO={todayISO()} />
+
+      <section className="w-full border-t border-[var(--color-border)]">
         <div className="mx-auto max-w-7xl space-y-24 px-6 py-20 lg:space-y-32">
           <FeatureRow
+            wideMedia
             eyebrow="Elevation"
             title="Splits shaped by the course, not a calculator's average"
             bullets={[
@@ -68,5 +86,6 @@ export default function Page() {
 
       <ClosingCta />
     </main>
+    </HomeSelectionProvider>
   );
 }

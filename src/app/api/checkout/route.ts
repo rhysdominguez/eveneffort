@@ -8,6 +8,7 @@
 import Stripe from "stripe";
 import { parseResultsParams } from "@/lib/resultsParams";
 import { buildCheckoutSessionParams } from "@/lib/orders";
+import { getCourseBySlug } from "@/db/queries";
 
 export async function POST(request: Request): Promise<Response> {
   const secretKey = process.env.STRIPE_SECRET_KEY;
@@ -40,6 +41,14 @@ export async function POST(request: Request): Promise<Response> {
     return Response.json({ error: parsed.reason }, { status: 400 });
   }
 
+  // The parser can only vouch for the slug's shape, so this lookup is what
+  // proves the course exists — and it also supplies the display name that goes
+  // on the order record. No course, no charge.
+  const course = await getCourseBySlug(parsed.input.courseId);
+  if (!course) {
+    return Response.json({ error: "Unknown course." }, { status: 400 });
+  }
+
   // NEXT_PUBLIC_SITE_URL pins the canonical origin (Stripe redirects back to
   // it); fall back to the request's own origin for local dev and previews.
   const origin =
@@ -55,6 +64,7 @@ export async function POST(request: Request): Promise<Response> {
         parsed.input,
         origin,
         priceId,
+        course.displayName,
       ) as unknown as Stripe.Checkout.SessionCreateParams,
     );
 

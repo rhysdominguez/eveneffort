@@ -5,6 +5,9 @@ import type { PacingInput } from "@/types";
 
 const ORIGIN = "https://eveneffort.com";
 const PRICE_ID = "price_test_123";
+// Resolved from the database by the route handler and passed in, so orders.ts
+// stays pure and synchronous.
+const COURSE_NAME = "Boston Marathon";
 
 const baseInput: PacingInput = {
   courseId: "boston",
@@ -14,7 +17,12 @@ const baseInput: PacingInput = {
 
 describe("buildCheckoutSessionParams", () => {
   it("charges the configured price once, US shipping only", () => {
-    const params = buildCheckoutSessionParams(baseInput, ORIGIN, PRICE_ID);
+    const params = buildCheckoutSessionParams(
+      baseInput,
+      ORIGIN,
+      PRICE_ID,
+      COURSE_NAME,
+    );
     expect(params.mode).toBe("payment");
     expect(params.line_items).toEqual([{ price: PRICE_ID, quantity: 1 }]);
     expect(params.shipping_address_collection.allowed_countries).toEqual(
@@ -27,6 +35,7 @@ describe("buildCheckoutSessionParams", () => {
       baseInput,
       ORIGIN,
       PRICE_ID,
+      COURSE_NAME,
     );
     expect(custom_fields).toHaveLength(1);
     expect(custom_fields[0].key).toBe("name_on_band");
@@ -38,6 +47,7 @@ describe("buildCheckoutSessionParams", () => {
       baseInput,
       ORIGIN,
       PRICE_ID,
+      COURSE_NAME,
     );
     expect(metadata.courseId).toBe("boston");
     expect(metadata.courseName).toBe("Boston Marathon");
@@ -55,7 +65,12 @@ describe("buildCheckoutSessionParams", () => {
       body: { massKg: 72.5, heightCm: 180 },
       fueling: { carbsPerHour: 60 },
     };
-    const { metadata } = buildCheckoutSessionParams(fat, ORIGIN, PRICE_ID);
+    const { metadata } = buildCheckoutSessionParams(
+      fat,
+      ORIGIN,
+      PRICE_ID,
+      COURSE_NAME,
+    );
     for (const value of Object.values(metadata)) {
       expect(value.length).toBeLessThanOrEqual(500);
     }
@@ -69,21 +84,29 @@ describe("buildCheckoutSessionParams", () => {
       weather: { tempC: 18, humidity: 55, windSpeed: 3, windDirection: 90 },
       fueling: { carbsPerHour: 75 },
     };
-    const { metadata } = buildCheckoutSessionParams(input, ORIGIN, PRICE_ID);
+    const { metadata } = buildCheckoutSessionParams(
+      input,
+      ORIGIN,
+      PRICE_ID,
+      COURSE_NAME,
+    );
 
     const url = new URL(metadata.resultsUrl);
     expect(url.origin).toBe(ORIGIN);
     expect(url.pathname).toBe("/results");
 
-    const reparsed = parseResultsParams(
-      Object.fromEntries(url.searchParams),
-    );
+    const reparsed = parseResultsParams(Object.fromEntries(url.searchParams));
     expect(reparsed.ok).toBe(true);
     if (reparsed.ok) expect(reparsed.input).toEqual(input);
   });
 
   it("returns to the same results page on cancel and to /order/success on payment", () => {
-    const params = buildCheckoutSessionParams(baseInput, ORIGIN, PRICE_ID);
+    const params = buildCheckoutSessionParams(
+      baseInput,
+      ORIGIN,
+      PRICE_ID,
+      COURSE_NAME,
+    );
     expect(params.cancel_url).toBe(params.metadata.resultsUrl);
     // Stripe substitutes the placeholder — it must survive verbatim.
     expect(params.success_url).toBe(

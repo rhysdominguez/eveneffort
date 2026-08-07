@@ -13,6 +13,12 @@ describe("SiteFooter", () => {
     ).not.toBeNull();
   });
 
+  it("carries the legal pages, which have no other route in", () => {
+    const { container } = render(<SiteFooter />);
+    expect(container.querySelector('a[href="/privacy"]')).not.toBeNull();
+    expect(container.querySelector('a[href="/terms"]')).not.toBeNull();
+  });
+
   it("stays off the printed page", () => {
     const { container } = render(<SiteFooter />);
     expect(container.querySelector("footer")?.className).toContain(

@@ -19,13 +19,36 @@ describe("resultsParams", () => {
     expect(parsed).toEqual({ ok: true, input });
   });
 
-  it("rejects an unknown course", () => {
+  // Courses are database rows now, so this parser — which is pure and
+  // synchronous — can only vouch for the SHAPE of a slug. Whether the course
+  // exists is proven by getCourseBySlug returning null, which /results and
+  // /api/checkout both handle. So a well-formed but unknown slug parses fine
+  // here on purpose, and only malformed ones are rejected.
+  it("accepts a well-formed slug it has never heard of", () => {
     const r = parseResultsParams({
-      courseId: "atlantis",
+      courseId: "atlantis-marathon",
       unit: "km",
       goalTimeSeconds: "14400",
     });
-    expect(r.ok).toBe(false);
+    expect(r.ok).toBe(true);
+  });
+
+  it("rejects a missing or malformed course slug", () => {
+    const base = { unit: "km", goalTimeSeconds: "14400" };
+    for (const courseId of [
+      undefined,
+      "",
+      "Berlin", // uppercase
+      "-berlin", // leading hyphen
+      "berlin marathon", // whitespace
+      "berlin/../etc", // path traversal
+      "b".repeat(65), // over the length cap
+    ]) {
+      expect(
+        parseResultsParams({ ...base, courseId }).ok,
+        `courseId: ${JSON.stringify(courseId)}`,
+      ).toBe(false);
+    }
   });
 
   it("rejects an invalid unit", () => {

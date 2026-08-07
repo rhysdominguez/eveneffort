@@ -1,7 +1,9 @@
-import type { PacingInput } from "@/types";
+import type { Course, PacingInput } from "@/types";
 import type { PacingResult } from "@/hooks/usePacingChart";
 import { computePaceChart } from "@/lib/pacing";
-import { getCourse } from "@/data/courses";
+import bostonElev from "@/data/courses/boston.json";
+import bostonProfile from "@/data/courses/boston.profile.json";
+import bostonCoords from "@/data/courses/boston.coords.json";
 import { applyFuelingToRows, buildFuelingPlan } from "@/lib/weather/fueling";
 import { calculateHeatAdjustment } from "@/lib/weather/heat";
 import { formatHMS } from "@/lib/units/time";
@@ -19,7 +21,23 @@ import { formatHMS } from "@/lib/units/time";
 /** 3:30 at Boston — Boston because the Newton hills make the clearest chart. */
 const DEMO_GOAL_SECONDS = 3 * 3600 + 30 * 60;
 
-export const DEMO_COURSE = getCourse("boston");
+// Built from the repo JSON rather than the database on purpose: this is a
+// static marketing figure baked in at build time, so making the home page wait
+// on a query for geometry it will never let the user change would be pure
+// latency. src/data/courses/ remains the seed's source of truth either way.
+export const DEMO_COURSE: Course = {
+  id: "boston",
+  displayName: "Boston Marathon",
+  city: "Boston",
+  elevations: bostonElev,
+  profile: bostonProfile as [number, number][],
+  coords: bostonCoords as [number, number][],
+  start: {
+    lat: (bostonCoords as [number, number][])[0][0],
+    lon: (bostonCoords as [number, number][])[0][1],
+  },
+  timezone: "America/New_York",
+};
 
 const DEMO_INPUT: PacingInput = {
   goalTimeSeconds: DEMO_GOAL_SECONDS,

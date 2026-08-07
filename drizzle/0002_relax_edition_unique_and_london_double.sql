@@ -1,0 +1,2 @@
+ALTER TABLE "event_edition" DROP CONSTRAINT "event_edition_series_year_key";--> statement-breakpoint
+ALTER TABLE "event_edition" ADD CONSTRAINT "event_edition_series_date_key" UNIQUE("series_id","race_date");

@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { render, fireEvent } from "@testing-library/react";
 import { InputForm } from "./InputForm";
 import type { PacingInput } from "@/types";
+import { FIXTURE_CATALOG } from "@/data/courses.fixture";
 
 // Weather/Wind and Fueling are dashboard-only (live mode) — the homepage
 // form is core race setup + Calculate. The disclosure is collapsed by
@@ -10,14 +11,18 @@ import type { PacingInput } from "@/types";
 // fields together, body metrics are inert (and therefore disabled) while
 // weather is off, and the per-field unit toggles convert what's displayed.
 const openSection = () => {
-  const utils = render(<InputForm onChange={() => {}} />);
+  const utils = render(
+    <InputForm catalog={FIXTURE_CATALOG} onChange={() => {}} />,
+  );
   fireEvent.click(utils.getByText(/Weather & Wind/));
   return utils;
 };
 
 describe("InputForm — Weather & Wind", () => {
   it("renders exactly one merged disclosure, not separate Weather/Advanced sections", () => {
-    const { container } = render(<InputForm onChange={() => {}} />);
+    const { container } = render(
+      <InputForm catalog={FIXTURE_CATALOG} onChange={() => {}} />,
+    );
     const text = container.textContent ?? "";
     expect(text).toContain("Weather & Wind");
     expect(text).not.toContain("Advanced");
@@ -47,8 +52,12 @@ describe("InputForm — Weather & Wind", () => {
   });
 
   it("hides Weather & Wind on the homepage (button mode) but shows it on the dashboard (live mode)", () => {
-    const button = render(<InputForm onCalculate={() => {}} />);
-    const live = render(<InputForm onChange={() => {}} />);
+    const button = render(
+      <InputForm catalog={FIXTURE_CATALOG} onCalculate={() => {}} />,
+    );
+    const live = render(
+      <InputForm catalog={FIXTURE_CATALOG} onChange={() => {}} />,
+    );
     expect(button.container.textContent).not.toContain("Weather & Wind");
     expect(live.container.textContent).toContain("Weather & Wind");
   });
@@ -62,7 +71,11 @@ describe("InputForm — date/time popover placement", () => {
   // two forms mounted and getByText would match both — hence the unmount.
   const panelClassFor = (live: boolean, label: RegExp): string => {
     const utils = render(
-      live ? <InputForm onChange={() => {}} /> : <InputForm onCalculate={() => {}} />,
+      live ? (
+        <InputForm catalog={FIXTURE_CATALOG} onChange={() => {}} />
+      ) : (
+        <InputForm catalog={FIXTURE_CATALOG} onCalculate={() => {}} />
+      ),
     );
     fireEvent.click(utils.getByText(label));
     const panel = utils.container.querySelector('[role="dialog"]');
@@ -246,19 +259,25 @@ describe("InputForm — height in feet and inches", () => {
 // Wind, and is likewise dashboard-only (live mode). Opening only this one
 // keeps the "On"/"Off" buttons unambiguous.
 const openFueling = () => {
-  const utils = render(<InputForm onChange={() => {}} />);
+  const utils = render(
+    <InputForm catalog={FIXTURE_CATALOG} onChange={() => {}} />,
+  );
   fireEvent.click(utils.getByText(/Fueling Strategy/));
   return utils;
 };
 
 describe("InputForm — Fueling strategy", () => {
   it("is hidden on the homepage (button mode)", () => {
-    const { container } = render(<InputForm onCalculate={() => {}} />);
+    const { container } = render(
+      <InputForm catalog={FIXTURE_CATALOG} onCalculate={() => {}} />,
+    );
     expect(container.textContent).not.toContain("Fueling Strategy");
   });
 
   it("starts collapsed, with no rate shown in the header", () => {
-    const { container } = render(<InputForm onChange={() => {}} />);
+    const { container } = render(
+      <InputForm catalog={FIXTURE_CATALOG} onChange={() => {}} />,
+    );
     expect(container.textContent).toContain("Fueling Strategy");
     expect(container.textContent).not.toContain("g/hr)");
     // Collapsed ⇒ the slider itself isn't mounted yet.
@@ -299,11 +318,73 @@ describe("InputForm — Fueling strategy", () => {
 
   it("emits fueling by default and drops it once switched off", () => {
     const seen: PacingInput[] = [];
-    const { getByText } = render(<InputForm onChange={(i) => seen.push(i)} />);
+    const { getByText } = render(
+      <InputForm catalog={FIXTURE_CATALOG} onChange={(i) => seen.push(i)} />,
+    );
     expect(seen.at(-1)?.fueling).toEqual({ carbsPerHour: 60 });
 
     fireEvent.click(getByText(/Fueling Strategy/));
     fireEvent.click(getByText("Off"));
     expect(seen.at(-1)?.fueling).toBeUndefined();
+  });
+});
+
+// The catalog now carries each course's next scheduled edition, so choosing a
+// race can fill in its date. The rule that matters is that it never clobbers a
+// date the runner chose themselves.
+describe("InputForm — race date prefill from the next edition", () => {
+  const withDates = FIXTURE_CATALOG.map((c, i) => ({
+    ...c,
+    nextRaceDateISO: `2026-0${i + 1}-11`,
+  }));
+
+  it("seeds the date from the initially selected course", () => {
+    const seen: PacingInput[] = [];
+    render(<InputForm catalog={withDates} onChange={(i) => seen.push(i)} />);
+    expect(seen.at(-1)?.raceDateISO).toBe(withDates[0].nextRaceDateISO);
+  });
+
+  it("moves the date when the course changes", () => {
+    const seen: PacingInput[] = [];
+    const { container } = render(
+      <InputForm catalog={withDates} onChange={(i) => seen.push(i)} />,
+    );
+    fireEvent.change(container.querySelector("#course")!, {
+      target: { value: withDates[2].id },
+    });
+    expect(seen.at(-1)?.courseId).toBe(withDates[2].id);
+    expect(seen.at(-1)?.raceDateISO).toBe(withDates[2].nextRaceDateISO);
+  });
+
+  it("never overwrites a date carried in from a shared URL", () => {
+    const seen: PacingInput[] = [];
+    const initial: PacingInput = {
+      courseId: withDates[0].id,
+      unit: "km",
+      goalTimeSeconds: 14400,
+      raceDateISO: "2026-12-25",
+    };
+    const { container } = render(
+      <InputForm
+        catalog={withDates}
+        initial={initial}
+        onChange={(i) => seen.push(i)}
+      />,
+    );
+    expect(seen.at(-1)?.raceDateISO).toBe("2026-12-25");
+
+    // Still the runner's date after switching course — their choice wins.
+    fireEvent.change(container.querySelector("#course")!, {
+      target: { value: withDates[3].id },
+    });
+    expect(seen.at(-1)?.raceDateISO).toBe("2026-12-25");
+  });
+
+  it("leaves the date blank when a course has no scheduled edition", () => {
+    const seen: PacingInput[] = [];
+    render(
+      <InputForm catalog={FIXTURE_CATALOG} onChange={(i) => seen.push(i)} />,
+    );
+    expect(seen.at(-1)?.raceDateISO).toBeUndefined();
   });
 });

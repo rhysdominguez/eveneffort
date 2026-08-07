@@ -2,9 +2,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import type { PacingInput, WeatherConditions } from "@/types";
+import type { Course, CourseSummary, PacingInput, WeatherConditions } from "@/types";
 import { usePacingChart } from "@/hooks/usePacingChart";
-import { getCourse } from "@/data/courses";
 import { buildResultsHref } from "@/lib/resultsParams";
 import { InputForm } from "@/components/InputForm";
 import { SummaryHeader } from "@/components/SummaryHeader";
@@ -18,7 +17,15 @@ import { PaceBand } from "@/components/PaceBand";
 // weather + fueling on top. `input` is the server-parsed PacingInput from the
 // URL and seeds the initial state.
 
-export function Dashboard({ input }: { input: PacingInput }) {
+export function Dashboard({
+  input,
+  course,
+  catalog,
+}: {
+  input: PacingInput;
+  course: Course;
+  catalog: CourseSummary[];
+}) {
   const router = useRouter();
   const { result, error, calculate } = usePacingChart();
   const [current, setCurrent] = useState<PacingInput>(input);
@@ -26,11 +33,18 @@ export function Dashboard({ input }: { input: PacingInput }) {
   // forecast series (or null in manual mode) driving per-segment sampling.
   const [hourly, setHourly] = useState<WeatherConditions[] | null>(null);
 
+  // Switching course in the form changes `current` immediately, but the new
+  // geometry only arrives after the URL round-trips to the server. Charting
+  // Berlin's elevations under Boston's name for those few hundred ms would be
+  // silently wrong, so hold off until the two agree.
+  const courseIsCurrent = course.id === current.courseId;
+
   // `current` already carries `weather` when InputForm's toggle is on (built
   // the same way `body` is) — no separate merge needed here.
   useEffect(() => {
-    calculate(current, hourly);
-  }, [calculate, current, hourly]);
+    if (!courseIsCurrent) return;
+    calculate(current, course, hourly);
+  }, [calculate, current, course, courseIsCurrent, hourly]);
 
   // Keep the URL shareable without flooding history. Debounced so rapid
   // typing in the goal-time inputs doesn't thrash navigation.
@@ -65,6 +79,7 @@ export function Dashboard({ input }: { input: PacingInput }) {
           <InputForm
             title="Race setup"
             initial={input}
+            catalog={catalog}
             onChange={setCurrent}
             onHourlyChange={setHourly}
           />
@@ -78,10 +93,10 @@ export function Dashboard({ input }: { input: PacingInput }) {
             <>
               <SummaryHeader
                 result={result}
-                courseName={getCourse(result.input.courseId).displayName}
+                courseName={course.displayName}
               />
               <ElevationChart
-                profile={getCourse(result.input.courseId).profile}
+                profile={course.profile}
                 unit={result.input.unit}
                 rows={result.rows}
               />
@@ -94,7 +109,7 @@ export function Dashboard({ input }: { input: PacingInput }) {
       {result && (
         <PaceBand
           result={result}
-          courseName={getCourse(result.input.courseId).displayName}
+          courseName={course.displayName}
         />
       )}
     </main>

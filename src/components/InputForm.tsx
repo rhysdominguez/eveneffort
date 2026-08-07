@@ -1,14 +1,14 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type {
   CourseId,
+  CourseSummary,
   GoalTimeInput,
   PacingInput,
   Unit,
   WeatherConditions,
 } from "@/types";
 import { DEFAULT_BODY, DEFAULT_FUELING } from "@/types";
-import { COURSE_LIST, getCourse } from "@/data/courses";
 import { toSeconds } from "@/lib/units/time";
 import { DatePicker } from "@/components/DatePicker";
 import { TimePicker } from "@/components/TimePicker";
@@ -51,6 +51,19 @@ interface Props {
   onCalculate?: (input: PacingInput) => void;
   onChange?: (input: PacingInput) => void;
   onHourlyChange?: (hourly: WeatherConditions[] | null) => void;
+  /**
+   * Every selectable course, fetched server-side and passed down. Light
+   * metadata only — the elevation geometry is loaded on /results for the one
+   * course being charted, so this stays small at hundreds of courses.
+   */
+  catalog: CourseSummary[];
+  /**
+   * A course chosen somewhere else on the page — currently only the home map,
+   * whose pins sit in a band the form can't see. Applied exactly as if it had
+   * been picked from the dropdown, date prefill and all. Omitted on the
+   * dashboard, where the form is the only thing that picks a course.
+   */
+  requestedCourseId?: CourseId | null;
   initial?: PacingInput;
   title?: string;
   /** Supporting line under the title. Hero only — the dashboard omits it. */
@@ -75,6 +88,8 @@ export function InputForm({
   onCalculate,
   onChange,
   onHourlyChange,
+  catalog,
+  requestedCourseId,
   initial,
   title,
   subtitle,
@@ -96,11 +111,17 @@ export function InputForm({
       ? secondsToGoalTime(initial.goalTimeSeconds)
       : { hours: 4, minutes: 0, seconds: 0 },
   );
-  const [courseId, setCourseId] = useState<CourseId>(
-    initial?.courseId ?? "berlin",
-  );
+  const initialCourseId = initial?.courseId ?? catalog[0]?.id ?? "";
+  const [courseId, setCourseId] = useState<CourseId>(initialCourseId);
   const [unit, setUnit] = useState<Unit>(initial?.unit ?? "km");
-  const [raceDate, setRaceDate] = useState<string>(initial?.raceDateISO ?? "");
+  // Seeded from the chosen course's next scheduled edition — the first thing
+  // the edition table buys the user. A date carried in from a shared URL
+  // always wins.
+  const [raceDate, setRaceDate] = useState<string>(
+    initial?.raceDateISO ??
+      catalog.find((c) => c.id === initialCourseId)?.nextRaceDateISO ??
+      "",
+  );
   const [raceStartTime, setRaceStartTime] = useState<string>(
     initial?.raceStartTime ?? "",
   );
@@ -146,15 +167,20 @@ export function InputForm({
     initial?.unit === "miles" ? "ftin" : "cm",
   );
 
+  const selected = catalog.find((c) => c.id === courseId) ?? catalog[0];
+
   // Owned locally so weather renders the same on the homepage and the
   // dashboard. `raceDate`/`raceStartTime` are passed as `undefined` rather
   // than "" so the hook's `hasTiming`-style guard (`if (!dateISO || !startTime)`)
   // behaves the same as it would from a PacingInput's optional fields.
+  //
+  // Note this uses the START LINE, not the city centre: the city coordinate
+  // exists for the map, but a forecast should be keyed to where the runner
+  // actually stands at the gun.
   const weather = useWeather(
-    {
-      ...getCourse(courseId).start,
-      timezone: getCourse(courseId).timezone,
-    },
+    selected
+      ? { ...selected.start, timezone: selected.timezone }
+      : { lat: 0, lon: 0, timezone: "UTC" },
     raceDate || undefined,
     raceStartTime || undefined,
     initial?.weather,
@@ -163,6 +189,30 @@ export function InputForm({
   useEffect(() => {
     onHourlyChange?.(weather.hourly);
   }, [onHourlyChange, weather.hourly]);
+
+  // Switching course moves the date to that race's next edition. Done in the
+  // handler rather than an effect so there is no cascading render, and only
+  // when the field is empty or still holds the previous course's suggestion —
+  // a date the runner typed themselves is never overwritten.
+  function selectCourse(nextId: CourseId) {
+    const prev = catalog.find((c) => c.id === courseId)?.nextRaceDateISO;
+    const next = catalog.find((c) => c.id === nextId)?.nextRaceDateISO;
+    setCourseId(nextId);
+    if (next && (raceDate === "" || raceDate === prev)) setRaceDate(next);
+  }
+
+  // A pin on the home map routes through the same handler as the dropdown, so
+  // a map pick prefills the race date identically. The effect fires only when
+  // the requested id actually changes, so it can't fight a runner who then
+  // picks something else from the dropdown, and the ref keeps `selectCourse`
+  // (redeclared every render) out of the dependency list.
+  const selectCourseRef = useRef(selectCourse);
+  useEffect(() => {
+    selectCourseRef.current = selectCourse;
+  });
+  useEffect(() => {
+    if (requestedCourseId) selectCourseRef.current(requestedCourseId);
+  }, [requestedCourseId]);
 
   const { hours, minutes, seconds } = goalTime;
 
@@ -301,10 +351,10 @@ export function InputForm({
           <select
             id="course"
             value={courseId}
-            onChange={(e) => setCourseId(e.target.value as CourseId)}
+            onChange={(e) => selectCourse(e.target.value)}
             className="w-full appearance-none rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] px-4 py-3 pr-11 text-base focus:border-[var(--color-border-focus)] focus:outline-none transition-colors"
           >
-            {COURSE_LIST.map((c) => (
+            {catalog.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.displayName}
               </option>
@@ -355,9 +405,9 @@ export function InputForm({
         </div>
       </div>
 
-      {/* Distance also sets the wind-speed unit (km ⇒ km/h, mi ⇒ mph). */}
+      {/* Unit also sets the wind-speed unit (km ⇒ km/h, mi ⇒ mph). */}
       <div className="flex items-center justify-between gap-2">
-        <label className={eyebrowClass}>Distance</label>
+        <label className={eyebrowClass}>Unit of measurement</label>
         <UnitToggle
           label="Distance unit"
           value={unit}

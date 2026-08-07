@@ -16,6 +16,12 @@ interface Props {
   media: ReactNode;
   /** Put the media column first on desktop — alternates down the stack. */
   reverse?: boolean;
+  /**
+   * Give the media column the larger share of the row. The elevation chart is
+   * a wide, detail-dense figure that reads as undersized against a full column
+   * of copy at 1:1; the paceband strip and stat block do not need it.
+   */
+  wideMedia?: boolean;
 }
 
 function CheckMark() {
@@ -35,9 +41,23 @@ function CheckMark() {
   );
 }
 
-export function FeatureRow({ eyebrow, title, bullets, media, reverse }: Props) {
+export function FeatureRow({
+  eyebrow,
+  title,
+  bullets,
+  media,
+  reverse,
+  wideMedia,
+}: Props) {
+  // minmax(0,…) on both tracks, not plain fr: a grid track's default `auto`
+  // minimum is its content's min-content width, which would let the chart's
+  // axis labels or the copy's longest word push the row wider than the page.
+  const columns = wideMedia
+    ? "lg:grid-cols-[minmax(0,4fr)_minmax(0,6fr)]"
+    : "lg:grid-cols-2";
+
   return (
-    <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+    <div className={`grid items-center gap-12 ${columns} lg:gap-16`}>
       <div className={reverse ? "lg:order-last" : undefined}>
         <p className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-tertiary)]">
           {eyebrow}

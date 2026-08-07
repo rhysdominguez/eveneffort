@@ -16,7 +16,7 @@ import { resolve } from "node:path";
 import { describe, it, expect } from "vitest";
 import { buildForecastUrl, selectHourlyWindow } from "./forecast";
 import { zonedWallClockToUTC } from "./timezone";
-import { COURSES } from "@/data/courses";
+import { fixtureCourse } from "@/data/courses.fixture";
 
 /** Vitest doesn't load .env.local the way Next does, so read it directly. */
 function readKey(): string | undefined {
@@ -36,7 +36,7 @@ function readKey(): string | undefined {
 const apiKey = readKey();
 
 describe.skipIf(!apiKey)("Tomorrow.io — live forecast retrieval", () => {
-  const berlin = COURSES.berlin;
+  const berlin = fixtureCourse("berlin");
 
   it("returns an hourly timeline with the fields we map", async () => {
     const res = await fetch(buildForecastUrl(berlin.start.lat, berlin.start.lon, apiKey!), {

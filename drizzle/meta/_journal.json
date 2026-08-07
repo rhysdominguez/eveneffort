@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1785857390343,
+      "tag": "0000_init_marathon_schema",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1785857397149,
+      "tag": "0001_event_calendar_view",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1785861453108,
+      "tag": "0002_relax_edition_unique_and_london_double",
+      "breakpoints": true
+    }
+  ]
+}

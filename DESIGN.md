@@ -21,7 +21,12 @@ Defined in the `@theme` block of `src/app/globals.css`. Reference in components 
 | `--color-green-primary` | `#15803D` | Faster-than-goal weather delta ONLY — as reserved as red; never decoration |
 | `--color-bg-page` | `#FFFFFF` | Page background (set on `html`) |
 | `--color-bg-surface` | `#FFFFFF` | Card / surface background |
-| `--color-bg-elevated` | `#FAFAFA` | Table header, hover fill, chart area fill |
+| `--color-bg-elevated` | `#FAFAFA` | Table header, hover fill, chart area fill, alternating marketing band |
+| `--color-bg-footer` | `#262626` | Site footer, upper tier — **footer only** |
+| `--color-bg-footer-deep` | `#171717` | Site footer, lower tier — **footer only** |
+| `--color-text-on-dark` | `#FAFAFA` | Wordmark and column headings on the footer — **footer only** |
+| `--color-text-on-dark-muted` | `#B5B5B5` | Footer links, tagline, copyright — **footer only** |
+| `--color-border-on-dark` | `#404040` | Footer column dividers — **footer only** |
 | `--color-text-primary` | `#0A0A0A` | Headings, primary values, chart line |
 | `--color-text-secondary` | `#525252` | Body, helper text, downhill delta, row labels |
 | `--color-text-tertiary` | `#A3A3A3` | Eyebrows/column headers, zero delta, axis labels |
@@ -31,6 +36,8 @@ Defined in the `@theme` block of `src/app/globals.css`. Reference in components 
 ## Theme
 
 Light mode only. There is no dark mode: no `@media (prefers-color-scheme: dark)` block, no `dark:` variants, no component-level theme logic. `color-scheme: light` is set on `html` so native controls, spinners, and scrollbars stay light.
+
+**The footer is the one dark surface, and it is not an exception to the above.** A near-black band at the foot of a white page is a layout decision, not a theme: it renders identically for every visitor and responds to no system preference. Its `*-on-dark` / `*-footer*` tokens exist because inverted text needs its own ramp, and they are scoped to `SiteFooter` — do not reach for them anywhere else, and do not generalise them into a theme.
 
 Rule for new components: never hardcode a surface (`bg-white`) or text color — always go through a token, so the single source of truth in `globals.css` stays authoritative.
 

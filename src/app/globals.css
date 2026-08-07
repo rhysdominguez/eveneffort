@@ -1,4 +1,9 @@
 @import "tailwindcss";
+/* MapLibre's own chrome (popup, zoom buttons, attribution). Imported here
+   rather than in the component so Tailwind still owns the end of the cascade
+   and our overrides below can win without !important. The map itself is
+   loaded lazily at runtime — this is only its stylesheet. */
+@import "maplibre-gl/dist/maplibre-gl.css";
 
 @theme {
   /* Brand colors — keep red rare */
@@ -12,6 +17,15 @@
   --color-bg-page: #FFFFFF;
   --color-bg-surface: #FFFFFF;
   --color-bg-elevated: #FAFAFA;
+  /* Footer — the one dark surface on the site. This is NOT dark mode: it's an
+     inverted band at the foot of a white page (the Macmillan reference's
+     structure), so it needs its own on-dark text/border ramp. Nothing above
+     the footer may use these. */
+  --color-bg-footer: #262626;
+  --color-bg-footer-deep: #171717;
+  --color-text-on-dark: #FAFAFA;
+  --color-text-on-dark-muted: #B5B5B5;
+  --color-border-on-dark: #404040;
 
   --color-text-primary: #0A0A0A;
   --color-text-secondary: #525252;
@@ -176,6 +190,95 @@ html {
   }
 }
 
+/* Screen preview of the printed band (home page "Race day" feature row).
+   Renders the SAME PaceBandStrip markup as the paper version, so it can only
+   ever show the band we actually print.
+
+   Every number below is the corresponding @media print value multiplied by
+   --pb-scale, and nothing else differs — the strip is a true enlargement, not
+   a lookalike. At true wrist scale (1.3in, 7pt type) the strip is legible on
+   paper at arm's length but far too small to read in a marketing column, so
+   it is scaled up bodily rather than restyled. Change the multiplier and the
+   whole strip stays in proportion; change a print number above and the
+   preview follows it. */
+.paceband-preview {
+  --pb-scale: 1.85;
+}
+
+.paceband-preview .paceband-strip {
+  width: calc(1.3in * var(--pb-scale));
+  /* Square corners: the printed strip is cut from a sheet, not a rounded card. */
+  border-radius: 0;
+}
+
+.paceband-preview .paceband-bar {
+  padding: calc(3pt * var(--pb-scale)) 0;
+  text-align: center;
+  font-size: calc(8.5pt * var(--pb-scale));
+  line-height: 1;
+}
+
+.paceband-preview .paceband-course {
+  padding: calc(2.5pt * var(--pb-scale)) 0;
+  text-align: center;
+  font-size: calc(7pt * var(--pb-scale));
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.paceband-preview .paceband-row {
+  display: flex;
+  align-items: center;
+  height: calc(11.5pt * var(--pb-scale));
+  padding: 0 calc(3pt * var(--pb-scale));
+  font-size: calc(7pt * var(--pb-scale));
+  line-height: 1;
+}
+
+.paceband-preview .paceband-row > span:nth-child(1) {
+  width: calc(0.22in * var(--pb-scale));
+  font-weight: 600;
+}
+.paceband-preview .paceband-row > span:nth-child(2) {
+  flex: 1;
+  text-align: right;
+}
+.paceband-preview .paceband-row > span:nth-child(3) {
+  flex: 1.4;
+  text-align: right;
+}
+.paceband-preview .paceband-gelcell,
+.paceband-preview .paceband-head > span:nth-child(4) {
+  width: calc(0.13in * var(--pb-scale));
+  display: flex;
+  justify-content: flex-end;
+}
+
+.paceband-preview .paceband-head {
+  height: calc(10pt * var(--pb-scale));
+  border-top: none;
+  font-size: calc(5.5pt * var(--pb-scale));
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.paceband-preview .paceband-gel {
+  width: calc(6pt * var(--pb-scale));
+  height: calc(6pt * var(--pb-scale));
+}
+
+/* Truncation marker for a partial strip. Centred across the full width rather
+   than sitting in the split columns — it is a note about the band, not a row
+   of it. Print never uses this: the paper band is always the whole race. */
+.paceband-preview .paceband-note {
+  padding: calc(4pt * var(--pb-scale)) 0;
+  text-align: center;
+  font-size: calc(5.5pt * var(--pb-scale));
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
 /* Range slider — the track and thumb live behind vendor pseudo-elements that
    Tailwind utilities can't reach, so the whole control is defined here rather
    than on the component. Colors still come from tokens only. */
@@ -245,4 +348,108 @@ html {
 .range-input:focus-visible::-moz-range-thumb {
   outline: 2px solid var(--color-border-focus);
   outline-offset: 2px;
+}
+
+/* Course map (`CourseMap.tsx`) — MapLibre draws its own popup, zoom buttons and
+   attribution as plain DOM, and ships them in its default blue-and-system-font
+   look. These rules put that chrome back on our tokens: 1px borders, our radius
+   scale, Montserrat, no drop shadows. Everything here is a re-skin of markup we
+   don't author, which is why it lives in globals.css rather than inline — the
+   nodes are created imperatively by the library. Pin and cluster colors are NOT
+   here: those are WebGL paint properties, read from these same tokens in the
+   component. */
+.maplibregl-map {
+  font-family: var(--font-sans);
+}
+
+.maplibregl-ctrl-group {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  background: var(--color-bg-surface);
+  box-shadow: none;
+}
+
+.maplibregl-ctrl-group button + button {
+  border-top: 1px solid var(--color-border);
+}
+
+.maplibregl-ctrl-group button:hover {
+  background: var(--color-bg-elevated);
+}
+
+.maplibregl-ctrl-attrib.maplibregl-compact {
+  border-radius: var(--radius-control);
+  background: color-mix(in srgb, var(--color-bg-surface) 85%, transparent);
+}
+
+.maplibregl-ctrl-attrib,
+.maplibregl-ctrl-attrib a {
+  color: var(--color-text-tertiary);
+  font-size: 0.625rem;
+}
+
+.maplibregl-popup-content {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-bg-surface);
+  box-shadow: none;
+  padding: 1rem;
+}
+
+.maplibregl-popup-tip {
+  border-top-color: var(--color-border);
+  border-bottom-color: var(--color-border);
+}
+
+.maplibregl-popup-close-button {
+  color: var(--color-text-tertiary);
+  font-size: 1.125rem;
+  padding: 0 0.375rem;
+}
+
+.maplibregl-popup-close-button:hover {
+  background: transparent;
+  color: var(--color-text-primary);
+}
+
+/* Popup body. Built as an HTML string by `popupMarkup` in courseMapData.ts —
+   MapLibre popups take markup, not React children — so its classes are styled
+   here rather than as Tailwind utilities on a JSX node. */
+.course-pin-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: var(--color-text-primary);
+}
+
+.course-pin-meta {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  margin-top: 0.125rem;
+}
+
+/* The map's one red action, and the only red on this band — same rule as the
+   hero's Calculate and the closing CTA. */
+.course-pin-cta {
+  margin-top: 0.75rem;
+  width: 100%;
+  border-radius: var(--radius-control);
+  background: var(--color-red-primary);
+  color: var(--color-bg-surface);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 150ms;
+}
+
+.course-pin-cta:hover {
+  background: var(--color-red-deep);
+}
+
+/* The two-finger / ctrl-scroll hint MapLibre overlays when a scroll gesture is
+   swallowed by the page. Its default is a dark scrim with white text. */
+.maplibregl-cooperative-gesture-screen {
+  background: color-mix(in srgb, var(--color-text-primary) 45%, transparent);
+  font-family: var(--font-sans);
 }

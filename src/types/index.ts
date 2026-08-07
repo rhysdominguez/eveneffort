@@ -2,14 +2,15 @@
 
 export type Unit = "km" | "miles";
 
-export type CourseId =
-  | "berlin"
-  | "chicago"
-  | "london"
-  | "tokyo"
-  | "sydney"
-  | "newyork"
-  | "boston";
+/**
+ * A course slug, e.g. "boston". Was a closed union of 7 literals before the
+ * database; now open, because courses are rows. Existence is proven by the
+ * lookup in src/db/queries.ts, not by the type — callers must handle null.
+ *
+ * The pre-database values are preserved as slugs, so every shared
+ * /results?courseId=... link (including printed pacebands) still resolves.
+ */
+export type CourseId = string;
 
 export interface PacingInput {
   goalTimeSeconds: number;
@@ -79,6 +80,62 @@ export interface GoalTimeInput {
   seconds: number;
 }
 
+/**
+ * Light course metadata — everything the picker, the map and the calendar
+ * need, and nothing the pacing engine needs. Small enough (~200 bytes) that
+ * the whole catalog ships to the client even at hundreds of courses.
+ */
+export interface CourseSummary {
+  id: CourseId;
+  seriesSlug: string; // e.g. "boston-marathon"
+  displayName: string; // e.g. "Boston Marathon"
+  city: string; // e.g. "Boston"
+  countryCode: string; // ISO 3166-1 alpha-2
+  countryName: string;
+  regionCode: string | null; // ISO 3166-2
+  regionName: string | null;
+  /**
+   * The map pin, seeded from a host race's GPX start line for precision.
+   * Every marathon in a city shares this one point, so two races in one
+   * city still render as a single pin. Not necessarily this race's OWN
+   * start line — `start` below is that, and is what the weather forecast
+   * is keyed to.
+   */
+  cityLat: number;
+  cityLon: number;
+  start: { lat: number; lon: number };
+  timezone: string;
+  /** Next scheduled edition, for prefilling the race-date picker. */
+  nextRaceDateISO: string | null;
+}
+
+/**
+ * One dated running of a series — the calendar's unit. Same "small enough to
+ * ship the whole list" contract as CourseSummary: no geometry, no prose.
+ *
+ * `courseId` is the course SLUG, not the edition's own slug, because that is
+ * what /results?courseId=… resolves. An edition with no course attached is
+ * unpaceable and never reaches this type — the query filters it out.
+ */
+export interface EditionSummary {
+  editionSlug: string; // e.g. "berlin-marathon-2026"
+  seriesSlug: string; // e.g. "berlin-marathon"
+  displayName: string; // series name, e.g. "Berlin Marathon"
+  courseId: CourseId; // course slug, e.g. "berlin"
+  city: string;
+  countryCode: string; // ISO 3166-1 alpha-2
+  countryName: string;
+  raceDateISO: string; // "2026-09-27" — a wall-clock calendar date, not an instant
+  /**
+   * Local start as zero-padded "HH:MM", or null when the organizer hasn't
+   * announced one. Null is meaningful: the seed refuses to guess an hour
+   * because a wrong one silently keys the forecast to the wrong conditions.
+   */
+  startTimeLocal: string | null;
+  dateConfidence: "confirmed" | "estimated" | "tbd";
+}
+
+/** A course plus its geometry. Fetched one at a time, server-side only. */
 export interface Course {
   id: CourseId;
   displayName: string; // e.g. "Berlin Marathon"

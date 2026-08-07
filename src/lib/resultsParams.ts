@@ -13,10 +13,18 @@ import type {
   Unit,
   WeatherConditions,
 } from "@/types";
-import { COURSES } from "@/data/courses";
 import { CARBS_PER_HOUR_MAX, CARBS_PER_HOUR_MIN } from "@/lib/weather/fueling";
 
 const UNITS: readonly Unit[] = ["km", "miles"];
+
+/**
+ * Course slugs are rows now, not a closed union, so this module can only
+ * check the SHAPE of the id — it is pure and synchronous, and the course
+ * table lives behind an async server-only query. Existence is proven
+ * downstream by `getCourseBySlug` returning null, which every caller must
+ * handle. Bounded length and a strict charset keep junk out of the query.
+ */
+const COURSE_SLUG_RE = /^[a-z0-9][a-z0-9-]{0,63}$/;
 
 export function buildResultsHref(input: PacingInput): string {
   return `/results?${buildResultsQuery(input)}`;
@@ -69,7 +77,7 @@ export function parseResultsParams(
   const unit = first(params.unit);
   const goalTimeRaw = first(params.goalTimeSeconds);
 
-  if (!courseId || !(courseId in COURSES)) {
+  if (!courseId || !COURSE_SLUG_RE.test(courseId)) {
     return { ok: false, reason: "Missing or unknown course." };
   }
   if (!unit || !UNITS.includes(unit as Unit)) {

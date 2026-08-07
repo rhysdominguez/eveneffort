@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { zonedWallClockToUTC } from "./timezone";
-import { COURSES } from "@/data/courses";
+import { FIXTURE_COURSES } from "@/data/courses.fixture";
 
 describe("zonedWallClockToUTC", () => {
   it("resolves a summer (DST) wall clock in Berlin as UTC+2", () => {
@@ -77,7 +77,7 @@ describe("zonedWallClockToUTC", () => {
 
 describe("course timezones", () => {
   it("gives every course a resolvable IANA zone", () => {
-    for (const course of Object.values(COURSES)) {
+    for (const course of FIXTURE_COURSES) {
       expect(course.timezone).toBeTruthy();
       // Throws RangeError on an unknown zone — the assertion is that it doesn't.
       expect(() =>

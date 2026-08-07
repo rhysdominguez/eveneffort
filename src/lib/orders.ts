@@ -6,7 +6,6 @@
 // Checkout Session's `metadata` IS the order record — `resultsUrl` is the link
 // we reopen to print the exact band the runner paid for. See docs/FULFILLMENT.md.
 import type { PacingInput } from "@/types";
-import { COURSES } from "@/data/courses";
 import { buildResultsQuery } from "@/lib/resultsParams";
 import { formatHMS } from "@/lib/units/time";
 
@@ -71,11 +70,15 @@ export interface CheckoutSessionParams {
  * @param input  Already validated server-side — never trust the raw client body.
  * @param origin Absolute site origin, e.g. "https://eveneffort.com".
  * @param priceId Stripe Price ID for the $9.99 paceband.
+ * @param courseName Display name, resolved from the database by the caller.
+ *   Passed in rather than looked up here so this module stays pure and
+ *   synchronous — the course table is behind an async server-only query.
  */
 export function buildCheckoutSessionParams(
   input: PacingInput,
   origin: string,
   priceId: string,
+  courseName: string,
 ): CheckoutSessionParams {
   const query = buildResultsQuery(input);
   const resultsUrl = `${origin}/results?${query}`;
@@ -95,7 +98,7 @@ export function buildCheckoutSessionParams(
     ],
     metadata: {
       courseId: input.courseId,
-      courseName: clamp(COURSES[input.courseId].displayName),
+      courseName: clamp(courseName),
       unit: input.unit,
       goalTime: formatHMS(input.goalTimeSeconds),
       resultsUrl: clamp(resultsUrl),

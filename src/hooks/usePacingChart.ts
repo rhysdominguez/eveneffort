@@ -1,8 +1,12 @@
 import { useState, useCallback } from "react";
-import type { PacingInput, PaceChartRow, WeatherConditions } from "@/types";
+import type {
+  Course,
+  PacingInput,
+  PaceChartRow,
+  WeatherConditions,
+} from "@/types";
 import { DEFAULT_BODY } from "@/types";
 import { computeElevationDurations, computePaceChart } from "@/lib/pacing";
-import { getCourse } from "@/data/courses";
 import { calculateHeatAdjustment } from "@/lib/weather/heat";
 import { buildWindMultipliers } from "@/lib/weather/wind";
 import { applyFuelingToRows, buildFuelingPlan } from "@/lib/weather/fueling";
@@ -29,15 +33,19 @@ export function usePacingChart() {
   const [error, setError] = useState<string | null>(null);
 
   /**
-   * Build the pace chart. `hourly`, when provided (live forecast), is the
-   * conditions series at 1-hour steps from the race start; otherwise a
-   * synthetic fall-morning progression is derived from `input.weather`.
+   * Build the pace chart. `course` carries the geometry, resolved server-side
+   * and passed in — the client no longer holds a registry of every course.
+   * `hourly`, when provided (live forecast), is the conditions series at
+   * 1-hour steps from the race start; otherwise a synthetic fall-morning
+   * progression is derived from `input.weather`.
    */
   const calculate = useCallback(
-    (input: PacingInput, hourly?: WeatherConditions[] | null) => {
+    (
+      input: PacingInput,
+      course: Course,
+      hourly?: WeatherConditions[] | null,
+    ) => {
       try {
-        const course = getCourse(input.courseId);
-
         let rows: PaceChartRow[];
         const weatherApplied = input.weather !== undefined;
 

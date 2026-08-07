@@ -16,10 +16,13 @@ if "gpxpy" not in sys.modules:
     sys.modules["gpxpy"] = types.ModuleType("gpxpy")
 
 from parse_gpx import (
+    MAX_STEP_M,
+    check_track_structure,
     haversine,
-    smooth_elevations,
+    max_step,
     sample_at_distances,
     sample_latlon,
+    smooth_elevations,
 )
 
 PASSED = 0
@@ -87,11 +90,59 @@ def test_sample_latlon() -> None:
     )
 
 
+def test_check_track_structure() -> None:
+    # One track, one segment: the only shape the flattening loop is correct for.
+    ok = True
+    try:
+        check_track_structure([1])
+    except ValueError:
+        ok = False
+    check("single track/segment accepted", ok)
+
+    def rejects(lengths: list[int]) -> bool:
+        try:
+            check_track_structure(lengths)
+            return False
+        except ValueError:
+            return True
+
+    check("two tracks rejected", rejects([1, 1]))
+    check("two segments in one track rejected", rejects([2]))
+    check("no tracks rejected", rejects([]))
+
+    # The escape hatch, for a file whose join really is the route.
+    allowed = True
+    try:
+        check_track_structure([1, 1], allow_multi_track=True)
+    except ValueError:
+        allowed = False
+    check("--allow-multi-track overrides", allowed)
+
+
+def test_max_step() -> None:
+    idx, gap = max_step([0.0, 100.0, 250.0, 260.0])
+    check("max_step finds the widest gap", gap == 150.0, f"got {gap}")
+    check("max_step reports the ending index", idx == 2, f"got {idx}")
+
+    idx, gap = max_step([42.0])
+    check("max_step handles a single point", idx == -1 and gap == 0.0)
+
+    # Real published courses top out at 1602 m (chicago); the ceiling must sit
+    # above that or it measures sampling density instead of discontinuity.
+    check(
+        "ceiling clears the worst legitimate gap",
+        MAX_STEP_M > 1602.0,
+        f"MAX_STEP_M={MAX_STEP_M}",
+    )
+
+
 def main() -> int:
     test_haversine()
     test_smoothing()
     test_sampling()
     test_sample_latlon()
+    test_check_track_structure()
+    test_max_step()
     print(f"\n{PASSED} passed, {FAILED} failed")
     return 1 if FAILED else 0
 
