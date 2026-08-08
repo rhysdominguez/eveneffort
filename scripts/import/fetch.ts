@@ -271,10 +271,27 @@ async function main(): Promise<void> {
 
   let discovered: Discovered[];
   if (directUrl) {
-    // Targeted mode: the caller already has the event page, so skip discovery
-    // entirely rather than paging a calendar looking for it.
-    discovered = [{ eventUrl: new URL(directUrl).toString(), city: "" }];
-    console.log(`direct    ${discovered[0].eventUrl}`);
+    // Targeted mode: the caller already has the page, so skip discovery
+    // entirely rather than paging a calendar looking for it. Accepts a
+    // comma-separated list, and accepts course-map URLs as well as event
+    // pages — a map page is what you land on when browsing the site, and it
+    // links back to its event page, which is where the JSON-LD lives.
+    discovered = [];
+    for (const raw of directUrl.split(",").map((u) => u.trim()).filter(Boolean)) {
+      let eventUrl = new URL(raw).toString();
+      if (eventUrl.includes("/map/")) {
+        const mapHtml = await getText(eventUrl);
+        const back = mapHtml.match(/href="([^"]*\/running-events\/[^"]*\.php)"/);
+        if (!back) {
+          console.log(`skip      ${eventUrl} — map page links no event page`);
+          continue;
+        }
+        eventUrl = new URL(back[1], eventUrl).toString();
+        await sleep(REQUEST_DELAY_MS);
+      }
+      discovered.push({ eventUrl, city: "" });
+    }
+    console.log(`direct    ${discovered.length} event page(s) resolved`);
   } else {
     discovered = await discoverEvents(yearStart, yearEnd);
     console.log(`found     ${discovered.length} marathons in ${yearStart}-${yearEnd}`);
