@@ -1,6 +1,6 @@
 ---
 name: import-races
-description: Import marathon courses from goandrace.com into the Neon database — GPX, geometry, city, series, edition and slug ledger — matching the original seven majors exactly. Use when the user asks to "import races", "add N marathons", "add the marathon for <city>", or gives a goandrace.com event URL.
+description: Import marathon courses from goandrace.com into the Neon database — GPX, geometry, city, series, edition and slug ledger — matching the original seven majors exactly. Use when the user asks to "import races", "add N marathons", "add the marathon for <city>", or gives goandrace.com event or course-map URLs.
 ---
 
 # import-races — bulk-import marathons into the database
@@ -19,9 +19,10 @@ Skips anything already imported, so repeat runs always bring in genuinely new ev
 
 **Targeted** — "add the marathon for Valencia", or a goandrace.com URL:
 ```bash
-npm run import:fetch -- --city "Valencia" --batch <batch>
-npm run import:fetch -- --url "https://www.goandrace.com/en/running-events/..." --batch <batch>
+npm run import:fetch -- --city "Valencia,Hamburg,Calgary" --batch <batch>
+npm run import:fetch -- --url "<url>,<url>,<url>" --batch <batch>
 ```
+Both flags take comma-separated lists, so one run covers many cities or URLs — discovery pages the calendar once instead of once per city. `--url` accepts course-map pages (`/en/map/...`) as well as event pages; a map URL is followed back to its event page automatically.
 If `--city` matches nothing, the city may be listed under a different spelling — search the calendar or ask the user for the event URL and use `--url`.
 
 Use `<batch>` = `import-YYYY-MM-DD` (add `-b`, `-c` for repeat runs the same day). **Never reuse a batch name** — the raw crawl file is overwritten, and courses from the earlier run silently vanish from QA.
@@ -109,10 +110,29 @@ console.table(rows);'
 
 Every row must show `elev` 44, `crd` 44, `distance_m` 42195 and `complete` true. Anything else is a defect — investigate before reporting success.
 
-### 8. Report
-Give the user a table: course slug, display name, city, race date, distance, organizer. Call out anything left blank or rejected, and say plainly how many of the requested count actually landed.
+### 8. Commit
 
-Do **not** commit unless asked. If asked, the ledger and seed edits must go in **one commit** — the ledger tests are set-equality in both directions, so the tree is red in between.
+Commit automatically once step 7 reports zero defects — do not ask first. A batch is the natural unit of a commit, and committing between batches is what makes a bad import one `git revert` away instead of a manual untangle.
+
+**Never commit if step 6 or 7 failed.** A red suite or a defective row gets reported and fixed, not committed.
+
+Two commits, in this order:
+
+1. **Tooling**, only if you changed anything under `scripts/import/`. Separate because it is green on its own and belongs to the pipeline, not the data.
+2. **The courses** — `src/db/seed/`, `src/data/courses/`, `data/gpx_sources/`, `data/import/decisions.json` in **one commit**. The ledger tests are set-equality in both directions, so splitting the ledger from the seed files leaves the tree red in between.
+
+Stage by explicit path. Never `git add -A` — `data/import/raw/` and `reports/` are gitignored, but a blanket add invites accidents.
+
+Write the message the way this repo does: what changed and *why*, in prose. Say which slugs shipped, which were rejected and for what measured reason, any timezone or city-name correction and what caused it, and any field deliberately left null. A future reader should be able to reconstruct the judgment calls without re-running anything. End with:
+
+```
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+```
+
+Do **not** push. Pushing is the user's call — say the branch is ahead and offer.
+
+### 9. Report
+Give the user a table: course slug, display name, city, race date, distance, organizer. Call out anything left blank or rejected, and say plainly how many of the requested count actually landed. Name the commits you made.
 
 ## Hard rules
 
@@ -127,6 +147,7 @@ Do **not** commit unless asked. If asked, the ledger and seed edits must go in *
 
 - *"links no course map"* — that race has no geometry published. Expected; report it as skipped.
 - *Parser rejects a course* — usually a multi-segment GPX or a half-marathon track. Mark it `rejected`; promote quarantines its files.
+- *Rejected for measuring just over 43.0 km* — a recurring pattern, not a one-off: Cleveland 43.21, Long Beach 43.10, Tulsa 43.06, Kansas City 43.04 and Pittsburgh 43.03 have all been lost this way, every one within 250 m of the ceiling. Dense urban courses drift long. **Report these separately from genuinely wrong tracks** (Marine Corps measured 50.5 km — that is a different failure). Do not widen the band to rescue them: that means editing `parse_gpx.py` and `courses.profile.integrity.test.ts` together and loosening a check that guards every course, so it needs the user's explicit decision.
 - *Test suite red after promote* — most likely a renamed slug whose files were not renamed, or a course parsed but missing from `SERIES_SEED`.
 - *New courses missing from the pacing dropdown* — `.next` was not cleared. Go back to step 6.
 
