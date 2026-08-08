@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-08T19:06:37.072Z",
+  "updatedAt": "2026-08-08T19:21:33.819Z",
   "courses": [
     {
       "courseSlug": "alamo-marathon",
@@ -396,6 +396,56 @@
       }
     },
     {
+      "courseSlug": "budapest-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "SPAR sponsor prefix dropped from slug and display name"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/spar-budapest-marathon-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/10/12/gpx_20251012_id10587_race1_20251003144213.gpx?t=1786216555",
+        "gpxSha256": "df0ec050c1c3e578f0c722bdcfbb946df5f6e1dc31b44b3602b3777e6c6b35be"
+      },
+      "stats": {
+        "totalKm": 42.20000662723117,
+        "gainM": 68.79999999999998
+      },
+      "city": {
+        "slug": "budapest-hu",
+        "name": "Budapest",
+        "countryCode": "HU",
+        "countryName": "Hungary",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 47.47353,
+        "longitude": 19.06365,
+        "timezone": "Europe/Budapest"
+      },
+      "citySlug": "budapest-hu",
+      "series": {
+        "slug": "budapest-marathon",
+        "name": "Budapest Marathon",
+        "citySlug": "budapest-hu",
+        "courseSlug": "budapest-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://marathon.runinbudapest.com/",
+        "organizer": "BUDAPEST SPORTIRODA (BSI)"
+      },
+      "recurrence": {
+        "seriesSlug": "budapest-marathon",
+        "month": 10,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2025-10-12 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "budapest-marathon",
+        "year": 2025,
+        "raceDate": "2025-10-12"
+      }
+    },
+    {
       "courseSlug": "calgary-marathon",
       "verdict": "ready",
       "reasons": [
@@ -611,6 +661,54 @@
       "series": null,
       "recurrence": null,
       "edition": null
+    },
+    {
+      "courseSlug": "cologne-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/generali-cologne-marathon-2024.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/10/06/gpx_20241006_id10009_race1_20240917144815.gpx?t=1786216514",
+        "gpxSha256": "4f6a49e9e434aaf69c3ce46050f2a1149923facf51148af43c66c268ef532109"
+      },
+      "stats": {
+        "totalKm": 42.11709824693575,
+        "gainM": 63.7
+      },
+      "city": {
+        "slug": "cologne-de",
+        "name": "Cologne",
+        "countryCode": "DE",
+        "countryName": "Germany",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 50.939895,
+        "longitude": 6.974156,
+        "timezone": "Europe/Berlin"
+      },
+      "citySlug": "cologne-de",
+      "series": {
+        "slug": "cologne-marathon",
+        "name": "Cologne Marathon",
+        "citySlug": "cologne-de",
+        "courseSlug": "cologne-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://generali-koeln-marathon.de",
+        "organizer": "Kölner AusdauerSport"
+      },
+      "recurrence": {
+        "seriesSlug": "cologne-marathon",
+        "month": 10,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the 2024-10-06 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "cologne-marathon",
+        "year": 2024,
+        "raceDate": "2024-10-06"
+      }
     },
     {
       "courseSlug": "cowtown-marathon",
@@ -872,6 +970,104 @@
       "series": null,
       "recurrence": null,
       "edition": null
+    },
+    {
+      "courseSlug": "irving-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/irving-marathon-2025-irving.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/03/30/gpx_20250330_id10235_race1_20250324220514.gpx?t=1786216609",
+        "gpxSha256": "d1f447501a184360b16a320779554c2daab758cd75845d27171c223ae08252a6"
+      },
+      "stats": {
+        "totalKm": 42.31576556060798,
+        "gainM": 78.50000000000003
+      },
+      "city": {
+        "slug": "irving-tx-us",
+        "name": "Irving",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-TX",
+        "regionName": "Texas",
+        "latitude": 32.874337,
+        "longitude": -96.944381,
+        "timezone": "America/Chicago"
+      },
+      "citySlug": "irving-tx-us",
+      "series": {
+        "slug": "irving-marathon",
+        "name": "Irving Marathon",
+        "citySlug": "irving-tx-us",
+        "courseSlug": "irving-marathon",
+        "isMajor": false,
+        "typicalMonth": 3,
+        "websiteUrl": "https://www.irvingmarathon.com",
+        "organizer": "Irving Marathon Group"
+      },
+      "recurrence": {
+        "seriesSlug": "irving-marathon",
+        "month": 3,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2025-03-30 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "irving-marathon",
+        "year": 2025,
+        "raceDate": "2025-03-30"
+      }
+    },
+    {
+      "courseSlug": "istanbul-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "organizer not published or site unreachable; left null"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/istanbul-marathon-2025-istanbul.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/11/02/gpx_20251102_id10600_race1_20251021220217.gpx?t=1786216876",
+        "gpxSha256": "8050b9e4537eee9cc78667a0527c6aed7baf3427036c0d55fcefe37028428a0e"
+      },
+      "stats": {
+        "totalKm": 42.26498201846089,
+        "gainM": 125.50000000000003
+      },
+      "city": {
+        "slug": "istanbul-tr",
+        "name": "Istanbul",
+        "countryCode": "TR",
+        "countryName": "Turkey",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 41.03697,
+        "longitude": 29.043167,
+        "timezone": "Europe/Istanbul"
+      },
+      "citySlug": "istanbul-tr",
+      "series": {
+        "slug": "istanbul-marathon",
+        "name": "Istanbul Marathon",
+        "citySlug": "istanbul-tr",
+        "courseSlug": "istanbul-marathon",
+        "isMajor": false,
+        "typicalMonth": 11,
+        "websiteUrl": "https://maraton.istanbul/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "istanbul-marathon",
+        "month": 11,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the 2025-11-02 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "istanbul-marathon",
+        "year": 2025,
+        "raceDate": "2025-11-02"
+      }
     },
     {
       "courseSlug": "kentucky-derby-festival-marathon",
@@ -1161,6 +1357,56 @@
       }
     },
     {
+      "courseSlug": "milan-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "city name anglicised from \"Milano\""
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/wizz-air-milano-marathon-2026.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/04/12/gpx_20260412_id10696_race1_20260316105108.gpx?t=1786216386",
+        "gpxSha256": "e59d7d28ceab3ac7fcf4bcc535b6077c047c61378446e967bf1133ab02f2be92"
+      },
+      "stats": {
+        "totalKm": 42.85633279954861,
+        "gainM": 57.000000000000014
+      },
+      "city": {
+        "slug": "milan-it",
+        "name": "Milan",
+        "countryCode": "IT",
+        "countryName": "Italy",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 45.479424,
+        "longitude": 9.167498,
+        "timezone": "Europe/Rome"
+      },
+      "citySlug": "milan-it",
+      "series": {
+        "slug": "milan-marathon",
+        "name": "Milan Marathon",
+        "citySlug": "milan-it",
+        "courseSlug": "milan-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://www.milanomarathon.it/",
+        "organizer": "RCS Sports & Events"
+      },
+      "recurrence": {
+        "seriesSlug": "milan-marathon",
+        "month": 4,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2026-04-12 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "milan-marathon",
+        "year": 2026,
+        "raceDate": "2026-04-12"
+      }
+    },
+    {
       "courseSlug": "milwaukee-marathon",
       "verdict": "ready",
       "reasons": [
@@ -1198,6 +1444,108 @@
         "seriesSlug": "milwaukee-marathon",
         "year": 2026,
         "raceDate": "2026-04-11"
+      }
+    },
+    {
+      "courseSlug": "munich-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "city name anglicised from \"München\"",
+        "organizer not published or site unreachable; left null"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/marathon-munchen-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/10/12/gpx_20251012_id10581_race1_20250926123446.gpx?t=1786216533",
+        "gpxSha256": "6cba43047c7a5533900f0721fed6538e19ccaef854f3bcd282cd46dcfebecdb0"
+      },
+      "stats": {
+        "totalKm": 42.61832379670759,
+        "gainM": 72.60000000000014
+      },
+      "city": {
+        "slug": "munich-de",
+        "name": "Munich",
+        "countryCode": "DE",
+        "countryName": "Germany",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 48.172664,
+        "longitude": 11.544343,
+        "timezone": "Europe/Berlin"
+      },
+      "citySlug": "munich-de",
+      "series": {
+        "slug": "munich-marathon",
+        "name": "Munich Marathon",
+        "citySlug": "munich-de",
+        "courseSlug": "munich-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://marathonmuenchen.org",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "munich-marathon",
+        "month": 10,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2025-10-12 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "munich-marathon",
+        "year": 2025,
+        "raceDate": "2025-10-12"
+      }
+    },
+    {
+      "courseSlug": "neapolis-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "city name anglicised from \"Napoli\"",
+        "organizer not published or site unreachable; left null"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/neapolis-marathon-2024-napoli.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/10/13/gpx_20241013_id10028_race1_20241002234435.gpx?t=1786216538",
+        "gpxSha256": "7cce129c2eec7245b70c82aea1d88061c6f94c5cd1b80238b8d62c1a6ec0a0ed"
+      },
+      "stats": {
+        "totalKm": 42.04796719081537,
+        "gainM": 73.40000000000002
+      },
+      "city": {
+        "slug": "naples-it",
+        "name": "Naples",
+        "countryCode": "IT",
+        "countryName": "Italy",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 40.836173,
+        "longitude": 14.249106,
+        "timezone": "Europe/Rome"
+      },
+      "citySlug": "naples-it",
+      "series": {
+        "slug": "neapolis-marathon",
+        "name": "Neapolis Marathon",
+        "citySlug": "naples-it",
+        "courseSlug": "neapolis-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://www.neapolismarathon.it",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "neapolis-marathon",
+        "month": 10,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2024-10-13 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "neapolis-marathon",
+        "year": 2024,
+        "raceDate": "2024-10-13"
       }
     },
     {
@@ -1299,6 +1647,56 @@
       }
     },
     {
+      "courseSlug": "paris-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "organizer not published or site unreachable; left null"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/marathon-de-paris-2026.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/04/12/gpx_20260412_id10915_race1_20260322120025.gpx?t=1786216372",
+        "gpxSha256": "876015601e8055599837ab5e09f81cec5e41e5fccd72d0ab31777d8b11e24e9a"
+      },
+      "stats": {
+        "totalKm": 42.1796343283215,
+        "gainM": 101.2
+      },
+      "city": {
+        "slug": "paris-fr",
+        "name": "Paris",
+        "countryCode": "FR",
+        "countryName": "France",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 48.86929,
+        "longitude": 2.3094,
+        "timezone": "Europe/Paris"
+      },
+      "citySlug": "paris-fr",
+      "series": {
+        "slug": "paris-marathon",
+        "name": "Paris Marathon",
+        "citySlug": "paris-fr",
+        "courseSlug": "paris-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://www.schneiderelectricparismarathon.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "paris-marathon",
+        "month": 4,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2026-04-12 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "paris-marathon",
+        "year": 2026,
+        "raceDate": "2026-04-12"
+      }
+    },
+    {
       "courseSlug": "philadelphia-marathon",
       "verdict": "ready",
       "reasons": [
@@ -1346,6 +1744,54 @@
         "seriesSlug": "philadelphia-marathon",
         "year": 2024,
         "raceDate": "2024-11-24"
+      }
+    },
+    {
+      "courseSlug": "prague-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/orlen-prague-marathon-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/05/04/gpx_20250504_id10286_race1_20250427161946.gpx?t=1786216545",
+        "gpxSha256": "4a1be41cb8ec0c5c7e0937498982e4dcfb61a75bd62719f0edfb5a86ce6c406b"
+      },
+      "stats": {
+        "totalKm": 42.488119125163294,
+        "gainM": 70.80000000000001
+      },
+      "city": {
+        "slug": "prague-cz",
+        "name": "Prague",
+        "countryCode": "CZ",
+        "countryName": "Czechia",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 50.087591,
+        "longitude": 14.420676,
+        "timezone": "Europe/Prague"
+      },
+      "citySlug": "prague-cz",
+      "series": {
+        "slug": "prague-marathon",
+        "name": "Prague Marathon",
+        "citySlug": "prague-cz",
+        "courseSlug": "prague-marathon",
+        "isMajor": false,
+        "typicalMonth": 5,
+        "websiteUrl": "https://www.runczech.com/en/events/orlen-prague-marathon-2025/races/orlen-prague-marathon",
+        "organizer": "RunCzech"
+      },
+      "recurrence": {
+        "seriesSlug": "prague-marathon",
+        "month": 5,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the 2025-05-04 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "prague-marathon",
+        "year": 2025,
+        "raceDate": "2025-05-04"
       }
     },
     {
@@ -1444,6 +1890,56 @@
         "seriesSlug": "rock-n-roll-san-diego-marathon",
         "year": 2026,
         "raceDate": "2026-05-30"
+      }
+    },
+    {
+      "courseSlug": "rome-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "city name anglicised from \"Roma\""
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/run-rome-the-marathon-2026-roma.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/03/22/gpx_20260322_id10603_race1_20260310175218.gpx?t=1786216376",
+        "gpxSha256": "e2edff89d29aa87221430e9cc2eb2d5d63293c2ed57cb300a47780efbc062fe8"
+      },
+      "stats": {
+        "totalKm": 42.160829183387115,
+        "gainM": 79.7
+      },
+      "city": {
+        "slug": "rome-it",
+        "name": "Rome",
+        "countryCode": "IT",
+        "countryName": "Italy",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 41.892035,
+        "longitude": 12.489396,
+        "timezone": "Europe/Rome"
+      },
+      "citySlug": "rome-it",
+      "series": {
+        "slug": "rome-marathon",
+        "name": "Rome Marathon",
+        "citySlug": "rome-it",
+        "courseSlug": "rome-marathon",
+        "isMajor": false,
+        "typicalMonth": 3,
+        "websiteUrl": "https://www.runromethemarathon.com/",
+        "organizer": "Infront Italy"
+      },
+      "recurrence": {
+        "seriesSlug": "rome-marathon",
+        "month": 3,
+        "weekday": 0,
+        "nth": 4,
+        "note": "Derived from the 2026-03-22 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "rome-marathon",
+        "year": 2026,
+        "raceDate": "2026-03-22"
       }
     },
     {
@@ -1593,6 +2089,75 @@
       }
     },
     {
+      "courseSlug": "stockholm-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/05/adidas-stockholm-marathon-2026.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/05/30/gpx_20260530_id10994_race1_20260512131034.gpx?t=1786216359",
+        "gpxSha256": "54432de1c326ff4085ee3140a22b1d01a5f165c35b5155e9e67ed494f312059d"
+      },
+      "stats": {
+        "totalKm": 42.94866466458186,
+        "gainM": 144.5
+      },
+      "city": {
+        "slug": "stockholm-se",
+        "name": "Stockholm",
+        "countryCode": "SE",
+        "countryName": "Sweden",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 59.345855,
+        "longitude": 18.082413,
+        "timezone": "Europe/Stockholm"
+      },
+      "citySlug": "stockholm-se",
+      "series": {
+        "slug": "stockholm-marathon",
+        "name": "Stockholm Marathon",
+        "citySlug": "stockholm-se",
+        "courseSlug": "stockholm-marathon",
+        "isMajor": false,
+        "typicalMonth": 5,
+        "websiteUrl": "https://www.stockholmmarathon.se",
+        "organizer": "Marathongruppen i Stockholm"
+      },
+      "recurrence": {
+        "seriesSlug": "stockholm-marathon",
+        "month": 5,
+        "weekday": 6,
+        "nth": -1,
+        "note": "Derived from the 2026-05-30 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "stockholm-marathon",
+        "year": 2026,
+        "raceDate": "2026-05-30"
+      }
+    },
+    {
+      "courseSlug": "tcs-amsterdam-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "parser failed: total route length 41.148 km is outside [41.5, 43.0] km"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/tcs-amsterdam-marathon-2023.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2023/10/15/gpx_20231015_id7959_race1_20230316221507.gpx?t=1786216559",
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "texas-triple",
       "verdict": "rejected",
       "reasons": [
@@ -1712,6 +2277,54 @@
       }
     },
     {
+      "courseSlug": "vienna-city-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/vienna-city-marathon-2026-vienna.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/04/19/gpx_20260419_id10942_race1_20260409221024.gpx?t=1786216381",
+        "gpxSha256": "0646399dc6940b3aeb74c200b06920d8050b10afb15d4206243383000c509950"
+      },
+      "stats": {
+        "totalKm": 42.51802259888631,
+        "gainM": 92.69999999999996
+      },
+      "city": {
+        "slug": "vienna-at",
+        "name": "Vienna",
+        "countryCode": "AT",
+        "countryName": "Austria",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 48.2312,
+        "longitude": 16.4149,
+        "timezone": "Europe/Vienna"
+      },
+      "citySlug": "vienna-at",
+      "series": {
+        "slug": "vienna-city-marathon",
+        "name": "Vienna City Marathon",
+        "citySlug": "vienna-at",
+        "courseSlug": "vienna-city-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://www.vienna-marathon.com/",
+        "organizer": "VCM Group"
+      },
+      "recurrence": {
+        "seriesSlug": "vienna-city-marathon",
+        "month": 4,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2026-04-19 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "vienna-city-marathon",
+        "year": 2026,
+        "raceDate": "2026-04-19"
+      }
+    },
+    {
       "courseSlug": "williams-route-66-marathon",
       "verdict": "rejected",
       "reasons": [
@@ -1720,6 +2333,75 @@
       "source": {
         "eventUrl": "https://www.goandrace.com/en/running-events/williams-route-66-marathon-2025-tulsa.php",
         "gpxUrl": "https://www.goandrace.com/gpx/2025/11/23/gpx_20251123_id10615_race1_20251110230537.gpx?t=1786215550",
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "windermere-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/windermere-marathon-2024-spokane.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/05/19/gpx_20240519_id9818_race1_20240430194246.gpx?t=1786216613",
+        "gpxSha256": "cb479a21649042702142542f9e21643c3001336a13e89d16318cee56463e7f6f"
+      },
+      "stats": {
+        "totalKm": 42.52317191866674,
+        "gainM": 95.90000000000009
+      },
+      "city": {
+        "slug": "spokane-wa-us",
+        "name": "Spokane",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-WA",
+        "regionName": "Washington",
+        "latitude": 47.6614,
+        "longitude": -117.41926,
+        "timezone": "America/Los_Angeles"
+      },
+      "citySlug": "spokane-wa-us",
+      "series": {
+        "slug": "windermere-marathon",
+        "name": "Windermere Marathon",
+        "citySlug": "spokane-wa-us",
+        "courseSlug": "windermere-marathon",
+        "isMajor": false,
+        "typicalMonth": 5,
+        "websiteUrl": "https://www.windermeremarathon.com",
+        "organizer": "Negative Split"
+      },
+      "recurrence": {
+        "seriesSlug": "windermere-marathon",
+        "month": 5,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2024-05-19 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "windermere-marathon",
+        "year": 2024,
+        "raceDate": "2024-05-19"
+      }
+    },
+    {
+      "courseSlug": "zurich-rock-n-roll-running-series-madrid",
+      "verdict": "rejected",
+      "reasons": [
+        "parser failed: total route length 39.759 km is outside [41.5, 43.0] km"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/zurich-rock-n-roll-running-series-madrid-2023.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2023/04/23/gpx_20230423_id7965_race1_20230317212715.gpx?t=1786216567",
         "gpxSha256": null
       },
       "stats": {
