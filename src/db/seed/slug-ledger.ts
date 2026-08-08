@@ -33,6 +33,23 @@ export const PUBLISHED_COURSE_SLUGS: string[] = [
   "austin-marathon",
   "barcelona-marathon",
   "barletta-marathon",
+  // Batch 2026-08-08, imported from goandrace.com on 2026-08-08.
+  "calgary-marathon",
+  "cape-town-marathon",
+  "vancouver-marathon",
+  // Batch 2026-08-08, imported from goandrace.com on 2026-08-08.
+  "alamo-marathon",
+  "cowtown-marathon",
+  "denver-colfax-marathon",
+  "houston-marathon",
+  "kentucky-derby-festival-marathon",
+  "los-angeles-marathon",
+  "oklahoma-city-memorial-marathon",
+  "philadelphia-marathon",
+  "revel-mt-charleston-marathon",
+  "rock-n-roll-san-diego-marathon",
+  "san-francisco-marathon",
+  "seattle-marathon",
 ];
 
 /** The shape every course slug must take: lowercase, digits, single hyphens. */

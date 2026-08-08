@@ -1,6 +1,54 @@
 {
-  "updatedAt": "2026-08-08T00:34:46.904Z",
+  "updatedAt": "2026-08-08T18:52:07.663Z",
   "courses": [
+    {
+      "courseSlug": "alamo-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/run-the-alamo-2025-san-antonio.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/03/02/gpx_20250302_id10197_race1_20250225132019.gpx?t=1786215088",
+        "gpxSha256": "d8a2f5aa0d8a8bbc7fe494b2241985f5858e5fb29e71ec44e96c0e5f745bf273"
+      },
+      "stats": {
+        "totalKm": 42.11944927209564,
+        "gainM": 52.599999999999994
+      },
+      "city": {
+        "slug": "san-antonio-tx-us",
+        "name": "San Antonio",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-TX",
+        "regionName": "Texas",
+        "latitude": 29.419636,
+        "longitude": -98.486458,
+        "timezone": "America/Chicago"
+      },
+      "citySlug": "san-antonio-tx-us",
+      "series": {
+        "slug": "alamo-marathon",
+        "name": "Alamo Marathon",
+        "citySlug": "san-antonio-tx-us",
+        "courseSlug": "alamo-marathon",
+        "isMajor": false,
+        "typicalMonth": 3,
+        "websiteUrl": "https://www.runthealamo.com",
+        "organizer": "Purpose Race Events"
+      },
+      "recurrence": {
+        "seriesSlug": "alamo-marathon",
+        "month": 3,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the 2025-03-02 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "alamo-marathon",
+        "year": 2025,
+        "raceDate": "2025-03-02"
+      }
+    },
     {
       "courseSlug": "asheville-marathon",
       "verdict": "ready",
@@ -199,6 +247,740 @@
         "seriesSlug": "barletta-marathon",
         "year": 2026,
         "raceDate": "2026-02-08"
+      }
+    },
+    {
+      "courseSlug": "calgary-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "source date 2026-05-23 is the race weekend's Saturday; the marathon runs Sunday"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/05/servus-calgary-marathon-2026.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/05/23/gpx_20260523_id10998_race1_20260516134214.gpx?t=1786214092",
+        "gpxSha256": "7c29b266fd84c4abb0fd5a70005573a166e0306341306cf928ac86fcb8315fde"
+      },
+      "stats": {
+        "totalKm": 42.49803176201834,
+        "gainM": 69.60000000000014
+      },
+      "city": {
+        "slug": "calgary-ab-ca",
+        "name": "Calgary",
+        "countryCode": "CA",
+        "countryName": "Canada",
+        "regionCode": "CA-AB",
+        "regionName": "Alberta",
+        "latitude": 51.04206,
+        "longitude": -114.05207,
+        "timezone": "America/Edmonton"
+      },
+      "citySlug": "calgary-ab-ca",
+      "series": {
+        "slug": "calgary-marathon",
+        "name": "Calgary Marathon",
+        "citySlug": "calgary-ab-ca",
+        "courseSlug": "calgary-marathon",
+        "isMajor": false,
+        "typicalMonth": 5,
+        "websiteUrl": "https://calgarymarathon.com/",
+        "organizer": "Calgary Marathon Society"
+      },
+      "recurrence": {
+        "seriesSlug": "calgary-marathon",
+        "month": 5,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Last Sunday of May. The organizer's own save-the-date for 2027 is May 29-30, a two-day race weekend with the marathon on the Sunday; goandrace's 2026-05-23 is that weekend's Saturday start, not race day."
+      },
+      "edition": {
+        "seriesSlug": "calgary-marathon",
+        "year": 2026,
+        "raceDate": "2026-05-23"
+      }
+    },
+    {
+      "courseSlug": "cape-town-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "organizer not published on the official site; left null deliberately"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/sanlam-cape-town-marathon-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/10/19/gpx_20251019_id10590_race1_20251007172424.gpx?t=1786214262",
+        "gpxSha256": "f9275cf3b99b707145f1d3db29504c8cc5d7b9c1a0fce6821d9e15dd8bd2d14c"
+      },
+      "stats": {
+        "totalKm": 42.35847153584752,
+        "gainM": 100.6
+      },
+      "city": {
+        "slug": "cape-town-za",
+        "name": "Cape Town",
+        "countryCode": "ZA",
+        "countryName": "South Africa",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": -33.903184,
+        "longitude": 18.408735,
+        "timezone": "Africa/Johannesburg"
+      },
+      "citySlug": "cape-town-za",
+      "series": {
+        "slug": "cape-town-marathon",
+        "name": "Cape Town Marathon",
+        "citySlug": "cape-town-za",
+        "courseSlug": "cape-town-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://capetownmarathon.com/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "cape-town-marathon",
+        "month": 10,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2025-10-19 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "cape-town-marathon",
+        "year": 2025,
+        "raceDate": "2025-10-19"
+      }
+    },
+    {
+      "courseSlug": "cowtown-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "organizer not published on the official site; left null deliberately"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/cowtown-marathon-2024-fort-worth.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/02/25/gpx_20240225_id9393_race1_20240207220614.gpx?t=1786215070",
+        "gpxSha256": "ba81df4d77bab5033a3ca6fcc395af970b8a601d1af933ed4aae7a614ef16e75"
+      },
+      "stats": {
+        "totalKm": 42.2729039157757,
+        "gainM": 103.10000000000005
+      },
+      "city": {
+        "slug": "fort-worth-tx-us",
+        "name": "Fort Worth",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-TX",
+        "regionName": "Texas",
+        "latitude": 32.745688,
+        "longitude": -97.368326,
+        "timezone": "America/Chicago"
+      },
+      "citySlug": "fort-worth-tx-us",
+      "series": {
+        "slug": "cowtown-marathon",
+        "name": "Cowtown Marathon",
+        "citySlug": "fort-worth-tx-us",
+        "courseSlug": "cowtown-marathon",
+        "isMajor": false,
+        "typicalMonth": 2,
+        "websiteUrl": "https://www.cowtownmarathon.org",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "cowtown-marathon",
+        "month": 2,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2024-02-25 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "cowtown-marathon",
+        "year": 2024,
+        "raceDate": "2024-02-25"
+      }
+    },
+    {
+      "courseSlug": "denver-colfax-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "organizer not published on the official site; left null deliberately"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/05/denver-colfax-marathon-2026.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/05/16/gpx_20260516_id10966_race1_20260501225614.gpx?t=1786214914",
+        "gpxSha256": "af34bf9dfa44b621d665eb98b1b0c710c54509ed8dca72a1a4edf7eb831d6def"
+      },
+      "stats": {
+        "totalKm": 42.887739142985986,
+        "gainM": 157.39999999999986
+      },
+      "city": {
+        "slug": "denver-co-us",
+        "name": "Denver",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-CO",
+        "regionName": "Colorado",
+        "latitude": 39.747772,
+        "longitude": -104.948265,
+        "timezone": "America/Denver"
+      },
+      "citySlug": "denver-co-us",
+      "series": {
+        "slug": "denver-colfax-marathon",
+        "name": "Denver Colfax Marathon",
+        "citySlug": "denver-co-us",
+        "courseSlug": "denver-colfax-marathon",
+        "isMajor": false,
+        "typicalMonth": 5,
+        "websiteUrl": "https://www.runcolfax.org/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "denver-colfax-marathon",
+        "month": 5,
+        "weekday": 6,
+        "nth": 3,
+        "note": "Derived from the 2026-05-16 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "denver-colfax-marathon",
+        "year": 2026,
+        "raceDate": "2026-05-16"
+      }
+    },
+    {
+      "courseSlug": "houston-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "organizer not published on the official site; left null deliberately"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/chevron-houston-marathon-2026.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/01/11/gpx_20260111_id10679_race1_20260101225905.gpx?t=1786214933",
+        "gpxSha256": "172f73e566e45e237835c3cdaf305faaa2d468eef5369c1dbe05c2febc2dbe11"
+      },
+      "stats": {
+        "totalKm": 42.59299602213074,
+        "gainM": 29.299999999999997
+      },
+      "city": {
+        "slug": "houston-tx-us",
+        "name": "Houston",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-TX",
+        "regionName": "Texas",
+        "latitude": 29.761165,
+        "longitude": -95.35899,
+        "timezone": "America/Chicago"
+      },
+      "citySlug": "houston-tx-us",
+      "series": {
+        "slug": "houston-marathon",
+        "name": "Houston Marathon",
+        "citySlug": "houston-tx-us",
+        "courseSlug": "houston-marathon",
+        "isMajor": false,
+        "typicalMonth": 1,
+        "websiteUrl": "https://www.chevronhoustonmarathon.com/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "houston-marathon",
+        "month": 1,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2026-01-11 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "houston-marathon",
+        "year": 2026,
+        "raceDate": "2026-01-11"
+      }
+    },
+    {
+      "courseSlug": "intercare-blouberg-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/10/intercare-blouberg-marathon-2026-cape-town.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "kentucky-derby-festival-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "timezone corrected from America/Chicago to America/New_York"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/kentucky-derby-festival-mini-marathon-2024-louisville.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/04/27/gpx_20240427_id9665_race1_20240411151025.gpx?t=1786215076",
+        "gpxSha256": "501d777439be0508bab95d7cd3f27dc0f2f8e6792449f4633d1557a94fafa6a9"
+      },
+      "stats": {
+        "totalKm": 42.32026739211512,
+        "gainM": 39.70000000000002
+      },
+      "city": {
+        "slug": "louisville-ky-us",
+        "name": "Louisville",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-KY",
+        "regionName": "Kentucky",
+        "latitude": 38.255681,
+        "longitude": -85.747908,
+        "timezone": "America/New_York"
+      },
+      "citySlug": "louisville-ky-us",
+      "series": {
+        "slug": "kentucky-derby-festival-marathon",
+        "name": "Kentucky Derby Festival Marathon",
+        "citySlug": "louisville-ky-us",
+        "courseSlug": "kentucky-derby-festival-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://derbyfestivalmarathon.com",
+        "organizer": "Kentucky Derby Festival"
+      },
+      "recurrence": {
+        "seriesSlug": "kentucky-derby-festival-marathon",
+        "month": 4,
+        "weekday": 6,
+        "nth": -1,
+        "note": "Derived from the 2024-04-27 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "kentucky-derby-festival-marathon",
+        "year": 2024,
+        "raceDate": "2024-04-27"
+      }
+    },
+    {
+      "courseSlug": "los-angeles-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/los-angeles-marathon-2026-los-angeles.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/03/08/gpx_20260308_id10751_race1_20260221125525.gpx?t=1786214938",
+        "gpxSha256": "e6adc9677fa8d5e991af1d003fbac00449ede717ab754e649fb356c498006439"
+      },
+      "stats": {
+        "totalKm": 42.10429161004298,
+        "gainM": 151.8
+      },
+      "city": {
+        "slug": "los-angeles-ca-us",
+        "name": "Los Angeles",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-CA",
+        "regionName": "California",
+        "latitude": 34.07259,
+        "longitude": -118.24562,
+        "timezone": "America/Los_Angeles"
+      },
+      "citySlug": "los-angeles-ca-us",
+      "series": {
+        "slug": "los-angeles-marathon",
+        "name": "Los Angeles Marathon",
+        "citySlug": "los-angeles-ca-us",
+        "courseSlug": "los-angeles-marathon",
+        "isMajor": false,
+        "typicalMonth": 3,
+        "websiteUrl": "https://www.mccourtfoundation.org/event/los-angeles-marathon/",
+        "organizer": "The McCourt Foundation"
+      },
+      "recurrence": {
+        "seriesSlug": "los-angeles-marathon",
+        "month": 3,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2026-03-08 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "los-angeles-marathon",
+        "year": 2026,
+        "raceDate": "2026-03-08"
+      }
+    },
+    {
+      "courseSlug": "oklahoma-city-memorial-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "organizer not published on the official site; left null deliberately"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/04/oklahoma-city-memorial-marathon-2026.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/04/26/gpx_20260426_id10950_race1_20260418184321.gpx?t=1786214910",
+        "gpxSha256": "decdc63ade364409f958f3722c4ad347c045e2db3ad559f6b158e10289014936"
+      },
+      "stats": {
+        "totalKm": 42.91781234687711,
+        "gainM": 99.19999999999993
+      },
+      "city": {
+        "slug": "oklahoma-city-ok-us",
+        "name": "Oklahoma City",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-OK",
+        "regionName": "Oklahoma",
+        "latitude": 35.473243,
+        "longitude": -97.517839,
+        "timezone": "America/Chicago"
+      },
+      "citySlug": "oklahoma-city-ok-us",
+      "series": {
+        "slug": "oklahoma-city-memorial-marathon",
+        "name": "Oklahoma City Memorial Marathon",
+        "citySlug": "oklahoma-city-ok-us",
+        "courseSlug": "oklahoma-city-memorial-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://okcmarathon.com/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "oklahoma-city-memorial-marathon",
+        "month": 4,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2026-04-26 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "oklahoma-city-memorial-marathon",
+        "year": 2026,
+        "raceDate": "2026-04-26"
+      }
+    },
+    {
+      "courseSlug": "philadelphia-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "organizer not published on the official site; left null deliberately"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/philadelphia-marathon-2024-philadelphia.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/11/24/gpx_20241124_id10056_race1_20241025232118.gpx?t=1786215082",
+        "gpxSha256": "43463112010455a6d4597d7289ca279406f373449973150a1ad10e3fd958bef8"
+      },
+      "stats": {
+        "totalKm": 42.5385586217002,
+        "gainM": 91.40000000000002
+      },
+      "city": {
+        "slug": "philadelphia-pa-us",
+        "name": "Philadelphia",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-PA",
+        "regionName": "Pennsylvania",
+        "latitude": 39.961986,
+        "longitude": -75.176262,
+        "timezone": "America/New_York"
+      },
+      "citySlug": "philadelphia-pa-us",
+      "series": {
+        "slug": "philadelphia-marathon",
+        "name": "Philadelphia Marathon",
+        "citySlug": "philadelphia-pa-us",
+        "courseSlug": "philadelphia-marathon",
+        "isMajor": false,
+        "typicalMonth": 11,
+        "websiteUrl": "https://www.philadelphiamarathon.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "philadelphia-marathon",
+        "month": 11,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2024-11-24 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "philadelphia-marathon",
+        "year": 2024,
+        "raceDate": "2024-11-24"
+      }
+    },
+    {
+      "courseSlug": "revel-mt-charleston-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/revel-mt-charleston-marathon-2026-las-vegas.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/03/28/gpx_20260328_id10799_race1_20260317073402.gpx?t=1786214942",
+        "gpxSha256": "83182a00c66ae7b9ea74820a08204cd41b2691f2d3f109d81080003761705c3b"
+      },
+      "stats": {
+        "totalKm": 42.17915838025669,
+        "gainM": 7.599999999999909
+      },
+      "city": {
+        "slug": "las-vegas-nv-us",
+        "name": "Las Vegas",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-NV",
+        "regionName": "Nevada",
+        "latitude": 36.257407,
+        "longitude": -115.643506,
+        "timezone": "America/Los_Angeles"
+      },
+      "citySlug": "las-vegas-nv-us",
+      "series": {
+        "slug": "revel-mt-charleston-marathon",
+        "name": "REVEL Mt Charleston Marathon",
+        "citySlug": "las-vegas-nv-us",
+        "courseSlug": "revel-mt-charleston-marathon",
+        "isMajor": false,
+        "typicalMonth": 3,
+        "websiteUrl": "https://www.runrevel.com/rmc",
+        "organizer": "Brooksee"
+      },
+      "recurrence": {
+        "seriesSlug": "revel-mt-charleston-marathon",
+        "month": 3,
+        "weekday": 6,
+        "nth": -1,
+        "note": "Derived from the 2026-03-28 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "revel-mt-charleston-marathon",
+        "year": 2026,
+        "raceDate": "2026-03-28"
+      }
+    },
+    {
+      "courseSlug": "rock-n-roll-san-diego-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "organizer not published on the official site; left null deliberately"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/05/rock-n-roll-san-diego-marathon-2026.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/05/30/gpx_20260530_id10974_race1_20260507232108.gpx?t=1786214919",
+        "gpxSha256": "1353b179cbe347d93b90ad042de1a4a5f5f771b68f7a55ac0c7a22e58b1d73b3"
+      },
+      "stats": {
+        "totalKm": 42.9568319591957,
+        "gainM": 131
+      },
+      "city": {
+        "slug": "san-diego-ca-us",
+        "name": "San Diego",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-CA",
+        "regionName": "California",
+        "latitude": 32.736644,
+        "longitude": -117.159354,
+        "timezone": "America/Los_Angeles"
+      },
+      "citySlug": "san-diego-ca-us",
+      "series": {
+        "slug": "rock-n-roll-san-diego-marathon",
+        "name": "Rock 'n' Roll San Diego Marathon",
+        "citySlug": "san-diego-ca-us",
+        "courseSlug": "rock-n-roll-san-diego-marathon",
+        "isMajor": false,
+        "typicalMonth": 5,
+        "websiteUrl": "https://www.runrocknroll.com/events/san-diego",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "rock-n-roll-san-diego-marathon",
+        "month": 5,
+        "weekday": 6,
+        "nth": -1,
+        "note": "Derived from the 2026-05-30 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "rock-n-roll-san-diego-marathon",
+        "year": 2026,
+        "raceDate": "2026-05-30"
+      }
+    },
+    {
+      "courseSlug": "san-francisco-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "organizer not published on the official site; left null deliberately"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/07/san-francisco-marathon-2026.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/07/26/gpx_20260726_id11057_race1_20260701121310.gpx?t=1786214924",
+        "gpxSha256": "84948c4ff08fe9f01157476302bba80ec741298cf0dea4d9594c28c522756353"
+      },
+      "stats": {
+        "totalKm": 42.74270000983495,
+        "gainM": 258.3
+      },
+      "city": {
+        "slug": "san-francisco-ca-us",
+        "name": "San Francisco",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-CA",
+        "regionName": "California",
+        "latitude": 37.795272,
+        "longitude": -122.393725,
+        "timezone": "America/Los_Angeles"
+      },
+      "citySlug": "san-francisco-ca-us",
+      "series": {
+        "slug": "san-francisco-marathon",
+        "name": "San Francisco Marathon",
+        "citySlug": "san-francisco-ca-us",
+        "courseSlug": "san-francisco-marathon",
+        "isMajor": false,
+        "typicalMonth": 7,
+        "websiteUrl": "https://www.thesfmarathon.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "san-francisco-marathon",
+        "month": 7,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2026-07-26 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "san-francisco-marathon",
+        "year": 2026,
+        "raceDate": "2026-07-26"
+      }
+    },
+    {
+      "courseSlug": "seattle-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/seattle-marathon-2024-seattle.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/12/01/gpx_20241201_id10066_race1_20241107080353.gpx?t=1786215092",
+        "gpxSha256": "f0117afc969360de868132d084cd428086d3e9151f5a119e0073ed72c74328de"
+      },
+      "stats": {
+        "totalKm": 42.68850146910486,
+        "gainM": 150.39999999999998
+      },
+      "city": {
+        "slug": "seattle-wa-us",
+        "name": "Seattle",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-WA",
+        "regionName": "Washington",
+        "latitude": 47.622067,
+        "longitude": -122.347567,
+        "timezone": "America/Los_Angeles"
+      },
+      "citySlug": "seattle-wa-us",
+      "series": {
+        "slug": "seattle-marathon",
+        "name": "Seattle Marathon",
+        "citySlug": "seattle-wa-us",
+        "courseSlug": "seattle-marathon",
+        "isMajor": false,
+        "typicalMonth": 12,
+        "websiteUrl": "https://www.seattlemarathon.org",
+        "organizer": "Seattle Marathon Association"
+      },
+      "recurrence": {
+        "seriesSlug": "seattle-marathon",
+        "month": 12,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the 2024-12-01 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "seattle-marathon",
+        "year": 2024,
+        "raceDate": "2024-12-01"
+      }
+    },
+    {
+      "courseSlug": "texas-triple",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/05/texas-triple-2026-dallas.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "vancouver-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/vancouver-marathon-half-marathon-2025-vancouver.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/05/04/gpx_20250504_id10291_race1_20250428223701.gpx?t=1786214257",
+        "gpxSha256": "206d10f0c4c95cf82226012c85d9dd0d6cce36e4876612506d9654c6906c82ba"
+      },
+      "stats": {
+        "totalKm": 42.79294639492521,
+        "gainM": 131.89999999999998
+      },
+      "city": {
+        "slug": "vancouver-bc-ca",
+        "name": "Vancouver",
+        "countryCode": "CA",
+        "countryName": "Canada",
+        "regionCode": "CA-BC",
+        "regionName": "British Columbia",
+        "latitude": 49.24298,
+        "longitude": -123.109119,
+        "timezone": "America/Vancouver"
+      },
+      "citySlug": "vancouver-bc-ca",
+      "series": {
+        "slug": "vancouver-marathon",
+        "name": "Vancouver Marathon",
+        "citySlug": "vancouver-bc-ca",
+        "courseSlug": "vancouver-marathon",
+        "isMajor": false,
+        "typicalMonth": 5,
+        "websiteUrl": "https://bmovanmarathon.ca/",
+        "organizer": "RUNVAN"
+      },
+      "recurrence": {
+        "seriesSlug": "vancouver-marathon",
+        "month": 5,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the 2025-05-04 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "vancouver-marathon",
+        "year": 2025,
+        "raceDate": "2025-05-04"
       }
     }
   ]

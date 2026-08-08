@@ -100,6 +100,100 @@ export const RECURRENCE: Record<string, RecurrenceRule> = {
     nth: 2,
     note: "Derived from the 2026-02-08 edition; not verified against the organizer",
   },
+  // Imported from goandrace.com — batch 2026-08-08. Each rule is derived
+  // from one observed date, not from the organizer's own statement.
+  "calgary-marathon": {
+    month: 5,
+    weekday: 0,
+    nth: -1,
+    note: "Last Sunday of May. The organizer's own save-the-date for 2027 is May 29-30, a two-day race weekend with the marathon on the Sunday; goandrace's 2026-05-23 is that weekend's Saturday start, not race day.",
+  },
+  "cape-town-marathon": {
+    month: 10,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2025-10-19 edition; not verified against the organizer",
+  },
+  "vancouver-marathon": {
+    month: 5,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the 2025-05-04 edition; not verified against the organizer",
+  },
+  // Imported from goandrace.com — batch 2026-08-08. Each rule is derived
+  // from one observed date, not from the organizer's own statement.
+  "alamo-marathon": {
+    month: 3,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the 2025-03-02 edition; not verified against the organizer",
+  },
+  "cowtown-marathon": {
+    month: 2,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2024-02-25 edition; not verified against the organizer",
+  },
+  "denver-colfax-marathon": {
+    month: 5,
+    weekday: 6,
+    nth: 3,
+    note: "Derived from the 2026-05-16 edition; not verified against the organizer",
+  },
+  "houston-marathon": {
+    month: 1,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2026-01-11 edition; not verified against the organizer",
+  },
+  "kentucky-derby-festival-marathon": {
+    month: 4,
+    weekday: 6,
+    nth: -1,
+    note: "Derived from the 2024-04-27 edition; not verified against the organizer",
+  },
+  "los-angeles-marathon": {
+    month: 3,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2026-03-08 edition; not verified against the organizer",
+  },
+  "oklahoma-city-memorial-marathon": {
+    month: 4,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2026-04-26 edition; not verified against the organizer",
+  },
+  "philadelphia-marathon": {
+    month: 11,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2024-11-24 edition; not verified against the organizer",
+  },
+  "revel-mt-charleston-marathon": {
+    month: 3,
+    weekday: 6,
+    nth: -1,
+    note: "Derived from the 2026-03-28 edition; not verified against the organizer",
+  },
+  "rock-n-roll-san-diego-marathon": {
+    month: 5,
+    weekday: 6,
+    nth: -1,
+    note: "Derived from the 2026-05-30 edition; not verified against the organizer",
+  },
+  "san-francisco-marathon": {
+    month: 7,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2026-07-26 edition; not verified against the organizer",
+  },
+  "seattle-marathon": {
+    month: 12,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the 2024-12-01 edition; not verified against the organizer",
+  },
 };
 
 export interface ConfirmedEdition {
@@ -155,6 +249,25 @@ export const CONFIRMED_EDITIONS: ConfirmedEdition[] = [
   { seriesSlug: "austin-marathon", year: 2026, raceDate: "2026-02-15" },
   { seriesSlug: "barcelona-marathon", year: 2026, raceDate: "2026-03-15" },
   { seriesSlug: "barletta-marathon", year: 2026, raceDate: "2026-02-08" },
+  // Imported from goandrace.com — batch 2026-08-08. Dates as published by
+  // the event listing; startTimeLocal is deliberately left unset.
+  { seriesSlug: "calgary-marathon", year: 2026, raceDate: "2026-05-23" },
+  { seriesSlug: "cape-town-marathon", year: 2025, raceDate: "2025-10-19" },
+  { seriesSlug: "vancouver-marathon", year: 2025, raceDate: "2025-05-04" },
+  // Imported from goandrace.com — batch 2026-08-08. Dates as published by
+  // the event listing; startTimeLocal is deliberately left unset.
+  { seriesSlug: "alamo-marathon", year: 2025, raceDate: "2025-03-02" },
+  { seriesSlug: "cowtown-marathon", year: 2024, raceDate: "2024-02-25" },
+  { seriesSlug: "denver-colfax-marathon", year: 2026, raceDate: "2026-05-16" },
+  { seriesSlug: "houston-marathon", year: 2026, raceDate: "2026-01-11" },
+  { seriesSlug: "kentucky-derby-festival-marathon", year: 2024, raceDate: "2024-04-27" },
+  { seriesSlug: "los-angeles-marathon", year: 2026, raceDate: "2026-03-08" },
+  { seriesSlug: "oklahoma-city-memorial-marathon", year: 2026, raceDate: "2026-04-26" },
+  { seriesSlug: "philadelphia-marathon", year: 2024, raceDate: "2024-11-24" },
+  { seriesSlug: "revel-mt-charleston-marathon", year: 2026, raceDate: "2026-03-28" },
+  { seriesSlug: "rock-n-roll-san-diego-marathon", year: 2026, raceDate: "2026-05-30" },
+  { seriesSlug: "san-francisco-marathon", year: 2026, raceDate: "2026-07-26" },
+  { seriesSlug: "seattle-marathon", year: 2024, raceDate: "2024-12-01" },
 ];
 
 /**
