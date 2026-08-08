@@ -23,9 +23,10 @@
 // cheap and honest — plenty of big races have an event page and no geometry
 // (Berlin 2026, at the time of writing).
 
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import {
+  DECISIONS_PATH,
   GPX_DIR,
   ORIGIN,
   REQUEST_DELAY_MS,
@@ -278,16 +279,27 @@ async function main(): Promise<void> {
     discovered = await discoverEvents(yearStart, yearEnd);
     console.log(`found     ${discovered.length} marathons in ${yearStart}-${yearEnd}`);
     if (city) {
-      const want = slugify(city);
-      discovered = discovered.filter(
-        (d) => slugify(d.city).includes(want) || d.eventUrl.includes(want),
-      );
-      console.log(`city      "${city}" matched ${discovered.length}`);
-      if (discovered.length === 0) {
+      // Comma-separated so a run covering many cities still pages discovery
+      // once. Matching one city at a time would re-fetch the whole calendar per
+      // city, which is both slow and rude to a small site.
+      const wanted = city
+        .split(",")
+        .map((c) => slugify(c.trim()))
+        .filter(Boolean);
+      const matchedBy = new Map<string, number>();
+      discovered = discovered.filter((d) => {
+        const hay = `${slugify(d.city)} ${d.eventUrl}`;
+        const hit = wanted.find((w) => hay.includes(w));
+        if (hit) matchedBy.set(hit, (matchedBy.get(hit) ?? 0) + 1);
+        return Boolean(hit);
+      });
+      console.log(`cities    ${wanted.length} requested, matched ${discovered.length} event(s)`);
+      const missed = wanted.filter((w) => !matchedBy.has(w));
+      if (missed.length > 0) {
         console.log(
-          `\nNo marathon in ${yearStart}-${yearEnd} matched "${city}". Either it is\n` +
-            `not listed for those years, or it is spelled differently there —\n` +
-            `pass the event page directly with --url instead.`,
+          `no match  ${missed.join(", ")}\n` +
+            `          — not listed for ${yearStart}-${yearEnd}, or spelled differently.\n` +
+            `          Widen the year range, or pass the event page with --url.`,
         );
       }
     }
@@ -299,6 +311,20 @@ async function main(): Promise<void> {
   // never gets re-fetched.
   const published = new Set(PUBLISHED_COURSE_SLUGS);
   const claimed = new Set<string>();
+
+  // Slugs get renamed during review — "ascension-seton-austin-marathon" ships as
+  // "austin-marathon" — so a slug check alone cannot tell that a race is already
+  // imported, and a repeat run would re-download it under its old name. The
+  // event URL is the one identifier that never changes, so dedupe on that too.
+  const importedUrls = new Set<string>();
+  if (existsSync(DECISIONS_PATH)) {
+    const decided = JSON.parse(readFileSync(DECISIONS_PATH, "utf8")) as {
+      courses?: { source?: { eventUrl?: string }; verdict?: string }[];
+    };
+    for (const c of decided.courses ?? []) {
+      if (c.source?.eventUrl) importedUrls.add(c.source.eventUrl);
+    }
+  }
 
   /** Why a slug cannot be used, or null if it is free. */
   const isTaken = (slug: string): string | null => {
@@ -314,6 +340,10 @@ async function main(): Promise<void> {
   let skipped = 0;
 
   for (const eventUrl of eventUrls) {
+    if (importedUrls.has(eventUrl)) {
+      skipped += 1; // already imported, whatever slug it ended up shipping under
+      continue;
+    }
     const filename = decodeURIComponent(
       eventUrl.split("/").pop()!.replace(/\.php$/, ""),
     );
