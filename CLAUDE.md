@@ -36,10 +36,14 @@ src/
   types/            Shared TypeScript types
 scripts/
   gpx_parser/       Python build pipeline for adding new marathon courses
+  import/           Bulk course importer (goandrace.com -> seed files)
   seed.ts           Upserts the seed definitions + course JSON into Postgres
 drizzle/            Generated SQL migrations (committed)
 data/
   gpx_sources/      Raw GPX files (one per marathon)
+  import/
+    decisions.json  COMMITTED — the human sign-off record for imported slugs
+    raw/ reports/ quarantine/   disposable, gitignored
 ```
 
 ## Data model
@@ -77,6 +81,40 @@ Race dates are stored as `date` + `time`, never `timestamptz`: a start is a wall
 8. Commit the source GPX, the generated JSON, and the seed edits.
 
 No `CourseId` union to update and no registry to edit — courses are rows, and the seed files are the only hand-maintained list. There is nothing to add to `src/data/courses.fixture.ts` either: it reads `src/data/courses/` off disk, so the integrity tests pick up a new course automatically.
+
+## Adding marathons in bulk
+
+`scripts/import/` automates the eight steps above for many courses at once, sourcing from goandrace.com — where every GPX in this repo already came from. Read `scripts/import/README.md` before using it.
+
+```
+npm run import:fetch   -- --year-start 2026 --year-end 2027 --limit 50
+npm run import:parse   -- --only <slugs> --report data/import/reports/<batch>.qa.json
+npm run import:qa      -- --batch <batch>
+#   review data/import/decisions.json — see below
+npm run import:promote -- --dry-run
+npm run import:promote
+npm run test && npm run build && npm run db:seed
+```
+
+`import:parse` is `scripts/gpx_parser/parse_gpx.py` unchanged — the importer feeds it, never modifies it.
+
+**The review step is not optional.** `import:qa` marks every course `review` and `import:promote` refuses to run until a human has cleared them (`--force` overrides; use it only if you have read each one). What needs a person:
+
+- **`courseSlug`** — permanent the moment it ships (Rule 8). Convention: the race's actual name, sponsor prefix dropped, no half-marathon suffix — `austin-marathon`, not `ascension-seton-austin-marathon`. Matches how `SERIES_SEED` already spells London rather than TCS London.
+- **`regionCode` / `regionName`** — never published by the source. US/CA/AU city slugs carry the subdivision (`chicago-il-us`), so the city slug usually needs fixing too. Null is fine elsewhere.
+- **`organizer`** — never published; only the organizer's URL is. Nullable, and read nowhere in the app today. Leave it null rather than guessing.
+- **`timezone`** — derived from the country, or from a longitude band in multi-zone countries (US, CA, AU, BR, MX, ID, CL). A banded guess always asks to be confirmed; a wrong zone shifts a start time by hours.
+- **`isMajor`** — always proposed `false`.
+
+`data/import/decisions.json` is committed because it *is* the record of which permanent identifiers a person approved. Raw crawls, parser reports and quarantine are disposable and gitignored.
+
+Things that will bite you:
+
+- **Event-page coordinates are unreliable** — one listing puts a Wisconsin race at coordinates in New York State. Pins come from GPX `coords[0]`, never from the page.
+- **One pin per city.** `scripts/seed.ts` upserts `latitude` from the excluded row, so emitting a city entry for an already-seeded slug would silently move an existing pin. `qa.ts` emits no city row when the slug exists; keep it that way.
+- **The ledger and the seed files must land in one commit** — the ledger tests are set-equality in both directions, so the tree is red in between.
+- **A measured length of 42.6–42.8 km is normal**, not a wrong route. Berlin has measured 42.76 since it was added; the parser rejects anything outside [41.5, 43.0] and warns outside [42.0, 42.4].
+- **Rights are unsettled.** goandrace's `robots.txt` has no `Disallow` and their terms restrict neither automated access nor commercial reuse — but nothing grants reuse either, and their §5 assigns responsibility for uploaded GPX to the submitting user. Pacebands are paid product. Worth settling before a large batch ships.
 
 ## Database workflow
 
