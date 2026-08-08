@@ -84,16 +84,19 @@ No `CourseId` union to update and no registry to edit — courses are rows, and 
 
 ## Adding marathons in bulk
 
-`scripts/import/` automates the eight steps above for many courses at once, sourcing from goandrace.com — where every GPX in this repo already came from. Read `scripts/import/README.md` before using it.
+`scripts/import/` automates the eight steps above for many courses at once, sourcing from goandrace.com — where every GPX in this repo already came from. **Prefer the `/import-races` skill**, which drives the whole pipeline including the enrichment and verification steps; `scripts/import/README.md` explains the design.
+
+Discovery pages `/it/api_calendario.php`, the JSON endpoint behind the calendar's "load more" button — the calendar page itself only renders its first 28 results, so scraping the HTML silently caps a batch. Roughly 128 marathons are listed for 2026-27. Targeted modes: `--city "<name>"` and `--url "<event-page>"`.
 
 ```
-npm run import:fetch   -- --year-start 2026 --year-end 2027 --limit 50
+npm run import:fetch   -- --limit 25          # or --city "<name>" / --url "<event>"
 npm run import:parse   -- --only <slugs> --report data/import/reports/<batch>.qa.json
 npm run import:qa      -- --batch <batch>
 #   review data/import/decisions.json — see below
 npm run import:promote -- --dry-run
 npm run import:promote
 npm run test && npm run build && npm run db:seed
+rm -rf .next   # REQUIRED after seeding — see below
 ```
 
 `import:parse` is `scripts/gpx_parser/parse_gpx.py` unchanged — the importer feeds it, never modifies it.
@@ -114,6 +117,7 @@ Things that will bite you:
 - **One pin per city.** `scripts/seed.ts` upserts `latitude` from the excluded row, so emitting a city entry for an already-seeded slug would silently move an existing pin. `qa.ts` emits no city row when the slug exists; keep it that way.
 - **The ledger and the seed files must land in one commit** — the ledger tests are set-equality in both directions, so the tree is red in between.
 - **A measured length of 42.6–42.8 km is normal**, not a wrong route. Berlin has measured 42.76 since it was added; the parser rejects anything outside [41.5, 43.0] and warns outside [42.0, 42.4].
+- **`npm run build` before `npm run db:seed` bakes a stale catalog into `.next`.** The homepage prerenders statically, so the new courses show up in the race calendar but never in the pacing dropdown, and neither restarting the dev server nor clearing `.next/cache` fixes it. `rm -rf .next` does.
 - **Rights are unsettled.** goandrace's `robots.txt` has no `Disallow` and their terms restrict neither automated access nor commercial reuse — but nothing grants reuse either, and their §5 assigns responsibility for uploaded GPX to the submitting user. Pacebands are paid product. Worth settling before a large batch ships.
 
 ## Database workflow

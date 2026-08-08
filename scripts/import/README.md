@@ -8,10 +8,15 @@ from a hand-added one.
 Every GPX in this repo already came from goandrace.com. This automates the path
 from their calendar to our seed files; it does not change what we store or how.
 
+Driven end to end by the `/import-races` skill
+(`.claude/skills/import-races/SKILL.md`); the steps below are what it runs.
+
 ## The four steps
 
 ```
-npm run import:fetch   -- --year-start 2026 --year-end 2027 --limit 50
+npm run import:fetch   -- --limit 25            # bulk
+npm run import:fetch   -- --city "Valencia"     # one city
+npm run import:fetch   -- --url "<event-page>"  # one event
 npm run import:parse   -- --only <slugs> --report data/import/reports/<batch>.qa.json
 npm run import:qa      -- --batch <batch>
 # ---- read data/import/decisions.json, resolve every "review" entry ----
@@ -25,10 +30,19 @@ written for bulk use; this pipeline just feeds it.
 
 ### 1. fetch — discover and download
 
-Queries the calendar's own search form with `ok_marath` **and `ok_course_map`**.
-That second filter is the only reliable predictor that geometry exists: plenty
-of well-known races have an event page and no map at all (Berlin 2026, at the
-time of writing). For 2026–27 it returns 28 marathons.
+Discovery pages `/it/api_calendario.php`, the JSON endpoint the calendar's own
+"load more" button calls. This matters: the calendar **page** only ever renders
+its first 28 results, so scraping the HTML caps you at 28 while the endpoint
+reports the real total — 128 marathons across 2026–27 at the time of writing,
+28 per page over 5 pages.
+
+Not every event has geometry. Those fail later with "links no course map",
+which is cheap and honest — plenty of well-known races have an event page and
+no map at all (Berlin 2026, at the time of writing).
+
+Two targeted modes bypass discovery: `--city "<name>"` filters by the city the
+calendar lists each event under, and `--url "<event-page>"` takes one event
+directly.
 
 Per event it reads the schema.org `SportsEvent` JSON-LD, follows the
 `/en/map/<year>/…-course-map-N.php` link, and pulls the `.gpx` href off it into
@@ -95,6 +109,12 @@ turn the suite red.
   set-equality in both directions, so the tree is red in between.
 - **A slug is spent forever.** Retired courses stay in the ledger and are never
   reused. See Rule 8.
+- **`npm run build` before `npm run db:seed` bakes a stale catalog into `.next`.**
+  The homepage prerenders statically, so new courses appear in the race calendar
+  but never in the pacing dropdown. Restarting the dev server does not fix it,
+  and neither does clearing `.next/cache` — only `rm -rf .next` does.
+- **Never reuse a batch name.** The raw crawl file is overwritten, and every
+  course from the earlier run silently disappears from QA.
 
 ## Provenance
 

@@ -12,12 +12,16 @@
 //   --year-start / --year-end   calendar range (default 2026..2027)
 //   --limit <n>                 stop after n new events (default 50)
 //   --batch <name>              staging file name (default import-<yyyy-mm-dd>)
+//   --city <name>               only events the calendar lists under this city
+//   --url <event-page-url>      one specific event; skips discovery entirely
 //   --only <slug,...>           restrict to these proposed course slugs
 //   --dry-run                   list what would be fetched; download nothing
 //
-// Discovery leans on the calendar's own `ok_course_map` filter, which is the
-// only reliable predictor that geometry exists: plenty of big races have an
-// event page and no map at all (Berlin 2026, at the time of writing).
+// Discovery pages the calendar's own JSON endpoint rather than scraping the
+// HTML, which only ever renders its first 28 results. Events without a course
+// map are still returned; they fail later with "links no course map", which is
+// cheap and honest — plenty of big races have an event page and no geometry
+// (Berlin 2026, at the time of writing).
 
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -31,43 +35,85 @@ import {
   getResponse,
   getText,
   proposeCourseSlug,
+  slugify,
   sleep,
   type RawBatch,
   type RawEvent,
 } from "./shared.ts";
 import { PUBLISHED_COURSE_SLUGS } from "../../src/db/seed/slug-ledger.ts";
 
-const CALENDAR = `${ORIGIN}/en/running-race-calendar.php`;
+// The calendar page renders only its first page of results as HTML — the rest
+// arrive through the same JSON endpoint its "load more" button calls. Scraping
+// the page therefore caps you at 28 events; this endpoint reports the true
+// total (128 marathons across 2026-27 at the time of writing) and pages
+// through all of it.
+const CALENDAR_API = `${ORIGIN}/it/api_calendario.php`;
+const EVENT_BASE = `${ORIGIN}/en/`;
 
-function buildCalendarUrl(yearStart: number, yearEnd: number): string {
+interface CalendarPage {
+  mapData?: { popup?: string; lat?: string; lon?: string }[];
+  totalEvents?: number;
+  page?: number;
+  limit?: number;
+}
+
+/** One discovered event: its page URL and the city the calendar lists it under. */
+export interface Discovered {
+  eventUrl: string;
+  city: string;
+}
+
+function calendarPageUrl(yearStart: number, yearEnd: number, page: number): string {
   const params = new URLSearchParams({
     ok_marath: "ok_marath",
-    ok_course_map: "ok_course_map",
     year_start: String(yearStart),
     month_start: "1",
     day_start: "1",
     year_end: String(yearEnd),
     month_end: "12",
     day_end: "31",
-    Send: "Send",
+    lang: "en",
+    page: String(page),
   });
-  return `${CALENDAR}?${params}`;
+  return `${CALENDAR_API}?${params}`;
 }
 
 /**
- * Pull distinct event-page URLs out of a calendar response. Each event is
- * linked twice — once bare, once with a #DettagliPercorsi anchor — so the hash
- * has to go before de-duplication or every event counts twice.
+ * Each mapData entry's popup is a fragment shaped
+ * `<b><a href="running-events/…php">Name 2026</a></b><br>City`, so both the
+ * event URL and its city come straight out of it — which is what makes the
+ * --city filter possible without fetching every event page first.
  */
-function extractEventUrls(html: string, base: string): string[] {
-  const seen = new Set<string>();
-  for (const m of html.matchAll(/href="([^"]*\/running-events\/[^"]*\.php)[^"]*"/g)) {
-    const url = new URL(m[1], base);
-    url.hash = "";
-    url.search = "";
-    seen.add(url.toString());
+function parsePopup(popup: string): Discovered | null {
+  const href = popup.match(/href="([^"]+\.php)"/);
+  if (!href) return null;
+  const city = popup.split(/<br\s*\/?>/i)[1]?.replace(/<[^>]*>/g, "").trim() ?? "";
+  const url = new URL(href[1], EVENT_BASE);
+  url.hash = "";
+  url.search = "";
+  return { eventUrl: url.toString(), city };
+}
+
+async function discoverEvents(
+  yearStart: number,
+  yearEnd: number,
+): Promise<Discovered[]> {
+  const found = new Map<string, Discovered>();
+  let total = Infinity;
+  for (let page = 1; page <= 40; page += 1) {
+    const raw = await getText(calendarPageUrl(yearStart, yearEnd, page));
+    const data = JSON.parse(raw) as CalendarPage;
+    total = data.totalEvents ?? total;
+    const entries = data.mapData ?? [];
+    if (entries.length === 0) break;
+    for (const entry of entries) {
+      const parsed = parsePopup(entry.popup ?? "");
+      if (parsed) found.set(parsed.eventUrl, parsed);
+    }
+    if (found.size >= total) break;
+    await sleep(REQUEST_DELAY_MS);
   }
-  return [...seen].sort();
+  return [...found.values()].sort((a, b) => a.eventUrl.localeCompare(b.eventUrl));
 }
 
 interface EventLd {
@@ -216,13 +262,37 @@ async function main(): Promise<void> {
       )
     : null;
 
+  const city = flagValue(argv, "--city");
+  const directUrl = flagValue(argv, "--url");
+
   mkdirSync(GPX_DIR, { recursive: true });
   mkdirSync(RAW_DIR, { recursive: true });
 
-  const calendarUrl = buildCalendarUrl(yearStart, yearEnd);
-  console.log(`calendar  ${calendarUrl}`);
-  const eventUrls = extractEventUrls(await getText(calendarUrl), calendarUrl);
-  console.log(`found     ${eventUrls.length} marathons with course maps`);
+  let discovered: Discovered[];
+  if (directUrl) {
+    // Targeted mode: the caller already has the event page, so skip discovery
+    // entirely rather than paging a calendar looking for it.
+    discovered = [{ eventUrl: new URL(directUrl).toString(), city: "" }];
+    console.log(`direct    ${discovered[0].eventUrl}`);
+  } else {
+    discovered = await discoverEvents(yearStart, yearEnd);
+    console.log(`found     ${discovered.length} marathons in ${yearStart}-${yearEnd}`);
+    if (city) {
+      const want = slugify(city);
+      discovered = discovered.filter(
+        (d) => slugify(d.city).includes(want) || d.eventUrl.includes(want),
+      );
+      console.log(`city      "${city}" matched ${discovered.length}`);
+      if (discovered.length === 0) {
+        console.log(
+          `\nNo marathon in ${yearStart}-${yearEnd} matched "${city}". Either it is\n` +
+            `not listed for those years, or it is spelled differently there —\n` +
+            `pass the event page directly with --url instead.`,
+        );
+      }
+    }
+  }
+  const eventUrls = discovered.map((d) => d.eventUrl);
 
   // The original seven are untouchable: their geometry, checksums and printed
   // paceband links must stay byte-identical, so anything already in the ledger
@@ -292,7 +362,12 @@ async function main(): Promise<void> {
   const payload: RawBatch = {
     batch,
     fetchedAt: new Date().toISOString(),
-    query: { calendarUrl, yearStart: String(yearStart), yearEnd: String(yearEnd) },
+    query: {
+      source: directUrl ?? calendarPageUrl(yearStart, yearEnd, 1),
+      yearStart: String(yearStart),
+      yearEnd: String(yearEnd),
+      city: city ?? "",
+    },
     events,
   };
   const out = join(RAW_DIR, `${batch}.raw.json`);
