@@ -356,6 +356,68 @@ export const RECURRENCE: Record<string, RecurrenceRule> = {
     nth: 3,
     note: "Derived from the 2024-05-19 edition; not verified against the organizer",
   },
+  // Imported from goandrace.com — batch 2026-08-08. Each rule is derived
+  // from one observed date, not from the organizer's own statement.
+  "athens-marathon": {
+    month: 11,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2023-11-12 edition; not verified against the organizer",
+  },
+  "frankfurt-marathon": {
+    month: 10,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2023-10-29 edition; not verified against the organizer",
+  },
+  "hamburg-marathon": {
+    month: 4,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2026-04-26 edition; not verified against the organizer",
+  },
+  "helsinki-city-run": {
+    month: 5,
+    weekday: 6,
+    nth: 2,
+    note: "Derived from the 2024-05-11 edition; not verified against the organizer",
+  },
+  "helsinki-marathon": {
+    month: 8,
+    weekday: 6,
+    nth: 4,
+    note: "Derived from the 2024-08-24 edition; not verified against the organizer",
+  },
+  "lisbon-eco-marathon": {
+    month: 4,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2026-04-12 edition; not verified against the organizer",
+  },
+  "palermo-marathon": {
+    month: 11,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2024-11-17 edition; not verified against the organizer",
+  },
+  "seville-marathon": {
+    month: 2,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2025-02-23 edition; not verified against the organizer",
+  },
+  "turin-marathon": {
+    month: 11,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the 2023-11-05 edition; not verified against the organizer",
+  },
+  "valencia-marathon": {
+    month: 12,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the 2025-12-07 edition; not verified against the organizer",
+  },
 };
 
 export interface ConfirmedEdition {
@@ -462,6 +524,18 @@ export const CONFIRMED_EDITIONS: ConfirmedEdition[] = [
   { seriesSlug: "stockholm-marathon", year: 2026, raceDate: "2026-05-30" },
   { seriesSlug: "vienna-city-marathon", year: 2026, raceDate: "2026-04-19" },
   { seriesSlug: "windermere-marathon", year: 2024, raceDate: "2024-05-19" },
+  // Imported from goandrace.com — batch 2026-08-08. Dates as published by
+  // the event listing; startTimeLocal is deliberately left unset.
+  { seriesSlug: "athens-marathon", year: 2023, raceDate: "2023-11-12" },
+  { seriesSlug: "frankfurt-marathon", year: 2023, raceDate: "2023-10-29" },
+  { seriesSlug: "hamburg-marathon", year: 2026, raceDate: "2026-04-26" },
+  { seriesSlug: "helsinki-city-run", year: 2024, raceDate: "2024-05-11" },
+  { seriesSlug: "helsinki-marathon", year: 2024, raceDate: "2024-08-24" },
+  { seriesSlug: "lisbon-eco-marathon", year: 2026, raceDate: "2026-04-12" },
+  { seriesSlug: "palermo-marathon", year: 2024, raceDate: "2024-11-17" },
+  { seriesSlug: "seville-marathon", year: 2025, raceDate: "2025-02-23" },
+  { seriesSlug: "turin-marathon", year: 2023, raceDate: "2023-11-05" },
+  { seriesSlug: "valencia-marathon", year: 2025, raceDate: "2025-12-07" },
 ];
 
 /**

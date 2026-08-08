@@ -79,6 +79,17 @@ export const PUBLISHED_COURSE_SLUGS: string[] = [
   "stockholm-marathon",
   "vienna-city-marathon",
   "windermere-marathon",
+  // Batch 2026-08-08, imported from goandrace.com on 2026-08-08.
+  "athens-marathon",
+  "frankfurt-marathon",
+  "hamburg-marathon",
+  "helsinki-city-run",
+  "helsinki-marathon",
+  "lisbon-eco-marathon",
+  "palermo-marathon",
+  "seville-marathon",
+  "turin-marathon",
+  "valencia-marathon",
 ];
 
 /** The shape every course slug must take: lowercase, digits, single hyphens. */

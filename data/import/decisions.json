@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-08T19:21:33.819Z",
+  "updatedAt": "2026-08-08T19:33:03.755Z",
   "courses": [
     {
       "courseSlug": "alamo-marathon",
@@ -48,6 +48,27 @@
         "year": 2025,
         "raceDate": "2025-03-02"
       }
+    },
+    {
+      "courseSlug": "amsterdam",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/10/amsterdam-2026.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
     },
     {
       "courseSlug": "anchorage-mayors-marathon",
@@ -148,6 +169,56 @@
         "seriesSlug": "asheville-marathon",
         "year": 2026,
         "raceDate": "2026-03-21"
+      }
+    },
+    {
+      "courseSlug": "athens-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "organizer not published, site refused the fetch, or only co-organizers named; left null"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/athens-marathon-2023-athens.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2023/11/12/gpx_20231112_id7968_race1_20230319223005.gpx?t=1786217485",
+        "gpxSha256": "da946f857b7e185eb82d77f585a0aa2195151a241d29840f514ec619d9da8dfc"
+      },
+      "stats": {
+        "totalKm": 41.896896404613585,
+        "gainM": 265.6
+      },
+      "city": {
+        "slug": "athens-gr",
+        "name": "Athens",
+        "countryCode": "GR",
+        "countryName": "Greece",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 38.151879,
+        "longitude": 23.961632,
+        "timezone": "Europe/Athens"
+      },
+      "citySlug": "athens-gr",
+      "series": {
+        "slug": "athens-marathon",
+        "name": "Athens Marathon",
+        "citySlug": "athens-gr",
+        "courseSlug": "athens-marathon",
+        "isMajor": false,
+        "typicalMonth": 11,
+        "websiteUrl": "https://www.athensauthenticmarathon.gr",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "athens-marathon",
+        "month": 11,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2023-11-12 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "athens-marathon",
+        "year": 2023,
+        "raceDate": "2023-11-12"
       }
     },
     {
@@ -711,6 +782,27 @@
       }
     },
     {
+      "courseSlug": "copenhagen-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "parser failed: total route length 43.175 km is outside [41.5, 43.0] km"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/copenhagen-marathon-2024-copenhagen.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/05/05/gpx_20240505_id9645_race1_20240325215115.gpx?t=1786217496",
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "cowtown-marathon",
       "verdict": "ready",
       "reasons": [
@@ -832,6 +924,54 @@
       "edition": null
     },
     {
+      "courseSlug": "frankfurt-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/mainova-frankfurt-marathon-2023.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2023/10/29/gpx_20231029_id8179_race1_20230823172330.gpx?t=1786217509",
+        "gpxSha256": "94ec796212cfdfe8f5500d0e30c78d472e300eeb471533c10db204e823215faa"
+      },
+      "stats": {
+        "totalKm": 42.24203367624176,
+        "gainM": 44.999999999999986
+      },
+      "city": {
+        "slug": "frankfurt-de",
+        "name": "Frankfurt",
+        "countryCode": "DE",
+        "countryName": "Germany",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 50.112324,
+        "longitude": 8.653968,
+        "timezone": "Europe/Berlin"
+      },
+      "citySlug": "frankfurt-de",
+      "series": {
+        "slug": "frankfurt-marathon",
+        "name": "Frankfurt Marathon",
+        "citySlug": "frankfurt-de",
+        "courseSlug": "frankfurt-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://www.frankfurt-marathon.com",
+        "organizer": "motion events"
+      },
+      "recurrence": {
+        "seriesSlug": "frankfurt-marathon",
+        "month": 10,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2023-10-29 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "frankfurt-marathon",
+        "year": 2023,
+        "raceDate": "2023-10-29"
+      }
+    },
+    {
       "courseSlug": "garmin-kansas-city-marathon",
       "verdict": "rejected",
       "reasons": [
@@ -851,6 +991,144 @@
       "series": null,
       "recurrence": null,
       "edition": null
+    },
+    {
+      "courseSlug": "hamburg-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/04/haspa-marathon-hamburg-2026.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/04/26/gpx_20260426_id10947_race1_20260415123932.gpx?t=1786217342",
+        "gpxSha256": "5e98b4a86255a1d48b98c05c507a6e568cca3a9edfad8e719ce8ef77ec66bba1"
+      },
+      "stats": {
+        "totalKm": 42.67922276290201,
+        "gainM": 96.79999999999998
+      },
+      "city": {
+        "slug": "hamburg-de",
+        "name": "Hamburg",
+        "countryCode": "DE",
+        "countryName": "Germany",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 53.560791,
+        "longitude": 9.975536,
+        "timezone": "Europe/Berlin"
+      },
+      "citySlug": "hamburg-de",
+      "series": {
+        "slug": "hamburg-marathon",
+        "name": "Hamburg Marathon",
+        "citySlug": "hamburg-de",
+        "courseSlug": "hamburg-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://haspa-marathon-hamburg.de",
+        "organizer": "Marathon Hamburg Veranstaltungs"
+      },
+      "recurrence": {
+        "seriesSlug": "hamburg-marathon",
+        "month": 4,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2026-04-26 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "hamburg-marathon",
+        "year": 2026,
+        "raceDate": "2026-04-26"
+      }
+    },
+    {
+      "courseSlug": "helsinki-city-run",
+      "verdict": "ready",
+      "reasons": [
+        "reuses the existing helsinki-fi pin; no city row emitted"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/helsinki-city-running-day-2024-helsinki.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/05/11/gpx_20240511_id9807_race2_20240427114454.gpx?t=1786217501",
+        "gpxSha256": "03501701ebe67c40939137af2b8af3ad7d6f2b8226de07653b9771bb901c5524"
+      },
+      "stats": {
+        "totalKm": 42.2028890017508,
+        "gainM": 139.6
+      },
+      "city": null,
+      "citySlug": "helsinki-fi",
+      "series": {
+        "slug": "helsinki-city-run",
+        "name": "Helsinki City Run",
+        "citySlug": "helsinki-fi",
+        "courseSlug": "helsinki-city-run",
+        "isMajor": false,
+        "typicalMonth": 5,
+        "websiteUrl": "https://helsinkicityrunningday.fi",
+        "organizer": "Suomen Urheiluliitto"
+      },
+      "recurrence": {
+        "seriesSlug": "helsinki-city-run",
+        "month": 5,
+        "weekday": 6,
+        "nth": 2,
+        "note": "Derived from the 2024-05-11 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "helsinki-city-run",
+        "year": 2024,
+        "raceDate": "2024-05-11"
+      }
+    },
+    {
+      "courseSlug": "helsinki-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "organizer not published, site refused the fetch, or only co-organizers named; left null"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/bmw-helsinki-marathon-2024.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/08/24/gpx_20240824_id9952_race1_20240728235324.gpx?t=1786217492",
+        "gpxSha256": "f0deccf69e9ca9aaba68a64461f1d34e9b6fcfcda20162dceaab07272c540482"
+      },
+      "stats": {
+        "totalKm": 42.93612833192105,
+        "gainM": 33.800000000000004
+      },
+      "city": {
+        "slug": "helsinki-fi",
+        "name": "Helsinki",
+        "countryCode": "FI",
+        "countryName": "Finland",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 60.155205,
+        "longitude": 24.951963,
+        "timezone": "Europe/Helsinki"
+      },
+      "citySlug": "helsinki-fi",
+      "series": {
+        "slug": "helsinki-marathon",
+        "name": "Helsinki Marathon",
+        "citySlug": "helsinki-fi",
+        "courseSlug": "helsinki-marathon",
+        "isMajor": false,
+        "typicalMonth": 8,
+        "websiteUrl": "https://www.helsinkimarathon.fi",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "helsinki-marathon",
+        "month": 8,
+        "weekday": 6,
+        "nth": 4,
+        "note": "Derived from the 2024-08-24 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "helsinki-marathon",
+        "year": 2024,
+        "raceDate": "2024-08-24"
+      }
     },
     {
       "courseSlug": "honolulu-marathon",
@@ -1168,6 +1446,57 @@
       }
     },
     {
+      "courseSlug": "lisbon-eco-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "organizer not published, site refused the fetch, or only co-organizers named; left null",
+        "543 m of climb over 41.8 km — a hilly Lisbon road race, NOT the flat EDP Lisbon Marathon; keeps its own name so it cannot claim lisbon-marathon"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/lisbon-eco-marathon-2026-lisbon.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/04/12/gpx_20260412_id10928_race1_20260405180454.gpx?t=1786217356",
+        "gpxSha256": "a9249327556e981074976b9ffd782814093bd29692bd6eb79122cb66b103e9c0"
+      },
+      "stats": {
+        "totalKm": 41.77383773399689,
+        "gainM": 543.5000000000001
+      },
+      "city": {
+        "slug": "lisbon-pt",
+        "name": "Lisbon",
+        "countryCode": "PT",
+        "countryName": "Portugal",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 38.730846,
+        "longitude": -9.154252,
+        "timezone": "Europe/Lisbon"
+      },
+      "citySlug": "lisbon-pt",
+      "series": {
+        "slug": "lisbon-eco-marathon",
+        "name": "Lisbon Eco Marathon",
+        "citySlug": "lisbon-pt",
+        "courseSlug": "lisbon-eco-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://lisbonecomarathon.com/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "lisbon-eco-marathon",
+        "month": 4,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2026-04-12 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "lisbon-eco-marathon",
+        "year": 2026,
+        "raceDate": "2026-04-12"
+      }
+    },
+    {
       "courseSlug": "long-beach-marathon",
       "verdict": "rejected",
       "reasons": [
@@ -1235,6 +1564,90 @@
         "year": 2026,
         "raceDate": "2026-03-08"
       }
+    },
+    {
+      "courseSlug": "maraton-valencia-trinidad-alfonso",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/maraton-valencia-trinidad-alfonso-2024.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "maratona-alpina-valdellatorre",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/maratona-alpina-valdellatorre-2023-torino.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "maratona-atene",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/11/maratona-atene-2026.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "maratona-di-torino",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/11/maratona-di-torino-2026.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
     },
     {
       "courseSlug": "marine-marathon",
@@ -1307,6 +1720,27 @@
         "year": 2025,
         "raceDate": "2025-02-08"
       }
+    },
+    {
+      "courseSlug": "mezza-maratona-una-corsa-da-re-torino",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: HTTP 404 for https://www.goandrace.com/en/running-events/2026/10/mezza-maratona-una-corsa-da-re-2026-torino.php"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/10/mezza-maratona-una-corsa-da-re-2026-torino.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
     },
     {
       "courseSlug": "miami-marathon",
@@ -1644,6 +2078,54 @@
         "seriesSlug": "oklahoma-city-memorial-marathon",
         "year": 2026,
         "raceDate": "2026-04-26"
+      }
+    },
+    {
+      "courseSlug": "palermo-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/xxix-maratona-di-palermo-2024.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/11/17/gpx_20241117_id10059_race1_20241102180453.gpx?t=1786217531",
+        "gpxSha256": "9bbc3063b63a863f4a0a8f1fe8e12a7088d0df7724b23e99c0e6a3606a332638"
+      },
+      "stats": {
+        "totalKm": 42.4507316751212,
+        "gainM": 147.00000000000003
+      },
+      "city": {
+        "slug": "palermo-it",
+        "name": "Palermo",
+        "countryCode": "IT",
+        "countryName": "Italy",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 38.124768,
+        "longitude": 13.355604,
+        "timezone": "Europe/Rome"
+      },
+      "citySlug": "palermo-it",
+      "series": {
+        "slug": "palermo-marathon",
+        "name": "Palermo Marathon",
+        "citySlug": "palermo-it",
+        "courseSlug": "palermo-marathon",
+        "isMajor": false,
+        "typicalMonth": 11,
+        "websiteUrl": "https://www.palermomaratona.it",
+        "organizer": "ASD Media@"
+      },
+      "recurrence": {
+        "seriesSlug": "palermo-marathon",
+        "month": 11,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2024-11-17 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "palermo-marathon",
+        "year": 2024,
+        "raceDate": "2024-11-17"
       }
     },
     {
@@ -2041,6 +2523,57 @@
       }
     },
     {
+      "courseSlug": "seville-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "city name anglicised from \"Sevilla\"",
+        "organizer not published, site refused the fetch, or only co-organizers named; left null"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/zurich-maraton-de-sevilla-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/02/23/gpx_20250223_id10137_race1_20250121223305.gpx?t=1786217535",
+        "gpxSha256": "31460ab09fb3f7f2a814d4097b05123ad876c4c628a6e5f229f9c7916ef0552e"
+      },
+      "stats": {
+        "totalKm": 42.82281863485316,
+        "gainM": 36.7
+      },
+      "city": {
+        "slug": "seville-es",
+        "name": "Seville",
+        "countryCode": "ES",
+        "countryName": "Spain",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 37.373479,
+        "longitude": -5.990398,
+        "timezone": "Europe/Madrid"
+      },
+      "citySlug": "seville-es",
+      "series": {
+        "slug": "seville-marathon",
+        "name": "Seville Marathon",
+        "citySlug": "seville-es",
+        "courseSlug": "seville-marathon",
+        "isMajor": false,
+        "typicalMonth": 2,
+        "websiteUrl": "https://www.zurichmaratonsevilla.es",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "seville-marathon",
+        "month": 2,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2025-02-23 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "seville-marathon",
+        "year": 2025,
+        "raceDate": "2025-02-23"
+      }
+    },
+    {
       "courseSlug": "st-louis-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -2179,6 +2712,57 @@
       "edition": null
     },
     {
+      "courseSlug": "turin-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "city name anglicised from \"Torino\"",
+        "organizer not published, site refused the fetch, or only co-organizers named; left null"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/torino-city-marathon-2023-torino.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2023/11/05/gpx_20231105_id8171_race1_20230930091725.gpx?t=1786217518",
+        "gpxSha256": "f791ab7ffc95b1295db33830e09559af78568863612d4ddb43d93f281b40704b"
+      },
+      "stats": {
+        "totalKm": 42.196371814478844,
+        "gainM": 68.40000000000006
+      },
+      "city": {
+        "slug": "turin-it",
+        "name": "Turin",
+        "countryCode": "IT",
+        "countryName": "Italy",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 45.070646,
+        "longitude": 7.682103,
+        "timezone": "Europe/Rome"
+      },
+      "citySlug": "turin-it",
+      "series": {
+        "slug": "turin-marathon",
+        "name": "Turin Marathon",
+        "citySlug": "turin-it",
+        "courseSlug": "turin-marathon",
+        "isMajor": false,
+        "typicalMonth": 11,
+        "websiteUrl": "https://www.torinocitymarathon.it",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "turin-marathon",
+        "month": 11,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the 2023-11-05 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "turin-marathon",
+        "year": 2023,
+        "raceDate": "2023-11-05"
+      }
+    },
+    {
       "courseSlug": "twin-cities-marathon",
       "verdict": "ready",
       "reasons": [
@@ -2226,6 +2810,54 @@
         "seriesSlug": "twin-cities-marathon",
         "year": 2023,
         "raceDate": "2023-09-30"
+      }
+    },
+    {
+      "courseSlug": "valencia-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/valencia-marathon-2025-valencia.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/12/07/gpx_20251207_id10637_race1_20251126173357.gpx?t=1786217526",
+        "gpxSha256": "3100f2f244cfbed759d794bd10ce5c5477b5cfeb81d290ab8df60f3bfabbaf07"
+      },
+      "stats": {
+        "totalKm": 42.631346793584356,
+        "gainM": 48.60000000000001
+      },
+      "city": {
+        "slug": "valencia-es",
+        "name": "Valencia",
+        "countryCode": "ES",
+        "countryName": "Spain",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 39.45745,
+        "longitude": -0.35457,
+        "timezone": "Europe/Madrid"
+      },
+      "citySlug": "valencia-es",
+      "series": {
+        "slug": "valencia-marathon",
+        "name": "Valencia Marathon",
+        "citySlug": "valencia-es",
+        "courseSlug": "valencia-marathon",
+        "isMajor": false,
+        "typicalMonth": 12,
+        "websiteUrl": "https://www.valenciaciudaddelrunning.com",
+        "organizer": "Fundación Trinidad Alfonso"
+      },
+      "recurrence": {
+        "seriesSlug": "valencia-marathon",
+        "month": 12,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the 2025-12-07 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "valencia-marathon",
+        "year": 2025,
+        "raceDate": "2025-12-07"
       }
     },
     {
