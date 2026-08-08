@@ -28,6 +28,11 @@ export const PUBLISHED_COURSE_SLUGS: string[] = [
   "newyork",
   "sydney",
   "tokyo",
+  // Batch 2026-08-08, imported from goandrace.com on 2026-08-08.
+  "asheville-marathon",
+  "austin-marathon",
+  "barcelona-marathon",
+  "barletta-marathon",
 ];
 
 /** The shape every course slug must take: lowercase, digits, single hyphens. */

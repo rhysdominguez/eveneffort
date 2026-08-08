@@ -74,6 +74,32 @@ export const RECURRENCE: Record<string, RecurrenceRule> = {
     nth: 3,
     note: "Patriots' Day, the third Monday of April",
   },
+  // Imported from goandrace.com — batch 2026-08-08. Each rule is derived
+  // from one observed date, not from the organizer's own statement.
+  "asheville-marathon": {
+    month: 3,
+    weekday: 6,
+    nth: 3,
+    note: "Derived from the 2026-03-21 edition; not verified against the organizer",
+  },
+  "austin-marathon": {
+    month: 2,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2026-02-15 edition; not verified against the organizer",
+  },
+  "barcelona-marathon": {
+    month: 3,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2026-03-15 edition; not verified against the organizer",
+  },
+  "barletta-marathon": {
+    month: 2,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2026-02-08 edition; not verified against the organizer",
+  },
 };
 
 export interface ConfirmedEdition {
@@ -123,6 +149,12 @@ export const CONFIRMED_EDITIONS: ConfirmedEdition[] = [
     year: 2026,
     raceDate: "2026-11-01",
   },
+  // Imported from goandrace.com — batch 2026-08-08. Dates as published by
+  // the event listing; startTimeLocal is deliberately left unset.
+  { seriesSlug: "asheville-marathon", year: 2026, raceDate: "2026-03-21" },
+  { seriesSlug: "austin-marathon", year: 2026, raceDate: "2026-02-15" },
+  { seriesSlug: "barcelona-marathon", year: 2026, raceDate: "2026-03-15" },
+  { seriesSlug: "barletta-marathon", year: 2026, raceDate: "2026-02-08" },
 ];
 
 /**

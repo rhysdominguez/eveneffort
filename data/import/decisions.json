@@ -1,0 +1,205 @@
+{
+  "updatedAt": "2026-08-08T00:34:46.904Z",
+  "courses": [
+    {
+      "courseSlug": "asheville-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.777 km, outside the [42.0, 42.4] band",
+        "timezone America/New_York was guessed from longitude (US spans zones) — confirm it"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/asheville-marathon-half-2026-asheville.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/03/21/gpx_20260321_id10774_race1_20260316182658.gpx?t=1786149269",
+        "gpxSha256": "c0ba62fb01e38629212f92e78746e479e3abf9cdcc16dd8566649fda3a692eb9"
+      },
+      "stats": {
+        "totalKm": 42.77669262943412,
+        "gainM": 136.9999999999999
+      },
+      "city": {
+        "slug": "asheville-nc-us",
+        "name": "Asheville",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-NC",
+        "regionName": "North Carolina",
+        "latitude": 35.59653,
+        "longitude": -82.54852,
+        "timezone": "America/New_York"
+      },
+      "citySlug": "asheville-nc-us",
+      "series": {
+        "slug": "asheville-marathon",
+        "name": "Asheville Marathon",
+        "citySlug": "asheville-nc-us",
+        "courseSlug": "asheville-marathon",
+        "isMajor": false,
+        "typicalMonth": 3,
+        "websiteUrl": "https://ashevillemarathon.com/",
+        "organizer": "iDaph Events"
+      },
+      "recurrence": {
+        "seriesSlug": "asheville-marathon",
+        "month": 3,
+        "weekday": 6,
+        "nth": 3,
+        "note": "Derived from the 2026-03-21 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "asheville-marathon",
+        "year": 2026,
+        "raceDate": "2026-03-21"
+      }
+    },
+    {
+      "courseSlug": "austin-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.691 km, outside the [42.0, 42.4] band",
+        "timezone America/Chicago was guessed from longitude (US spans zones) — confirm it"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/ascension-seton-austin-marathon-2026.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/02/15/gpx_20260215_id10707_race1_20260114125519.gpx?t=1786149265",
+        "gpxSha256": "3d9e1e1391d033f4f68cc47fc83ed9f29d97e0e224510df54bd0120758ef6e3d"
+      },
+      "stats": {
+        "totalKm": 42.69136204611101,
+        "gainM": 160
+      },
+      "city": {
+        "slug": "austin-tx-us",
+        "name": "Austin",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-TX",
+        "regionName": "Texas",
+        "latitude": 30.264178,
+        "longitude": -97.744263,
+        "timezone": "America/Chicago"
+      },
+      "citySlug": "austin-tx-us",
+      "series": {
+        "slug": "austin-marathon",
+        "name": "Austin Marathon",
+        "citySlug": "austin-tx-us",
+        "courseSlug": "austin-marathon",
+        "isMajor": false,
+        "typicalMonth": 2,
+        "websiteUrl": "https://youraustinmarathon.com",
+        "organizer": "High Five Events"
+      },
+      "recurrence": {
+        "seriesSlug": "austin-marathon",
+        "month": 2,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2026-02-15 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "austin-marathon",
+        "year": 2026,
+        "raceDate": "2026-02-15"
+      }
+    },
+    {
+      "courseSlug": "barcelona-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/barcelona-marathon-2026-barcelona.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/03/15/gpx_20260315_id10746_race1_20260215184303.gpx?t=1786149274",
+        "gpxSha256": "84752a1aeb9180d204743605d7662b73779b6bdb55e07cf14348266086291873"
+      },
+      "stats": {
+        "totalKm": 42.377526359288105,
+        "gainM": 86
+      },
+      "city": {
+        "slug": "barcelona-es",
+        "name": "Barcelona",
+        "countryCode": "ES",
+        "countryName": "Spain",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 41.388868,
+        "longitude": 2.169217,
+        "timezone": "Europe/Madrid"
+      },
+      "citySlug": "barcelona-es",
+      "series": {
+        "slug": "barcelona-marathon",
+        "name": "Barcelona Marathon",
+        "citySlug": "barcelona-es",
+        "courseSlug": "barcelona-marathon",
+        "isMajor": false,
+        "typicalMonth": 3,
+        "websiteUrl": "https://www.zurichmaratobarcelona.es",
+        "organizer": "RPM Sports"
+      },
+      "recurrence": {
+        "seriesSlug": "barcelona-marathon",
+        "month": 3,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2026-03-15 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "barcelona-marathon",
+        "year": 2026,
+        "raceDate": "2026-03-15"
+      }
+    },
+    {
+      "courseSlug": "barletta-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/barletta-marathon-half-marathon-2026-barletta.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/02/08/gpx_20260208_id10635_race1_20260205130939.gpx?t=1786149278",
+        "gpxSha256": "5a6243740822d7d5ca13699a9d64de26fce9cf72da21c814742f929af3498b50"
+      },
+      "stats": {
+        "totalKm": 42.24304520786555,
+        "gainM": 51.49999999999999
+      },
+      "city": {
+        "slug": "barletta-it",
+        "name": "Barletta",
+        "countryCode": "IT",
+        "countryName": "Italy",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 41.32155,
+        "longitude": 16.28795,
+        "timezone": "Europe/Rome"
+      },
+      "citySlug": "barletta-it",
+      "series": {
+        "slug": "barletta-marathon",
+        "name": "Barletta Marathon",
+        "citySlug": "barletta-it",
+        "courseSlug": "barletta-marathon",
+        "isMajor": false,
+        "typicalMonth": 2,
+        "websiteUrl": "https://www.icron.it/newgo/#/evento/20254186",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "barletta-marathon",
+        "month": 2,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2026-02-08 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "barletta-marathon",
+        "year": 2026,
+        "raceDate": "2026-02-08"
+      }
+    }
+  ]
+}
