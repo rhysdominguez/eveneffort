@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-08T18:52:07.663Z",
+  "updatedAt": "2026-08-08T19:06:37.072Z",
   "courses": [
     {
       "courseSlug": "alamo-marathon",
@@ -47,6 +47,56 @@
         "seriesSlug": "alamo-marathon",
         "year": 2025,
         "raceDate": "2025-03-02"
+      }
+    },
+    {
+      "courseSlug": "anchorage-mayors-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "official site names two co-hosts and no single organizer; left null"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/anchorage-mayor-s-marathon-2025-anchorage.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/06/21/gpx_20250621_id10342_race1_20250614130658.gpx?t=1786215950",
+        "gpxSha256": "17e51e000887cc9fdb85ac2ef57ba622a8aefdeb6bcc37a7e81dcc6e641bc42b"
+      },
+      "stats": {
+        "totalKm": 42.734867758344585,
+        "gainM": 142.6
+      },
+      "city": {
+        "slug": "anchorage-ak-us",
+        "name": "Anchorage",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-AK",
+        "regionName": "Alaska",
+        "latitude": 61.152145,
+        "longitude": -150.057043,
+        "timezone": "America/Anchorage"
+      },
+      "citySlug": "anchorage-ak-us",
+      "series": {
+        "slug": "anchorage-mayors-marathon",
+        "name": "Anchorage Mayor's Marathon",
+        "citySlug": "anchorage-ak-us",
+        "courseSlug": "anchorage-mayors-marathon",
+        "isMajor": false,
+        "typicalMonth": 6,
+        "websiteUrl": "https://www.anchoragemayorsmarathon.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "anchorage-mayors-marathon",
+        "month": 6,
+        "weekday": 6,
+        "nth": 3,
+        "note": "Derived from the 2025-06-21 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "anchorage-mayors-marathon",
+        "year": 2025,
+        "raceDate": "2025-06-21"
       }
     },
     {
@@ -98,6 +148,54 @@
         "seriesSlug": "asheville-marathon",
         "year": 2026,
         "raceDate": "2026-03-21"
+      }
+    },
+    {
+      "courseSlug": "atlanta-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/publix-atlanta-marathon-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/03/02/gpx_20250302_id10200_race1_20250226214408.gpx?t=1786215546",
+        "gpxSha256": "b6155f021eaae6a062add5901ee8bcb34432e89431c97baa3b1b08f2cece4e63"
+      },
+      "stats": {
+        "totalKm": 42.3281887533642,
+        "gainM": 137.49999999999994
+      },
+      "city": {
+        "slug": "atlanta-ga-us",
+        "name": "Atlanta",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-GA",
+        "regionName": "Georgia",
+        "latitude": 33.75796,
+        "longitude": -84.402779,
+        "timezone": "America/New_York"
+      },
+      "citySlug": "atlanta-ga-us",
+      "series": {
+        "slug": "atlanta-marathon",
+        "name": "Atlanta Marathon",
+        "citySlug": "atlanta-ga-us",
+        "courseSlug": "atlanta-marathon",
+        "isMajor": false,
+        "typicalMonth": 3,
+        "websiteUrl": "https://www.atlantatrackclub.org",
+        "organizer": "Atlanta Track Club"
+      },
+      "recurrence": {
+        "seriesSlug": "atlanta-marathon",
+        "month": 3,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the 2025-03-02 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "atlanta-marathon",
+        "year": 2025,
+        "raceDate": "2025-03-02"
       }
     },
     {
@@ -250,6 +348,54 @@
       }
     },
     {
+      "courseSlug": "brew-city-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/brew-city-marathon-2026-milwaukee.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/04/18/gpx_20260418_id10934_race1_20260407125454.gpx?t=1786215404",
+        "gpxSha256": "7b5389be878c8f68d3f9cf0a14c2a762d60679cde013deb409f9dd8c1f6df22a"
+      },
+      "stats": {
+        "totalKm": 42.40828643734944,
+        "gainM": 84.79999999999998
+      },
+      "city": {
+        "slug": "milwaukee-wi-us",
+        "name": "Milwaukee",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-WI",
+        "regionName": "Wisconsin",
+        "latitude": 43.051807,
+        "longitude": -87.887238,
+        "timezone": "America/Chicago"
+      },
+      "citySlug": "milwaukee-wi-us",
+      "series": {
+        "slug": "brew-city-marathon",
+        "name": "Brew City Marathon",
+        "citySlug": "milwaukee-wi-us",
+        "courseSlug": "brew-city-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://wisconsinruns.com/brewcityrun",
+        "organizer": "All Community Events"
+      },
+      "recurrence": {
+        "seriesSlug": "brew-city-marathon",
+        "month": 4,
+        "weekday": 6,
+        "nth": 3,
+        "note": "Derived from the 2026-04-18 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "brew-city-marathon",
+        "year": 2026,
+        "raceDate": "2026-04-18"
+      }
+    },
+    {
       "courseSlug": "calgary-marathon",
       "verdict": "ready",
       "reasons": [
@@ -297,6 +443,54 @@
         "seriesSlug": "calgary-marathon",
         "year": 2026,
         "raceDate": "2026-05-23"
+      }
+    },
+    {
+      "courseSlug": "california-international-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/california-international-marathon-2024-sacramento.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/12/08/gpx_20241208_id10069_race1_20241113130152.gpx?t=1786215515",
+        "gpxSha256": "223df193d0f3160d7e904d0d7cf5851b410763ac7867cf9d8763d14a50566d6e"
+      },
+      "stats": {
+        "totalKm": 42.35867470922543,
+        "gainM": 14.600000000000009
+      },
+      "city": {
+        "slug": "sacramento-ca-us",
+        "name": "Sacramento",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-CA",
+        "regionName": "California",
+        "latitude": 38.703557,
+        "longitude": -121.170347,
+        "timezone": "America/Los_Angeles"
+      },
+      "citySlug": "sacramento-ca-us",
+      "series": {
+        "slug": "california-international-marathon",
+        "name": "California International Marathon",
+        "citySlug": "sacramento-ca-us",
+        "courseSlug": "california-international-marathon",
+        "isMajor": false,
+        "typicalMonth": 12,
+        "websiteUrl": "https://runsra.org/california-international-marathon",
+        "organizer": "Sacramento Running Association"
+      },
+      "recurrence": {
+        "seriesSlug": "california-international-marathon",
+        "month": 12,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2024-12-08 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "california-international-marathon",
+        "year": 2024,
+        "raceDate": "2024-12-08"
       }
     },
     {
@@ -348,6 +542,75 @@
         "year": 2025,
         "raceDate": "2025-10-19"
       }
+    },
+    {
+      "courseSlug": "cincinnati-flying-pig-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/cincinnati-flying-pig-marathon-2025-cincinnati.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/05/04/gpx_20250504_id10281_race1_20250425171525.gpx?t=1786215941",
+        "gpxSha256": "556b08ee1ada08a620b7b10247742664b9cd6169af56220292e9407675f4fb87"
+      },
+      "stats": {
+        "totalKm": 42.67855937752127,
+        "gainM": 117.4
+      },
+      "city": {
+        "slug": "cincinnati-oh-us",
+        "name": "Cincinnati",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-OH",
+        "regionName": "Ohio",
+        "latitude": 39.09693,
+        "longitude": -84.51518,
+        "timezone": "America/New_York"
+      },
+      "citySlug": "cincinnati-oh-us",
+      "series": {
+        "slug": "cincinnati-flying-pig-marathon",
+        "name": "Cincinnati Flying Pig Marathon",
+        "citySlug": "cincinnati-oh-us",
+        "courseSlug": "cincinnati-flying-pig-marathon",
+        "isMajor": false,
+        "typicalMonth": 5,
+        "websiteUrl": "https://flyingpigmarathon.com",
+        "organizer": "Pig Works"
+      },
+      "recurrence": {
+        "seriesSlug": "cincinnati-flying-pig-marathon",
+        "month": 5,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the 2025-05-04 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "cincinnati-flying-pig-marathon",
+        "year": 2025,
+        "raceDate": "2025-05-04"
+      }
+    },
+    {
+      "courseSlug": "cleveland-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "parser failed: total route length 43.210 km is outside [41.5, 43.0] km"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/cleveland-marathon-2024-cleveland.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/05/19/gpx_20240519_id9838_race1_20240512220324.gpx?t=1786215929",
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
     },
     {
       "courseSlug": "cowtown-marathon",
@@ -447,6 +710,96 @@
         "seriesSlug": "denver-colfax-marathon",
         "year": 2026,
         "raceDate": "2026-05-16"
+      }
+    },
+    {
+      "courseSlug": "dick-s-sporting-goods-pittsburgh-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "parser failed: total route length 43.026 km is outside [41.5, 43.0] km"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/dick-s-sporting-goods-pittsburgh-marathon-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/05/04/gpx_20250504_id10282_race1_20250425194513.gpx?t=1786215945",
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "garmin-kansas-city-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "parser failed: total route length 43.044 km is outside [41.5, 43.0] km"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/garmin-kansas-city-marathon-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/10/18/gpx_20251018_id10460_race1_20251007093754.gpx?t=1786215521",
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "honolulu-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/honolulu-marathon-2024-honolulu.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/12/08/gpx_20241208_id10057_race1_20241101184055.gpx?t=1786215526",
+        "gpxSha256": "3a61b3a276b921604375f794298ffba216b28a7d8f650b96166b02cd0f3be081"
+      },
+      "stats": {
+        "totalKm": 42.35391081097648,
+        "gainM": 82.50000000000001
+      },
+      "city": {
+        "slug": "honolulu-hi-us",
+        "name": "Honolulu",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-HI",
+        "regionName": "Hawaii",
+        "latitude": 21.291943,
+        "longitude": -157.850822,
+        "timezone": "Pacific/Honolulu"
+      },
+      "citySlug": "honolulu-hi-us",
+      "series": {
+        "slug": "honolulu-marathon",
+        "name": "Honolulu Marathon",
+        "citySlug": "honolulu-hi-us",
+        "courseSlug": "honolulu-marathon",
+        "isMajor": false,
+        "typicalMonth": 12,
+        "websiteUrl": "https://www.honolulumarathon.org",
+        "organizer": "Honolulu Marathon Association"
+      },
+      "recurrence": {
+        "seriesSlug": "honolulu-marathon",
+        "month": 12,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2024-12-08 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "honolulu-marathon",
+        "year": 2024,
+        "raceDate": "2024-12-08"
       }
     },
     {
@@ -571,6 +924,75 @@
       }
     },
     {
+      "courseSlug": "lincoln-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/47th-annual-lincoln-marathon-2024.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/05/05/gpx_20240505_id9793_race1_20240423124005.gpx?t=1786215954",
+        "gpxSha256": "ffd6db22125b00b7d1423d52489508c13a082f9c06d715202f7ca5ba145a3ab3"
+      },
+      "stats": {
+        "totalKm": 42.54765536088679,
+        "gainM": 88.30000000000007
+      },
+      "city": {
+        "slug": "lincoln-ne-us",
+        "name": "Lincoln",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-NE",
+        "regionName": "Nebraska",
+        "latitude": 40.820826,
+        "longitude": -96.700941,
+        "timezone": "America/Chicago"
+      },
+      "citySlug": "lincoln-ne-us",
+      "series": {
+        "slug": "lincoln-marathon",
+        "name": "Lincoln Marathon",
+        "citySlug": "lincoln-ne-us",
+        "courseSlug": "lincoln-marathon",
+        "isMajor": false,
+        "typicalMonth": 5,
+        "websiteUrl": "https://www.lincolnmarathon.org",
+        "organizer": "Lincoln Track Club"
+      },
+      "recurrence": {
+        "seriesSlug": "lincoln-marathon",
+        "month": 5,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the 2024-05-05 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "lincoln-marathon",
+        "year": 2024,
+        "raceDate": "2024-05-05"
+      }
+    },
+    {
+      "courseSlug": "long-beach-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "parser failed: total route length 43.098 km is outside [41.5, 43.0] km"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/long-beach-marathon-2024-long-beach.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/10/06/gpx_20241006_id10027_race1_20241002224516.gpx?t=1786215531",
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "los-angeles-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -616,6 +1038,214 @@
         "seriesSlug": "los-angeles-marathon",
         "year": 2026,
         "raceDate": "2026-03-08"
+      }
+    },
+    {
+      "courseSlug": "marine-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "parser failed: total route length 50.535 km is outside [41.5, 43.0] km"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/marine-marathon-2024-arlington.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/10/27/gpx_20241027_id10044_race1_20241017152930.gpx?t=1786215537",
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "mesa-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "timezone corrected from America/Denver to America/Phoenix",
+        "city name normalised from \"MESA\""
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/mesa-marathon-2025-mesa.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/02/08/gpx_20250208_id10133_race1_20250120175208.gpx?t=1786215542",
+        "gpxSha256": "3ee2c7e6f026aab14cc16f448952a21c5541fc2decefcf99789942bf9701a0c2"
+      },
+      "stats": {
+        "totalKm": 42.58336868639704,
+        "gainM": 49.30000000000007
+      },
+      "city": {
+        "slug": "mesa-az-us",
+        "name": "Mesa",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-AZ",
+        "regionName": "Arizona",
+        "latitude": 33.483436,
+        "longitude": -111.622723,
+        "timezone": "America/Phoenix"
+      },
+      "citySlug": "mesa-az-us",
+      "series": {
+        "slug": "mesa-marathon",
+        "name": "Mesa Marathon",
+        "citySlug": "mesa-az-us",
+        "courseSlug": "mesa-marathon",
+        "isMajor": false,
+        "typicalMonth": 2,
+        "websiteUrl": "https://mesamarathon.com",
+        "organizer": "Brooksee"
+      },
+      "recurrence": {
+        "seriesSlug": "mesa-marathon",
+        "month": 2,
+        "weekday": 6,
+        "nth": 2,
+        "note": "Derived from the 2025-02-08 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "mesa-marathon",
+        "year": 2025,
+        "raceDate": "2025-02-08"
+      }
+    },
+    {
+      "courseSlug": "miami-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/life-time-miami-marathon-2026.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/01/25/gpx_20260125_id10713_race1_20260116221258.gpx?t=1786215409",
+        "gpxSha256": "ec5c4ea571a103826b183c9f7739c846b08ee5f8c6a9998f36dacaa289ffa70e"
+      },
+      "stats": {
+        "totalKm": 42.48232686366188,
+        "gainM": 21.6
+      },
+      "city": {
+        "slug": "miami-fl-us",
+        "name": "Miami",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-FL",
+        "regionName": "Florida",
+        "latitude": 25.782187,
+        "longitude": -80.189261,
+        "timezone": "America/New_York"
+      },
+      "citySlug": "miami-fl-us",
+      "series": {
+        "slug": "miami-marathon",
+        "name": "Miami Marathon",
+        "citySlug": "miami-fl-us",
+        "courseSlug": "miami-marathon",
+        "isMajor": false,
+        "typicalMonth": 1,
+        "websiteUrl": "https://www.themiamimarathon.com",
+        "organizer": "Life Time"
+      },
+      "recurrence": {
+        "seriesSlug": "miami-marathon",
+        "month": 1,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2026-01-25 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "miami-marathon",
+        "year": 2026,
+        "raceDate": "2026-01-25"
+      }
+    },
+    {
+      "courseSlug": "milwaukee-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "reuses the existing milwaukee-wi-us pin; no city row emitted"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/milwaukee-marathon-2026-milwaukee.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/04/11/gpx_20260411_id10875_race1_20260324225907.gpx?t=1786215413",
+        "gpxSha256": "bc586b3b618f9e33822cbbf893ed33ab673eb51a35e223c34c73b3c71445b9ac"
+      },
+      "stats": {
+        "totalKm": 42.59822777761674,
+        "gainM": 88.70000000000002
+      },
+      "city": null,
+      "citySlug": "milwaukee-wi-us",
+      "series": {
+        "slug": "milwaukee-marathon",
+        "name": "Milwaukee Marathon",
+        "citySlug": "milwaukee-wi-us",
+        "courseSlug": "milwaukee-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://milwaukeemarathon.com/",
+        "organizer": "Ventures Endurance Events"
+      },
+      "recurrence": {
+        "seriesSlug": "milwaukee-marathon",
+        "month": 4,
+        "weekday": 6,
+        "nth": 2,
+        "note": "Derived from the 2026-04-11 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "milwaukee-marathon",
+        "year": 2026,
+        "raceDate": "2026-04-11"
+      }
+    },
+    {
+      "courseSlug": "oakland-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/oakland-marathon-2026-oakland.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/03/22/gpx_20260322_id10775_race1_20260316191030.gpx?t=1786215417",
+        "gpxSha256": "aab7f829937ec98987d37d045840cba0881318b29ffc294b9fb8de984f82ca7b"
+      },
+      "stats": {
+        "totalKm": 42.877922660620115,
+        "gainM": 102.99999999999999
+      },
+      "city": {
+        "slug": "oakland-ca-us",
+        "name": "Oakland",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-CA",
+        "regionName": "California",
+        "latitude": 37.798121,
+        "longitude": -122.259495,
+        "timezone": "America/Los_Angeles"
+      },
+      "citySlug": "oakland-ca-us",
+      "series": {
+        "slug": "oakland-marathon",
+        "name": "Oakland Marathon",
+        "citySlug": "oakland-ca-us",
+        "courseSlug": "oakland-marathon",
+        "isMajor": false,
+        "typicalMonth": 3,
+        "websiteUrl": "https://oaklandmarathon.com/",
+        "organizer": "Run Local Ventures"
+      },
+      "recurrence": {
+        "seriesSlug": "oakland-marathon",
+        "month": 3,
+        "weekday": 0,
+        "nth": 4,
+        "note": "Derived from the 2026-03-22 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "oakland-marathon",
+        "year": 2026,
+        "raceDate": "2026-03-22"
       }
     },
     {
@@ -915,6 +1545,54 @@
       }
     },
     {
+      "courseSlug": "st-louis-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/go-st-louis-marathon-2026.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/04/11/gpx_20260411_id10871_race1_20260324130404.gpx?t=1786215937",
+        "gpxSha256": "e38a2ec7fd55042dc156f3910e383d06627ea648d400b79ebe6f028a052e4647"
+      },
+      "stats": {
+        "totalKm": 42.1315007562148,
+        "gainM": 94.59999999999995
+      },
+      "city": {
+        "slug": "st-louis-mo-us",
+        "name": "St. Louis",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-MO",
+        "regionName": "Missouri",
+        "latitude": 38.628283,
+        "longitude": -90.201841,
+        "timezone": "America/Chicago"
+      },
+      "citySlug": "st-louis-mo-us",
+      "series": {
+        "slug": "st-louis-marathon",
+        "name": "St. Louis Marathon",
+        "citySlug": "st-louis-mo-us",
+        "courseSlug": "st-louis-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://gostlouis.org/",
+        "organizer": "GO! Saint Louis"
+      },
+      "recurrence": {
+        "seriesSlug": "st-louis-marathon",
+        "month": 4,
+        "weekday": 6,
+        "nth": 2,
+        "note": "Derived from the 2026-04-11 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "st-louis-marathon",
+        "year": 2026,
+        "raceDate": "2026-04-11"
+      }
+    },
+    {
       "courseSlug": "texas-triple",
       "verdict": "rejected",
       "reasons": [
@@ -934,6 +1612,56 @@
       "series": null,
       "recurrence": null,
       "edition": null
+    },
+    {
+      "courseSlug": "twin-cities-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "pin is the Minneapolis start line; the race finishes in St. Paul (same pattern as Boston pinning Hopkinton)"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/medtronic-twin-cities-marathon-2023-st-paul.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2023/09/30/gpx_20230930_id8198_race1_20230903170604.gpx?t=1786215933",
+        "gpxSha256": "445d5be66816866471da2baee834dcf93808f2c05532d29455f63500854fd297"
+      },
+      "stats": {
+        "totalKm": 42.3095786929575,
+        "gainM": 89.80000000000004
+      },
+      "city": {
+        "slug": "saint-paul-mn-us",
+        "name": "St. Paul",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-MN",
+        "regionName": "Minnesota",
+        "latitude": 44.975791,
+        "longitude": -93.266594,
+        "timezone": "America/Chicago"
+      },
+      "citySlug": "saint-paul-mn-us",
+      "series": {
+        "slug": "twin-cities-marathon",
+        "name": "Twin Cities Marathon",
+        "citySlug": "saint-paul-mn-us",
+        "courseSlug": "twin-cities-marathon",
+        "isMajor": false,
+        "typicalMonth": 9,
+        "websiteUrl": "https://www.tcmevents.org",
+        "organizer": "Twin Cities In Motion"
+      },
+      "recurrence": {
+        "seriesSlug": "twin-cities-marathon",
+        "month": 9,
+        "weekday": 6,
+        "nth": -1,
+        "note": "Derived from the 2023-09-30 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "twin-cities-marathon",
+        "year": 2023,
+        "raceDate": "2023-09-30"
+      }
     },
     {
       "courseSlug": "vancouver-marathon",
@@ -982,6 +1710,27 @@
         "year": 2025,
         "raceDate": "2025-05-04"
       }
+    },
+    {
+      "courseSlug": "williams-route-66-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "parser failed: total route length 43.063 km is outside [41.5, 43.0] km"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/williams-route-66-marathon-2025-tulsa.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/11/23/gpx_20251123_id10615_race1_20251110230537.gpx?t=1786215550",
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
     }
   ]
 }

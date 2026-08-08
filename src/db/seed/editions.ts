@@ -194,6 +194,88 @@ export const RECURRENCE: Record<string, RecurrenceRule> = {
     nth: 1,
     note: "Derived from the 2024-12-01 edition; not verified against the organizer",
   },
+  // Imported from goandrace.com — batch 2026-08-08. Each rule is derived
+  // from one observed date, not from the organizer's own statement.
+  "atlanta-marathon": {
+    month: 3,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the 2025-03-02 edition; not verified against the organizer",
+  },
+  "brew-city-marathon": {
+    month: 4,
+    weekday: 6,
+    nth: 3,
+    note: "Derived from the 2026-04-18 edition; not verified against the organizer",
+  },
+  "california-international-marathon": {
+    month: 12,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2024-12-08 edition; not verified against the organizer",
+  },
+  "honolulu-marathon": {
+    month: 12,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2024-12-08 edition; not verified against the organizer",
+  },
+  "mesa-marathon": {
+    month: 2,
+    weekday: 6,
+    nth: 2,
+    note: "Derived from the 2025-02-08 edition; not verified against the organizer",
+  },
+  "miami-marathon": {
+    month: 1,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2026-01-25 edition; not verified against the organizer",
+  },
+  "milwaukee-marathon": {
+    month: 4,
+    weekday: 6,
+    nth: 2,
+    note: "Derived from the 2026-04-11 edition; not verified against the organizer",
+  },
+  "oakland-marathon": {
+    month: 3,
+    weekday: 0,
+    nth: 4,
+    note: "Derived from the 2026-03-22 edition; not verified against the organizer",
+  },
+  // Imported from goandrace.com — batch 2026-08-08. Each rule is derived
+  // from one observed date, not from the organizer's own statement.
+  "anchorage-mayors-marathon": {
+    month: 6,
+    weekday: 6,
+    nth: 3,
+    note: "Derived from the 2025-06-21 edition; not verified against the organizer",
+  },
+  "cincinnati-flying-pig-marathon": {
+    month: 5,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the 2025-05-04 edition; not verified against the organizer",
+  },
+  "lincoln-marathon": {
+    month: 5,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the 2024-05-05 edition; not verified against the organizer",
+  },
+  "st-louis-marathon": {
+    month: 4,
+    weekday: 6,
+    nth: 2,
+    note: "Derived from the 2026-04-11 edition; not verified against the organizer",
+  },
+  "twin-cities-marathon": {
+    month: 9,
+    weekday: 6,
+    nth: -1,
+    note: "Derived from the 2023-09-30 edition; not verified against the organizer",
+  },
 };
 
 export interface ConfirmedEdition {
@@ -268,6 +350,23 @@ export const CONFIRMED_EDITIONS: ConfirmedEdition[] = [
   { seriesSlug: "rock-n-roll-san-diego-marathon", year: 2026, raceDate: "2026-05-30" },
   { seriesSlug: "san-francisco-marathon", year: 2026, raceDate: "2026-07-26" },
   { seriesSlug: "seattle-marathon", year: 2024, raceDate: "2024-12-01" },
+  // Imported from goandrace.com — batch 2026-08-08. Dates as published by
+  // the event listing; startTimeLocal is deliberately left unset.
+  { seriesSlug: "atlanta-marathon", year: 2025, raceDate: "2025-03-02" },
+  { seriesSlug: "brew-city-marathon", year: 2026, raceDate: "2026-04-18" },
+  { seriesSlug: "california-international-marathon", year: 2024, raceDate: "2024-12-08" },
+  { seriesSlug: "honolulu-marathon", year: 2024, raceDate: "2024-12-08" },
+  { seriesSlug: "mesa-marathon", year: 2025, raceDate: "2025-02-08" },
+  { seriesSlug: "miami-marathon", year: 2026, raceDate: "2026-01-25" },
+  { seriesSlug: "milwaukee-marathon", year: 2026, raceDate: "2026-04-11" },
+  { seriesSlug: "oakland-marathon", year: 2026, raceDate: "2026-03-22" },
+  // Imported from goandrace.com — batch 2026-08-08. Dates as published by
+  // the event listing; startTimeLocal is deliberately left unset.
+  { seriesSlug: "anchorage-mayors-marathon", year: 2025, raceDate: "2025-06-21" },
+  { seriesSlug: "cincinnati-flying-pig-marathon", year: 2025, raceDate: "2025-05-04" },
+  { seriesSlug: "lincoln-marathon", year: 2024, raceDate: "2024-05-05" },
+  { seriesSlug: "st-louis-marathon", year: 2026, raceDate: "2026-04-11" },
+  { seriesSlug: "twin-cities-marathon", year: 2023, raceDate: "2023-09-30" },
 ];
 
 /**
