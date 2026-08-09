@@ -1078,6 +1078,74 @@ export const RECURRENCE: Record<string, RecurrenceRule> = {
     nth: 1,
     note: "Derived from the 2025-05-03 edition; not verified against the organizer",
   },
+  // Imported from goandrace.com — batch 2026-08-09. Each rule is derived
+  // from one observed date, not from the organizer's own statement.
+  "buffalo-marathon": {
+    month: 5,
+    weekday: 6,
+    nth: 4,
+    note: "Derived from the 2026-05-23 edition; not verified against the organizer",
+  },
+  "copenhagen-marathon": {
+    month: 5,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the 2024-05-05 edition; not verified against the organizer",
+  },
+  "cork-city-marathon": {
+    month: 6,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the 2024-06-02 edition; not verified against the organizer",
+  },
+  "chattanooga-marathon": {
+    month: 3,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2026-03-29 edition; not verified against the organizer",
+  },
+  "fargo-marathon": {
+    month: 5,
+    weekday: 5,
+    nth: -1,
+    note: "Derived from the 2026-05-29 edition; not verified against the organizer",
+  },
+  "blue-ridge-marathon": {
+    month: 4,
+    weekday: 6,
+    nth: 3,
+    note: "Derived from the 2026-04-18 edition; not verified against the organizer",
+  },
+  "kansas-city-marathon": {
+    month: 10,
+    weekday: 6,
+    nth: 3,
+    note: "Derived from the 2025-10-18 edition; not verified against the organizer",
+  },
+  "hyannis-marathon": {
+    month: 3,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the 2025-03-02 edition; not verified against the organizer",
+  },
+  "long-island-marathon": {
+    month: 5,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the 2024-05-05 edition; not verified against the organizer",
+  },
+  "zydeco-marathon": {
+    month: 3,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2025-03-16 edition; not verified against the organizer",
+  },
+  "route-66-marathon": {
+    month: 11,
+    weekday: 0,
+    nth: 4,
+    note: "Derived from the 2025-11-23 edition; not verified against the organizer",
+  },
 };
 
 export interface ConfirmedEdition {
@@ -1316,6 +1384,19 @@ export const CONFIRMED_EDITIONS: ConfirmedEdition[] = [
   { seriesSlug: "tobacco-road-marathon", year: 2026, raceDate: "2026-03-15" },
   { seriesSlug: "walt-disney-world-marathon", year: 2025, raceDate: "2025-01-12" },
   { seriesSlug: "wisconsin-marathon", year: 2025, raceDate: "2025-05-03" },
+  // Imported from goandrace.com — batch 2026-08-09. Dates as published by
+  // the event listing; startTimeLocal is deliberately left unset.
+  { seriesSlug: "buffalo-marathon", year: 2026, raceDate: "2026-05-23" },
+  { seriesSlug: "copenhagen-marathon", year: 2024, raceDate: "2024-05-05" },
+  { seriesSlug: "cork-city-marathon", year: 2024, raceDate: "2024-06-02" },
+  { seriesSlug: "chattanooga-marathon", year: 2026, raceDate: "2026-03-29" },
+  { seriesSlug: "fargo-marathon", year: 2026, raceDate: "2026-05-29" },
+  { seriesSlug: "blue-ridge-marathon", year: 2026, raceDate: "2026-04-18" },
+  { seriesSlug: "kansas-city-marathon", year: 2025, raceDate: "2025-10-18" },
+  { seriesSlug: "hyannis-marathon", year: 2025, raceDate: "2025-03-02" },
+  { seriesSlug: "long-island-marathon", year: 2024, raceDate: "2024-05-05" },
+  { seriesSlug: "zydeco-marathon", year: 2025, raceDate: "2025-03-16" },
+  { seriesSlug: "route-66-marathon", year: 2025, raceDate: "2025-11-23" },
 ];
 
 /**

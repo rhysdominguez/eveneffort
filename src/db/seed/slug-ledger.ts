@@ -204,6 +204,18 @@ export const PUBLISHED_COURSE_SLUGS: string[] = [
   "tobacco-road-marathon",
   "walt-disney-world-marathon",
   "wisconsin-marathon",
+  // Batch 2026-08-09, imported from goandrace.com on 2026-08-09.
+  "buffalo-marathon",
+  "copenhagen-marathon",
+  "cork-city-marathon",
+  "chattanooga-marathon",
+  "fargo-marathon",
+  "blue-ridge-marathon",
+  "kansas-city-marathon",
+  "hyannis-marathon",
+  "long-island-marathon",
+  "zydeco-marathon",
+  "route-66-marathon",
 ];
 
 /** The shape every course slug must take: lowercase, digits, single hyphens. */
