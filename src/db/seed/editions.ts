@@ -1528,6 +1528,80 @@ export const RECURRENCE: Record<string, RecurrenceRule> = {
     nth: 4,
     note: "Derived from the 2026-05-23 edition; not verified against the organizer",
   },
+  // Imported from goandrace.com — batch 2026-08-09. Each rule is derived
+  // from one observed date, not from the organizer's own statement.
+  "baloise-namur-marathon": {
+    month: 4,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2026-04-12 edition; not verified against the organizer",
+  },
+  "brescia-art-marathon": {
+    month: 3,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2026-03-08 edition; not verified against the organizer",
+  },
+  "brighton-marathon": {
+    month: 4,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2026-04-12 edition; not verified against the organizer",
+  },
+  "cadbury-marathon": {
+    month: 1,
+    weekday: 6,
+    nth: 2,
+    note: "Derived from the 2026-01-10 edition; not verified against the organizer",
+  },
+  "great-welsh-marathon": {
+    month: 3,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2026-03-08 edition; not verified against the organizer",
+  },
+  "hobart-airport-marathon-festival": {
+    month: 4,
+    weekday: 6,
+    nth: 2,
+    note: "Derived from the 2026-04-11 edition; not verified against the organizer",
+  },
+  "hogeye-marathon": {
+    month: 4,
+    weekday: 6,
+    nth: 2,
+    note: "Derived from the 2026-04-11 edition; not verified against the organizer",
+  },
+  "jerusalem-marathon": {
+    month: 4,
+    weekday: 5,
+    nth: 3,
+    note: "Derived from the 2026-04-17 edition; not verified against the organizer",
+  },
+  "lake-garda-42k": {
+    month: 4,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2026-04-12 edition; not verified against the organizer",
+  },
+  "marathon-de-montauban": {
+    month: 3,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2026-03-29 edition; not verified against the organizer",
+  },
+  "marathon-du-golfe-de-saint-tropez": {
+    month: 3,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2026-03-29 edition; not verified against the organizer",
+  },
+  "marathon-zeeuws-vlaanderen": {
+    month: 4,
+    weekday: 6,
+    nth: 2,
+    note: "Derived from the 2026-04-11 edition; not verified against the organizer",
+  },
 };
 
 export interface ConfirmedEdition {
@@ -1851,6 +1925,20 @@ export const CONFIRMED_EDITIONS: ConfirmedEdition[] = [
   { seriesSlug: "samoa-international-marathon", year: 2026, raceDate: "2026-07-03" },
   { seriesSlug: "metropolmarathon", year: 2026, raceDate: "2026-06-14" },
   { seriesSlug: "terwa-marathon", year: 2026, raceDate: "2026-05-23" },
+  // Imported from goandrace.com — batch 2026-08-09. Dates as published by
+  // the event listing; startTimeLocal is deliberately left unset.
+  { seriesSlug: "baloise-namur-marathon", year: 2026, raceDate: "2026-04-12" },
+  { seriesSlug: "brescia-art-marathon", year: 2026, raceDate: "2026-03-08" },
+  { seriesSlug: "brighton-marathon", year: 2026, raceDate: "2026-04-12" },
+  { seriesSlug: "cadbury-marathon", year: 2026, raceDate: "2026-01-10" },
+  { seriesSlug: "great-welsh-marathon", year: 2026, raceDate: "2026-03-08" },
+  { seriesSlug: "hobart-airport-marathon-festival", year: 2026, raceDate: "2026-04-11" },
+  { seriesSlug: "hogeye-marathon", year: 2026, raceDate: "2026-04-11" },
+  { seriesSlug: "jerusalem-marathon", year: 2026, raceDate: "2026-04-17" },
+  { seriesSlug: "lake-garda-42k", year: 2026, raceDate: "2026-04-12" },
+  { seriesSlug: "marathon-de-montauban", year: 2026, raceDate: "2026-03-29" },
+  { seriesSlug: "marathon-du-golfe-de-saint-tropez", year: 2026, raceDate: "2026-03-29" },
+  { seriesSlug: "marathon-zeeuws-vlaanderen", year: 2026, raceDate: "2026-04-11" },
 ];
 
 /**

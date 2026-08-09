@@ -283,6 +283,19 @@ export const PUBLISHED_COURSE_SLUGS: string[] = [
   "samoa-international-marathon",
   "metropolmarathon",
   "terwa-marathon",
+  // Batch 2026-08-09, imported from goandrace.com on 2026-08-09.
+  "baloise-namur-marathon",
+  "brescia-art-marathon",
+  "brighton-marathon",
+  "cadbury-marathon",
+  "great-welsh-marathon",
+  "hobart-airport-marathon-festival",
+  "hogeye-marathon",
+  "jerusalem-marathon",
+  "lake-garda-42k",
+  "marathon-de-montauban",
+  "marathon-du-golfe-de-saint-tropez",
+  "marathon-zeeuws-vlaanderen",
 ];
 
 /** The shape every course slug must take: lowercase, digits, single hyphens. */

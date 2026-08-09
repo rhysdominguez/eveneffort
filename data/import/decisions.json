@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-09T20:01:11.465Z",
+  "updatedAt": "2026-08-09T20:37:19.117Z",
   "courses": [
     {
       "courseSlug": "2-bologna-marathon",
@@ -21,56 +21,6 @@
       "series": null,
       "recurrence": null,
       "edition": null
-    },
-    {
-      "courseSlug": "marsala-marathon",
-      "verdict": "ready",
-      "reasons": [
-        "no organizer name published — fill SeriesSeed.organizer by hand"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/2026/04/2-marsala-marathon-2026.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2026/04/26/gpx_20260426_id10656_race1_20260418152018.gpx?t=1786305476",
-        "gpxSha256": "eea866aa492ff2fbc391c1a48966253ba2429bfaadb20088c98e1420f897729e"
-      },
-      "stats": {
-        "totalKm": 42.19660561534522,
-        "gainM": 32.9
-      },
-      "city": {
-        "slug": "marsala-it",
-        "name": "Marsala",
-        "countryCode": "IT",
-        "countryName": "Italy",
-        "regionCode": null,
-        "regionName": null,
-        "latitude": 37.801537,
-        "longitude": 12.43142,
-        "timezone": "Europe/Rome"
-      },
-      "citySlug": "marsala-it",
-      "series": {
-        "slug": "marsala-marathon",
-        "name": "Marsala Marathon",
-        "citySlug": "marsala-it",
-        "courseSlug": "marsala-marathon",
-        "isMajor": false,
-        "typicalMonth": 4,
-        "websiteUrl": "https://www.marsalamarathon.it",
-        "organizer": ""
-      },
-      "recurrence": {
-        "seriesSlug": "marsala-marathon",
-        "month": 4,
-        "weekday": 0,
-        "nth": -1,
-        "note": "Derived from the 2026-04-26 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "marsala-marathon",
-        "year": 2026,
-        "raceDate": "2026-04-26"
-      }
     },
     {
       "courseSlug": "23-puma-salzburg-marathon",
@@ -852,6 +802,57 @@
       }
     },
     {
+      "courseSlug": "baloise-namur-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.443 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/baloise-namur-marathon-2026.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/04/12/gpx_20260412_id10880_race1_20260405171538.gpx?t=1786306471",
+        "gpxSha256": "5adfd0689c39b4afaf64d9dc66662814d73958366e5c36aca516d02d53dbba73"
+      },
+      "stats": {
+        "totalKm": 42.44331758687176,
+        "gainM": 69.30000000000001
+      },
+      "city": {
+        "slug": "namur-be",
+        "name": "Namur",
+        "countryCode": "BE",
+        "countryName": "Belgium",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 50.40184,
+        "longitude": 4.88139,
+        "timezone": "Europe/Brussels"
+      },
+      "citySlug": "namur-be",
+      "series": {
+        "slug": "baloise-namur-marathon",
+        "name": "Baloise Namur Marathon",
+        "citySlug": "namur-be",
+        "courseSlug": "baloise-namur-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://www.baloisenamurmarathon.com/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "baloise-namur-marathon",
+        "month": 4,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2026-04-12 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "baloise-namur-marathon",
+        "year": 2026,
+        "raceDate": "2026-04-12"
+      }
+    },
+    {
       "courseSlug": "barcelona-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -1557,6 +1558,27 @@
       }
     },
     {
+      "courseSlug": "boston-marathon-boston",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: looks like the already-seeded \"Boston Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/boston-marathon-2026-boston.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "boulderthon",
       "verdict": "ready",
       "reasons": [],
@@ -1754,6 +1776,57 @@
       }
     },
     {
+      "courseSlug": "brescia-art-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 43.002 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/brescia-art-marathon-2026-brescia.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/03/08/gpx_20260308_id10733_race1_20260219214336.gpx?t=1786306477",
+        "gpxSha256": "9e1d76626b8f24573e9b3849e9491c8f1a13e8cc84ce443ca6f82c692e5523a0"
+      },
+      "stats": {
+        "totalKm": 43.00213673661514,
+        "gainM": 83.60000000000004
+      },
+      "city": {
+        "slug": "brescia-it",
+        "name": "Brescia",
+        "countryCode": "IT",
+        "countryName": "Italy",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 45.541436,
+        "longitude": 10.219402,
+        "timezone": "Europe/Rome"
+      },
+      "citySlug": "brescia-it",
+      "series": {
+        "slug": "brescia-art-marathon",
+        "name": "Brescia Art Marathon",
+        "citySlug": "brescia-it",
+        "courseSlug": "brescia-art-marathon",
+        "isMajor": false,
+        "typicalMonth": 3,
+        "websiteUrl": "https://bresciamarathon.it/",
+        "organizer": "A.S.D. Rosa Running Team"
+      },
+      "recurrence": {
+        "seriesSlug": "brescia-art-marathon",
+        "month": 3,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2026-03-08 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "brescia-art-marathon",
+        "year": 2026,
+        "raceDate": "2026-03-08"
+      }
+    },
+    {
       "courseSlug": "brew-city-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -1799,6 +1872,57 @@
         "seriesSlug": "brew-city-marathon",
         "year": 2026,
         "raceDate": "2026-04-18"
+      }
+    },
+    {
+      "courseSlug": "brighton-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.426 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/brighton-marathon-2026-brighton-and-hove.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/04/12/gpx_20260412_id10918_race1_20260324152302.gpx?t=1786306482",
+        "gpxSha256": "e1e5f84c2470fd6bdc89fe5188034d29e92f9d4f7aa514935fba27382992bf0b"
+      },
+      "stats": {
+        "totalKm": 42.425754121709865,
+        "gainM": 77.3
+      },
+      "city": {
+        "slug": "brighton-gb",
+        "name": "Brighton",
+        "countryCode": "GB",
+        "countryName": "United Kingdom",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 50.83773,
+        "longitude": -0.14535,
+        "timezone": "Europe/London"
+      },
+      "citySlug": "brighton-gb",
+      "series": {
+        "slug": "brighton-marathon",
+        "name": "Brighton Marathon",
+        "citySlug": "brighton-gb",
+        "courseSlug": "brighton-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://www.londonmarathonevents.co.uk/brighton-marathon-weekend",
+        "organizer": "London Marathon Events"
+      },
+      "recurrence": {
+        "seriesSlug": "brighton-marathon",
+        "month": 4,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2026-04-12 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "brighton-marathon",
+        "year": 2026,
+        "raceDate": "2026-04-12"
       }
     },
     {
@@ -1949,6 +2073,80 @@
         "seriesSlug": "buffalo-marathon",
         "year": 2026,
         "raceDate": "2026-05-23"
+      }
+    },
+    {
+      "courseSlug": "busselton-runners-club-bay-run",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/busselton-runners-club-bay-run-2026-busselton.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "cadbury-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.979 km, outside the [42.0, 42.4] band",
+        "no addressRegion published; AU city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone Australia/Hobart was guessed from longitude (AU spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/cadbury-marathon-2026-claremont.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/01/11/gpx_20260111_id10678_race1_20251231165433.gpx?t=1786306487",
+        "gpxSha256": "e968d31202770a8a811a6c25809d18278d2fd8d4330a7a4b1a0bc121a6cfa9d2"
+      },
+      "stats": {
+        "totalKm": 42.97939974268233,
+        "gainM": 102.3
+      },
+      "city": {
+        "slug": "claremont-tas-au",
+        "name": "Claremont",
+        "countryCode": "AU",
+        "countryName": "Australia",
+        "regionCode": "AU-TAS",
+        "regionName": "Tasmania",
+        "latitude": -42.79176,
+        "longitude": 147.26338,
+        "timezone": "Australia/Hobart"
+      },
+      "citySlug": "claremont-tas-au",
+      "series": {
+        "slug": "cadbury-marathon",
+        "name": "Cadbury Marathon",
+        "citySlug": "claremont-tas-au",
+        "courseSlug": "cadbury-marathon",
+        "isMajor": false,
+        "typicalMonth": 1,
+        "websiteUrl": "https://cadburymarathon.com.au/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "cadbury-marathon",
+        "month": 1,
+        "weekday": 6,
+        "nth": 2,
+        "note": "Derived from the 2026-01-10 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "cadbury-marathon",
+        "year": 2026,
+        "raceDate": "2026-01-10"
       }
     },
     {
@@ -4101,6 +4299,56 @@
       }
     },
     {
+      "courseSlug": "great-welsh-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/great-welsh-marathon-2026-llanelli.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/03/08/gpx_20260308_id10767_race1_20260228140729.gpx?t=1786306492",
+        "gpxSha256": "09dec0bcf66774796fa5bd79ef68c0eebc759ee775bb6e86fa793846b08ef56a"
+      },
+      "stats": {
+        "totalKm": 42.385600322141435,
+        "gainM": 47.39999999999999
+      },
+      "city": {
+        "slug": "llanelli-gb",
+        "name": "Llanelli",
+        "countryCode": "GB",
+        "countryName": "United Kingdom",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 51.679883,
+        "longitude": -4.296655,
+        "timezone": "Europe/London"
+      },
+      "citySlug": "llanelli-gb",
+      "series": {
+        "slug": "great-welsh-marathon",
+        "name": "Great Welsh Marathon",
+        "citySlug": "llanelli-gb",
+        "courseSlug": "great-welsh-marathon",
+        "isMajor": false,
+        "typicalMonth": 3,
+        "websiteUrl": "https://www.greatwelshmarathon.co.uk/",
+        "organizer": "Front Runner Events Ltd"
+      },
+      "recurrence": {
+        "seriesSlug": "great-welsh-marathon",
+        "month": 3,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2026-03-08 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "great-welsh-marathon",
+        "year": 2026,
+        "raceDate": "2026-03-08"
+      }
+    },
+    {
       "courseSlug": "hamburg-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -4359,14 +4607,120 @@
       "edition": null
     },
     {
-      "courseSlug": "hogeye-marathon",
-      "verdict": "rejected",
+      "courseSlug": "hobart-airport-marathon-festival",
+      "verdict": "ready",
       "reasons": [
-        "parser failed: total route length 41.404 km is outside [41.5, 43.0] km"
+        "measured 42.770 km, outside the [42.0, 42.4] band",
+        "no addressRegion published; AU city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone Australia/Hobart was guessed from longitude (AU spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
       ],
       "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/hogeye-marathon-2023-springdale.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2023/04/15/gpx_20230415_id7985_race1_20230403223052.gpx?t=1786288411",
+        "eventUrl": "https://www.goandrace.com/en/running-events/hobart-airport-marathon-festival-2026-hobart.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/04/12/gpx_20260412_id10877_race1_20260404183509.gpx?t=1786306496",
+        "gpxSha256": "2ee6e77102a9ec002e8dd48a2815f49c6b00da73704b42b1843a8769e6d68e97"
+      },
+      "stats": {
+        "totalKm": 42.769997547730384,
+        "gainM": 264.59999999999997
+      },
+      "city": {
+        "slug": "hobart-tas-au",
+        "name": "Hobart",
+        "countryCode": "AU",
+        "countryName": "Australia",
+        "regionCode": "AU-TAS",
+        "regionName": "Tasmania",
+        "latitude": -42.886228,
+        "longitude": 147.333136,
+        "timezone": "Australia/Hobart"
+      },
+      "citySlug": "hobart-tas-au",
+      "series": {
+        "slug": "hobart-airport-marathon-festival",
+        "name": "Hobart Airport Marathon Festival",
+        "citySlug": "hobart-tas-au",
+        "courseSlug": "hobart-airport-marathon-festival",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://hobartmarathon.com.au/",
+        "organizer": "My Atlas Events"
+      },
+      "recurrence": {
+        "seriesSlug": "hobart-airport-marathon-festival",
+        "month": 4,
+        "weekday": 6,
+        "nth": 2,
+        "note": "Derived from the 2026-04-11 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "hobart-airport-marathon-festival",
+        "year": 2026,
+        "raceDate": "2026-04-11"
+      }
+    },
+    {
+      "courseSlug": "hogeye-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.561 km, outside the [42.0, 42.4] band",
+        "no addressRegion published; US city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone America/Chicago was guessed from longitude (US spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/hogeye-marathon-2026-springdale.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/04/11/gpx_20260411_id10872_race1_20260324214712.gpx?t=1786306500",
+        "gpxSha256": "21214a4db6dbee6ef120ad8a260ca195653b7bcb9e366ad6be4cd8357a9b795b"
+      },
+      "stats": {
+        "totalKm": 42.56104080246697,
+        "gainM": 127.89999999999992
+      },
+      "city": {
+        "slug": "springdale-ar-us",
+        "name": "Springdale",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-AR",
+        "regionName": "Arkansas",
+        "latitude": 36.185112,
+        "longitude": -94.13295,
+        "timezone": "America/Chicago"
+      },
+      "citySlug": "springdale-ar-us",
+      "series": {
+        "slug": "hogeye-marathon",
+        "name": "Hogeye Marathon",
+        "citySlug": "springdale-ar-us",
+        "courseSlug": "hogeye-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://hogeyemarathon.com/",
+        "organizer": "Hogeye Marathon"
+      },
+      "recurrence": {
+        "seriesSlug": "hogeye-marathon",
+        "month": 4,
+        "weekday": 6,
+        "nth": 2,
+        "note": "Derived from the 2026-04-11 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "hogeye-marathon",
+        "year": 2026,
+        "raceDate": "2026-04-11"
+      }
+    },
+    {
+      "courseSlug": "holmestrand-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/holmestrand-marathon-2026-holmestrand.php",
+        "gpxUrl": null,
         "gpxSha256": null
       },
       "stats": {
@@ -4701,6 +5055,27 @@
       }
     },
     {
+      "courseSlug": "irving-marathon-irving",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: looks like the already-seeded \"Irving Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/irving-marathon-2026-irving.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "istanbul-marathon",
       "verdict": "ready",
       "reasons": [
@@ -4869,6 +5244,57 @@
         "seriesSlug": "jacksonville-marathon",
         "year": 2023,
         "raceDate": "2023-12-10"
+      }
+    },
+    {
+      "courseSlug": "jerusalem-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 43.039 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/jerusalem-marathon-2026-jerusalem.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/04/17/gpx_20260417_id10931_race1_20260406200725.gpx?t=1786306508",
+        "gpxSha256": "ebca1501df073fb644e7df29970e82d8d492270f3f3a881c5a18fce2229ad0b1"
+      },
+      "stats": {
+        "totalKm": 43.03867675046286,
+        "gainM": 267.19999999999993
+      },
+      "city": {
+        "slug": "jerusalem-il",
+        "name": "Jerusalem",
+        "countryCode": "IL",
+        "countryName": "Israel",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 31.77504,
+        "longitude": 35.20424,
+        "timezone": "Asia/Jerusalem"
+      },
+      "citySlug": "jerusalem-il",
+      "series": {
+        "slug": "jerusalem-marathon",
+        "name": "Jerusalem Marathon",
+        "citySlug": "jerusalem-il",
+        "courseSlug": "jerusalem-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://jerusalem-marathon.com/",
+        "organizer": "Jerusalem Municipality"
+      },
+      "recurrence": {
+        "seriesSlug": "jerusalem-marathon",
+        "month": 4,
+        "weekday": 5,
+        "nth": 3,
+        "note": "Derived from the 2026-04-17 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "jerusalem-marathon",
+        "year": 2026,
+        "raceDate": "2026-04-17"
       }
     },
     {
@@ -5277,54 +5703,54 @@
       }
     },
     {
-      "courseSlug": "maastricht-marathon",
+      "courseSlug": "lake-garda-42k",
       "verdict": "ready",
       "reasons": [
-        "measured 41.945 km, outside the [42.0, 42.4] band",
+        "measured 42.511 km, outside the [42.0, 42.4] band",
         "no organizer name published — fill SeriesSeed.organizer by hand"
       ],
       "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/2026/05/lcw-maastricht-marathon-2026.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2026/05/24/gpx_20260524_id11003_race1_20260519142914.gpx?t=1786305499",
-        "gpxSha256": "3094cb85e67925d1c53cffeedb33bde3232ba95e8987ed7a7f8ac529bc038680"
+        "eventUrl": "https://www.goandrace.com/en/running-events/lake-garda-42k-2026-limone-sul-garda.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/04/12/gpx_20260412_id10926_race1_20260328110943.gpx?t=1786306512",
+        "gpxSha256": "442e3043f308891edf79c334a4b12db44b01ced040a21ab6b2104d9fd1c19218"
       },
       "stats": {
-        "totalKm": 41.945219459220944,
-        "gainM": 46.300000000000004
+        "totalKm": 42.511032405665624,
+        "gainM": 116
       },
       "city": {
-        "slug": "maastricht-nl",
-        "name": "Maastricht",
-        "countryCode": "NL",
-        "countryName": "Netherlands",
+        "slug": "limone-sul-garda-it",
+        "name": "Limone sul Garda",
+        "countryCode": "IT",
+        "countryName": "Italy",
         "regionCode": null,
         "regionName": null,
-        "latitude": 50.85725,
-        "longitude": 5.68269,
-        "timezone": "Europe/Amsterdam"
+        "latitude": 45.814094,
+        "longitude": 10.793756,
+        "timezone": "Europe/Rome"
       },
-      "citySlug": "maastricht-nl",
+      "citySlug": "limone-sul-garda-it",
       "series": {
-        "slug": "maastricht-marathon",
-        "name": "Maastricht Marathon",
-        "citySlug": "maastricht-nl",
-        "courseSlug": "maastricht-marathon",
+        "slug": "lake-garda-42k",
+        "name": "Lake Garda 42K",
+        "citySlug": "limone-sul-garda-it",
+        "courseSlug": "lake-garda-42k",
         "isMajor": false,
-        "typicalMonth": 5,
-        "websiteUrl": "https://www.lcwnetherlands.com/",
-        "organizer": "dsm-firmenich"
+        "typicalMonth": 4,
+        "websiteUrl": "https://lakegarda42.com",
+        "organizer": ""
       },
       "recurrence": {
-        "seriesSlug": "maastricht-marathon",
-        "month": 5,
+        "seriesSlug": "lake-garda-42k",
+        "month": 4,
         "weekday": 0,
-        "nth": 4,
-        "note": "Derived from the 2026-05-24 edition; not verified against the organizer"
+        "nth": 2,
+        "note": "Derived from the 2026-04-12 edition; not verified against the organizer"
       },
       "edition": {
-        "seriesSlug": "maastricht-marathon",
+        "seriesSlug": "lake-garda-42k",
         "year": 2026,
-        "raceDate": "2026-05-24"
+        "raceDate": "2026-04-12"
       }
     },
     {
@@ -5964,6 +6390,57 @@
       }
     },
     {
+      "courseSlug": "maastricht-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 41.945 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/05/lcw-maastricht-marathon-2026.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/05/24/gpx_20260524_id11003_race1_20260519142914.gpx?t=1786305499",
+        "gpxSha256": "3094cb85e67925d1c53cffeedb33bde3232ba95e8987ed7a7f8ac529bc038680"
+      },
+      "stats": {
+        "totalKm": 41.945219459220944,
+        "gainM": 46.300000000000004
+      },
+      "city": {
+        "slug": "maastricht-nl",
+        "name": "Maastricht",
+        "countryCode": "NL",
+        "countryName": "Netherlands",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 50.85725,
+        "longitude": 5.68269,
+        "timezone": "Europe/Amsterdam"
+      },
+      "citySlug": "maastricht-nl",
+      "series": {
+        "slug": "maastricht-marathon",
+        "name": "Maastricht Marathon",
+        "citySlug": "maastricht-nl",
+        "courseSlug": "maastricht-marathon",
+        "isMajor": false,
+        "typicalMonth": 5,
+        "websiteUrl": "https://www.lcwnetherlands.com/",
+        "organizer": "dsm-firmenich"
+      },
+      "recurrence": {
+        "seriesSlug": "maastricht-marathon",
+        "month": 5,
+        "weekday": 0,
+        "nth": 4,
+        "note": "Derived from the 2026-05-24 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "maastricht-marathon",
+        "year": 2026,
+        "raceDate": "2026-05-24"
+      }
+    },
+    {
       "courseSlug": "malaga-marathon",
       "verdict": "ready",
       "reasons": [
@@ -6221,6 +6698,157 @@
       }
     },
     {
+      "courseSlug": "marathon-de-montauban",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/marathon-de-montauban-2026.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/03/29/gpx_20260329_id10869_race1_20260320174453.gpx?t=1786306517",
+        "gpxSha256": "016926968388ed3ab483e9aa578d780ec11e4f15a8f724e816ddac06d12c5d9f"
+      },
+      "stats": {
+        "totalKm": 42.224712423435264,
+        "gainM": 52.10000000000001
+      },
+      "city": {
+        "slug": "montauban-fr",
+        "name": "Montauban",
+        "countryCode": "FR",
+        "countryName": "France",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 44.023095,
+        "longitude": 1.34516,
+        "timezone": "Europe/Paris"
+      },
+      "citySlug": "montauban-fr",
+      "series": {
+        "slug": "marathon-de-montauban",
+        "name": "Marathon de Montauban",
+        "citySlug": "montauban-fr",
+        "courseSlug": "marathon-de-montauban",
+        "isMajor": false,
+        "typicalMonth": 3,
+        "websiteUrl": "https://marathon.montauban.com/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "marathon-de-montauban",
+        "month": 3,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2026-03-29 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "marathon-de-montauban",
+        "year": 2026,
+        "raceDate": "2026-03-29"
+      }
+    },
+    {
+      "courseSlug": "marathon-du-golfe-de-saint-tropez",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.622 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/marathon-du-golfe-de-saint-tropez-2026.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/03/29/gpx_20260329_id10920_race1_20260324210930.gpx?t=1786306522",
+        "gpxSha256": "50bf74aa0ee6ea05aa5b35518a6a0ef71829e8dcfb645235d9495bf5ff2120b7"
+      },
+      "stats": {
+        "totalKm": 42.621611830515036,
+        "gainM": 221.99999999999994
+      },
+      "city": {
+        "slug": "saint-tropez-fr",
+        "name": "Saint-Tropez",
+        "countryCode": "FR",
+        "countryName": "France",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 43.306986,
+        "longitude": 6.633522,
+        "timezone": "Europe/Paris"
+      },
+      "citySlug": "saint-tropez-fr",
+      "series": {
+        "slug": "marathon-du-golfe-de-saint-tropez",
+        "name": "Marathon du Golfe de Saint-Tropez",
+        "citySlug": "saint-tropez-fr",
+        "courseSlug": "marathon-du-golfe-de-saint-tropez",
+        "isMajor": false,
+        "typicalMonth": 3,
+        "websiteUrl": "https://www.marathondugolfedesainttropez.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "marathon-du-golfe-de-saint-tropez",
+        "month": 3,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2026-03-29 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "marathon-du-golfe-de-saint-tropez",
+        "year": 2026,
+        "raceDate": "2026-03-29"
+      }
+    },
+    {
+      "courseSlug": "marathon-zeeuws-vlaanderen",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/marathon-zeeuws-vlaanderen-2026-terneuzen.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/04/11/gpx_20260411_id10874_race1_20260324223032.gpx?t=1786306526",
+        "gpxSha256": "8649f4487cd304568d32cd502211ea4fa812ed8074e15178c73734d87cca5577"
+      },
+      "stats": {
+        "totalKm": 42.23371681002296,
+        "gainM": 41.9
+      },
+      "city": {
+        "slug": "terneuzen-nl",
+        "name": "Terneuzen",
+        "countryCode": "NL",
+        "countryName": "Netherlands",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 51.27994,
+        "longitude": 4.053764,
+        "timezone": "Europe/Amsterdam"
+      },
+      "citySlug": "terneuzen-nl",
+      "series": {
+        "slug": "marathon-zeeuws-vlaanderen",
+        "name": "Marathon Zeeuws-Vlaanderen",
+        "citySlug": "terneuzen-nl",
+        "courseSlug": "marathon-zeeuws-vlaanderen",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://marathonzvl.nl/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "marathon-zeeuws-vlaanderen",
+        "month": 4,
+        "weekday": 6,
+        "nth": 2,
+        "note": "Derived from the 2026-04-11 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "marathon-zeeuws-vlaanderen",
+        "year": 2026,
+        "raceDate": "2026-04-11"
+      }
+    },
+    {
       "courseSlug": "maraton-valencia-trinidad-alfonso",
       "verdict": "rejected",
       "reasons": [
@@ -6305,6 +6933,48 @@
       "edition": null
     },
     {
+      "courseSlug": "maratona-di-chicago",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: looks like the already-seeded \"Chicago Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/10/maratona-di-chicago-2026.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "maratona-di-napoli",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/10/maratona-di-napoli-2026.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "maratona-di-torino",
       "verdict": "rejected",
       "reasons": [
@@ -6333,6 +7003,27 @@
       ],
       "source": {
         "eventUrl": "https://www.goandrace.com/en/running-events/maratona-firenze-2026.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "maratona-ravenna",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/11/maratona-ravenna-2026.php",
         "gpxUrl": null,
         "gpxSha256": null
       },
@@ -6514,6 +7205,56 @@
         "seriesSlug": "marrakech-marathon",
         "year": 2025,
         "raceDate": "2025-01-26"
+      }
+    },
+    {
+      "courseSlug": "marsala-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/04/2-marsala-marathon-2026.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/04/26/gpx_20260426_id10656_race1_20260418152018.gpx?t=1786305476",
+        "gpxSha256": "eea866aa492ff2fbc391c1a48966253ba2429bfaadb20088c98e1420f897729e"
+      },
+      "stats": {
+        "totalKm": 42.19660561534522,
+        "gainM": 32.9
+      },
+      "city": {
+        "slug": "marsala-it",
+        "name": "Marsala",
+        "countryCode": "IT",
+        "countryName": "Italy",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 37.801537,
+        "longitude": 12.43142,
+        "timezone": "Europe/Rome"
+      },
+      "citySlug": "marsala-it",
+      "series": {
+        "slug": "marsala-marathon",
+        "name": "Marsala Marathon",
+        "citySlug": "marsala-it",
+        "courseSlug": "marsala-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://www.marsalamarathon.it",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "marsala-marathon",
+        "month": 4,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2026-04-26 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "marsala-marathon",
+        "year": 2026,
+        "raceDate": "2026-04-26"
       }
     },
     {
@@ -6737,6 +7478,99 @@
         "year": 2025,
         "raceDate": "2025-02-08"
       }
+    },
+    {
+      "courseSlug": "messini-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/messini-marathon-2026.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "metropolmarathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 41.985 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/06/sparkassen-metropolmarathon-2026-furth.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/06/14/gpx_20260614_id11030_race1_20260607155556.gpx?t=1786305523",
+        "gpxSha256": "5ccf45d845025941057e69abb4eb9b526ddd098865b838d977e9148090652a89"
+      },
+      "stats": {
+        "totalKm": 41.98493796964938,
+        "gainM": 118.20000000000005
+      },
+      "city": {
+        "slug": "furth-de",
+        "name": "Fürth",
+        "countryCode": "DE",
+        "countryName": "Germany",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 49.481094,
+        "longitude": 10.988609,
+        "timezone": "Europe/Berlin"
+      },
+      "citySlug": "furth-de",
+      "series": {
+        "slug": "metropolmarathon",
+        "name": "Metropolmarathon",
+        "citySlug": "furth-de",
+        "courseSlug": "metropolmarathon",
+        "isMajor": false,
+        "typicalMonth": 6,
+        "websiteUrl": "https://metropolmarathon.de/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "metropolmarathon",
+        "month": 6,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2026-06-14 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "metropolmarathon",
+        "year": 2026,
+        "raceDate": "2026-06-14"
+      }
+    },
+    {
+      "courseSlug": "mezza-maratona-d-annunziana",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/09/mezza-maratona-d-annunziana-2026-pescara.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
     },
     {
       "courseSlug": "mezza-maratona-una-corsa-da-re-torino",
@@ -7101,6 +7935,27 @@
       }
     },
     {
+      "courseSlug": "mississippi-blues-marathon-jackson",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: looks like the already-seeded \"Mississippi Blues Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/mississippi-blues-marathon-2026-jackson.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "missoula-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -7365,6 +8220,27 @@
         "year": 2024,
         "raceDate": "2024-03-02"
       }
+    },
+    {
+      "courseSlug": "myrtle-beach-marathon-myrtle-beach",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: looks like the already-seeded \"Myrtle Beach Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/myrtle-beach-marathon-2026-myrtle-beach.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
     },
     {
       "courseSlug": "n4-elands-marathon",
@@ -7717,6 +8593,27 @@
         "year": 2024,
         "raceDate": "2024-11-03"
       }
+    },
+    {
+      "courseSlug": "nn-marathon-rotterdam",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: looks like the already-seeded \"Rotterdam Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/nn-marathon-rotterdam-2026.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
     },
     {
       "courseSlug": "north-olympic-discovery-marathon",
@@ -8874,54 +9771,6 @@
       "edition": null
     },
     {
-      "courseSlug": "santa-cruz-marathon",
-      "verdict": "ready",
-      "reasons": [],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/2026/07/renault-42k-santa-cruz-2026.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2026/07/19/gpx_20260719_id10868_race1_20260618125905.gpx?t=1786305548",
-        "gpxSha256": "945bccc4bb0f85d9539853b2a13b4ec629af65c21171bf2c81eadf6324a4000c"
-      },
-      "stats": {
-        "totalKm": 42.230104475715166,
-        "gainM": 42.69999999999999
-      },
-      "city": {
-        "slug": "santa-cruz-bo",
-        "name": "Santa Cruz",
-        "countryCode": "BO",
-        "countryName": "Bolivia",
-        "regionCode": null,
-        "regionName": null,
-        "latitude": -17.783821,
-        "longitude": -63.209117,
-        "timezone": "America/La_Paz"
-      },
-      "citySlug": "santa-cruz-bo",
-      "series": {
-        "slug": "santa-cruz-marathon",
-        "name": "Santa Cruz Marathon",
-        "citySlug": "santa-cruz-bo",
-        "courseSlug": "santa-cruz-marathon",
-        "isMajor": false,
-        "typicalMonth": 7,
-        "websiteUrl": "https://42ksantacruz.com/",
-        "organizer": "Atlestar"
-      },
-      "recurrence": {
-        "seriesSlug": "santa-cruz-marathon",
-        "month": 7,
-        "weekday": 0,
-        "nth": 3,
-        "note": "Derived from the 2026-07-19 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "santa-cruz-marathon",
-        "year": 2026,
-        "raceDate": "2026-07-19"
-      }
-    },
-    {
       "courseSlug": "revel-mt-charleston-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -9643,6 +10492,27 @@
       }
     },
     {
+      "courseSlug": "san-francesco-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/11/san-francesco-marathon-2026-assisi.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "san-francisco-marathon",
       "verdict": "ready",
       "reasons": [
@@ -9690,6 +10560,54 @@
         "seriesSlug": "san-francisco-marathon",
         "year": 2026,
         "raceDate": "2026-07-26"
+      }
+    },
+    {
+      "courseSlug": "santa-cruz-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/07/renault-42k-santa-cruz-2026.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/07/19/gpx_20260719_id10868_race1_20260618125905.gpx?t=1786305548",
+        "gpxSha256": "945bccc4bb0f85d9539853b2a13b4ec629af65c21171bf2c81eadf6324a4000c"
+      },
+      "stats": {
+        "totalKm": 42.230104475715166,
+        "gainM": 42.69999999999999
+      },
+      "city": {
+        "slug": "santa-cruz-bo",
+        "name": "Santa Cruz",
+        "countryCode": "BO",
+        "countryName": "Bolivia",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": -17.783821,
+        "longitude": -63.209117,
+        "timezone": "America/La_Paz"
+      },
+      "citySlug": "santa-cruz-bo",
+      "series": {
+        "slug": "santa-cruz-marathon",
+        "name": "Santa Cruz Marathon",
+        "citySlug": "santa-cruz-bo",
+        "courseSlug": "santa-cruz-marathon",
+        "isMajor": false,
+        "typicalMonth": 7,
+        "websiteUrl": "https://42ksantacruz.com/",
+        "organizer": "Atlestar"
+      },
+      "recurrence": {
+        "seriesSlug": "santa-cruz-marathon",
+        "month": 7,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2026-07-19 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "santa-cruz-marathon",
+        "year": 2026,
+        "raceDate": "2026-07-19"
       }
     },
     {
@@ -10271,57 +11189,6 @@
         "seriesSlug": "sioux-falls-marathon",
         "year": 2025,
         "raceDate": "2025-09-21"
-      }
-    },
-    {
-      "courseSlug": "metropolmarathon",
-      "verdict": "ready",
-      "reasons": [
-        "measured 41.985 km, outside the [42.0, 42.4] band",
-        "no organizer name published — fill SeriesSeed.organizer by hand"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/2026/06/sparkassen-metropolmarathon-2026-furth.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2026/06/14/gpx_20260614_id11030_race1_20260607155556.gpx?t=1786305523",
-        "gpxSha256": "5ccf45d845025941057e69abb4eb9b526ddd098865b838d977e9148090652a89"
-      },
-      "stats": {
-        "totalKm": 41.98493796964938,
-        "gainM": 118.20000000000005
-      },
-      "city": {
-        "slug": "furth-de",
-        "name": "Fürth",
-        "countryCode": "DE",
-        "countryName": "Germany",
-        "regionCode": null,
-        "regionName": null,
-        "latitude": 49.481094,
-        "longitude": 10.988609,
-        "timezone": "Europe/Berlin"
-      },
-      "citySlug": "furth-de",
-      "series": {
-        "slug": "metropolmarathon",
-        "name": "Metropolmarathon",
-        "citySlug": "furth-de",
-        "courseSlug": "metropolmarathon",
-        "isMajor": false,
-        "typicalMonth": 6,
-        "websiteUrl": "https://metropolmarathon.de/",
-        "organizer": ""
-      },
-      "recurrence": {
-        "seriesSlug": "metropolmarathon",
-        "month": 6,
-        "weekday": 0,
-        "nth": 2,
-        "note": "Derived from the 2026-06-14 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "metropolmarathon",
-        "year": 2026,
-        "raceDate": "2026-06-14"
       }
     },
     {
@@ -11774,6 +12641,27 @@
       }
     },
     {
+      "courseSlug": "verdi-marathon-salsomaggiore-terme",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: looks like the already-seeded \"Verdi Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/verdi-marathon-2026-salsomaggiore-terme.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "vermont-city-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -12092,6 +12980,27 @@
       }
     },
     {
+      "courseSlug": "walt-disney-world-marathon-weekend-orlando",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: looks like the already-seeded \"Walt Disney World Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/walt-disney-world-marathon-weekend-2026-orlando.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "white-marble-marathon",
       "verdict": "ready",
       "reasons": [
@@ -12141,6 +13050,27 @@
         "year": 2025,
         "raceDate": "2025-02-16"
       }
+    },
+    {
+      "courseSlug": "white-marble-marathon-carrara",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: looks like the already-seeded \"White Marble Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/white-marble-marathon-2026-carrara.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
     },
     {
       "courseSlug": "wilmington-marathon",
@@ -12237,6 +13167,27 @@
         "year": 2024,
         "raceDate": "2024-05-19"
       }
+    },
+    {
+      "courseSlug": "windermere-marathon-ambleside",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: looks like the already-seeded \"Windermere Marathon\" (name+city match 1.00) — skipping to avoid a duplicate"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/06/windermere-marathon-2026-ambleside.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
     },
     {
       "courseSlug": "wisconsin-marathon",
@@ -12441,6 +13392,27 @@
         "year": 2025,
         "raceDate": "2025-04-13"
       }
+    },
+    {
+      "courseSlug": "zurich-marathon-zurich",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: looks like the already-seeded \"Zürich Marathon\" (name+city match 1.00) — skipping to avoid a duplicate"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/zurich-marathon-2026-zurich.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
     },
     {
       "courseSlug": "zurich-rock-n-roll-running-series-madrid",
