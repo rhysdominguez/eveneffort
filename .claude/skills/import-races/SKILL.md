@@ -15,7 +15,7 @@ Runs the full pipeline: discover events on goandrace.com, download their GPX, de
 ```bash
 npm run import:fetch -- --limit <n> --batch <batch>
 ```
-Skips anything already imported, so repeat runs always bring in genuinely new events.
+Skips anything already imported — by slug, by GPX already on disk, *and* by name+city match against every already-seeded series (catches a recurring race re-discovered under next year's goandrace URL, which has a different slug and a different event URL from the one already shipped). Repeat runs bring in genuinely new events, not the same ones under a fresh year.
 
 **Targeted** — "add the marathon for Valencia", or a goandrace.com URL:
 ```bash
@@ -142,11 +142,13 @@ Give the user a table: course slug, display name, city, race date, distance, org
 - **Never invent data.** Blank beats wrong for organizer and region.
 - **42.6–43.4 km is normal.** Not GPS drift so much as a digitized or GPS-built course line running long against the officially certified shortest-possible-route distance — Berlin has measured 42.76 since it was added, and the ceiling was widened to 43.5 on 2026-08-09 after confirming (Douglas-Peucker simplification test, up to 20 m tolerance) that the excess on courses like Cleveland and Cork City is real path length through corners, not noise to smooth away.
 - **`data/import/decisions.json` is committed**; raw crawls, reports and quarantine are gitignored.
+- **A duplicate can survive a slug check.** goandrace pages a fresh event URL every year, so a recurring race already in `SERIES_SEED` reappears at a bulk `--limit` discovery under a new URL and often a differently-worded name ("Flying Pig Marathon 2026" vs. the seeded "Cincinnati Flying Pig Marathon"). `fetch.ts` now checks every scraped event's name+city against `SERIES_SEED` (`findNameMatch` in `shared.ts`) before downloading its map or GPX, and skips it with `looks like the already-seeded "…"` if it matches — this runs *after* the page is scraped, since the real name isn't known until then, so a duplicate still costs one page fetch, just not the map+GPX fetches on top. If a false negative ever gets through anyway, cross-check the batch's scraped names/cities against `SERIES_SEED` by hand before parsing, the way this was caught the first time.
 
 ## If something fails
 
 - *"links no course map"* — that race has no geometry published. Expected; report it as skipped.
 - *Parser rejects a course* — usually a multi-segment GPX or a half-marathon track. Mark it `rejected`; promote quarantines its files.
+- *A scraped event turns out to be a relay, not a solo marathon* — `findNameMatch` only catches name+city duplicates, not format. A "… Relay" event can be a genuinely distinct listing from the solo race in the same city and still not belong here: this app has no way to represent multiple runners splitting one distance. Exclude it from `--only` at the parse step and record why in `decisions.json`'s `reasons`, the same as a rejected distance.
 - *Rejected for measuring between 43.0 and 43.5 km* — no longer rejected. The ceiling moved to 43.5 on 2026-08-09 for exactly this pattern: at the old 43.0 line, Tulsa (43.06), Kansas City (43.04), Cork City (43.02), Buffalo (43.00) and others were rejected, every one a real marathon whose course line runs long through corners. (Cleveland, Long Beach and Pittsburgh show up in older notes about this same pattern — they are not part of the recovery, because a later import already seeded all three under a different, shorter-measuring GPX. Check the ledger before assuming a familiar name is still missing.) If a course now fails, it is genuinely past 43.5 — **report it separately from a course that merely used to fail**: the next real failure mode starts at 48.7 km (Thelma & Louise) and 50.5 km (Marine Corps, a different distance entirely, not course drift). Widening further than 43.5 needs the same thing this one did: a real loss cluster and the user's explicit decision, editing `parse_gpx.py` and `courses.profile.integrity.test.ts` together.
 - *Test suite red after promote* — most likely a renamed slug whose files were not renamed, or a course parsed but missing from `SERIES_SEED`.
 - *New courses missing from the pacing dropdown* — `.next` was not cleared. Go back to step 6.

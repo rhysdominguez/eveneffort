@@ -31,6 +31,7 @@ import {
   ORIGIN,
   REQUEST_DELAY_MS,
   RAW_DIR,
+  findNameMatch,
   flagNumber,
   flagValue,
   getResponse,
@@ -42,6 +43,7 @@ import {
   type RawEvent,
 } from "./shared.ts";
 import { PUBLISHED_COURSE_SLUGS } from "../../src/db/seed/slug-ledger.ts";
+import { SERIES_SEED } from "../../src/db/seed/series.ts";
 
 // The calendar page renders only its first page of results as HTML — the rest
 // arrive through the same JSON endpoint its "load more" button calls. Scraping
@@ -202,6 +204,20 @@ async function scrapeEvent(
     base.websiteUrl = ld.organizer?.url || null;
 
     if (ld.name) {
+      // Catches what a slug-only check can't: goandrace pages a fresh URL
+      // every year, so a recurring race we already have ships under a new
+      // event URL and often a differently-worded name each time ("Flying Pig
+      // Marathon 2026" vs. our seeded "Cincinnati Flying Pig Marathon"). This
+      // runs before the slug clash check below and before the map/GPX fetch,
+      // so a match skips two more requests as well as the download.
+      const seeded = findNameMatch(ld.name, base.locality, SERIES_SEED);
+      if (seeded) {
+        base.error =
+          `looks like the already-seeded "${seeded.name}" ` +
+          `(name+city match ${seeded.score.toFixed(2)}) — skipping to avoid a duplicate`;
+        return base;
+      }
+
       courseSlug = proposeCourseSlug(ld.name);
       base.courseSlug = courseSlug;
       const clash = isTaken(courseSlug);

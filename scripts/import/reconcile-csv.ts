@@ -25,7 +25,10 @@ import {
   IMPORT_DIR,
   RAW_DIR,
   REPO_ROOT,
+  findNameMatch,
   flagValue,
+  matchTokens,
+  nameSimilarity,
   type RawBatch,
   type RawEvent,
 } from "./shared.ts";
@@ -112,55 +115,16 @@ function cityOf(field: string): string {
 }
 
 // ------------------------------------------------------------- matching
+//
+// Token matching itself (stop words, alias folding, year-stripping, the
+// half/relay/trail differentiator guard) lives in shared.ts's
+// nameSimilarity/findNameMatch — fetch.ts uses the same functions to catch a
+// recurring race re-discovered under a new year's URL. Only what's specific
+// to this CSV (its US-state/CA-province/non-ISO country column) stays here.
 
-// Words that carry no identity: every row is a marathon, and "international
-// annual city races" appears often enough to swamp a token overlap score.
-const STOP = new Set([
-  "marathon", "the", "of", "a", "and", "international", "annual",
-  "run", "runs", "races", "race", "festival", "city", "st", "mt",
-]);
-
-// The two sources spell the same race differently often enough to matter. The
-// CSV writes "Ft. Lauderdale A1A" where goandrace writes "Publix Fort
-// Lauderdale A1A"; left alone that scores 0.67 and the row would be closed out
-// as unavailable while its GPX sits on the source. Every entry here was added
-// after seeing it cause a real miss.
-const ALIASES: Record<string, string> = {
-  ft: "fort",
-  mount: "mt",
-  mtn: "mountain",
-  intl: "international",
-  saint: "st",
-  ste: "st",
-  "&": "and",
-  n: "and",
-};
-
-function tokens(input: string): Set<string> {
-  return new Set(
-    input
-      .toLowerCase()
-      // Drop apostrophes rather than turning them into a word break — "Jill's"
-      // must fold to "jills", the same token the CSV writes without one. Left
-      // as a break, "Jack & Jill's Downhill Marathon" split into a stray "s"
-      // token and the real match dropped from 0.82 to just under threshold.
-      .replace(/['']/g, "")
-      .replace(/[^a-z0-9 ]/g, " ")
-      .split(/\s+/)
-      .map((w) => ALIASES[w] ?? w)
-      .filter((w) => w && !STOP.has(w)),
-  );
-}
-
-/** Overlap against the *smaller* token set, so a sponsor prefix cannot sink a match. */
-function similarity(a: string, b: string): number {
-  const A = tokens(a);
-  const B = tokens(b);
-  if (A.size === 0 || B.size === 0) return 0;
-  let shared = 0;
-  for (const t of A) if (B.has(t)) shared += 1;
-  return shared / Math.min(A.size, B.size);
-}
+// The CSV writes "Ft. Lauderdale A1A" where goandrace writes "Publix Fort
+// Lauderdale A1A"; without alias folding that scores 0.67 and the row closes
+// out as unavailable while its GPX sits right there on the source.
 
 // The CSV's fourth column is a US state, a Canadian province, or findmymarathon's
 // own country abbreviation — which is not ISO. Mapping it to a real country code
@@ -293,10 +257,10 @@ function classify(
   // the slug the importer would have proposed for this name.
   let bestSeries = { score: 0, slug: "", name: "" };
   for (const s of series) {
-    const score = similarity(label, s.name);
+    const score = nameSimilarity(label, s.name);
     if (score > bestSeries.score) bestSeries = { score, slug: s.slug, name: s.name };
   }
-  const guess = [...tokens(label)].join("-");
+  const guess = [...matchTokens(label)].join("-");
   const ledgerHit = [...slugs].find((s) => s === guess || s === `${guess}-marathon`);
   if (bestSeries.score >= 0.99 || ledgerHit) {
     return {
@@ -318,24 +282,24 @@ function classify(
   // goandrace answers for this row either.
   const isPast = Number(year) < new Date().getFullYear();
 
-  // On goandrace? A city agreement is worth a nudge but never a match on its
-  // own — "Springfield Marathon" exists in three states. A country
-  // *disagreement*, on the other hand, is disqualifying.
+  // On goandrace? findNameMatch wants a city on the candidate, which RawEvent
+  // calls `locality`; a country *disagreement* is disqualifying in a way a
+  // city agreement never gets to be, so that's filtered before scoring rather
+  // than folded into the shared match — country isn't reliable enough data on
+  // fetch.ts's side to belong in the generic function.
   const country = countryOf(row.state);
-  let best = { score: 0, event: null as RawEvent | null };
-  for (const e of events) {
-    if (country && e.countryCode && e.countryCode !== country) continue;
-    let score = similarity(label, e.name ?? "");
-    if (e.locality && similarity(city, e.locality) > 0.5) score += 0.15;
-    if (score > best.score) best = { score, event: e };
-  }
-  if (best.score < 0.85 || !best.event) {
+  const inCountry = country
+    ? events.filter((e) => !e.countryCode || e.countryCode === country)
+    : events;
+  const candidates = inCountry.map((e) => ({ ...e, name: e.name ?? "", citySlug: e.locality ?? "" }));
+  const hit = findNameMatch(label, city, candidates, 0.85);
+  if (!hit) {
     return isPast
       ? { ...base, status: "past-event", note: `listed ${row.date}` }
       : { ...base, status: "not-on-source", note: "no goandrace listing in any crawl" };
   }
 
-  const event = best.event;
+  const event = hit;
   const shared = { ...base, sourceUrl: event.eventUrl, courseSlug: event.courseSlug };
 
   // The name match can miss what the slug catches: the CSV calls it "Bear Lake

@@ -51,6 +51,13 @@ Per event it reads the schema.org `SportsEvent` JSON-LD, follows the
 Sequential, ~1s between requests, honest `User-Agent`. Skips anything already
 downloaded, so a re-run resumes.
 
+It also skips anything that scrapes to the same real-world race as an
+already-seeded series, even under a brand new event URL and slug — goandrace
+pages a fresh URL for every year of a recurring race, so a slug/URL check
+alone would re-download a race already shipped. `findNameMatch` in
+`shared.ts` compares the scraped name and city against `SERIES_SEED` for
+this; see the import-races skill's hard rules for how it's wired in.
+
 ### 2. parse — geometry
 
 Standard parser run. Its validation is the first real gate: it rejects GPX with

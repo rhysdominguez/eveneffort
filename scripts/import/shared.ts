@@ -110,6 +110,118 @@ export function cleanDisplayName(eventName: string): string {
 }
 
 // ---------------------------------------------------------------------------
+// Fuzzy name matching
+// ---------------------------------------------------------------------------
+//
+// goandrace pages a fresh event URL for every year of a recurring race, so an
+// exact-slug or exact-URL dedup check (both used elsewhere in this pipeline)
+// cannot tell that "Flying Pig Marathon 2026" is the same real-world race as
+// the already-seeded "Cincinnati Flying Pig Marathon" — the slugs differ and
+// so does the URL. This is the shared matching logic that catches it by name
+// and city instead. Used at fetch time against SERIES_SEED (see fetch.ts) and
+// by the findmymarathon reconciler against its own crawl pool.
+
+/** Words that carry no identity: every race is a "marathon" in some city. */
+export const MATCH_STOP_WORDS = new Set([
+  "marathon", "the", "of", "a", "and", "international", "annual",
+  "run", "runs", "races", "race", "festival", "city", "st", "mt",
+]);
+
+/**
+ * Words that change what race this *is*, not just how it's phrased — a half
+ * marathon is not a marathon, a relay splits the distance across runners, a
+ * kids' fun run is not a competitive field. Unlike MATCH_STOP_WORDS these are
+ * never dropped: findNameMatch refuses a match where exactly one side has one,
+ * regardless of how high the token overlap scores otherwise. Without this
+ * guard, "Rotterdam Half Marathon" matches the seeded "Rotterdam Marathon" at
+ * a perfect 1.0 — the smaller token set (the seeded name, just "rotterdam")
+ * is a subset of the larger one, and dividing by the smaller set is exactly
+ * what makes a sponsor prefix not sink a real match, so the same property
+ * blinds it to a genuinely distinguishing suffix on the other side.
+ */
+const DISTANCE_OR_FORMAT_WORDS = new Set([
+  "half", "quarter", "ultra", "relay", "virtual", "kids", "youth",
+  "junior", "5k", "10k", "trail",
+]);
+
+/**
+ * Spelling variants seen often enough across the two sources this pipeline
+ * reads (goandrace's own listings, and hand-curated CSVs) to fold together
+ * rather than let sink a real match. Every entry here was added after seeing
+ * it cause one.
+ */
+export const MATCH_ALIASES: Record<string, string> = {
+  ft: "fort",
+  mount: "mt",
+  mtn: "mountain",
+  intl: "international",
+  saint: "st",
+  ste: "st",
+  "&": "and",
+  n: "and",
+};
+
+/** Lowercased, alias-folded, stop-word-stripped identity tokens for a name. */
+export function matchTokens(input: string): Set<string> {
+  return new Set(
+    input
+      .toLowerCase()
+      // Drop apostrophes rather than turning them into a word break — "Jill's"
+      // must fold to the same token as a source that writes "Jills".
+      .replace(/['']/g, "")
+      .replace(/[^a-z0-9 ]/g, " ")
+      .split(/\s+/)
+      // A bare edition year ("Flying Pig Marathon 2026") carries no identity
+      // but does inflate the token count on whichever side has it, which can
+      // drag a real match below threshold — proposeCourseSlug() strips years
+      // for the same reason.
+      .filter((w) => !/^(19|20)\d{2}$/.test(w))
+      .map((w) => MATCH_ALIASES[w] ?? w)
+      .filter((w) => w && !MATCH_STOP_WORDS.has(w)),
+  );
+}
+
+/** Token overlap against the *smaller* set, so a sponsor prefix cannot sink a match. */
+export function nameSimilarity(a: string, b: string): number {
+  const A = matchTokens(a);
+  const B = matchTokens(b);
+  if (A.size === 0 || B.size === 0) return 0;
+  let shared = 0;
+  for (const t of A) if (B.has(t)) shared += 1;
+  return shared / Math.min(A.size, B.size);
+}
+
+/**
+ * Does `name` (optionally anchored by `locality`) already match one of
+ * `candidates` closely enough to be the same real-world race? A city
+ * agreement is worth a nudge but never a match on its own — "Springfield
+ * Marathon" exists in three US states alone.
+ */
+export function findNameMatch<T extends { name: string; citySlug: string }>(
+  name: string,
+  locality: string | null,
+  candidates: readonly T[],
+  threshold = 0.85,
+): (T & { score: number }) | null {
+  const nameTokens = matchTokens(name);
+  let best: (T & { score: number }) | null = null;
+  for (const candidate of candidates) {
+    let score = nameSimilarity(name, candidate.name);
+    if (locality && nameSimilarity(locality, candidate.citySlug) > 0.4) score += 0.15;
+    if (!best || score > best.score) best = { ...candidate, score };
+  }
+  if (!best || best.score < threshold) return null;
+
+  // A perfect token-subset score does not survive a differentiator that only
+  // one side carries — see the comment on DISTANCE_OR_FORMAT_WORDS.
+  const candidateTokens = matchTokens(best.name);
+  for (const word of DISTANCE_OR_FORMAT_WORDS) {
+    if (nameTokens.has(word) !== candidateTokens.has(word)) return null;
+  }
+  return best;
+}
+
+// ---------------------------------------------------------------------------
 // Geography
 // ---------------------------------------------------------------------------
 
