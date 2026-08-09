@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-09T14:01:41.540Z",
+  "updatedAt": "2026-08-09T14:12:20.582Z",
   "courses": [
     {
       "courseSlug": "2-bologna-marathon",
@@ -758,6 +758,57 @@
       }
     },
     {
+      "courseSlug": "brasilia-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "city display name set to \"Brasília\"",
+        "organizer's site did not resolve, returned no readable content, or named none; left null"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/maratona-monumental-de-brasilia-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/11/23/gpx_20251123_id10633_race1_20251115150003.gpx?t=1786284469",
+        "gpxSha256": "d2fad953ee4dd809ab9f7b838c6821cb2aa0ec531341f67fa0f72e152da17a57"
+      },
+      "stats": {
+        "totalKm": 42.47601293035531,
+        "gainM": 155.00000000000034
+      },
+      "city": {
+        "slug": "brasilia-br",
+        "name": "Brasília",
+        "countryCode": "BR",
+        "countryName": "Brazil",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": -15.797379,
+        "longitude": -47.871342,
+        "timezone": "America/Sao_Paulo"
+      },
+      "citySlug": "brasilia-br",
+      "series": {
+        "slug": "brasilia-marathon",
+        "name": "Brasília Marathon",
+        "citySlug": "brasilia-br",
+        "courseSlug": "brasilia-marathon",
+        "isMajor": false,
+        "typicalMonth": 11,
+        "websiteUrl": "https://www.maratonamonumentalbsb.com.br/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "brasilia-marathon",
+        "month": 11,
+        "weekday": 0,
+        "nth": 4,
+        "note": "Derived from the 2025-11-23 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "brasilia-marathon",
+        "year": 2025,
+        "raceDate": "2025-11-23"
+      }
+    },
+    {
       "courseSlug": "bratislava-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -954,6 +1005,54 @@
       }
     },
     {
+      "courseSlug": "buenos-aires-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/buenos-aires-international-marathon-2025-buenos-aires.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/09/21/gpx_20250921_id10560_race1_20250906154220.gpx?t=1786284423",
+        "gpxSha256": "1fa21da53b6fb26bdbbbd4eed1ce969236ea0d39bc5c0e1c5f471cebf304f888"
+      },
+      "stats": {
+        "totalKm": 42.56297225893873,
+        "gainM": 76.30000000000001
+      },
+      "city": {
+        "slug": "buenos-aires-ar",
+        "name": "Buenos Aires",
+        "countryCode": "AR",
+        "countryName": "Argentina",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": -34.563065,
+        "longitude": -58.421104,
+        "timezone": "America/Argentina/Buenos_Aires"
+      },
+      "citySlug": "buenos-aires-ar",
+      "series": {
+        "slug": "buenos-aires-marathon",
+        "name": "Buenos Aires Marathon",
+        "citySlug": "buenos-aires-ar",
+        "courseSlug": "buenos-aires-marathon",
+        "isMajor": false,
+        "typicalMonth": 9,
+        "websiteUrl": "https://www.maratondebuenosaires.com",
+        "organizer": "Asociación Ñandú"
+      },
+      "recurrence": {
+        "seriesSlug": "buenos-aires-marathon",
+        "month": 9,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2025-09-21 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "buenos-aires-marathon",
+        "year": 2025,
+        "raceDate": "2025-09-21"
+      }
+    },
+    {
       "courseSlug": "calgary-marathon",
       "verdict": "ready",
       "reasons": [
@@ -1099,6 +1198,54 @@
         "seriesSlug": "cape-town-marathon",
         "year": 2025,
         "raceDate": "2025-10-19"
+      }
+    },
+    {
+      "courseSlug": "caracas-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/maraton-caf-caracas-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/02/16/gpx_20250216_id10129_race1_20250118173504.gpx?t=1786284443",
+        "gpxSha256": "6e76e350e6159f5247a7c54cdf5c424dfc409cea3cd0c27f8df4bbc3da2c5e8d"
+      },
+      "stats": {
+        "totalKm": 42.62643713323104,
+        "gainM": 125.00000000000011
+      },
+      "city": {
+        "slug": "caracas-ve",
+        "name": "Caracas",
+        "countryCode": "VE",
+        "countryName": "Venezuela",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 10.49779,
+        "longitude": -66.896267,
+        "timezone": "America/Caracas"
+      },
+      "citySlug": "caracas-ve",
+      "series": {
+        "slug": "caracas-marathon",
+        "name": "Caracas Marathon",
+        "citySlug": "caracas-ve",
+        "courseSlug": "caracas-marathon",
+        "isMajor": false,
+        "typicalMonth": 2,
+        "websiteUrl": "https://www.caf.com/es/especiales/maraton",
+        "organizer": "CAF - Banco de Desarrollo de América Latina"
+      },
+      "recurrence": {
+        "seriesSlug": "caracas-marathon",
+        "month": 2,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2025-02-16 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "caracas-marathon",
+        "year": 2025,
+        "raceDate": "2025-02-16"
       }
     },
     {
@@ -2029,6 +2176,56 @@
       }
     },
     {
+      "courseSlug": "lima-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "organizer's site did not resolve, returned no readable content, or named none; left null"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/05/marathon-lima-42k-2026.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/05/24/gpx_20260524_id11008_race1_20260520221725.gpx?t=1786284408",
+        "gpxSha256": "d368a3a4acec1a64450b16bcde4c2cf0d8b9aca43e1ea66cebe0327b35e60f52"
+      },
+      "stats": {
+        "totalKm": 42.94510339280909,
+        "gainM": 215.70000000000005
+      },
+      "city": {
+        "slug": "lima-pe",
+        "name": "Lima",
+        "countryCode": "PE",
+        "countryName": "Peru",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": -12.122828,
+        "longitude": -77.029162,
+        "timezone": "America/Lima"
+      },
+      "citySlug": "lima-pe",
+      "series": {
+        "slug": "lima-marathon",
+        "name": "Lima Marathon",
+        "citySlug": "lima-pe",
+        "courseSlug": "lima-marathon",
+        "isMajor": false,
+        "typicalMonth": 5,
+        "websiteUrl": "https://lima42k.com.pe/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "lima-marathon",
+        "month": 5,
+        "weekday": 0,
+        "nth": 4,
+        "note": "Derived from the 2026-05-24 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "lima-marathon",
+        "year": 2026,
+        "raceDate": "2026-05-24"
+      }
+    },
+    {
       "courseSlug": "lincoln-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -2472,6 +2669,77 @@
       "series": null,
       "recurrence": null,
       "edition": null
+    },
+    {
+      "courseSlug": "medellin-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/medellin-marathon-2025-medellin.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "mendoza-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "organizer's site did not resolve, returned no readable content, or named none; left null"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/maraton-de-mendoza-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/05/04/gpx_20250504_id10172_race1_20250407222646.gpx?t=1786284692",
+        "gpxSha256": "72ecac34e36325907a4846106b3d84a366f6dfc5facc3e08e719810b80bd6a58"
+      },
+      "stats": {
+        "totalKm": 42.3327308792411,
+        "gainM": 23.800000000000296
+      },
+      "city": {
+        "slug": "mendoza-ar",
+        "name": "Mendoza",
+        "countryCode": "AR",
+        "countryName": "Argentina",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": -33.015362,
+        "longitude": -69.117928,
+        "timezone": "America/Argentina/Buenos_Aires"
+      },
+      "citySlug": "mendoza-ar",
+      "series": {
+        "slug": "mendoza-marathon",
+        "name": "Mendoza Marathon",
+        "citySlug": "mendoza-ar",
+        "courseSlug": "mendoza-marathon",
+        "isMajor": false,
+        "typicalMonth": 5,
+        "websiteUrl": "https://maratondemendoza.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "mendoza-marathon",
+        "month": 5,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the 2025-05-04 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "mendoza-marathon",
+        "year": 2025,
+        "raceDate": "2025-05-04"
+      }
     },
     {
       "courseSlug": "mesa-marathon",
@@ -3277,6 +3545,56 @@
       }
     },
     {
+      "courseSlug": "rio-de-janeiro-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "organizer's site did not resolve, returned no readable content, or named none; left null"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/06/maratona-da-cidade-do-rio-de-janeiro-2026.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/06/07/gpx_20260607_id11015_race1_20260521154938.gpx?t=1786284413",
+        "gpxSha256": "2e83173853f0cea89f6f883ffb74c66d43f3d0b17b08a0aadd18cd8e708f8227"
+      },
+      "stats": {
+        "totalKm": 42.48627379082847,
+        "gainM": 83.1
+      },
+      "city": {
+        "slug": "rio-de-janeiro-br",
+        "name": "Rio de Janeiro",
+        "countryCode": "BR",
+        "countryName": "Brazil",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": -23.019668,
+        "longitude": -43.435065,
+        "timezone": "America/Sao_Paulo"
+      },
+      "citySlug": "rio-de-janeiro-br",
+      "series": {
+        "slug": "rio-de-janeiro-marathon",
+        "name": "Rio de Janeiro Marathon",
+        "citySlug": "rio-de-janeiro-br",
+        "courseSlug": "rio-de-janeiro-marathon",
+        "isMajor": false,
+        "typicalMonth": 6,
+        "websiteUrl": "https://www.maratonadorio.com.br",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "rio-de-janeiro-marathon",
+        "month": 6,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the 2026-06-07 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "rio-de-janeiro-marathon",
+        "year": 2026,
+        "raceDate": "2026-06-07"
+      }
+    },
+    {
       "courseSlug": "rock-n-roll-san-diego-marathon",
       "verdict": "ready",
       "reasons": [
@@ -3472,6 +3790,54 @@
         "seriesSlug": "san-francisco-marathon",
         "year": 2026,
         "raceDate": "2026-07-26"
+      }
+    },
+    {
+      "courseSlug": "santiago-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/maraton-de-santiago-2024.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/04/28/gpx_20240428_id8678_race1_20240127235838.gpx?t=1786284454",
+        "gpxSha256": "3aa59e0350f5efec0320ae13e6504471e831c692e39f75b71a2fc17e1fbddac1"
+      },
+      "stats": {
+        "totalKm": 42.243044441967044,
+        "gainM": 174.79999999999995
+      },
+      "city": {
+        "slug": "santiago-cl",
+        "name": "Santiago",
+        "countryCode": "CL",
+        "countryName": "Chile",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": -33.444343,
+        "longitude": -70.653553,
+        "timezone": "America/Santiago"
+      },
+      "citySlug": "santiago-cl",
+      "series": {
+        "slug": "santiago-marathon",
+        "name": "Santiago Marathon",
+        "citySlug": "santiago-cl",
+        "courseSlug": "santiago-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://maratondesantiago.cl",
+        "organizer": "Prokart Producciones"
+      },
+      "recurrence": {
+        "seriesSlug": "santiago-marathon",
+        "month": 4,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2024-04-28 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "santiago-marathon",
+        "year": 2024,
+        "raceDate": "2024-04-28"
       }
     },
     {

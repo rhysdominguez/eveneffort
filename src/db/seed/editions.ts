@@ -550,6 +550,50 @@ export const RECURRENCE: Record<string, RecurrenceRule> = {
     nth: 3,
     note: "Derived from the 2025-11-16 edition; not verified against the organizer",
   },
+  // Imported from goandrace.com — batch 2026-08-09. Each rule is derived
+  // from one observed date, not from the organizer's own statement.
+  "brasilia-marathon": {
+    month: 11,
+    weekday: 0,
+    nth: 4,
+    note: "Derived from the 2025-11-23 edition; not verified against the organizer",
+  },
+  "buenos-aires-marathon": {
+    month: 9,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2025-09-21 edition; not verified against the organizer",
+  },
+  "caracas-marathon": {
+    month: 2,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2025-02-16 edition; not verified against the organizer",
+  },
+  "lima-marathon": {
+    month: 5,
+    weekday: 0,
+    nth: 4,
+    note: "Derived from the 2026-05-24 edition; not verified against the organizer",
+  },
+  "mendoza-marathon": {
+    month: 5,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the 2025-05-04 edition; not verified against the organizer",
+  },
+  "rio-de-janeiro-marathon": {
+    month: 6,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the 2026-06-07 edition; not verified against the organizer",
+  },
+  "santiago-marathon": {
+    month: 4,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2024-04-28 edition; not verified against the organizer",
+  },
 };
 
 export interface ConfirmedEdition {
@@ -695,6 +739,15 @@ export const CONFIRMED_EDITIONS: ConfirmedEdition[] = [
   // Imported from goandrace.com — batch 2026-08-09. Dates as published by
   // the event listing; startTimeLocal is deliberately left unset.
   { seriesSlug: "verona-marathon", year: 2025, raceDate: "2025-11-16" },
+  // Imported from goandrace.com — batch 2026-08-09. Dates as published by
+  // the event listing; startTimeLocal is deliberately left unset.
+  { seriesSlug: "brasilia-marathon", year: 2025, raceDate: "2025-11-23" },
+  { seriesSlug: "buenos-aires-marathon", year: 2025, raceDate: "2025-09-21" },
+  { seriesSlug: "caracas-marathon", year: 2025, raceDate: "2025-02-16" },
+  { seriesSlug: "lima-marathon", year: 2026, raceDate: "2026-05-24" },
+  { seriesSlug: "mendoza-marathon", year: 2025, raceDate: "2025-05-04" },
+  { seriesSlug: "rio-de-janeiro-marathon", year: 2026, raceDate: "2026-06-07" },
+  { seriesSlug: "santiago-marathon", year: 2024, raceDate: "2024-04-28" },
 ];
 
 /**
