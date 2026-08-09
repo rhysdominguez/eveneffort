@@ -21,7 +21,8 @@
     "import:fetch": "node scripts/import/fetch.ts",
     "import:parse": "python3 scripts/gpx_parser/parse_gpx.py",
     "import:qa": "node scripts/import/qa.ts",
-    "import:promote": "node scripts/import/promote.ts"
+    "import:promote": "node scripts/import/promote.ts",
+    "import:reconcile": "node scripts/import/reconcile-csv.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
