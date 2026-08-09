@@ -849,4 +849,15 @@ export const SERIES_SEED: SeriesSeed[] = [
     websiteUrl: "https://www.jooks.ee/en/tallinn-marathon",
     organizer: "Spordiürituste Korraldamise Klubi",
   },
+  // Imported from goandrace.com — batch 2026-08-09.
+  {
+    slug: "verona-marathon",
+    name: "Verona Marathon",
+    citySlug: "verona-it",
+    courseSlug: "verona-marathon",
+    isMajor: false,
+    typicalMonth: 11,
+    websiteUrl: "https://www.veronarunmarathon.it/",
+    organizer: "GAAC 2007 Veronamarathon",
+  },
 ];

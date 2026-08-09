@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-09T13:54:22.254Z",
+  "updatedAt": "2026-08-09T14:01:41.540Z",
   "courses": [
     {
       "courseSlug": "2-bologna-marathon",
@@ -9,6 +9,27 @@
       ],
       "source": {
         "eventUrl": "https://www.goandrace.com/en/running-events/2-bologna-marathon-2023.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "5-maratona-di-catania",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/5-maratona-di-catania-2023.php",
         "gpxUrl": null,
         "gpxSha256": null
       },
@@ -3934,6 +3955,75 @@
         "year": 2025,
         "raceDate": "2025-05-04"
       }
+    },
+    {
+      "courseSlug": "verona-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/verona-run-marathon-2025-verona.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/11/16/gpx_20251116_id10612_race1_20251108223837.gpx?t=1786284068",
+        "gpxSha256": "9d1f632fb24145764ffe72029240975504bb559dfdace5457b428f833973fc6c"
+      },
+      "stats": {
+        "totalKm": 42.71349380464905,
+        "gainM": 64.6
+      },
+      "city": {
+        "slug": "verona-it",
+        "name": "Verona",
+        "countryCode": "IT",
+        "countryName": "Italy",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 45.435688,
+        "longitude": 10.966571,
+        "timezone": "Europe/Rome"
+      },
+      "citySlug": "verona-it",
+      "series": {
+        "slug": "verona-marathon",
+        "name": "Verona Marathon",
+        "citySlug": "verona-it",
+        "courseSlug": "verona-marathon",
+        "isMajor": false,
+        "typicalMonth": 11,
+        "websiteUrl": "https://www.veronarunmarathon.it/",
+        "organizer": "GAAC 2007 Veronamarathon"
+      },
+      "recurrence": {
+        "seriesSlug": "verona-marathon",
+        "month": 11,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2025-11-16 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "verona-marathon",
+        "year": 2025,
+        "raceDate": "2025-11-16"
+      }
+    },
+    {
+      "courseSlug": "verona-run-marathon-42k-21k-family-run",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/11/verona-run-marathon-42k-21k-family-run-2026.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
     },
     {
       "courseSlug": "vienna-city-marathon",

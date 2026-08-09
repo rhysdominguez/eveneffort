@@ -915,4 +915,16 @@ export const CITY_SEED: CitySeed[] = [
     longitude: 24.73459,
     timezone: "Europe/Tallinn",
   },
+  // Imported from goandrace.com — batch 2026-08-09.
+  {
+    slug: "verona-it",
+    name: "Verona",
+    countryCode: "IT",
+    countryName: "Italy",
+    regionCode: null,
+    regionName: null,
+    latitude: 45.435688,
+    longitude: 10.966571,
+    timezone: "Europe/Rome",
+  },
 ];

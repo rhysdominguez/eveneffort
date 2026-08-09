@@ -542,6 +542,14 @@ export const RECURRENCE: Record<string, RecurrenceRule> = {
     nth: 2,
     note: "Derived from the 2024-09-08 edition; not verified against the organizer",
   },
+  // Imported from goandrace.com — batch 2026-08-09. Each rule is derived
+  // from one observed date, not from the organizer's own statement.
+  "verona-marathon": {
+    month: 11,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2025-11-16 edition; not verified against the organizer",
+  },
 };
 
 export interface ConfirmedEdition {
@@ -684,6 +692,9 @@ export const CONFIRMED_EDITIONS: ConfirmedEdition[] = [
   { seriesSlug: "montpellier-marathon", year: 2026, raceDate: "2026-04-18" },
   { seriesSlug: "nice-cannes-marathon", year: 2024, raceDate: "2024-11-03" },
   { seriesSlug: "tallinn-marathon", year: 2024, raceDate: "2024-09-08" },
+  // Imported from goandrace.com — batch 2026-08-09. Dates as published by
+  // the event listing; startTimeLocal is deliberately left unset.
+  { seriesSlug: "verona-marathon", year: 2025, raceDate: "2025-11-16" },
 ];
 
 /**
