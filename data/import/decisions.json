@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-09T19:10:47.086Z",
+  "updatedAt": "2026-08-09T19:32:04.278Z",
   "courses": [
     {
       "courseSlug": "2-bologna-marathon",
@@ -42,6 +42,56 @@
       "series": null,
       "recurrence": null,
       "edition": null
+    },
+    {
+      "courseSlug": "lagos-city-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/access-lagos-city-marathon-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/02/15/gpx_20250215_id10159_race1_20250131103312.gpx?t=1786285565",
+        "gpxSha256": "c3868d60f971a8def227da745938e5da8499b0006feb70ebd8f86ee3e7ae02aa"
+      },
+      "stats": {
+        "totalKm": 42.30957830647381,
+        "gainM": 46.39999999999999
+      },
+      "city": {
+        "slug": "lagos-ng",
+        "name": "Lagos",
+        "countryCode": "NG",
+        "countryName": "Nigeria",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 6.497999,
+        "longitude": 3.362104,
+        "timezone": "Africa/Lagos"
+      },
+      "citySlug": "lagos-ng",
+      "series": {
+        "slug": "lagos-city-marathon",
+        "name": "Lagos City Marathon",
+        "citySlug": "lagos-ng",
+        "courseSlug": "lagos-city-marathon",
+        "isMajor": false,
+        "typicalMonth": 2,
+        "websiteUrl": "https://lagoscitymarathon.com",
+        "organizer": "Lagos City Marathon"
+      },
+      "recurrence": {
+        "seriesSlug": "lagos-city-marathon",
+        "month": 2,
+        "weekday": 6,
+        "nth": 3,
+        "note": "Derived from the 2025-02-15 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "lagos-city-marathon",
+        "year": 2025,
+        "raceDate": "2025-02-15"
+      }
     },
     {
       "courseSlug": "alamo-marathon",
@@ -1225,56 +1275,6 @@
       "edition": null
     },
     {
-      "courseSlug": "oslo-marathon",
-      "verdict": "ready",
-      "reasons": [
-        "measured 42.730 km, outside the [42.0, 42.4] band"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/bmw-oslo-maraton-2025.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2025/09/20/gpx_20250920_id10471_race2_20250821122528.gpx?t=1786302431",
-        "gpxSha256": "0d098c00dcbc23a9f785cf58c046faf674d81b96c0988531018ab95735012680"
-      },
-      "stats": {
-        "totalKm": 42.72971497943326,
-        "gainM": 177.39999999999998
-      },
-      "city": {
-        "slug": "oslo-no",
-        "name": "Oslo",
-        "countryCode": "NO",
-        "countryName": "Norway",
-        "regionCode": null,
-        "regionName": null,
-        "latitude": 59.911614,
-        "longitude": 10.733293,
-        "timezone": "Europe/Oslo"
-      },
-      "citySlug": "oslo-no",
-      "series": {
-        "slug": "oslo-marathon",
-        "name": "Oslo Marathon",
-        "citySlug": "oslo-no",
-        "courseSlug": "oslo-marathon",
-        "isMajor": false,
-        "typicalMonth": 9,
-        "websiteUrl": "https://oslomaraton.no",
-        "organizer": "Oslo Marathon As"
-      },
-      "recurrence": {
-        "seriesSlug": "oslo-marathon",
-        "month": 9,
-        "weekday": 6,
-        "nth": 3,
-        "note": "Derived from the 2025-09-20 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "oslo-marathon",
-        "year": 2025,
-        "raceDate": "2025-09-20"
-      }
-    },
-    {
       "courseSlug": "bologna-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -1765,6 +1765,56 @@
         "seriesSlug": "buffalo-marathon",
         "year": 2026,
         "raceDate": "2026-05-23"
+      }
+    },
+    {
+      "courseSlug": "xiamen-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/c-d-xiamen-marathon-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/01/05/gpx_20250105_id10087_race1_20241206151726.gpx?t=1786286392",
+        "gpxSha256": "f2ea4afda88c58f6ff3d14c0fc035e120190ad5ab25684674f216d1cb8db00cd"
+      },
+      "stats": {
+        "totalKm": 42.23519452629154,
+        "gainM": 47.199999999999996
+      },
+      "city": {
+        "slug": "xiamen-cn",
+        "name": "Xiamen",
+        "countryCode": "CN",
+        "countryName": "China",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 24.472297,
+        "longitude": 118.188542,
+        "timezone": "Asia/Shanghai"
+      },
+      "citySlug": "xiamen-cn",
+      "series": {
+        "slug": "xiamen-marathon",
+        "name": "Xiamen Marathon",
+        "citySlug": "xiamen-cn",
+        "courseSlug": "xiamen-marathon",
+        "isMajor": false,
+        "typicalMonth": 1,
+        "websiteUrl": "https://www.xmim.org",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "xiamen-marathon",
+        "month": 1,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the 2025-01-05 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "xiamen-marathon",
+        "year": 2025,
+        "raceDate": "2025-01-05"
       }
     },
     {
@@ -3047,6 +3097,56 @@
       }
     },
     {
+      "courseSlug": "dubai-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/dubai-marathon-2024-dubai.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/01/07/gpx_20240107_id8232_race1_20231006132253.gpx?t=1786286515",
+        "gpxSha256": "d0909af3f5976a5c1e25320292f914310f863542fc0f0b8ae6064fed393e26cb"
+      },
+      "stats": {
+        "totalKm": 42.39037718867896,
+        "gainM": 11.2
+      },
+      "city": {
+        "slug": "dubai-ae",
+        "name": "Dubai",
+        "countryCode": "AE",
+        "countryName": "United Arab Emirates",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 25.130593,
+        "longitude": 55.191207,
+        "timezone": "Asia/Dubai"
+      },
+      "citySlug": "dubai-ae",
+      "series": {
+        "slug": "dubai-marathon",
+        "name": "Dubai Marathon",
+        "citySlug": "dubai-ae",
+        "courseSlug": "dubai-marathon",
+        "isMajor": false,
+        "typicalMonth": 1,
+        "websiteUrl": "https://www.dubaimarathon.org",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "dubai-marathon",
+        "month": 1,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the 2024-01-07 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "dubai-marathon",
+        "year": 2024,
+        "raceDate": "2024-01-07"
+      }
+    },
+    {
       "courseSlug": "dublin-marathon",
       "verdict": "ready",
       "reasons": [
@@ -3143,48 +3243,6 @@
         "seriesSlug": "edinburgh-marathon",
         "year": 2026,
         "raceDate": "2026-05-24"
-      }
-    },
-    {
-      "courseSlug": "lisbon-marathon",
-      "verdict": "ready",
-      "reasons": [
-        "measured 42.411 km, outside the [42.0, 42.4] band",
-        "city lisbon-pt is already seeded (start lines 16.1 km apart); reusing its existing pin, emitting no city row",
-        "no organizer name published — fill SeriesSeed.organizer by hand"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/edp-lisbon-marathon-2025.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2025/10/25/gpx_20251025_id10582_race1_20250925225441.gpx?t=1786302537",
-        "gpxSha256": "d59223473b25b65713515a7007549e0a7039c194e51c954a6dc352aee2962a84"
-      },
-      "stats": {
-        "totalKm": 42.410815686284806,
-        "gainM": 66.89999999999999
-      },
-      "city": null,
-      "citySlug": "lisbon-pt",
-      "series": {
-        "slug": "lisbon-marathon",
-        "name": "Lisbon Marathon",
-        "citySlug": "lisbon-pt",
-        "courseSlug": "lisbon-marathon",
-        "isMajor": false,
-        "typicalMonth": 10,
-        "websiteUrl": "https://www.maratonalisboa.com",
-        "organizer": ""
-      },
-      "recurrence": {
-        "seriesSlug": "lisbon-marathon",
-        "month": 10,
-        "weekday": 6,
-        "nth": -1,
-        "note": "Derived from the 2025-10-25 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "lisbon-marathon",
-        "year": 2025,
-        "raceDate": "2025-10-25"
       }
     },
     {
@@ -4092,6 +4150,56 @@
       }
     },
     {
+      "courseSlug": "huairou-great-wall-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/huairou-great-wall-marathon-2025-beijing.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/09/21/gpx_20250921_id10490_race1_20250914223703.gpx?t=1786287930",
+        "gpxSha256": "3e36d7b3a86e3e7ff0e2243666b259413902638d74f0b3dcaa0e1d7512e5bc40"
+      },
+      "stats": {
+        "totalKm": 42.16890170997843,
+        "gainM": 275.4
+      },
+      "city": {
+        "slug": "huairou-cn",
+        "name": "Beijing",
+        "countryCode": "CN",
+        "countryName": "China",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 40.376,
+        "longitude": 116.64902,
+        "timezone": "Asia/Shanghai"
+      },
+      "citySlug": "huairou-cn",
+      "series": {
+        "slug": "huairou-great-wall-marathon",
+        "name": "Huairou Great Wall Marathon",
+        "citySlug": "huairou-cn",
+        "courseSlug": "huairou-great-wall-marathon",
+        "isMajor": false,
+        "typicalMonth": 9,
+        "websiteUrl": "https://www.huairougreatwallmarathon.com/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "huairou-great-wall-marathon",
+        "month": 9,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2025-09-21 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "huairou-great-wall-marathon",
+        "year": 2025,
+        "raceDate": "2025-09-21"
+      }
+    },
+    {
       "courseSlug": "hyannis-marathon",
       "verdict": "ready",
       "reasons": [
@@ -4164,6 +4272,57 @@
       "series": null,
       "recurrence": null,
       "edition": null
+    },
+    {
+      "courseSlug": "marrakech-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.672 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/international-marathon-of-marrakech-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/01/26/gpx_20250126_id10100_race1_20241216160558.gpx?t=1786287949",
+        "gpxSha256": "65387fa4890599500dadbb9e2880759ba9d7873378d6e2acbd6886a96cef3d33"
+      },
+      "stats": {
+        "totalKm": 42.67222643305757,
+        "gainM": 113.10000000000008
+      },
+      "city": {
+        "slug": "marrakech-ma",
+        "name": "Marrakech",
+        "countryCode": "MA",
+        "countryName": "Morocco",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 31.62094,
+        "longitude": -8.000798,
+        "timezone": "Africa/Casablanca"
+      },
+      "citySlug": "marrakech-ma",
+      "series": {
+        "slug": "marrakech-marathon",
+        "name": "Marrakech Marathon",
+        "citySlug": "marrakech-ma",
+        "courseSlug": "marrakech-marathon",
+        "isMajor": false,
+        "typicalMonth": 1,
+        "websiteUrl": "https://marathonmarrakech.ma",
+        "organizer": "AGA"
+      },
+      "recurrence": {
+        "seriesSlug": "marrakech-marathon",
+        "month": 1,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2025-01-26 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "marrakech-marathon",
+        "year": 2025,
+        "raceDate": "2025-01-26"
+      }
     },
     {
       "courseSlug": "irving-marathon",
@@ -4517,6 +4676,56 @@
       }
     },
     {
+      "courseSlug": "kilimanjaro-international-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/kilimanjaro-international-marathon-2024-moshi.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/02/25/gpx_20240225_id8305_race1_20231228165141.gpx?t=1786287994",
+        "gpxSha256": "ebf440affcede82a04b5a59334e492d82c74555e820c20170d9c8e11dc0b0bb5"
+      },
+      "stats": {
+        "totalKm": 42.14094150538766,
+        "gainM": 407.4
+      },
+      "city": {
+        "slug": "moshi-tz",
+        "name": "Moshi",
+        "countryCode": "TZ",
+        "countryName": "Tanzania",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": -3.336297,
+        "longitude": 37.341017,
+        "timezone": "Africa/Dar_es_Salaam"
+      },
+      "citySlug": "moshi-tz",
+      "series": {
+        "slug": "kilimanjaro-international-marathon",
+        "name": "Kilimanjaro International Marathon",
+        "citySlug": "moshi-tz",
+        "courseSlug": "kilimanjaro-international-marathon",
+        "isMajor": false,
+        "typicalMonth": 2,
+        "websiteUrl": "https://www.kilimanjaromarathon.com",
+        "organizer": "Wild Frontiers Events (Pty) Ltd"
+      },
+      "recurrence": {
+        "seriesSlug": "kilimanjaro-international-marathon",
+        "month": 2,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2024-02-25 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "kilimanjaro-international-marathon",
+        "year": 2024,
+        "raceDate": "2024-02-25"
+      }
+    },
+    {
       "courseSlug": "leadville-trail-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -4612,6 +4821,56 @@
         "seriesSlug": "lima-marathon",
         "year": 2026,
         "raceDate": "2026-05-24"
+      }
+    },
+    {
+      "courseSlug": "limassol-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/opap-limassol-marathon-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/03/23/gpx_20250323_id10224_race1_20250312233924.gpx?t=1786302441",
+        "gpxSha256": "9bc653e718c0722d56c210f844e184edfe094dfdde38c34032e7679274477c96"
+      },
+      "stats": {
+        "totalKm": 42.212274958592296,
+        "gainM": 60.00000000000001
+      },
+      "city": {
+        "slug": "limassol-cy",
+        "name": "Limassol",
+        "countryCode": "CY",
+        "countryName": "Cyprus",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 34.673364,
+        "longitude": 33.046264,
+        "timezone": "Asia/Nicosia"
+      },
+      "citySlug": "limassol-cy",
+      "series": {
+        "slug": "limassol-marathon",
+        "name": "Limassol Marathon",
+        "citySlug": "limassol-cy",
+        "courseSlug": "limassol-marathon",
+        "isMajor": false,
+        "typicalMonth": 3,
+        "websiteUrl": "https://www.limassolmarathon.com",
+        "organizer": "Eleven Blue Events Ltd"
+      },
+      "recurrence": {
+        "seriesSlug": "limassol-marathon",
+        "month": 3,
+        "weekday": 0,
+        "nth": 4,
+        "note": "Derived from the 2025-03-23 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "limassol-marathon",
+        "year": 2025,
+        "raceDate": "2025-03-23"
       }
     },
     {
@@ -4711,6 +4970,48 @@
         "seriesSlug": "lisbon-eco-marathon",
         "year": 2026,
         "raceDate": "2026-04-12"
+      }
+    },
+    {
+      "courseSlug": "lisbon-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.411 km, outside the [42.0, 42.4] band",
+        "city lisbon-pt is already seeded (start lines 16.1 km apart); reusing its existing pin, emitting no city row",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/edp-lisbon-marathon-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/10/25/gpx_20251025_id10582_race1_20250925225441.gpx?t=1786302537",
+        "gpxSha256": "d59223473b25b65713515a7007549e0a7039c194e51c954a6dc352aee2962a84"
+      },
+      "stats": {
+        "totalKm": 42.410815686284806,
+        "gainM": 66.89999999999999
+      },
+      "city": null,
+      "citySlug": "lisbon-pt",
+      "series": {
+        "slug": "lisbon-marathon",
+        "name": "Lisbon Marathon",
+        "citySlug": "lisbon-pt",
+        "courseSlug": "lisbon-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://www.maratonalisboa.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "lisbon-marathon",
+        "month": 10,
+        "weekday": 6,
+        "nth": -1,
+        "note": "Derived from the 2025-10-25 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "lisbon-marathon",
+        "year": 2025,
+        "raceDate": "2025-10-25"
       }
     },
     {
@@ -5690,54 +5991,6 @@
         "seriesSlug": "mesa-marathon",
         "year": 2025,
         "raceDate": "2025-02-08"
-      }
-    },
-    {
-      "courseSlug": "pisa-marathon",
-      "verdict": "ready",
-      "reasons": [],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/mezza-maratona-la-pisanina-xviii-edizione-2025.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2025/12/21/gpx_20251221_id10667_race1_20251216215237.gpx?t=1786302437",
-        "gpxSha256": "32d66dbbe53bd6d0724b61bb35df77dbbbf315c191f68f27c0ebc8b3da065e09"
-      },
-      "stats": {
-        "totalKm": 42.22615606223845,
-        "gainM": 26.599999999999998
-      },
-      "city": {
-        "slug": "pisa-it",
-        "name": "Pisa",
-        "countryCode": "IT",
-        "countryName": "Italy",
-        "regionCode": null,
-        "regionName": null,
-        "latitude": 43.72315,
-        "longitude": 10.39216,
-        "timezone": "Europe/Rome"
-      },
-      "citySlug": "pisa-it",
-      "series": {
-        "slug": "pisa-marathon",
-        "name": "Pisa Marathon",
-        "citySlug": "pisa-it",
-        "courseSlug": "pisa-marathon",
-        "isMajor": false,
-        "typicalMonth": 12,
-        "websiteUrl": "https://maratonadipisa.com/",
-        "organizer": "1063AD e TriO Events"
-      },
-      "recurrence": {
-        "seriesSlug": "pisa-marathon",
-        "month": 12,
-        "weekday": 0,
-        "nth": 3,
-        "note": "Derived from the 2025-12-21 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "pisa-marathon",
-        "year": 2025,
-        "raceDate": "2025-12-21"
       }
     },
     {
@@ -6842,56 +7095,6 @@
       }
     },
     {
-      "courseSlug": "limassol-marathon",
-      "verdict": "ready",
-      "reasons": [
-        "no organizer name published — fill SeriesSeed.organizer by hand"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/opap-limassol-marathon-2025.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2025/03/23/gpx_20250323_id10224_race1_20250312233924.gpx?t=1786302441",
-        "gpxSha256": "9bc653e718c0722d56c210f844e184edfe094dfdde38c34032e7679274477c96"
-      },
-      "stats": {
-        "totalKm": 42.212274958592296,
-        "gainM": 60.00000000000001
-      },
-      "city": {
-        "slug": "limassol-cy",
-        "name": "Limassol",
-        "countryCode": "CY",
-        "countryName": "Cyprus",
-        "regionCode": null,
-        "regionName": null,
-        "latitude": 34.673364,
-        "longitude": 33.046264,
-        "timezone": "Asia/Nicosia"
-      },
-      "citySlug": "limassol-cy",
-      "series": {
-        "slug": "limassol-marathon",
-        "name": "Limassol Marathon",
-        "citySlug": "limassol-cy",
-        "courseSlug": "limassol-marathon",
-        "isMajor": false,
-        "typicalMonth": 3,
-        "websiteUrl": "https://www.limassolmarathon.com",
-        "organizer": "Eleven Blue Events Ltd"
-      },
-      "recurrence": {
-        "seriesSlug": "limassol-marathon",
-        "month": 3,
-        "weekday": 0,
-        "nth": 4,
-        "note": "Derived from the 2025-03-23 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "limassol-marathon",
-        "year": 2025,
-        "raceDate": "2025-03-23"
-      }
-    },
-    {
       "courseSlug": "orange-county-marathon",
       "verdict": "ready",
       "reasons": [
@@ -6939,6 +7142,149 @@
         "seriesSlug": "orange-county-marathon",
         "year": 2024,
         "raceDate": "2024-05-05"
+      }
+    },
+    {
+      "courseSlug": "osaka-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.413 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/osaka-marathon-2025-osaka.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/02/24/gpx_20250224_id10134_race1_20250121145438.gpx?t=1786291406",
+        "gpxSha256": "9fe6cff3d540074b34bc73cf17fa0628830c2cb061c54c9884b866604adf4921"
+      },
+      "stats": {
+        "totalKm": 42.41256666764692,
+        "gainM": 52.00000000000001
+      },
+      "city": {
+        "slug": "osaka-jp",
+        "name": "Osaka",
+        "countryCode": "JP",
+        "countryName": "Japan",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 34.686181,
+        "longitude": 135.520616,
+        "timezone": "Asia/Tokyo"
+      },
+      "citySlug": "osaka-jp",
+      "series": {
+        "slug": "osaka-marathon",
+        "name": "Osaka Marathon",
+        "citySlug": "osaka-jp",
+        "courseSlug": "osaka-marathon",
+        "isMajor": false,
+        "typicalMonth": 2,
+        "websiteUrl": "https://www.osaka-marathon.com",
+        "organizer": "Osaka Marathon"
+      },
+      "recurrence": {
+        "seriesSlug": "osaka-marathon",
+        "month": 2,
+        "weekday": 1,
+        "nth": -1,
+        "note": "Derived from the 2025-02-24 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "osaka-marathon",
+        "year": 2025,
+        "raceDate": "2025-02-24"
+      }
+    },
+    {
+      "courseSlug": "osaka-women-s-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 41.786 km, outside the [42.0, 42.4] band",
+        "city osaka-jp is already seeded (start lines 8.1 km apart); reusing its existing pin, emitting no city row",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/osaka-women-s-marathon-2025-osaka.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/01/26/gpx_20250126_id10097_race1_20241211232554.gpx?t=1786291357",
+        "gpxSha256": "c2ac16171fa92cfc56d5d754b6644c1c9b3c7c8f392d34417d1d1317d12bd068"
+      },
+      "stats": {
+        "totalKm": 41.78578339540414,
+        "gainM": 22.9
+      },
+      "city": null,
+      "citySlug": "osaka-jp",
+      "series": {
+        "slug": "osaka-women-s-marathon",
+        "name": "Osaka Women's Marathon",
+        "citySlug": "osaka-jp",
+        "courseSlug": "osaka-women-s-marathon",
+        "isMajor": false,
+        "typicalMonth": 1,
+        "websiteUrl": "https://www.osaka-marathon.jp",
+        "organizer": "Japan Association of Athletics Federations"
+      },
+      "recurrence": {
+        "seriesSlug": "osaka-women-s-marathon",
+        "month": 1,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2025-01-26 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "osaka-women-s-marathon",
+        "year": 2025,
+        "raceDate": "2025-01-26"
+      }
+    },
+    {
+      "courseSlug": "oslo-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.730 km, outside the [42.0, 42.4] band"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/bmw-oslo-maraton-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/09/20/gpx_20250920_id10471_race2_20250821122528.gpx?t=1786302431",
+        "gpxSha256": "0d098c00dcbc23a9f785cf58c046faf674d81b96c0988531018ab95735012680"
+      },
+      "stats": {
+        "totalKm": 42.72971497943326,
+        "gainM": 177.39999999999998
+      },
+      "city": {
+        "slug": "oslo-no",
+        "name": "Oslo",
+        "countryCode": "NO",
+        "countryName": "Norway",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 59.911614,
+        "longitude": 10.733293,
+        "timezone": "Europe/Oslo"
+      },
+      "citySlug": "oslo-no",
+      "series": {
+        "slug": "oslo-marathon",
+        "name": "Oslo Marathon",
+        "citySlug": "oslo-no",
+        "courseSlug": "oslo-marathon",
+        "isMajor": false,
+        "typicalMonth": 9,
+        "websiteUrl": "https://oslomaraton.no",
+        "organizer": "Oslo Marathon As"
+      },
+      "recurrence": {
+        "seriesSlug": "oslo-marathon",
+        "month": 9,
+        "weekday": 6,
+        "nth": 3,
+        "note": "Derived from the 2025-09-20 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "oslo-marathon",
+        "year": 2025,
+        "raceDate": "2025-09-20"
       }
     },
     {
@@ -7190,6 +7536,54 @@
         "seriesSlug": "pikes-peak-marathon",
         "year": 2025,
         "raceDate": "2025-09-21"
+      }
+    },
+    {
+      "courseSlug": "pisa-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/mezza-maratona-la-pisanina-xviii-edizione-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/12/21/gpx_20251221_id10667_race1_20251216215237.gpx?t=1786302437",
+        "gpxSha256": "32d66dbbe53bd6d0724b61bb35df77dbbbf315c191f68f27c0ebc8b3da065e09"
+      },
+      "stats": {
+        "totalKm": 42.22615606223845,
+        "gainM": 26.599999999999998
+      },
+      "city": {
+        "slug": "pisa-it",
+        "name": "Pisa",
+        "countryCode": "IT",
+        "countryName": "Italy",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 43.72315,
+        "longitude": 10.39216,
+        "timezone": "Europe/Rome"
+      },
+      "citySlug": "pisa-it",
+      "series": {
+        "slug": "pisa-marathon",
+        "name": "Pisa Marathon",
+        "citySlug": "pisa-it",
+        "courseSlug": "pisa-marathon",
+        "isMajor": false,
+        "typicalMonth": 12,
+        "websiteUrl": "https://maratonadipisa.com/",
+        "organizer": "1063AD e TriO Events"
+      },
+      "recurrence": {
+        "seriesSlug": "pisa-marathon",
+        "month": 12,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2025-12-21 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "pisa-marathon",
+        "year": 2025,
+        "raceDate": "2025-12-21"
       }
     },
     {
@@ -7490,6 +7884,56 @@
       }
     },
     {
+      "courseSlug": "vilnius-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/rimi-vilnius-marathon-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/09/14/gpx_20250914_id10488_race1_20250901191302.gpx?t=1786291564",
+        "gpxSha256": "25720863128c6b3ba879d3263a9c5d6fe2e465aa480ff7f1877380bc31eb1c7d"
+      },
+      "stats": {
+        "totalKm": 42.3558104031711,
+        "gainM": 158.10000000000002
+      },
+      "city": {
+        "slug": "vilnius-lt",
+        "name": "Vilnius",
+        "countryCode": "LT",
+        "countryName": "Lithuania",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 54.685871,
+        "longitude": 25.286144,
+        "timezone": "Europe/Vilnius"
+      },
+      "citySlug": "vilnius-lt",
+      "series": {
+        "slug": "vilnius-marathon",
+        "name": "Vilnius Marathon",
+        "citySlug": "vilnius-lt",
+        "courseSlug": "vilnius-marathon",
+        "isMajor": false,
+        "typicalMonth": 9,
+        "websiteUrl": "https://www.vilniausmaratonas.lt",
+        "organizer": "VšĮ \"Tarptautinis maratonas\""
+      },
+      "recurrence": {
+        "seriesSlug": "vilnius-marathon",
+        "month": 9,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2025-09-14 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "vilnius-marathon",
+        "year": 2025,
+        "raceDate": "2025-09-14"
+      }
+    },
+    {
       "courseSlug": "rio-de-janeiro-marathon",
       "verdict": "ready",
       "reasons": [
@@ -7538,6 +7982,27 @@
         "year": 2026,
         "raceDate": "2026-06-07"
       }
+    },
+    {
+      "courseSlug": "riyadh-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "parser failed: total route length 43.519 km is outside [41.5, 43.5] km"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/riyadh-marathon-2025-riyadh.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/02/08/gpx_20250208_id10083_race1_20241208183310.gpx?t=1786291361",
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
     },
     {
       "courseSlug": "rock-n-roll-san-diego-marathon",
@@ -8301,6 +8766,57 @@
       }
     },
     {
+      "courseSlug": "hong-kong-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 43.168 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/standard-chartered-hong-kong-marathon-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/02/09/gpx_20250209_id10104_race1_20241228183330.gpx?t=1786291366",
+        "gpxSha256": "fb5992b5e612da71ddb0bd8323918ad056e98d21e258e51a182f20780e963b40"
+      },
+      "stats": {
+        "totalKm": 43.16787414453725,
+        "gainM": 181.69999999999996
+      },
+      "city": {
+        "slug": "hong-kong-hk",
+        "name": "Hong Kong",
+        "countryCode": "HK",
+        "countryName": "Hong Kong",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 22.298933,
+        "longitude": 114.171949,
+        "timezone": "Asia/Hong_Kong"
+      },
+      "citySlug": "hong-kong-hk",
+      "series": {
+        "slug": "hong-kong-marathon",
+        "name": "Hong Kong Marathon",
+        "citySlug": "hong-kong-hk",
+        "courseSlug": "hong-kong-marathon",
+        "isMajor": false,
+        "typicalMonth": 2,
+        "websiteUrl": "https://www.hkmarathon.com",
+        "organizer": "Hong Kong Amateur Athletic Association"
+      },
+      "recurrence": {
+        "seriesSlug": "hong-kong-marathon",
+        "month": 2,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2025-02-09 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "hong-kong-marathon",
+        "year": 2025,
+        "raceDate": "2025-02-09"
+      }
+    },
+    {
       "courseSlug": "stockholm-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -8500,6 +9016,56 @@
       }
     },
     {
+      "courseSlug": "mumbai-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/tata-mumbai-marathon-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/01/19/gpx_20250119_id10095_race1_20250108125849.gpx?t=1786291353",
+        "gpxSha256": "3849b19714fb47a28f9ac44916fc8b1d27e17363a62e18098c05a9dacc40c969"
+      },
+      "stats": {
+        "totalKm": 42.18189813301163,
+        "gainM": 126.8
+      },
+      "city": {
+        "slug": "mumbai-in",
+        "name": "Mumbai",
+        "countryCode": "IN",
+        "countryName": "India",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 18.940139,
+        "longitude": 72.834877,
+        "timezone": "Asia/Kolkata"
+      },
+      "citySlug": "mumbai-in",
+      "series": {
+        "slug": "mumbai-marathon",
+        "name": "Mumbai Marathon",
+        "citySlug": "mumbai-in",
+        "courseSlug": "mumbai-marathon",
+        "isMajor": false,
+        "typicalMonth": 1,
+        "websiteUrl": "https://tatamumbaimarathon.procam.in",
+        "organizer": "Procam International"
+      },
+      "recurrence": {
+        "seriesSlug": "mumbai-marathon",
+        "month": 1,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2025-01-19 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "mumbai-marathon",
+        "year": 2025,
+        "raceDate": "2025-01-19"
+      }
+    },
+    {
       "courseSlug": "tcs-amsterdam-marathon",
       "verdict": "rejected",
       "reasons": [
@@ -8519,6 +9085,56 @@
       "series": null,
       "recurrence": null,
       "edition": null
+    },
+    {
+      "courseSlug": "tel-aviv-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/tel-aviv-bank-leumi-marathon-2025-tel-aviv.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/02/28/gpx_20250228_id10153_race1_20250127232615.gpx?t=1786291412",
+        "gpxSha256": "a71174f410ae5397a1d8290ae2df21329041e70cc0395894120a0a058c5e73b1"
+      },
+      "stats": {
+        "totalKm": 42.204748707816165,
+        "gainM": 74.8
+      },
+      "city": {
+        "slug": "tel-aviv-il",
+        "name": "Tel Aviv",
+        "countryCode": "IL",
+        "countryName": "Israel",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 32.10456,
+        "longitude": 34.81062,
+        "timezone": "Asia/Jerusalem"
+      },
+      "citySlug": "tel-aviv-il",
+      "series": {
+        "slug": "tel-aviv-marathon",
+        "name": "Tel Aviv Marathon",
+        "citySlug": "tel-aviv-il",
+        "courseSlug": "tel-aviv-marathon",
+        "isMajor": false,
+        "typicalMonth": 2,
+        "websiteUrl": "https://www.tlvmarathon.co.il",
+        "organizer": "Kapaim Active"
+      },
+      "recurrence": {
+        "seriesSlug": "tel-aviv-marathon",
+        "month": 2,
+        "weekday": 5,
+        "nth": -1,
+        "note": "Derived from the 2025-02-28 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "tel-aviv-marathon",
+        "year": 2025,
+        "raceDate": "2025-02-28"
+      }
     },
     {
       "courseSlug": "texas-triple",
@@ -8759,6 +9375,57 @@
         "seriesSlug": "toronto-waterfront-marathon",
         "year": 2025,
         "raceDate": "2025-10-19"
+      }
+    },
+    {
+      "courseSlug": "township-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 43.167 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/township-marathon-2025-johannesburg.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/02/23/gpx_20250223_id10161_race1_20250131222337.gpx?t=1786291397",
+        "gpxSha256": "ee0b35ee7b9d53326ad9ea1350b732dc1207d697bf07a8b3d29d1790c6381d9d"
+      },
+      "stats": {
+        "totalKm": 43.166631660080775,
+        "gainM": 215.29999999999995
+      },
+      "city": {
+        "slug": "johannesburg-za",
+        "name": "Johannesburg",
+        "countryCode": "ZA",
+        "countryName": "South Africa",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": -26.299868,
+        "longitude": 27.891308,
+        "timezone": "Africa/Johannesburg"
+      },
+      "citySlug": "johannesburg-za",
+      "series": {
+        "slug": "township-marathon",
+        "name": "Township Marathon",
+        "citySlug": "johannesburg-za",
+        "courseSlug": "township-marathon",
+        "isMajor": false,
+        "typicalMonth": 2,
+        "websiteUrl": "https://www.townshipmarathon.org.za",
+        "organizer": "Township Marathon Trust"
+      },
+      "recurrence": {
+        "seriesSlug": "township-marathon",
+        "month": 2,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2025-02-23 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "township-marathon",
+        "year": 2025,
+        "raceDate": "2025-02-23"
       }
     },
     {
@@ -9176,6 +9843,56 @@
       "edition": null
     },
     {
+      "courseSlug": "victoria-falls-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.904 km, outside the [42.0, 42.4] band"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/07/victoria-falls-marathon-2026.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/07/05/gpx_20260705_id11053_race1_20260625124359.gpx?t=1786285393",
+        "gpxSha256": "5f73d375037970f5f84816abc8caa1c60e1f7728d5bd94bd900ff7496155cade"
+      },
+      "stats": {
+        "totalKm": 42.90386477194912,
+        "gainM": 248.60000000000002
+      },
+      "city": {
+        "slug": "victoria-falls-zw",
+        "name": "Victoria Falls",
+        "countryCode": "ZW",
+        "countryName": "Zimbabwe",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": -17.92404,
+        "longitude": 25.83437,
+        "timezone": "Africa/Harare"
+      },
+      "citySlug": "victoria-falls-zw",
+      "series": {
+        "slug": "victoria-falls-marathon",
+        "name": "Victoria Falls Marathon",
+        "citySlug": "victoria-falls-zw",
+        "courseSlug": "victoria-falls-marathon",
+        "isMajor": false,
+        "typicalMonth": 7,
+        "websiteUrl": "https://www.vicfallsmarathon.com/",
+        "organizer": "Wild Frontiers Events (Pty) Ltd"
+      },
+      "recurrence": {
+        "seriesSlug": "victoria-falls-marathon",
+        "month": 7,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the 2026-07-05 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "victoria-falls-marathon",
+        "year": 2026,
+        "raceDate": "2026-07-05"
+      }
+    },
+    {
       "courseSlug": "vienna-city-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -9422,6 +10139,57 @@
         "seriesSlug": "wisconsin-marathon",
         "year": 2025,
         "raceDate": "2025-05-03"
+      }
+    },
+    {
+      "courseSlug": "zurich-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.428 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/zurich-marathon-2025-zurich.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/04/13/gpx_20250413_id10258_race1_20250408222722.gpx?t=1786291473",
+        "gpxSha256": "302fc06a264e5d1f1fef0ba155613b614f9b09ca37fb58a53eda5120d6a1be7f"
+      },
+      "stats": {
+        "totalKm": 42.42839374106194,
+        "gainM": 33.10000000000002
+      },
+      "city": {
+        "slug": "zurich-ch",
+        "name": "Zurich",
+        "countryCode": "CH",
+        "countryName": "Switzerland",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 47.366848,
+        "longitude": 8.543322,
+        "timezone": "Europe/Zurich"
+      },
+      "citySlug": "zurich-ch",
+      "series": {
+        "slug": "zurich-marathon",
+        "name": "Zürich Marathon",
+        "citySlug": "zurich-ch",
+        "courseSlug": "zurich-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://www.zuerichmarathon.ch",
+        "organizer": "ZH Marathon GmbH"
+      },
+      "recurrence": {
+        "seriesSlug": "zurich-marathon",
+        "month": 4,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2025-04-13 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "zurich-marathon",
+        "year": 2025,
+        "raceDate": "2025-04-13"
       }
     },
     {

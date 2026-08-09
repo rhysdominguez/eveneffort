@@ -226,6 +226,22 @@ export const PUBLISHED_COURSE_SLUGS: string[] = [
   "midnight-sun-marathon",
   "limassol-marathon",
   "venice-marathon",
+  // Batch 2026-08-09, imported from goandrace.com on 2026-08-09.
+  "lagos-city-marathon",
+  "xiamen-marathon",
+  "dubai-marathon",
+  "huairou-great-wall-marathon",
+  "marrakech-marathon",
+  "kilimanjaro-international-marathon",
+  "osaka-marathon",
+  "osaka-women-s-marathon",
+  "vilnius-marathon",
+  "hong-kong-marathon",
+  "mumbai-marathon",
+  "tel-aviv-marathon",
+  "township-marathon",
+  "victoria-falls-marathon",
+  "zurich-marathon",
 ];
 
 /** The shape every course slug must take: lowercase, digits, single hyphens. */

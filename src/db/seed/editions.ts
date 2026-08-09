@@ -1202,6 +1202,98 @@ export const RECURRENCE: Record<string, RecurrenceRule> = {
     nth: -1,
     note: "Derived from the 2025-10-26 edition; not verified against the organizer",
   },
+  // Imported from goandrace.com — batch 2026-08-09. Each rule is derived
+  // from one observed date, not from the organizer's own statement.
+  "lagos-city-marathon": {
+    month: 2,
+    weekday: 6,
+    nth: 3,
+    note: "Derived from the 2025-02-15 edition; not verified against the organizer",
+  },
+  "xiamen-marathon": {
+    month: 1,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the 2025-01-05 edition; not verified against the organizer",
+  },
+  "dubai-marathon": {
+    month: 1,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the 2024-01-07 edition; not verified against the organizer",
+  },
+  "huairou-great-wall-marathon": {
+    month: 9,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2025-09-21 edition; not verified against the organizer",
+  },
+  "marrakech-marathon": {
+    month: 1,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2025-01-26 edition; not verified against the organizer",
+  },
+  "kilimanjaro-international-marathon": {
+    month: 2,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2024-02-25 edition; not verified against the organizer",
+  },
+  "osaka-marathon": {
+    month: 2,
+    weekday: 1,
+    nth: -1,
+    note: "Derived from the 2025-02-24 edition; not verified against the organizer",
+  },
+  "osaka-women-s-marathon": {
+    month: 1,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2025-01-26 edition; not verified against the organizer",
+  },
+  "vilnius-marathon": {
+    month: 9,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2025-09-14 edition; not verified against the organizer",
+  },
+  "hong-kong-marathon": {
+    month: 2,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2025-02-09 edition; not verified against the organizer",
+  },
+  "mumbai-marathon": {
+    month: 1,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2025-01-19 edition; not verified against the organizer",
+  },
+  "tel-aviv-marathon": {
+    month: 2,
+    weekday: 5,
+    nth: -1,
+    note: "Derived from the 2025-02-28 edition; not verified against the organizer",
+  },
+  "township-marathon": {
+    month: 2,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2025-02-23 edition; not verified against the organizer",
+  },
+  "victoria-falls-marathon": {
+    month: 7,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the 2026-07-05 edition; not verified against the organizer",
+  },
+  "zurich-marathon": {
+    month: 4,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2025-04-13 edition; not verified against the organizer",
+  },
 };
 
 export interface ConfirmedEdition {
@@ -1464,6 +1556,23 @@ export const CONFIRMED_EDITIONS: ConfirmedEdition[] = [
   { seriesSlug: "midnight-sun-marathon", year: 2025, raceDate: "2025-06-21" },
   { seriesSlug: "limassol-marathon", year: 2025, raceDate: "2025-03-23" },
   { seriesSlug: "venice-marathon", year: 2025, raceDate: "2025-10-26" },
+  // Imported from goandrace.com — batch 2026-08-09. Dates as published by
+  // the event listing; startTimeLocal is deliberately left unset.
+  { seriesSlug: "lagos-city-marathon", year: 2025, raceDate: "2025-02-15" },
+  { seriesSlug: "xiamen-marathon", year: 2025, raceDate: "2025-01-05" },
+  { seriesSlug: "dubai-marathon", year: 2024, raceDate: "2024-01-07" },
+  { seriesSlug: "huairou-great-wall-marathon", year: 2025, raceDate: "2025-09-21" },
+  { seriesSlug: "marrakech-marathon", year: 2025, raceDate: "2025-01-26" },
+  { seriesSlug: "kilimanjaro-international-marathon", year: 2024, raceDate: "2024-02-25" },
+  { seriesSlug: "osaka-marathon", year: 2025, raceDate: "2025-02-24" },
+  { seriesSlug: "osaka-women-s-marathon", year: 2025, raceDate: "2025-01-26" },
+  { seriesSlug: "vilnius-marathon", year: 2025, raceDate: "2025-09-14" },
+  { seriesSlug: "hong-kong-marathon", year: 2025, raceDate: "2025-02-09" },
+  { seriesSlug: "mumbai-marathon", year: 2025, raceDate: "2025-01-19" },
+  { seriesSlug: "tel-aviv-marathon", year: 2025, raceDate: "2025-02-28" },
+  { seriesSlug: "township-marathon", year: 2025, raceDate: "2025-02-23" },
+  { seriesSlug: "victoria-falls-marathon", year: 2026, raceDate: "2026-07-05" },
+  { seriesSlug: "zurich-marathon", year: 2025, raceDate: "2025-04-13" },
 ];
 
 /**
