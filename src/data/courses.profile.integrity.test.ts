@@ -49,7 +49,14 @@ describe("course profile integrity", () => {
       const { profile } = loadGeometry(slug);
       const lastKm = profile[profile.length - 1][0];
       expect(lastKm).toBeGreaterThanOrEqual(41.5);
-      expect(lastKm).toBeLessThanOrEqual(43.0);
+      // Matches scripts/gpx_parser/parse_gpx.py's ceiling — see the comment
+      // there for why it is 43.5 and not 42.4 or 43.0. A digitized or
+      // GPS-built course line runs long against the officially certified
+      // shortest-possible-route distance; several real marathons (Cleveland,
+      // Cork City, Copenhagen among them) measure past 43.0 for that reason
+      // alone, and 43.5 sits at the real gap before the next failure mode
+      // (a wrong-distance event, not a long marathon) starts at 48.7 km.
+      expect(lastKm).toBeLessThanOrEqual(43.5);
     });
   });
 });

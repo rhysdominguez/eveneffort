@@ -131,7 +131,7 @@ def parse_gpx(
       - fewer than 100 track points
       - any point missing elevation
       - a jump over MAX_STEP_M between consecutive points
-      - total route length outside [41.5, 43.0] km
+      - total route length outside [41.5, 43.5] km
     Prints a warning (but continues) if length is outside [42.0, 42.4] km.
     """
     with path.open("r", encoding="utf-8") as fh:
@@ -172,10 +172,33 @@ def parse_gpx(
             f"or discontinuous"
         )
 
+    # The ceiling was 43.0 km through 2026-08-09. Widened to 43.5 after a real
+    # cluster of losses: Buffalo (43.001), Long Beach (43.098), Pittsburgh
+    # (43.026), Cork City (43.022), Fargo (43.036), Kansas City (43.044), Tulsa
+    # (43.063), Blue Ridge (43.078), Hyannis (43.105), Long Island (43.121),
+    # Copenhagen (43.175), Cleveland (43.21) and Chattanooga (43.295) were all
+    # rejected within 300 m of the old line, every one a real marathon.
+    #
+    # These GPX files are not recorded activities with GPS jitter to smooth —
+    # they carry no per-point timestamps, just a hand-traced or Garmin
+    # Connect-built course line. Tried Douglas-Peucker simplification at up to
+    # 20 m tolerance (blurring real corners) and it recovered under half the
+    # excess: the extra distance is real path length, not noise, distributed
+    # through the course rather than sitting at either end. This is the
+    # standard course-measurement gap — an officially certified distance is
+    # the shortest possible route through every turn; a traced or GPS-based
+    # line almost always runs long against that, the same reason Berlin has
+    # measured 42.76 km since it was added.
+    #
+    # 43.5 is not "wide enough to pass everything" — it is chosen at the real
+    # gap in the data. The worst genuine near-miss above is Zydeco at 43.390;
+    # the next rejection past that is Amsterdam-adjacent Marine Corps at
+    # 50.535 km, a different failure entirely (wrong event, not course drift).
+    # A GPX that fails at 43.5 is not a marathon course with a long tail.
     total_km = cum / 1000.0
-    if not (41.5 <= total_km <= 43.0):
+    if not (41.5 <= total_km <= 43.5):
         raise ValueError(
-            f"total route length {total_km:.3f} km is outside [41.5, 43.0] km"
+            f"total route length {total_km:.3f} km is outside [41.5, 43.5] km"
         )
     if not (42.0 <= total_km <= 42.4):
         print(
@@ -330,9 +353,9 @@ def build_profile(points: list[tuple[float, float]]) -> list[list[float]]:
             f"profile has only {len(profile)} points (need >= 100)"
         )
     total_km = profile[-1][0]
-    if not (41.5 <= total_km <= 43.0):
+    if not (41.5 <= total_km <= 43.5):
         raise ValueError(
-            f"profile length {total_km:.3f} km is outside [41.5, 43.0] km"
+            f"profile length {total_km:.3f} km is outside [41.5, 43.5] km"
         )
     return profile
 

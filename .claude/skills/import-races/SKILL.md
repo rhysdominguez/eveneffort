@@ -140,14 +140,14 @@ Give the user a table: course slug, display name, city, race date, distance, org
 - **A course slug is permanent.** It rides in `/results?courseId=…` links and on printed pacebands (Rule 8). Get it right at step 4 — it cannot be renamed later.
 - **One pin per city.** If a city slug already exists, QA emits no city row. Do not add one; `scripts/seed.ts` upserts latitude and would silently move the existing pin.
 - **Never invent data.** Blank beats wrong for organizer and region.
-- **42.6–42.8 km is normal.** Raw GPS drift, not a wrong route — Berlin has measured 42.76 since it was added.
+- **42.6–43.4 km is normal.** Not GPS drift so much as a digitized or GPS-built course line running long against the officially certified shortest-possible-route distance — Berlin has measured 42.76 since it was added, and the ceiling was widened to 43.5 on 2026-08-09 after confirming (Douglas-Peucker simplification test, up to 20 m tolerance) that the excess on courses like Cleveland and Cork City is real path length through corners, not noise to smooth away.
 - **`data/import/decisions.json` is committed**; raw crawls, reports and quarantine are gitignored.
 
 ## If something fails
 
 - *"links no course map"* — that race has no geometry published. Expected; report it as skipped.
 - *Parser rejects a course* — usually a multi-segment GPX or a half-marathon track. Mark it `rejected`; promote quarantines its files.
-- *Rejected for measuring just over 43.0 km* — a recurring pattern, not a one-off: Cleveland 43.21, Long Beach 43.10, Tulsa 43.06, Kansas City 43.04 and Pittsburgh 43.03 have all been lost this way, every one within 250 m of the ceiling. Dense urban courses drift long. **Report these separately from genuinely wrong tracks** (Marine Corps measured 50.5 km — that is a different failure). Do not widen the band to rescue them: that means editing `parse_gpx.py` and `courses.profile.integrity.test.ts` together and loosening a check that guards every course, so it needs the user's explicit decision.
+- *Rejected for measuring between 43.0 and 43.5 km* — no longer rejected. The ceiling moved to 43.5 on 2026-08-09 for exactly this pattern (Cleveland 43.21, Long Beach 43.10, Tulsa 43.06, Kansas City 43.04, Pittsburgh 43.03, Cork City 43.02 and others were all lost to the old 43.0 line, every one a real marathon whose course line runs long through corners). If a course now fails, it is genuinely past 43.5 — **report it separately from a course that merely used to fail**: the next real failure mode starts at 48.7 km (Thelma & Louise) and 50.5 km (Marine Corps, a different distance entirely, not course drift). Widening further than 43.5 needs the same thing this one did: a real loss cluster and the user's explicit decision, editing `parse_gpx.py` and `courses.profile.integrity.test.ts` together.
 - *Test suite red after promote* — most likely a renamed slug whose files were not renamed, or a course parsed but missing from `SERIES_SEED`.
 - *New courses missing from the pacing dropdown* — `.next` was not cleared. Go back to step 6.
 

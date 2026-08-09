@@ -55,7 +55,7 @@ downloaded, so a re-run resumes.
 
 Standard parser run. Its validation is the first real gate: it rejects GPX with
 more than one track or segment, fewer than 100 points, any point missing
-elevation, a gap over 5 km, or a total outside [41.5, 43.0] km. Expect losses —
+elevation, a gap over 5 km, or a total outside [41.5, 43.5] km. Expect losses —
 community-uploaded tracks are uneven, and that filter working is the point.
 
 ### 3. qa — propose rows, flag what needs a human
