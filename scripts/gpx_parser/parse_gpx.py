@@ -314,10 +314,15 @@ def build_profile(points: list[tuple[float, float]]) -> list[list[float]]:
     profile: list[list[float]] = []
     last_dist = -1.0
     for dist_m, elev_m in points:
-        dist_km = dist_m / 1000.0
+        # Compare the ROUNDED value, which is what actually gets written. Testing
+        # the unrounded distance let two points 0.05 m apart both through, and
+        # they then collided at 4 dp -- breaking the strict ascent promised
+        # above. Only very dense tracks hit it: Gothenburg, at 4193 points, was
+        # the first course dense enough to produce a duplicate.
+        dist_km = round(dist_m / 1000.0, 4)
         if dist_km <= last_dist:
             continue
-        profile.append([round(dist_km, 4), round(elev_m, 1)])
+        profile.append([dist_km, round(elev_m, 1)])
         last_dist = dist_km
 
     if len(profile) < 100:
