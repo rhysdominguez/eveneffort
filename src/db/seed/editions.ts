@@ -1294,6 +1294,140 @@ export const RECURRENCE: Record<string, RecurrenceRule> = {
     nth: 2,
     note: "Derived from the 2025-04-13 edition; not verified against the organizer",
   },
+  // Imported from goandrace.com — batch 2026-08-09. Each rule is derived
+  // from one observed date, not from the organizer's own statement.
+  "pokhara-international-marathon": {
+    month: 2,
+    weekday: 6,
+    nth: 3,
+    note: "Derived from the 2025-02-15 edition; not verified against the organizer",
+  },
+  "polar-night-marathon": {
+    month: 1,
+    weekday: 6,
+    nth: 1,
+    note: "Derived from the 2026-01-03 edition; not verified against the organizer",
+  },
+  "portsmouth-coastal-waterside-marathon": {
+    month: 12,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2025-12-21 edition; not verified against the organizer",
+  },
+  "pretoria-marathon": {
+    month: 2,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2025-02-23 edition; not verified against the organizer",
+  },
+  "rimini-marathon": {
+    month: 4,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2026-04-19 edition; not verified against the organizer",
+  },
+  "rota-marathon": {
+    month: 1,
+    weekday: 5,
+    nth: 3,
+    note: "Derived from the 2025-01-17 edition; not verified against the organizer",
+  },
+  "saipan-marathon": {
+    month: 3,
+    weekday: 5,
+    nth: 1,
+    note: "Derived from the 2025-03-07 edition; not verified against the organizer",
+  },
+  "salzburg-marathon": {
+    month: 5,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2025-05-18 edition; not verified against the organizer",
+  },
+  "santa-eularia-ibiza-marathon": {
+    month: 4,
+    weekday: 6,
+    nth: 3,
+    note: "Derived from the 2026-04-18 edition; not verified against the organizer",
+  },
+  "santo-domingo-marathon": {
+    month: 10,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2025-10-19 edition; not verified against the organizer",
+  },
+  "score-marathon": {
+    month: 7,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2025-07-13 edition; not verified against the organizer",
+  },
+  "sea-of-galilee-marathon": {
+    month: 1,
+    weekday: 5,
+    nth: 1,
+    note: "Derived from the 2025-01-03 edition; not verified against the organizer",
+  },
+  "stanley-marathon": {
+    month: 3,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2025-03-09 edition; not verified against the organizer",
+  },
+  "taipei-charity-marathon": {
+    month: 1,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2025-01-12 edition; not verified against the organizer",
+  },
+  "ston-wall-marathon": {
+    month: 9,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2025-09-21 edition; not verified against the organizer",
+  },
+  "thimphu-marathon": {
+    month: 9,
+    weekday: 6,
+    nth: -1,
+    note: "Derived from the 2025-09-27 edition; not verified against the organizer",
+  },
+  "three-bridges-run": {
+    month: 9,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2025-09-28 edition; not verified against the organizer",
+  },
+  "n4-elands-marathon": {
+    month: 3,
+    weekday: 6,
+    nth: 1,
+    note: "Derived from the 2025-03-01 edition; not verified against the organizer",
+  },
+  "uppsala-marathon": {
+    month: 10,
+    weekday: 6,
+    nth: 3,
+    note: "Derived from the 2025-10-18 edition; not verified against the organizer",
+  },
+  "verdi-marathon": {
+    month: 2,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2025-02-23 edition; not verified against the organizer",
+  },
+  "white-marble-marathon": {
+    month: 2,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2025-02-16 edition; not verified against the organizer",
+  },
+  "wurzburg-marathon": {
+    month: 5,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2025-05-25 edition; not verified against the organizer",
+  },
 };
 
 export interface ConfirmedEdition {
@@ -1573,6 +1707,30 @@ export const CONFIRMED_EDITIONS: ConfirmedEdition[] = [
   { seriesSlug: "township-marathon", year: 2025, raceDate: "2025-02-23" },
   { seriesSlug: "victoria-falls-marathon", year: 2026, raceDate: "2026-07-05" },
   { seriesSlug: "zurich-marathon", year: 2025, raceDate: "2025-04-13" },
+  // Imported from goandrace.com — batch 2026-08-09. Dates as published by
+  // the event listing; startTimeLocal is deliberately left unset.
+  { seriesSlug: "pokhara-international-marathon", year: 2025, raceDate: "2025-02-15" },
+  { seriesSlug: "polar-night-marathon", year: 2026, raceDate: "2026-01-03" },
+  { seriesSlug: "portsmouth-coastal-waterside-marathon", year: 2025, raceDate: "2025-12-21" },
+  { seriesSlug: "pretoria-marathon", year: 2025, raceDate: "2025-02-23" },
+  { seriesSlug: "rimini-marathon", year: 2026, raceDate: "2026-04-19" },
+  { seriesSlug: "rota-marathon", year: 2025, raceDate: "2025-01-17" },
+  { seriesSlug: "saipan-marathon", year: 2025, raceDate: "2025-03-07" },
+  { seriesSlug: "salzburg-marathon", year: 2025, raceDate: "2025-05-18" },
+  { seriesSlug: "santa-eularia-ibiza-marathon", year: 2026, raceDate: "2026-04-18" },
+  { seriesSlug: "santo-domingo-marathon", year: 2025, raceDate: "2025-10-19" },
+  { seriesSlug: "score-marathon", year: 2025, raceDate: "2025-07-13" },
+  { seriesSlug: "sea-of-galilee-marathon", year: 2025, raceDate: "2025-01-03" },
+  { seriesSlug: "stanley-marathon", year: 2025, raceDate: "2025-03-09" },
+  { seriesSlug: "taipei-charity-marathon", year: 2025, raceDate: "2025-01-12" },
+  { seriesSlug: "ston-wall-marathon", year: 2025, raceDate: "2025-09-21" },
+  { seriesSlug: "thimphu-marathon", year: 2025, raceDate: "2025-09-27" },
+  { seriesSlug: "three-bridges-run", year: 2025, raceDate: "2025-09-28" },
+  { seriesSlug: "n4-elands-marathon", year: 2025, raceDate: "2025-03-01" },
+  { seriesSlug: "uppsala-marathon", year: 2025, raceDate: "2025-10-18" },
+  { seriesSlug: "verdi-marathon", year: 2025, raceDate: "2025-02-23" },
+  { seriesSlug: "white-marble-marathon", year: 2025, raceDate: "2025-02-16" },
+  { seriesSlug: "wurzburg-marathon", year: 2025, raceDate: "2025-05-25" },
 ];
 
 /**

@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-09T19:32:04.278Z",
+  "updatedAt": "2026-08-09T19:40:42.617Z",
   "courses": [
     {
       "courseSlug": "2-bologna-marathon",
@@ -42,56 +42,6 @@
       "series": null,
       "recurrence": null,
       "edition": null
-    },
-    {
-      "courseSlug": "lagos-city-marathon",
-      "verdict": "ready",
-      "reasons": [
-        "no organizer name published — fill SeriesSeed.organizer by hand"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/access-lagos-city-marathon-2025.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2025/02/15/gpx_20250215_id10159_race1_20250131103312.gpx?t=1786285565",
-        "gpxSha256": "c3868d60f971a8def227da745938e5da8499b0006feb70ebd8f86ee3e7ae02aa"
-      },
-      "stats": {
-        "totalKm": 42.30957830647381,
-        "gainM": 46.39999999999999
-      },
-      "city": {
-        "slug": "lagos-ng",
-        "name": "Lagos",
-        "countryCode": "NG",
-        "countryName": "Nigeria",
-        "regionCode": null,
-        "regionName": null,
-        "latitude": 6.497999,
-        "longitude": 3.362104,
-        "timezone": "Africa/Lagos"
-      },
-      "citySlug": "lagos-ng",
-      "series": {
-        "slug": "lagos-city-marathon",
-        "name": "Lagos City Marathon",
-        "citySlug": "lagos-ng",
-        "courseSlug": "lagos-city-marathon",
-        "isMajor": false,
-        "typicalMonth": 2,
-        "websiteUrl": "https://lagoscitymarathon.com",
-        "organizer": "Lagos City Marathon"
-      },
-      "recurrence": {
-        "seriesSlug": "lagos-city-marathon",
-        "month": 2,
-        "weekday": 6,
-        "nth": 3,
-        "note": "Derived from the 2025-02-15 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "lagos-city-marathon",
-        "year": 2025,
-        "raceDate": "2025-02-15"
-      }
     },
     {
       "courseSlug": "alamo-marathon",
@@ -1765,56 +1715,6 @@
         "seriesSlug": "buffalo-marathon",
         "year": 2026,
         "raceDate": "2026-05-23"
-      }
-    },
-    {
-      "courseSlug": "xiamen-marathon",
-      "verdict": "ready",
-      "reasons": [
-        "no organizer name published — fill SeriesSeed.organizer by hand"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/c-d-xiamen-marathon-2025.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2025/01/05/gpx_20250105_id10087_race1_20241206151726.gpx?t=1786286392",
-        "gpxSha256": "f2ea4afda88c58f6ff3d14c0fc035e120190ad5ab25684674f216d1cb8db00cd"
-      },
-      "stats": {
-        "totalKm": 42.23519452629154,
-        "gainM": 47.199999999999996
-      },
-      "city": {
-        "slug": "xiamen-cn",
-        "name": "Xiamen",
-        "countryCode": "CN",
-        "countryName": "China",
-        "regionCode": null,
-        "regionName": null,
-        "latitude": 24.472297,
-        "longitude": 118.188542,
-        "timezone": "Asia/Shanghai"
-      },
-      "citySlug": "xiamen-cn",
-      "series": {
-        "slug": "xiamen-marathon",
-        "name": "Xiamen Marathon",
-        "citySlug": "xiamen-cn",
-        "courseSlug": "xiamen-marathon",
-        "isMajor": false,
-        "typicalMonth": 1,
-        "websiteUrl": "https://www.xmim.org",
-        "organizer": ""
-      },
-      "recurrence": {
-        "seriesSlug": "xiamen-marathon",
-        "month": 1,
-        "weekday": 0,
-        "nth": 1,
-        "note": "Derived from the 2025-01-05 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "xiamen-marathon",
-        "year": 2025,
-        "raceDate": "2025-01-05"
       }
     },
     {
@@ -4052,6 +3952,57 @@
       "edition": null
     },
     {
+      "courseSlug": "hong-kong-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 43.168 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/standard-chartered-hong-kong-marathon-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/02/09/gpx_20250209_id10104_race1_20241228183330.gpx?t=1786291366",
+        "gpxSha256": "fb5992b5e612da71ddb0bd8323918ad056e98d21e258e51a182f20780e963b40"
+      },
+      "stats": {
+        "totalKm": 43.16787414453725,
+        "gainM": 181.69999999999996
+      },
+      "city": {
+        "slug": "hong-kong-hk",
+        "name": "Hong Kong",
+        "countryCode": "HK",
+        "countryName": "Hong Kong",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 22.298933,
+        "longitude": 114.171949,
+        "timezone": "Asia/Hong_Kong"
+      },
+      "citySlug": "hong-kong-hk",
+      "series": {
+        "slug": "hong-kong-marathon",
+        "name": "Hong Kong Marathon",
+        "citySlug": "hong-kong-hk",
+        "courseSlug": "hong-kong-marathon",
+        "isMajor": false,
+        "typicalMonth": 2,
+        "websiteUrl": "https://www.hkmarathon.com",
+        "organizer": "Hong Kong Amateur Athletic Association"
+      },
+      "recurrence": {
+        "seriesSlug": "hong-kong-marathon",
+        "month": 2,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2025-02-09 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "hong-kong-marathon",
+        "year": 2025,
+        "raceDate": "2025-02-09"
+      }
+    },
+    {
       "courseSlug": "honolulu-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -4272,57 +4223,6 @@
       "series": null,
       "recurrence": null,
       "edition": null
-    },
-    {
-      "courseSlug": "marrakech-marathon",
-      "verdict": "ready",
-      "reasons": [
-        "measured 42.672 km, outside the [42.0, 42.4] band",
-        "no organizer name published — fill SeriesSeed.organizer by hand"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/international-marathon-of-marrakech-2025.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2025/01/26/gpx_20250126_id10100_race1_20241216160558.gpx?t=1786287949",
-        "gpxSha256": "65387fa4890599500dadbb9e2880759ba9d7873378d6e2acbd6886a96cef3d33"
-      },
-      "stats": {
-        "totalKm": 42.67222643305757,
-        "gainM": 113.10000000000008
-      },
-      "city": {
-        "slug": "marrakech-ma",
-        "name": "Marrakech",
-        "countryCode": "MA",
-        "countryName": "Morocco",
-        "regionCode": null,
-        "regionName": null,
-        "latitude": 31.62094,
-        "longitude": -8.000798,
-        "timezone": "Africa/Casablanca"
-      },
-      "citySlug": "marrakech-ma",
-      "series": {
-        "slug": "marrakech-marathon",
-        "name": "Marrakech Marathon",
-        "citySlug": "marrakech-ma",
-        "courseSlug": "marrakech-marathon",
-        "isMajor": false,
-        "typicalMonth": 1,
-        "websiteUrl": "https://marathonmarrakech.ma",
-        "organizer": "AGA"
-      },
-      "recurrence": {
-        "seriesSlug": "marrakech-marathon",
-        "month": 1,
-        "weekday": 0,
-        "nth": -1,
-        "note": "Derived from the 2025-01-26 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "marrakech-marathon",
-        "year": 2025,
-        "raceDate": "2025-01-26"
-      }
     },
     {
       "courseSlug": "irving-marathon",
@@ -4723,6 +4623,56 @@
         "seriesSlug": "kilimanjaro-international-marathon",
         "year": 2024,
         "raceDate": "2024-02-25"
+      }
+    },
+    {
+      "courseSlug": "lagos-city-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/access-lagos-city-marathon-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/02/15/gpx_20250215_id10159_race1_20250131103312.gpx?t=1786285565",
+        "gpxSha256": "c3868d60f971a8def227da745938e5da8499b0006feb70ebd8f86ee3e7ae02aa"
+      },
+      "stats": {
+        "totalKm": 42.30957830647381,
+        "gainM": 46.39999999999999
+      },
+      "city": {
+        "slug": "lagos-ng",
+        "name": "Lagos",
+        "countryCode": "NG",
+        "countryName": "Nigeria",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 6.497999,
+        "longitude": 3.362104,
+        "timezone": "Africa/Lagos"
+      },
+      "citySlug": "lagos-ng",
+      "series": {
+        "slug": "lagos-city-marathon",
+        "name": "Lagos City Marathon",
+        "citySlug": "lagos-ng",
+        "courseSlug": "lagos-city-marathon",
+        "isMajor": false,
+        "typicalMonth": 2,
+        "websiteUrl": "https://lagoscitymarathon.com",
+        "organizer": "Lagos City Marathon"
+      },
+      "recurrence": {
+        "seriesSlug": "lagos-city-marathon",
+        "month": 2,
+        "weekday": 6,
+        "nth": 3,
+        "note": "Derived from the 2025-02-15 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "lagos-city-marathon",
+        "year": 2025,
+        "raceDate": "2025-02-15"
       }
     },
     {
@@ -5822,6 +5772,57 @@
       }
     },
     {
+      "courseSlug": "marrakech-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.672 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/international-marathon-of-marrakech-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/01/26/gpx_20250126_id10100_race1_20241216160558.gpx?t=1786287949",
+        "gpxSha256": "65387fa4890599500dadbb9e2880759ba9d7873378d6e2acbd6886a96cef3d33"
+      },
+      "stats": {
+        "totalKm": 42.67222643305757,
+        "gainM": 113.10000000000008
+      },
+      "city": {
+        "slug": "marrakech-ma",
+        "name": "Marrakech",
+        "countryCode": "MA",
+        "countryName": "Morocco",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 31.62094,
+        "longitude": -8.000798,
+        "timezone": "Africa/Casablanca"
+      },
+      "citySlug": "marrakech-ma",
+      "series": {
+        "slug": "marrakech-marathon",
+        "name": "Marrakech Marathon",
+        "citySlug": "marrakech-ma",
+        "courseSlug": "marrakech-marathon",
+        "isMajor": false,
+        "typicalMonth": 1,
+        "websiteUrl": "https://marathonmarrakech.ma",
+        "organizer": "AGA"
+      },
+      "recurrence": {
+        "seriesSlug": "marrakech-marathon",
+        "month": 1,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2025-01-26 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "marrakech-marathon",
+        "year": 2025,
+        "raceDate": "2025-01-26"
+      }
+    },
+    {
       "courseSlug": "maui-oceanfront-marathon",
       "verdict": "ready",
       "reasons": [
@@ -6449,6 +6450,56 @@
         "seriesSlug": "montpellier-marathon",
         "year": 2026,
         "raceDate": "2026-04-18"
+      }
+    },
+    {
+      "courseSlug": "mumbai-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/tata-mumbai-marathon-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/01/19/gpx_20250119_id10095_race1_20250108125849.gpx?t=1786291353",
+        "gpxSha256": "3849b19714fb47a28f9ac44916fc8b1d27e17363a62e18098c05a9dacc40c969"
+      },
+      "stats": {
+        "totalKm": 42.18189813301163,
+        "gainM": 126.8
+      },
+      "city": {
+        "slug": "mumbai-in",
+        "name": "Mumbai",
+        "countryCode": "IN",
+        "countryName": "India",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 18.940139,
+        "longitude": 72.834877,
+        "timezone": "Asia/Kolkata"
+      },
+      "citySlug": "mumbai-in",
+      "series": {
+        "slug": "mumbai-marathon",
+        "name": "Mumbai Marathon",
+        "citySlug": "mumbai-in",
+        "courseSlug": "mumbai-marathon",
+        "isMajor": false,
+        "typicalMonth": 1,
+        "websiteUrl": "https://tatamumbaimarathon.procam.in",
+        "organizer": "Procam International"
+      },
+      "recurrence": {
+        "seriesSlug": "mumbai-marathon",
+        "month": 1,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2025-01-19 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "mumbai-marathon",
+        "year": 2025,
+        "raceDate": "2025-01-19"
       }
     },
     {
@@ -7637,6 +7688,154 @@
       }
     },
     {
+      "courseSlug": "pokhara-international-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/pokhara-international-marathon-2025-pokhara.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/02/15/gpx_20250215_id10115_race1_20250111111920.gpx?t=1786291370",
+        "gpxSha256": "55c4ed344b66148f71db072e2336e2a2e633541f8f25cdc1a55d3bd2d7a6110f"
+      },
+      "stats": {
+        "totalKm": 42.39572899013641,
+        "gainM": 213.20000000000016
+      },
+      "city": {
+        "slug": "pokhara-np",
+        "name": "Pokhara",
+        "countryCode": "NP",
+        "countryName": "Nepal",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 28.204609,
+        "longitude": 83.992327,
+        "timezone": "Asia/Kathmandu"
+      },
+      "citySlug": "pokhara-np",
+      "series": {
+        "slug": "pokhara-international-marathon",
+        "name": "Pokhara International Marathon",
+        "citySlug": "pokhara-np",
+        "courseSlug": "pokhara-international-marathon",
+        "isMajor": false,
+        "typicalMonth": 2,
+        "websiteUrl": "https://pokharamarathon.org",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "pokhara-international-marathon",
+        "month": 2,
+        "weekday": 6,
+        "nth": 3,
+        "note": "Derived from the 2025-02-15 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "pokhara-international-marathon",
+        "year": 2025,
+        "raceDate": "2025-02-15"
+      }
+    },
+    {
+      "courseSlug": "polar-night-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/polar-night-marathon-2026-tromso.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/01/03/gpx_20260103_id10673_race1_20251224165653.gpx?t=1786291636",
+        "gpxSha256": "864eaa5b009a4d5603a203ca0ce223063f66a121450cb58534dd2bb1899bdff0"
+      },
+      "stats": {
+        "totalKm": 42.24126553717016,
+        "gainM": 222.39999999999998
+      },
+      "city": {
+        "slug": "troms-no",
+        "name": "Tromsø",
+        "countryCode": "NO",
+        "countryName": "Norway",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 69.583011,
+        "longitude": 18.281299,
+        "timezone": "Europe/Oslo"
+      },
+      "citySlug": "troms-no",
+      "series": {
+        "slug": "polar-night-marathon",
+        "name": "Polar Night Marathon",
+        "citySlug": "troms-no",
+        "courseSlug": "polar-night-marathon",
+        "isMajor": false,
+        "typicalMonth": 1,
+        "websiteUrl": "https://msm.no/en/polar-night-marathon/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "polar-night-marathon",
+        "month": 1,
+        "weekday": 6,
+        "nth": 1,
+        "note": "Derived from the 2026-01-03 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "polar-night-marathon",
+        "year": 2026,
+        "raceDate": "2026-01-03"
+      }
+    },
+    {
+      "courseSlug": "portsmouth-coastal-waterside-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/portsmouth-coastal-waterside-marathon-2025-portsmouth.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/12/21/gpx_20251221_id10672_race2_20251217173148.gpx?t=1786291632",
+        "gpxSha256": "7226d55f59fa8df26445a3e8a62d992ee6979edfefbca80d2921573c77d24f25"
+      },
+      "stats": {
+        "totalKm": 42.15057407099044,
+        "gainM": 30.2
+      },
+      "city": {
+        "slug": "portsmouth-gb",
+        "name": "Portsmouth",
+        "countryCode": "GB",
+        "countryName": "United Kingdom",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 50.77849,
+        "longitude": -1.08502,
+        "timezone": "Europe/London"
+      },
+      "citySlug": "portsmouth-gb",
+      "series": {
+        "slug": "portsmouth-coastal-waterside-marathon",
+        "name": "Portsmouth Coastal Waterside Marathon",
+        "citySlug": "portsmouth-gb",
+        "courseSlug": "portsmouth-coastal-waterside-marathon",
+        "isMajor": false,
+        "typicalMonth": 12,
+        "websiteUrl": "https://www.fitprorob.biz/event/pcwmevent2025/",
+        "organizer": "Believe and Achieve Events Ltd"
+      },
+      "recurrence": {
+        "seriesSlug": "portsmouth-coastal-waterside-marathon",
+        "month": 12,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2025-12-21 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "portsmouth-coastal-waterside-marathon",
+        "year": 2025,
+        "raceDate": "2025-12-21"
+      }
+    },
+    {
       "courseSlug": "prague-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -7682,6 +7881,57 @@
         "seriesSlug": "prague-marathon",
         "year": 2025,
         "raceDate": "2025-05-04"
+      }
+    },
+    {
+      "courseSlug": "pretoria-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.546 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/pretoria-marathon-2025-pretoria.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/02/23/gpx_20250223_id10160_race1_20250131145723.gpx?t=1786291401",
+        "gpxSha256": "655de287f3961912afd7a2a36a6678f1d663bd27855223e008c8817075015d62"
+      },
+      "stats": {
+        "totalKm": 42.54616112393303,
+        "gainM": 409.0999999999999
+      },
+      "city": {
+        "slug": "pretoria-za",
+        "name": "Pretoria",
+        "countryCode": "ZA",
+        "countryName": "South Africa",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": -25.76166,
+        "longitude": 28.25567,
+        "timezone": "Africa/Johannesburg"
+      },
+      "citySlug": "pretoria-za",
+      "series": {
+        "slug": "pretoria-marathon",
+        "name": "Pretoria Marathon",
+        "citySlug": "pretoria-za",
+        "courseSlug": "pretoria-marathon",
+        "isMajor": false,
+        "typicalMonth": 2,
+        "websiteUrl": "https://pretoriamarathon.co.za",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "pretoria-marathon",
+        "month": 2,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2025-02-23 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "pretoria-marathon",
+        "year": 2025,
+        "raceDate": "2025-02-23"
       }
     },
     {
@@ -7735,6 +7985,27 @@
         "year": 2025,
         "raceDate": "2025-05-24"
       }
+    },
+    {
+      "courseSlug": "prosecco-running-festival",
+      "verdict": "rejected",
+      "reasons": [
+        "parser failed: total route length 49.825 km is outside [41.5, 43.5] km"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/prosecco-running-festival-2025-vidor.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/12/07/gpx_20251207_id10648_race1_20251129115946.gpx?t=1786291627",
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
     },
     {
       "courseSlug": "revel-mt-charleston-marathon",
@@ -7884,53 +8155,51 @@
       }
     },
     {
-      "courseSlug": "vilnius-marathon",
+      "courseSlug": "rimini-marathon",
       "verdict": "ready",
-      "reasons": [
-        "no organizer name published — fill SeriesSeed.organizer by hand"
-      ],
+      "reasons": [],
       "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/rimi-vilnius-marathon-2025.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2025/09/14/gpx_20250914_id10488_race1_20250901191302.gpx?t=1786291564",
-        "gpxSha256": "25720863128c6b3ba879d3263a9c5d6fe2e465aa480ff7f1877380bc31eb1c7d"
+        "eventUrl": "https://www.goandrace.com/en/running-events/rimini-marathon-2026-rimini.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/04/19/gpx_20260419_id10665_race1_20260405215950.gpx?t=1786291660",
+        "gpxSha256": "d22d71ce35d26afa37cd66f0edb9f6476c9797f1243496fddb5159a939052aca"
       },
       "stats": {
-        "totalKm": 42.3558104031711,
-        "gainM": 158.10000000000002
+        "totalKm": 42.275304644950914,
+        "gainM": 16.499999999999996
       },
       "city": {
-        "slug": "vilnius-lt",
-        "name": "Vilnius",
-        "countryCode": "LT",
-        "countryName": "Lithuania",
+        "slug": "rimini-it",
+        "name": "Rimini",
+        "countryCode": "IT",
+        "countryName": "Italy",
         "regionCode": null,
         "regionName": null,
-        "latitude": 54.685871,
-        "longitude": 25.286144,
-        "timezone": "Europe/Vilnius"
+        "latitude": 44.073466,
+        "longitude": 12.577452,
+        "timezone": "Europe/Rome"
       },
-      "citySlug": "vilnius-lt",
+      "citySlug": "rimini-it",
       "series": {
-        "slug": "vilnius-marathon",
-        "name": "Vilnius Marathon",
-        "citySlug": "vilnius-lt",
-        "courseSlug": "vilnius-marathon",
+        "slug": "rimini-marathon",
+        "name": "Rimini Marathon",
+        "citySlug": "rimini-it",
+        "courseSlug": "rimini-marathon",
         "isMajor": false,
-        "typicalMonth": 9,
-        "websiteUrl": "https://www.vilniausmaratonas.lt",
-        "organizer": "VšĮ \"Tarptautinis maratonas\""
+        "typicalMonth": 4,
+        "websiteUrl": "https://www.riminimarathon.it/",
+        "organizer": "ASD RIMINI MARATHON UNSTOPPABLE"
       },
       "recurrence": {
-        "seriesSlug": "vilnius-marathon",
-        "month": 9,
+        "seriesSlug": "rimini-marathon",
+        "month": 4,
         "weekday": 0,
-        "nth": 2,
-        "note": "Derived from the 2025-09-14 edition; not verified against the organizer"
+        "nth": 3,
+        "note": "Derived from the 2026-04-19 edition; not verified against the organizer"
       },
       "edition": {
-        "seriesSlug": "vilnius-marathon",
-        "year": 2025,
-        "raceDate": "2025-09-14"
+        "seriesSlug": "rimini-marathon",
+        "year": 2026,
+        "raceDate": "2026-04-19"
       }
     },
     {
@@ -8105,6 +8374,56 @@
       }
     },
     {
+      "courseSlug": "rota-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/rota-marathon-2025-songsong.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/01/18/gpx_20250118_id10111_race1_20250108233459.gpx?t=1786291348",
+        "gpxSha256": "4322a74a7847439e340c2a97bdb30ba3ef6a7db7510f42ba808686fffc6b0fc8"
+      },
+      "stats": {
+        "totalKm": 42.32022143742269,
+        "gainM": 273.2
+      },
+      "city": {
+        "slug": "songsong-mp",
+        "name": "Songsong",
+        "countryCode": "MP",
+        "countryName": "Northern Mariana Islands",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 14.140598,
+        "longitude": 145.140321,
+        "timezone": "Pacific/Saipan"
+      },
+      "citySlug": "songsong-mp",
+      "series": {
+        "slug": "rota-marathon",
+        "name": "Rota Marathon",
+        "citySlug": "songsong-mp",
+        "courseSlug": "rota-marathon",
+        "isMajor": false,
+        "typicalMonth": 1,
+        "websiteUrl": "https://mva.mymarianas.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "rota-marathon",
+        "month": 1,
+        "weekday": 5,
+        "nth": 3,
+        "note": "Derived from the 2025-01-17 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "rota-marathon",
+        "year": 2025,
+        "raceDate": "2025-01-17"
+      }
+    },
+    {
       "courseSlug": "rotterdam-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -8206,6 +8525,56 @@
       }
     },
     {
+      "courseSlug": "saipan-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/saipan-marathon-2025-garapan.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/03/08/gpx_20250308_id10175_race1_20250205225348.gpx?t=1786291430",
+        "gpxSha256": "3a09f99952c72915ce5ea3d6cb64f209af515c0d54adbb0da682f8e13cb140c2"
+      },
+      "stats": {
+        "totalKm": 42.20079416183836,
+        "gainM": 100.19999999999999
+      },
+      "city": {
+        "slug": "garapan-mp",
+        "name": "Garapan",
+        "countryCode": "MP",
+        "countryName": "Northern Mariana Islands",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 15.216133,
+        "longitude": 145.718834,
+        "timezone": "Pacific/Saipan"
+      },
+      "citySlug": "garapan-mp",
+      "series": {
+        "slug": "saipan-marathon",
+        "name": "Saipan Marathon",
+        "citySlug": "garapan-mp",
+        "courseSlug": "saipan-marathon",
+        "isMajor": false,
+        "typicalMonth": 3,
+        "websiteUrl": "https://www.mymarianas.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "saipan-marathon",
+        "month": 3,
+        "weekday": 5,
+        "nth": 1,
+        "note": "Derived from the 2025-03-07 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "saipan-marathon",
+        "year": 2025,
+        "raceDate": "2025-03-07"
+      }
+    },
+    {
       "courseSlug": "salt-lake-city-marathon",
       "verdict": "ready",
       "reasons": [
@@ -8259,6 +8628,57 @@
       }
     },
     {
+      "courseSlug": "salzburg-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.897 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/salzburg-marathon-2025-salzburg.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/05/18/gpx_20250518_id10298_race1_20250513191428.gpx?t=1786291515",
+        "gpxSha256": "64939a476b87fcd5a82a53877cb46bd29faa2b76b02bb2a3383b99d2d8c2e8aa"
+      },
+      "stats": {
+        "totalKm": 42.89705945298094,
+        "gainM": 97.10000000000008
+      },
+      "city": {
+        "slug": "salzburg-at",
+        "name": "Salzburg",
+        "countryCode": "AT",
+        "countryName": "Austria",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 47.801283,
+        "longitude": 13.044791,
+        "timezone": "Europe/Vienna"
+      },
+      "citySlug": "salzburg-at",
+      "series": {
+        "slug": "salzburg-marathon",
+        "name": "Salzburg Marathon",
+        "citySlug": "salzburg-at",
+        "courseSlug": "salzburg-marathon",
+        "isMajor": false,
+        "typicalMonth": 5,
+        "websiteUrl": "https://salzburg-marathon.at",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "salzburg-marathon",
+        "month": 5,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2025-05-18 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "salzburg-marathon",
+        "year": 2025,
+        "raceDate": "2025-05-18"
+      }
+    },
+    {
       "courseSlug": "san-francisco-marathon",
       "verdict": "ready",
       "reasons": [
@@ -8306,6 +8726,57 @@
         "seriesSlug": "san-francisco-marathon",
         "year": 2026,
         "raceDate": "2026-07-26"
+      }
+    },
+    {
+      "courseSlug": "santa-eularia-ibiza-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.404 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/santa-eularia-ibiza-marathon-2026.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/04/18/gpx_20260418_id10933_race1_20260411151038.gpx?t=1786291656",
+        "gpxSha256": "fc517ad3901e317ff46ae9000b2c100d8a9a33981f413db7c9269ae6aaf1b19d"
+      },
+      "stats": {
+        "totalKm": 42.40432175729866,
+        "gainM": 168.3
+      },
+      "city": {
+        "slug": "ibiza-es",
+        "name": "Ibiza",
+        "countryCode": "ES",
+        "countryName": "Spain",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 38.909974,
+        "longitude": 1.438126,
+        "timezone": "Europe/Madrid"
+      },
+      "citySlug": "ibiza-es",
+      "series": {
+        "slug": "santa-eularia-ibiza-marathon",
+        "name": "Santa Eulària Ibiza Marathon",
+        "citySlug": "ibiza-es",
+        "courseSlug": "santa-eularia-ibiza-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://ibizamarathon.es",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "santa-eularia-ibiza-marathon",
+        "month": 4,
+        "weekday": 6,
+        "nth": 3,
+        "note": "Derived from the 2026-04-18 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "santa-eularia-ibiza-marathon",
+        "year": 2026,
+        "raceDate": "2026-04-18"
       }
     },
     {
@@ -8410,6 +8881,57 @@
       }
     },
     {
+      "courseSlug": "santo-domingo-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.404 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/santo-domingo-marathon-half-2025-santo-domingo.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/10/19/gpx_20251019_id10519_race1_20251013163830.gpx?t=1786291610",
+        "gpxSha256": "ec1b52a46623b3e11e3fcb5879934dd02a1b74c9588380cd6fc6d9e1f952f3ea"
+      },
+      "stats": {
+        "totalKm": 42.40376152083327,
+        "gainM": 61.400000000000006
+      },
+      "city": {
+        "slug": "santo-domingo-do",
+        "name": "Santo Domingo",
+        "countryCode": "DO",
+        "countryName": "Dominican Republic",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 18.449503,
+        "longitude": -69.926673,
+        "timezone": "America/Santo_Domingo"
+      },
+      "citySlug": "santo-domingo-do",
+      "series": {
+        "slug": "santo-domingo-marathon",
+        "name": "Santo Domingo Marathon",
+        "citySlug": "santo-domingo-do",
+        "courseSlug": "santo-domingo-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://santodomingomarathon.com/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "santo-domingo-marathon",
+        "month": 10,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2025-10-19 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "santo-domingo-marathon",
+        "year": 2025,
+        "raceDate": "2025-10-19"
+      }
+    },
+    {
       "courseSlug": "saskatchewan-marathon",
       "verdict": "ready",
       "reasons": [
@@ -8460,6 +8982,107 @@
         "seriesSlug": "saskatchewan-marathon",
         "year": 2026,
         "raceDate": "2026-05-31"
+      }
+    },
+    {
+      "courseSlug": "score-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.985 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/score-marathon-2025-putrajaya.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/07/13/gpx_20250713_id10359_race1_20250707214741.gpx?t=1786291545",
+        "gpxSha256": "546d9fc105c78cc15722c2fba8166c14cf6a2b5b9793c711f0bc86b1fb167ae2"
+      },
+      "stats": {
+        "totalKm": 42.984984427679166,
+        "gainM": 110.20000000000002
+      },
+      "city": {
+        "slug": "putrajaya-my",
+        "name": "Putrajaya",
+        "countryCode": "MY",
+        "countryName": "Malaysia",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 2.916187,
+        "longitude": 101.688478,
+        "timezone": "Asia/Kuala_Lumpur"
+      },
+      "citySlug": "putrajaya-my",
+      "series": {
+        "slug": "score-marathon",
+        "name": "Score Marathon",
+        "citySlug": "putrajaya-my",
+        "courseSlug": "score-marathon",
+        "isMajor": false,
+        "typicalMonth": 7,
+        "websiteUrl": "https://scoremarathon.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "score-marathon",
+        "month": 7,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2025-07-13 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "score-marathon",
+        "year": 2025,
+        "raceDate": "2025-07-13"
+      }
+    },
+    {
+      "courseSlug": "sea-of-galilee-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/sea-of-galilee-winner-marathon-2025-tiberias.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/01/03/gpx_20250103_id10085_race1_20241206142206.gpx?t=1786291335",
+        "gpxSha256": "88a3e23c493974008f3fd944470d64dfe97e515bb99280d9096e75069fd91ded"
+      },
+      "stats": {
+        "totalKm": 42.08914305114754,
+        "gainM": 33.5
+      },
+      "city": {
+        "slug": "tiberias-il",
+        "name": "Tiberias",
+        "countryCode": "IL",
+        "countryName": "Israel",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 32.784538,
+        "longitude": 35.542074,
+        "timezone": "Asia/Jerusalem"
+      },
+      "citySlug": "tiberias-il",
+      "series": {
+        "slug": "sea-of-galilee-marathon",
+        "name": "Sea of Galilee Marathon",
+        "citySlug": "tiberias-il",
+        "courseSlug": "sea-of-galilee-marathon",
+        "isMajor": false,
+        "typicalMonth": 1,
+        "websiteUrl": "https://tiberiasmarathon.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "sea-of-galilee-marathon",
+        "month": 1,
+        "weekday": 5,
+        "nth": 1,
+        "note": "Derived from the 2025-01-03 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "sea-of-galilee-marathon",
+        "year": 2025,
+        "raceDate": "2025-01-03"
       }
     },
     {
@@ -8766,54 +9389,104 @@
       }
     },
     {
-      "courseSlug": "hong-kong-marathon",
+      "courseSlug": "stanley-marathon",
       "verdict": "ready",
       "reasons": [
-        "measured 43.168 km, outside the [42.0, 42.4] band",
         "no organizer name published — fill SeriesSeed.organizer by hand"
       ],
       "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/standard-chartered-hong-kong-marathon-2025.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2025/02/09/gpx_20250209_id10104_race1_20241228183330.gpx?t=1786291366",
-        "gpxSha256": "fb5992b5e612da71ddb0bd8323918ad056e98d21e258e51a182f20780e963b40"
+        "eventUrl": "https://www.goandrace.com/en/running-events/standard-chartered-bank-stanley-marathon-2025-port-stanley.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/03/09/gpx_20250309_id10185_race1_20250211224908.gpx?t=1786291434",
+        "gpxSha256": "d2c697239b0c4c6153fb36c9c2ac11139d1b153bdc804ce6f8d697434a98d274"
       },
       "stats": {
-        "totalKm": 43.16787414453725,
-        "gainM": 181.69999999999996
+        "totalKm": 42.23342523224854,
+        "gainM": 179.50000000000003
       },
       "city": {
-        "slug": "hong-kong-hk",
-        "name": "Hong Kong",
-        "countryCode": "HK",
-        "countryName": "Hong Kong",
+        "slug": "port-stanley-fk",
+        "name": "Port Stanley",
+        "countryCode": "FK",
+        "countryName": "Falkland Islands",
         "regionCode": null,
         "regionName": null,
-        "latitude": 22.298933,
-        "longitude": 114.171949,
-        "timezone": "Asia/Hong_Kong"
+        "latitude": -51.691565,
+        "longitude": -57.863874,
+        "timezone": "Atlantic/Stanley"
       },
-      "citySlug": "hong-kong-hk",
+      "citySlug": "port-stanley-fk",
       "series": {
-        "slug": "hong-kong-marathon",
-        "name": "Hong Kong Marathon",
-        "citySlug": "hong-kong-hk",
-        "courseSlug": "hong-kong-marathon",
+        "slug": "stanley-marathon",
+        "name": "Stanley Marathon",
+        "citySlug": "port-stanley-fk",
+        "courseSlug": "stanley-marathon",
         "isMajor": false,
-        "typicalMonth": 2,
-        "websiteUrl": "https://www.hkmarathon.com",
-        "organizer": "Hong Kong Amateur Athletic Association"
+        "typicalMonth": 3,
+        "websiteUrl": "https://www.sc.com/fk/marathon",
+        "organizer": ""
       },
       "recurrence": {
-        "seriesSlug": "hong-kong-marathon",
-        "month": 2,
+        "seriesSlug": "stanley-marathon",
+        "month": 3,
         "weekday": 0,
         "nth": 2,
-        "note": "Derived from the 2025-02-09 edition; not verified against the organizer"
+        "note": "Derived from the 2025-03-09 edition; not verified against the organizer"
       },
       "edition": {
-        "seriesSlug": "hong-kong-marathon",
+        "seriesSlug": "stanley-marathon",
         "year": 2025,
-        "raceDate": "2025-02-09"
+        "raceDate": "2025-03-09"
+      }
+    },
+    {
+      "courseSlug": "taipei-charity-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 41.852 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/standard-chartered-taipei-charity-marathon-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/01/12/gpx_20250112_id10092_race1_20241208234042.gpx?t=1786291343",
+        "gpxSha256": "4b8372b339861959eecd4e6a52457ec04fb2833533b1b06cefd0e0db55fe931c"
+      },
+      "stats": {
+        "totalKm": 41.85185091062053,
+        "gainM": 25.099999999999994
+      },
+      "city": {
+        "slug": "taipei-tw",
+        "name": "Taipei",
+        "countryCode": "TW",
+        "countryName": "Taiwan",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 25.039841,
+        "longitude": 121.513242,
+        "timezone": "Asia/Taipei"
+      },
+      "citySlug": "taipei-tw",
+      "series": {
+        "slug": "taipei-charity-marathon",
+        "name": "Taipei Charity Marathon",
+        "citySlug": "taipei-tw",
+        "courseSlug": "taipei-charity-marathon",
+        "isMajor": false,
+        "typicalMonth": 1,
+        "websiteUrl": "https://scbmarathon.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "taipei-charity-marathon",
+        "month": 1,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2025-01-12 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "taipei-charity-marathon",
+        "year": 2025,
+        "raceDate": "2025-01-12"
       }
     },
     {
@@ -8863,6 +9536,77 @@
         "year": 2026,
         "raceDate": "2026-05-30"
       }
+    },
+    {
+      "courseSlug": "ston-wall-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/ston-wall-marathon-2025-ston.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/09/21/gpx_20250921_id10562_race1_20250912174727.gpx?t=1786291568",
+        "gpxSha256": "9906cbebbec03e6cdc3c5096f22979917e147a1c35e9faa479976fc0e6944369"
+      },
+      "stats": {
+        "totalKm": 42.16857219917075,
+        "gainM": 466.79999999999995
+      },
+      "city": {
+        "slug": "ston-hr",
+        "name": "Ston",
+        "countryCode": "HR",
+        "countryName": "Croatia",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 42.8382,
+        "longitude": 17.697206,
+        "timezone": "Europe/Zagreb"
+      },
+      "citySlug": "ston-hr",
+      "series": {
+        "slug": "ston-wall-marathon",
+        "name": "Ston Wall Marathon",
+        "citySlug": "ston-hr",
+        "courseSlug": "ston-wall-marathon",
+        "isMajor": false,
+        "typicalMonth": 9,
+        "websiteUrl": "https://ston-wall-marathon.com/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "ston-wall-marathon",
+        "month": 9,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2025-09-21 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "ston-wall-marathon",
+        "year": 2025,
+        "raceDate": "2025-09-21"
+      }
+    },
+    {
+      "courseSlug": "strasimeno",
+      "verdict": "rejected",
+      "reasons": [
+        "parser failed: total route length 58.010 km is outside [41.5, 43.5] km"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/strasimeno-2025-castiglione-del-lago.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/03/09/gpx_20250309_id10214_race1_20250305230419.gpx?t=1786291439",
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
     },
     {
       "courseSlug": "suffolk-county-marathon",
@@ -9013,56 +9757,6 @@
         "seriesSlug": "tallinn-marathon",
         "year": 2024,
         "raceDate": "2024-09-08"
-      }
-    },
-    {
-      "courseSlug": "mumbai-marathon",
-      "verdict": "ready",
-      "reasons": [
-        "no organizer name published — fill SeriesSeed.organizer by hand"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/tata-mumbai-marathon-2025.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2025/01/19/gpx_20250119_id10095_race1_20250108125849.gpx?t=1786291353",
-        "gpxSha256": "3849b19714fb47a28f9ac44916fc8b1d27e17363a62e18098c05a9dacc40c969"
-      },
-      "stats": {
-        "totalKm": 42.18189813301163,
-        "gainM": 126.8
-      },
-      "city": {
-        "slug": "mumbai-in",
-        "name": "Mumbai",
-        "countryCode": "IN",
-        "countryName": "India",
-        "regionCode": null,
-        "regionName": null,
-        "latitude": 18.940139,
-        "longitude": 72.834877,
-        "timezone": "Asia/Kolkata"
-      },
-      "citySlug": "mumbai-in",
-      "series": {
-        "slug": "mumbai-marathon",
-        "name": "Mumbai Marathon",
-        "citySlug": "mumbai-in",
-        "courseSlug": "mumbai-marathon",
-        "isMajor": false,
-        "typicalMonth": 1,
-        "websiteUrl": "https://tatamumbaimarathon.procam.in",
-        "organizer": "Procam International"
-      },
-      "recurrence": {
-        "seriesSlug": "mumbai-marathon",
-        "month": 1,
-        "weekday": 0,
-        "nth": 3,
-        "note": "Derived from the 2025-01-19 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "mumbai-marathon",
-        "year": 2025,
-        "raceDate": "2025-01-19"
       }
     },
     {
@@ -9229,6 +9923,109 @@
       "series": null,
       "recurrence": null,
       "edition": null
+    },
+    {
+      "courseSlug": "thimphu-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.460 km, outside the [42.0, 42.4] band"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/thimphu-marathon-2025-thimphu.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/09/27/gpx_20250927_id10259_race1_20250826121058.gpx?t=1786291582",
+        "gpxSha256": "1a66cb521900d136e1cc90d67a24f9aa4fa3cdbef6db657dab6929148df83cec"
+      },
+      "stats": {
+        "totalKm": 42.459570977236325,
+        "gainM": 454.9000000000001
+      },
+      "city": {
+        "slug": "thimphu-bt",
+        "name": "Thimphu",
+        "countryCode": "BT",
+        "countryName": "Bhutan",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 27.444336,
+        "longitude": 89.64466,
+        "timezone": "Asia/Thimphu"
+      },
+      "citySlug": "thimphu-bt",
+      "series": {
+        "slug": "thimphu-marathon",
+        "name": "Thimphu Marathon",
+        "citySlug": "thimphu-bt",
+        "courseSlug": "thimphu-marathon",
+        "isMajor": false,
+        "typicalMonth": 9,
+        "websiteUrl": "https://bhutanmarathon.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "thimphu-marathon",
+        "month": 9,
+        "weekday": 6,
+        "nth": -1,
+        "note": "Derived from the 2025-09-27 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "thimphu-marathon",
+        "year": 2025,
+        "raceDate": "2025-09-27"
+      }
+    },
+    {
+      "courseSlug": "three-bridges-run",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.776 km, outside the [42.0, 42.4] band",
+        "no addressRegion published; AU city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone Australia/Sydney was guessed from longitude (AU spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/three-bridges-run-2025-parramatta.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/09/28/gpx_20250928_id10496_race1_20250914233237.gpx?t=1786291587",
+        "gpxSha256": "44722ec95dd99778732041e6bd5c057153bc5a11b54f2a4f3346603eb17f2b8b"
+      },
+      "stats": {
+        "totalKm": 42.77556042408625,
+        "gainM": 73.50000000000001
+      },
+      "city": {
+        "slug": "parramatta-nsw-au",
+        "name": "Parramatta",
+        "countryCode": "AU",
+        "countryName": "Australia",
+        "regionCode": "AU-NSW",
+        "regionName": "New South Wales",
+        "latitude": -33.81041,
+        "longitude": 151.025207,
+        "timezone": "Australia/Sydney"
+      },
+      "citySlug": "parramatta-nsw-au",
+      "series": {
+        "slug": "three-bridges-run",
+        "name": "Three Bridges Run",
+        "citySlug": "parramatta-nsw-au",
+        "courseSlug": "three-bridges-run",
+        "isMajor": false,
+        "typicalMonth": 9,
+        "websiteUrl": "https://threebridgesrun.com.au",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "three-bridges-run",
+        "month": 9,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2025-09-28 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "three-bridges-run",
+        "year": 2025,
+        "raceDate": "2025-09-28"
+      }
     },
     {
       "courseSlug": "tobacco-road-marathon",
@@ -9429,6 +10226,77 @@
       }
     },
     {
+      "courseSlug": "n4-elands-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/trac-n4-elands-marathon-2025-waterval-boven.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/03/01/gpx_20250301_id10167_race1_20250201123046.gpx?t=1786291421",
+        "gpxSha256": "3c276a80a88f9093f7a5256fb447b5815b3e7806981c4b34b9e65f274e86dbb7"
+      },
+      "stats": {
+        "totalKm": 42.15291440986093,
+        "gainM": 51.19999999999993
+      },
+      "city": {
+        "slug": "waterval-boven-za",
+        "name": "Waterval Boven",
+        "countryCode": "ZA",
+        "countryName": "South Africa",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": -25.643705,
+        "longitude": 30.330372,
+        "timezone": "Africa/Johannesburg"
+      },
+      "citySlug": "waterval-boven-za",
+      "series": {
+        "slug": "n4-elands-marathon",
+        "name": "N4 Elands Marathon",
+        "citySlug": "waterval-boven-za",
+        "courseSlug": "n4-elands-marathon",
+        "isMajor": false,
+        "typicalMonth": 3,
+        "websiteUrl": "https://elandsmarathon.co.za",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "n4-elands-marathon",
+        "month": 3,
+        "weekday": 6,
+        "nth": 1,
+        "note": "Derived from the 2025-03-01 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "n4-elands-marathon",
+        "year": 2025,
+        "raceDate": "2025-03-01"
+      }
+    },
+    {
+      "courseSlug": "tui-palma-marathon-mallorca",
+      "verdict": "rejected",
+      "reasons": [
+        "parser failed: total route length 43.521 km is outside [41.5, 43.5] km"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/tui-palma-marathon-mallorca-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/10/19/gpx_20251019_id10596_race1_20251009125458.gpx?t=1786291615",
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "turin-marathon",
       "verdict": "ready",
       "reasons": [
@@ -9527,6 +10395,56 @@
         "seriesSlug": "twin-cities-marathon",
         "year": 2023,
         "raceDate": "2023-09-30"
+      }
+    },
+    {
+      "courseSlug": "uppsala-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/uppsala-marathon-half-marathon-2025-uppsala.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/10/18/gpx_20251018_id10511_race1_20251011122923.gpx?t=1786291601",
+        "gpxSha256": "7a9170deec4700ac3e037feb665d1679cb7e544ac4f1e69ac8a67f2246b8a039"
+      },
+      "stats": {
+        "totalKm": 42.297684034505494,
+        "gainM": 130.2
+      },
+      "city": {
+        "slug": "uppsala-se",
+        "name": "Uppsala",
+        "countryCode": "SE",
+        "countryName": "Sweden",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 59.854002,
+        "longitude": 17.634723,
+        "timezone": "Europe/Stockholm"
+      },
+      "citySlug": "uppsala-se",
+      "series": {
+        "slug": "uppsala-marathon",
+        "name": "Uppsala Marathon",
+        "citySlug": "uppsala-se",
+        "courseSlug": "uppsala-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://www.uppsalamarathon.se/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "uppsala-marathon",
+        "month": 10,
+        "weekday": 6,
+        "nth": 3,
+        "note": "Derived from the 2025-10-18 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "uppsala-marathon",
+        "year": 2025,
+        "raceDate": "2025-10-18"
       }
     },
     {
@@ -9723,6 +10641,57 @@
         "seriesSlug": "venice-marathon",
         "year": 2025,
         "raceDate": "2025-10-26"
+      }
+    },
+    {
+      "courseSlug": "verdi-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.972 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/verdi-marathon-2025-salsomaggiore-terme.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/02/23/gpx_20250223_id10147_race1_20250127183332.gpx?t=1786291392",
+        "gpxSha256": "449c913fea52ad0f60401d5a3cee4400f2608d922261715b22b8d3ae555b24ba"
+      },
+      "stats": {
+        "totalKm": 42.97222792038327,
+        "gainM": 14.899999999999991
+      },
+      "city": {
+        "slug": "salsomaggiore-terme-it",
+        "name": "Salsomaggiore Terme",
+        "countryCode": "IT",
+        "countryName": "Italy",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 44.817214,
+        "longitude": 9.980727,
+        "timezone": "Europe/Rome"
+      },
+      "citySlug": "salsomaggiore-terme-it",
+      "series": {
+        "slug": "verdi-marathon",
+        "name": "Verdi Marathon",
+        "citySlug": "salsomaggiore-terme-it",
+        "courseSlug": "verdi-marathon",
+        "isMajor": false,
+        "typicalMonth": 2,
+        "websiteUrl": "https://www.verdimarathon.it",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "verdi-marathon",
+        "month": 2,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2025-02-23 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "verdi-marathon",
+        "year": 2025,
+        "raceDate": "2025-02-23"
       }
     },
     {
@@ -9941,6 +10910,56 @@
       }
     },
     {
+      "courseSlug": "vilnius-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/rimi-vilnius-marathon-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/09/14/gpx_20250914_id10488_race1_20250901191302.gpx?t=1786291564",
+        "gpxSha256": "25720863128c6b3ba879d3263a9c5d6fe2e465aa480ff7f1877380bc31eb1c7d"
+      },
+      "stats": {
+        "totalKm": 42.3558104031711,
+        "gainM": 158.10000000000002
+      },
+      "city": {
+        "slug": "vilnius-lt",
+        "name": "Vilnius",
+        "countryCode": "LT",
+        "countryName": "Lithuania",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 54.685871,
+        "longitude": 25.286144,
+        "timezone": "Europe/Vilnius"
+      },
+      "citySlug": "vilnius-lt",
+      "series": {
+        "slug": "vilnius-marathon",
+        "name": "Vilnius Marathon",
+        "citySlug": "vilnius-lt",
+        "courseSlug": "vilnius-marathon",
+        "isMajor": false,
+        "typicalMonth": 9,
+        "websiteUrl": "https://www.vilniausmaratonas.lt",
+        "organizer": "VšĮ \"Tarptautinis maratonas\""
+      },
+      "recurrence": {
+        "seriesSlug": "vilnius-marathon",
+        "month": 9,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2025-09-14 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "vilnius-marathon",
+        "year": 2025,
+        "raceDate": "2025-09-14"
+      }
+    },
+    {
       "courseSlug": "walt-disney-world-marathon",
       "verdict": "ready",
       "reasons": [
@@ -9991,6 +11010,57 @@
         "seriesSlug": "walt-disney-world-marathon",
         "year": 2025,
         "raceDate": "2025-01-12"
+      }
+    },
+    {
+      "courseSlug": "white-marble-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.510 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/white-marble-marathon-2025-carrara.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/02/16/gpx_20250216_id10127_race1_20250118123128.gpx?t=1786291376",
+        "gpxSha256": "1f81f4c69533956d7d034872f41830e50b2c07225acaddaf5738feb5a8bb83b6"
+      },
+      "stats": {
+        "totalKm": 42.509642959790305,
+        "gainM": 19.1
+      },
+      "city": {
+        "slug": "carrara-it",
+        "name": "Carrara",
+        "countryCode": "IT",
+        "countryName": "Italy",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 44.042247,
+        "longitude": 10.027205,
+        "timezone": "Europe/Rome"
+      },
+      "citySlug": "carrara-it",
+      "series": {
+        "slug": "white-marble-marathon",
+        "name": "White Marble Marathon",
+        "citySlug": "carrara-it",
+        "courseSlug": "white-marble-marathon",
+        "isMajor": false,
+        "typicalMonth": 2,
+        "websiteUrl": "http://www.whitemarblemarathon.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "white-marble-marathon",
+        "month": 2,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2025-02-16 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "white-marble-marathon",
+        "year": 2025,
+        "raceDate": "2025-02-16"
       }
     },
     {
@@ -10139,6 +11209,107 @@
         "seriesSlug": "wisconsin-marathon",
         "year": 2025,
         "raceDate": "2025-05-03"
+      }
+    },
+    {
+      "courseSlug": "wurzburg-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 43.265 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/wvv-marathon-wurzburg-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/05/25/gpx_20250525_id10308_race1_20250519161657.gpx?t=1786291534",
+        "gpxSha256": "035e7e4bbdf0ef458346b5de20767b74c6947a83af135b45c2a83e89d3db720f"
+      },
+      "stats": {
+        "totalKm": 43.265233434005125,
+        "gainM": 60.80000000000007
+      },
+      "city": {
+        "slug": "wurzburg-de",
+        "name": "Würzburg",
+        "countryCode": "DE",
+        "countryName": "Germany",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 49.798495,
+        "longitude": 9.92649,
+        "timezone": "Europe/Berlin"
+      },
+      "citySlug": "wurzburg-de",
+      "series": {
+        "slug": "wurzburg-marathon",
+        "name": "Würzburg Marathon",
+        "citySlug": "wurzburg-de",
+        "courseSlug": "wurzburg-marathon",
+        "isMajor": false,
+        "typicalMonth": 5,
+        "websiteUrl": "https://www.wuerzburg-marathon.de",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "wurzburg-marathon",
+        "month": 5,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2025-05-25 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "wurzburg-marathon",
+        "year": 2025,
+        "raceDate": "2025-05-25"
+      }
+    },
+    {
+      "courseSlug": "xiamen-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/c-d-xiamen-marathon-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/01/05/gpx_20250105_id10087_race1_20241206151726.gpx?t=1786286392",
+        "gpxSha256": "f2ea4afda88c58f6ff3d14c0fc035e120190ad5ab25684674f216d1cb8db00cd"
+      },
+      "stats": {
+        "totalKm": 42.23519452629154,
+        "gainM": 47.199999999999996
+      },
+      "city": {
+        "slug": "xiamen-cn",
+        "name": "Xiamen",
+        "countryCode": "CN",
+        "countryName": "China",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 24.472297,
+        "longitude": 118.188542,
+        "timezone": "Asia/Shanghai"
+      },
+      "citySlug": "xiamen-cn",
+      "series": {
+        "slug": "xiamen-marathon",
+        "name": "Xiamen Marathon",
+        "citySlug": "xiamen-cn",
+        "courseSlug": "xiamen-marathon",
+        "isMajor": false,
+        "typicalMonth": 1,
+        "websiteUrl": "https://www.xmim.org",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "xiamen-marathon",
+        "month": 1,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the 2025-01-05 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "xiamen-marathon",
+        "year": 2025,
+        "raceDate": "2025-01-05"
       }
     },
     {
