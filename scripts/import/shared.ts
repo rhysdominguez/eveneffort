@@ -134,6 +134,7 @@ export const COUNTRY_NAMES: Record<string, string> = {
   CZ: "Czechia",
   DE: "Germany",
   DK: "Denmark",
+  EC: "Ecuador",
   EE: "Estonia",
   EG: "Egypt",
   ES: "Spain",
@@ -167,6 +168,7 @@ export const COUNTRY_NAMES: Record<string, string> = {
   PH: "Philippines",
   PL: "Poland",
   PT: "Portugal",
+  PY: "Paraguay",
   RO: "Romania",
   RS: "Serbia",
   SE: "Sweden",
@@ -179,6 +181,7 @@ export const COUNTRY_NAMES: Record<string, string> = {
   UA: "Ukraine",
   US: "United States",
   UY: "Uruguay",
+  VE: "Venezuela",
   VN: "Vietnam",
   ZA: "South Africa",
 };
@@ -198,6 +201,7 @@ const ZONE_BY_COUNTRY: Record<string, string> = {
   CZ: "Europe/Prague",
   DE: "Europe/Berlin",
   DK: "Europe/Copenhagen",
+  EC: "America/Guayaquil", // mainland; Galapagos differs, but no marathon runs there
   EE: "Europe/Tallinn",
   EG: "Africa/Cairo",
   ES: "Europe/Madrid", // Canary Islands differ; QA flags a bad distance anyway
@@ -239,6 +243,8 @@ const ZONE_BY_COUNTRY: Record<string, string> = {
   TW: "Asia/Taipei",
   UA: "Europe/Kyiv",
   UY: "America/Montevideo",
+  VE: "America/Caracas",
+  PY: "America/Asuncion",
   VN: "Asia/Ho_Chi_Minh",
   ZA: "Africa/Johannesburg",
   AR: "America/Argentina/Buenos_Aires",
