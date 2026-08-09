@@ -103,6 +103,15 @@ export const PUBLISHED_COURSE_SLUGS: string[] = [
   "malaga-marathon",
   "nantes-marathon",
   "rotterdam-marathon",
+  // Batch 2026-08-09, imported from goandrace.com on 2026-08-09.
+  "belfast-marathon",
+  "bilbao-night-marathon",
+  "edinburgh-marathon",
+  "lyon-marathon",
+  "manchester-marathon",
+  "montpellier-marathon",
+  "nice-cannes-marathon",
+  "tallinn-marathon",
 ];
 
 /** The shape every course slug must take: lowercase, digits, single hyphens. */

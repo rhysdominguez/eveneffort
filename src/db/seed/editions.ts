@@ -492,6 +492,56 @@ export const RECURRENCE: Record<string, RecurrenceRule> = {
     nth: 2,
     note: "Derived from the 2024-04-14 edition; not verified against the organizer",
   },
+  // Imported from goandrace.com — batch 2026-08-09. Each rule is derived
+  // from one observed date, not from the organizer's own statement.
+  "belfast-marathon": {
+    month: 5,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the 2024-05-05 edition; not verified against the organizer",
+  },
+  "bilbao-night-marathon": {
+    month: 10,
+    weekday: 6,
+    nth: 3,
+    note: "Derived from the 2024-10-19 edition; not verified against the organizer",
+  },
+  "edinburgh-marathon": {
+    month: 5,
+    weekday: 0,
+    nth: 4,
+    note: "Derived from the 2026-05-24 edition; not verified against the organizer",
+  },
+  "lyon-marathon": {
+    month: 10,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the 2025-10-05 edition; not verified against the organizer",
+  },
+  "manchester-marathon": {
+    month: 4,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2026-04-19 edition; not verified against the organizer",
+  },
+  "montpellier-marathon": {
+    month: 4,
+    weekday: 6,
+    nth: 3,
+    note: "Derived from the 2026-04-18 edition; not verified against the organizer",
+  },
+  "nice-cannes-marathon": {
+    month: 11,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the 2024-11-03 edition; not verified against the organizer",
+  },
+  "tallinn-marathon": {
+    month: 9,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2024-09-08 edition; not verified against the organizer",
+  },
 };
 
 export interface ConfirmedEdition {
@@ -624,6 +674,16 @@ export const CONFIRMED_EDITIONS: ConfirmedEdition[] = [
   { seriesSlug: "malaga-marathon", year: 2025, raceDate: "2025-12-14" },
   { seriesSlug: "nantes-marathon", year: 2024, raceDate: "2024-04-21" },
   { seriesSlug: "rotterdam-marathon", year: 2024, raceDate: "2024-04-14" },
+  // Imported from goandrace.com — batch 2026-08-09. Dates as published by
+  // the event listing; startTimeLocal is deliberately left unset.
+  { seriesSlug: "belfast-marathon", year: 2024, raceDate: "2024-05-05" },
+  { seriesSlug: "bilbao-night-marathon", year: 2024, raceDate: "2024-10-19" },
+  { seriesSlug: "edinburgh-marathon", year: 2026, raceDate: "2026-05-24" },
+  { seriesSlug: "lyon-marathon", year: 2025, raceDate: "2025-10-05" },
+  { seriesSlug: "manchester-marathon", year: 2026, raceDate: "2026-04-19" },
+  { seriesSlug: "montpellier-marathon", year: 2026, raceDate: "2026-04-18" },
+  { seriesSlug: "nice-cannes-marathon", year: 2024, raceDate: "2024-11-03" },
+  { seriesSlug: "tallinn-marathon", year: 2024, raceDate: "2024-09-08" },
 ];
 
 /**

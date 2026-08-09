@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-09T13:42:08.335Z",
+  "updatedAt": "2026-08-09T13:54:22.254Z",
   "courses": [
     {
       "courseSlug": "2-bologna-marathon",
@@ -537,6 +537,105 @@
         "seriesSlug": "barletta-marathon",
         "year": 2026,
         "raceDate": "2026-02-08"
+      }
+    },
+    {
+      "courseSlug": "belfast-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/moy-park-belfast-city-marathon-2024.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/05/05/gpx_20240505_id9377_race1_20240201222223.gpx?t=1786283567",
+        "gpxSha256": "cb16e791b5a2db639fb914ee99993a2faedb0ec4e988fd57ceec18924c1ff762"
+      },
+      "stats": {
+        "totalKm": 42.252574677122794,
+        "gainM": 106.69999999999999
+      },
+      "city": {
+        "slug": "belfast-gb",
+        "name": "Belfast",
+        "countryCode": "GB",
+        "countryName": "United Kingdom",
+        "regionCode": "GB-BFS",
+        "regionName": "Belfast",
+        "latitude": 54.594507,
+        "longitude": -5.84125,
+        "timezone": "Europe/London"
+      },
+      "citySlug": "belfast-gb",
+      "series": {
+        "slug": "belfast-marathon",
+        "name": "Belfast Marathon",
+        "citySlug": "belfast-gb",
+        "courseSlug": "belfast-marathon",
+        "isMajor": false,
+        "typicalMonth": 5,
+        "websiteUrl": "https://belfastcitymarathon.com",
+        "organizer": "Belfast City Marathon"
+      },
+      "recurrence": {
+        "seriesSlug": "belfast-marathon",
+        "month": 5,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the 2024-05-05 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "belfast-marathon",
+        "year": 2024,
+        "raceDate": "2024-05-05"
+      }
+    },
+    {
+      "courseSlug": "bilbao-night-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "organizer not published, page refused the fetch, or not clearly a primary organizer; left null",
+        "websiteUrl corrected: scraped URL did not resolve (DNS failure)"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/totalenergies-bilbao-night-marathon-2024.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/10/19/gpx_20241019_id10029_race1_20241003101517.gpx?t=1786283594",
+        "gpxSha256": "d002e14a375ba90002fb4db7c207d59261293735e7dc5b97533d33daabee9b08"
+      },
+      "stats": {
+        "totalKm": 42.200898889778315,
+        "gainM": 139.5
+      },
+      "city": {
+        "slug": "bilbao-es",
+        "name": "Bilbao",
+        "countryCode": "ES",
+        "countryName": "Spain",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 43.26311,
+        "longitude": -2.94936,
+        "timezone": "Europe/Madrid"
+      },
+      "citySlug": "bilbao-es",
+      "series": {
+        "slug": "bilbao-night-marathon",
+        "name": "Bilbao Night Marathon",
+        "citySlug": "bilbao-es",
+        "courseSlug": "bilbao-night-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://www.bilbaonightrun.com/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "bilbao-night-marathon",
+        "month": 10,
+        "weekday": 6,
+        "nth": 3,
+        "note": "Derived from the 2024-10-19 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "bilbao-night-marathon",
+        "year": 2024,
+        "raceDate": "2024-10-19"
       }
     },
     {
@@ -1239,6 +1338,54 @@
       "series": null,
       "recurrence": null,
       "edition": null
+    },
+    {
+      "courseSlug": "edinburgh-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/05/edinburgh-marathon-festival-2026.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/05/24/gpx_20260524_id10988_race1_20260511130307.gpx?t=1786283434",
+        "gpxSha256": "abc0b84729c8e5e1d60a63afc68586445eeac59a9fe0928773b6cacafada932a"
+      },
+      "stats": {
+        "totalKm": 42.497903862706664,
+        "gainM": 45.5
+      },
+      "city": {
+        "slug": "edinburgh-gb",
+        "name": "Edinburgh",
+        "countryCode": "GB",
+        "countryName": "United Kingdom",
+        "regionCode": "GB-EDH",
+        "regionName": "Edinburgh, City of",
+        "latitude": 55.945885,
+        "longitude": -3.189162,
+        "timezone": "Europe/London"
+      },
+      "citySlug": "edinburgh-gb",
+      "series": {
+        "slug": "edinburgh-marathon",
+        "name": "Edinburgh Marathon",
+        "citySlug": "edinburgh-gb",
+        "courseSlug": "edinburgh-marathon",
+        "isMajor": false,
+        "typicalMonth": 5,
+        "websiteUrl": "https://www.edinburghmarathon.com/marathon",
+        "organizer": "MyRunning"
+      },
+      "recurrence": {
+        "seriesSlug": "edinburgh-marathon",
+        "month": 5,
+        "weekday": 0,
+        "nth": 4,
+        "note": "Derived from the 2026-05-24 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "edinburgh-marathon",
+        "year": 2026,
+        "raceDate": "2026-05-24"
+      }
     },
     {
       "courseSlug": "florence-marathon",
@@ -2029,6 +2176,56 @@
       }
     },
     {
+      "courseSlug": "lyon-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "organizer not published, page refused the fetch, or not clearly a primary organizer; left null"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/run-in-lyon-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/10/05/gpx_20251005_id10501_race1_20250923143941.gpx?t=1786283581",
+        "gpxSha256": "b0ee053b2fa6b08a3e17f86124816d2b36e77ffbf47b9d7c23dbbcfc01a8f842"
+      },
+      "stats": {
+        "totalKm": 42.63950268296479,
+        "gainM": 73.39999999999995
+      },
+      "city": {
+        "slug": "lyon-fr",
+        "name": "Lyon",
+        "countryCode": "FR",
+        "countryName": "France",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 45.761765,
+        "longitude": 4.828661,
+        "timezone": "Europe/Paris"
+      },
+      "citySlug": "lyon-fr",
+      "series": {
+        "slug": "lyon-marathon",
+        "name": "Lyon Marathon",
+        "citySlug": "lyon-fr",
+        "courseSlug": "lyon-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://www.ahotu.com/it/evento/run-in-lyon-by-harmonie-mutuelle",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "lyon-marathon",
+        "month": 10,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the 2025-10-05 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "lyon-marathon",
+        "year": 2025,
+        "raceDate": "2025-10-05"
+      }
+    },
+    {
       "courseSlug": "malaga-marathon",
       "verdict": "ready",
       "reasons": [
@@ -2077,6 +2274,56 @@
         "seriesSlug": "malaga-marathon",
         "year": 2025,
         "raceDate": "2025-12-14"
+      }
+    },
+    {
+      "courseSlug": "manchester-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "organizer not published, page refused the fetch, or not clearly a primary organizer; left null"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/adidas-manchester-marathon-2026.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/04/19/gpx_20260419_id10938_race1_20260407231231.gpx?t=1786283439",
+        "gpxSha256": "8379316f69d52b329d08cdc63e0a3fd7a73879cfba0547b271ee842e3234c451"
+      },
+      "stats": {
+        "totalKm": 42.28090996961215,
+        "gainM": 61.2
+      },
+      "city": {
+        "slug": "manchester-gb",
+        "name": "Manchester",
+        "countryCode": "GB",
+        "countryName": "United Kingdom",
+        "regionCode": "GB-MAN",
+        "regionName": "Manchester",
+        "latitude": 53.463686,
+        "longitude": -2.281654,
+        "timezone": "Europe/London"
+      },
+      "citySlug": "manchester-gb",
+      "series": {
+        "slug": "manchester-marathon",
+        "name": "Manchester Marathon",
+        "citySlug": "manchester-gb",
+        "courseSlug": "manchester-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://www.manchestermarathon.co.uk/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "manchester-marathon",
+        "month": 4,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2026-04-19 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "manchester-marathon",
+        "year": 2026,
+        "raceDate": "2026-04-19"
       }
     },
     {
@@ -2416,6 +2663,54 @@
       }
     },
     {
+      "courseSlug": "montpellier-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/montpellier-run-festival-2026-montpellier.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/04/18/gpx_20260418_id10936_race1_20260406211317.gpx?t=1786283443",
+        "gpxSha256": "d9a81d17a4a5cd02c8f5475c09ced1eac9da43c6c21ef80fbdddf847378f7f91"
+      },
+      "stats": {
+        "totalKm": 42.20333126916661,
+        "gainM": 143.79999999999998
+      },
+      "city": {
+        "slug": "montpellier-fr",
+        "name": "Montpellier",
+        "countryCode": "FR",
+        "countryName": "France",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 43.611961,
+        "longitude": 3.863176,
+        "timezone": "Europe/Paris"
+      },
+      "citySlug": "montpellier-fr",
+      "series": {
+        "slug": "montpellier-marathon",
+        "name": "Montpellier Marathon",
+        "citySlug": "montpellier-fr",
+        "courseSlug": "montpellier-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://montpellierrunfestival.fr/",
+        "organizer": "Playground Event"
+      },
+      "recurrence": {
+        "seriesSlug": "montpellier-marathon",
+        "month": 4,
+        "weekday": 6,
+        "nth": 3,
+        "note": "Derived from the 2026-04-18 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "montpellier-marathon",
+        "year": 2026,
+        "raceDate": "2026-04-18"
+      }
+    },
+    {
       "courseSlug": "munich-marathon",
       "verdict": "ready",
       "reasons": [
@@ -2565,6 +2860,57 @@
         "seriesSlug": "neapolis-marathon",
         "year": 2024,
         "raceDate": "2024-10-13"
+      }
+    },
+    {
+      "courseSlug": "nice-cannes-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "city corrected from \"Cannes\" (scraped locality) to the GPX start line",
+        "organizer not published, page refused the fetch, or not clearly a primary organizer; left null"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/marathon-des-alpes-maritimes-nice-cannes-2024.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/11/03/gpx_20241103_id10048_race1_20241019180036.gpx?t=1786283562",
+        "gpxSha256": "1f55714818bcb342329b1f2283a7c74f41fb609fdcf428d9b1aa7a816262e9c1"
+      },
+      "stats": {
+        "totalKm": 42.54029013462284,
+        "gainM": 59.499999999999986
+      },
+      "city": {
+        "slug": "nice-fr",
+        "name": "Nice",
+        "countryCode": "FR",
+        "countryName": "France",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 43.69493,
+        "longitude": 7.2671,
+        "timezone": "Europe/Paris"
+      },
+      "citySlug": "nice-fr",
+      "series": {
+        "slug": "nice-cannes-marathon",
+        "name": "Nice-Cannes Marathon",
+        "citySlug": "nice-fr",
+        "courseSlug": "nice-cannes-marathon",
+        "isMajor": false,
+        "typicalMonth": 11,
+        "websiteUrl": "https://www.marathon06.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "nice-cannes-marathon",
+        "month": 11,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the 2024-11-03 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "nice-cannes-marathon",
+        "year": 2024,
+        "raceDate": "2024-11-03"
       }
     },
     {
@@ -3300,6 +3646,54 @@
         "seriesSlug": "stockholm-marathon",
         "year": 2026,
         "raceDate": "2026-05-30"
+      }
+    },
+    {
+      "courseSlug": "tallinn-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/swedbank-tallinn-marathon-2024.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/09/08/gpx_20240908_id9967_race1_20240813162742.gpx?t=1786283585",
+        "gpxSha256": "b4d1988e3411cc174f35fe7a343cdaf9c1674d84d90f8c98ecbabd1c37e1a334"
+      },
+      "stats": {
+        "totalKm": 42.624824619798964,
+        "gainM": 89.80000000000001
+      },
+      "city": {
+        "slug": "tallinn-ee",
+        "name": "Tallinn",
+        "countryCode": "EE",
+        "countryName": "Estonia",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 59.434836,
+        "longitude": 24.73459,
+        "timezone": "Europe/Tallinn"
+      },
+      "citySlug": "tallinn-ee",
+      "series": {
+        "slug": "tallinn-marathon",
+        "name": "Tallinn Marathon",
+        "citySlug": "tallinn-ee",
+        "courseSlug": "tallinn-marathon",
+        "isMajor": false,
+        "typicalMonth": 9,
+        "websiteUrl": "https://www.jooks.ee/en/tallinn-marathon",
+        "organizer": "Spordiürituste Korraldamise Klubi"
+      },
+      "recurrence": {
+        "seriesSlug": "tallinn-marathon",
+        "month": 9,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2024-09-08 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "tallinn-marathon",
+        "year": 2024,
+        "raceDate": "2024-09-08"
       }
     },
     {
