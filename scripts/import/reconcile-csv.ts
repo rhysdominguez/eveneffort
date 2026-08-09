@@ -140,6 +140,11 @@ function tokens(input: string): Set<string> {
   return new Set(
     input
       .toLowerCase()
+      // Drop apostrophes rather than turning them into a word break — "Jill's"
+      // must fold to "jills", the same token the CSV writes without one. Left
+      // as a break, "Jack & Jill's Downhill Marathon" split into a stray "s"
+      // token and the real match dropped from 0.82 to just under threshold.
+      .replace(/['']/g, "")
       .replace(/[^a-z0-9 ]/g, " ")
       .split(/\s+/)
       .map((w) => ALIASES[w] ?? w)
@@ -302,14 +307,16 @@ function classify(
     };
   }
 
-  // Dates we will never seed an edition for.
   const year = row.date.match(/\d{4}/)?.[0];
   if (!year) {
     return { ...base, status: "no-date", note: `date is "${row.date}"` };
   }
-  if (Number(year) < new Date().getFullYear()) {
-    return { ...base, status: "past-event", note: `listed ${row.date}` };
-  }
+  // A past CSV date does not mean the race is gone — it means this specific
+  // running already happened. Annual races recur, and goandrace's GPX for a
+  // past edition measures the same course as next year's. So this checks the
+  // source before giving up: only fall back to "past-event" once nothing on
+  // goandrace answers for this row either.
+  const isPast = Number(year) < new Date().getFullYear();
 
   // On goandrace? A city agreement is worth a nudge but never a match on its
   // own — "Springfield Marathon" exists in three states. A country
@@ -323,7 +330,9 @@ function classify(
     if (score > best.score) best = { score, event: e };
   }
   if (best.score < 0.85 || !best.event) {
-    return { ...base, status: "not-on-source", note: "no goandrace listing in any crawl" };
+    return isPast
+      ? { ...base, status: "past-event", note: `listed ${row.date}` }
+      : { ...base, status: "not-on-source", note: "no goandrace listing in any crawl" };
   }
 
   const event = best.event;

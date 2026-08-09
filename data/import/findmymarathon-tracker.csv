@@ -81,7 +81,7 @@ Cowtown Marathon,"Fort Worth, TX 02/28/2027",TX,02/28/2027,cowtown-marathon,in-d
 Cummins Falls Marathon,"Cookeville, TN 02/28/2026",TN,02/28/2026,cummins-falls-marathon,in-db,,Cummins Falls Marathon
 Oak Ridge to Kingston Express Marathon,"Oak Ridge, TN 02/28/2027",TN,02/28/2027,,not-on-source,,no goandrace listing in any crawl
 Every Womans Marathon,"New Orleans, LA 02/28/2027",LA,02/28/2027,,not-on-source,,no goandrace listing in any crawl
-Hyannis Marathon,"Hyannis, MA 03/02/2025",MA,03/02/2025,,past-event,,listed 03/02/2025
+Hyannis Marathon,"Hyannis, MA 03/02/2025",MA,03/02/2025,hyannis-marathon,parser-rejected,https://www.goandrace.com/en/running-events/hyannis-marathon-2025-hyannis.php,"parser failed: total route length 43.105 km is outside [41.5, 43.0] km"
 Combos Marathon,"Albany, GA 03/06/2027",GA,03/06/2027,albany-combos-marathon,in-db,https://www.goandrace.com/en/running-events/albany-combos-marathon-2025-albany.php,already imported from albany-combos-marathon
 Myrtle Beach Marathon,"Myrtle Beach, SC 03/06/2027",SC,03/06/2027,myrtle-beach-marathon,in-db,,Myrtle Beach Marathon
 Run the Alamo 26.2 Marathon,"San Antonio, TX 03/06/2027",TX,03/06/2027,alamo-marathon,in-db,,Alamo Marathon
@@ -358,8 +358,8 @@ Wicked Fast (CA) Marathon,"El Cajon, CA 06/13/2026",CA,06/13/2026,,not-on-source
 Lake Placid Marathon,"Lake Placid, NY 06/14/2026",NY,06/14/2026,,not-on-source,,no goandrace listing in any crawl
 Bound for Boston (Seattle) Marathon,"Olympia, WA 06/14/2026",WA,06/14/2026,boston-marathon,in-db,,Boston Marathon
 XCelsior Marathon,"Valley Cottage,, NY 06/14/2026",NY,06/14/2026,,not-on-source,,no goandrace listing in any crawl
-Mayors Marathon,"Anchorage, AK 06/20/2026",AK,06/20/2026,,not-on-source,,no goandrace listing in any crawl
-Grandmas Marathon,"Duluth, MN 06/19/2027",MN,06/19/2027,grandmas-marathon,in-db,,
+Mayors Marathon,"Anchorage, AK 06/20/2026",AK,06/20/2026,anchorage-mayors-marathon,in-db,,Anchorage Mayor's Marathon
+Grandmas Marathon,"Duluth, MN 06/19/2027",MN,06/19/2027,grandmas-marathon,in-db,,Grandma's Marathon
 Niagara Ultra Races Marathon,"Niagara-on-the-Lake, ON 06/20/2026",ON,06/20/2026,,not-on-source,,no goandrace listing in any crawl
 Boise Marathon,"Boise, ID 06/20/2026",ID,06/20/2026,,not-on-source,,no goandrace listing in any crawl
 Two Hearted Trail Marathon,"Paradise, MI 06/20/2026",MI,06/20/2026,,not-on-source,,no goandrace listing in any crawl
@@ -397,12 +397,12 @@ Grand Island Trail Marathon,"Munising, MI 07/25/2026",MI,07/25/2026,,not-on-sour
 Juneau Marathon,"Juneau, AK 07/25/2026",AK,07/25/2026,,not-on-source,,no goandrace listing in any crawl
 Idaho Falls Marathon,"Idaho Falls, ID 07/25/2026",ID,07/25/2026,,not-on-source,,no goandrace listing in any crawl
 Conquer the Canyon Marathon,"Wellsboro, PA 07/24/2027",PA,07/24/2027,,not-on-source,,no goandrace listing in any crawl
-Jack and Jills Downhill Marathon (Saturday),"North Bend, WA 07/25/2026",WA,07/25/2026,,not-on-source,,no goandrace listing in any crawl
+Jack and Jills Downhill Marathon (Saturday),"North Bend, WA 07/25/2026",WA,07/25/2026,jack-and-jills-downhill-marathon,in-db,,Jack and Jill's Downhill Marathon
 Xenia Avenue Marathon,"Brooklyn Park, MN 07/25/2026",MN,07/25/2026,,not-on-source,,no goandrace listing in any crawl
 Run for the Elk Marathon,"Emporium, PA 07/25/2027",PA,07/25/2027,,not-on-source,,no goandrace listing in any crawl
 Austin Solstice Circuit Marathon,"Spicewood, TX 07/25/2026",TX,07/25/2026,austin-marathon,in-db,,Austin Marathon
 San Francisco Marathon,"San Francisco, CA 07/26/2026",CA,07/26/2026,san-francisco-marathon,in-db,,San Francisco Marathon
-Jack and Jills Downhill Marathon,"North Bend, WA 07/26/2026",WA,07/26/2026,,not-on-source,,no goandrace listing in any crawl
+Jack and Jills Downhill Marathon,"North Bend, WA 07/26/2026",WA,07/26/2026,jack-and-jills-downhill-marathon,in-db,,Jack and Jill's Downhill Marathon
 Extraterrestrial Full Moon Midnight Marathon,"Rachel, NV 08/01/2026",NV,08/01/2026,,not-on-source,,no goandrace listing in any crawl
 Hatcher Pass Marathon,"Willow, AK 08/01/2026",AK,08/01/2026,,not-on-source,,no goandrace listing in any crawl
 Moorehead Park Trail Mazathon,"Ida Grove, IA 08/01/2026",IA,08/01/2026,,not-on-source,,no goandrace listing in any crawl
