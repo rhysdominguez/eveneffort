@@ -1448,6 +1448,86 @@ export const RECURRENCE: Record<string, RecurrenceRule> = {
     nth: 2,
     note: "Derived from the 2025-03-09 edition; not verified against the organizer",
   },
+  // Imported from goandrace.com — batch 2026-08-09. Each rule is derived
+  // from one observed date, not from the organizer's own statement.
+  "marsala-marathon": {
+    month: 4,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2026-04-26 edition; not verified against the organizer",
+  },
+  "bastad-marathon": {
+    month: 7,
+    weekday: 6,
+    nth: 1,
+    note: "Derived from the 2026-07-04 edition; not verified against the organizer",
+  },
+  "clare-burren-marathon-challenge": {
+    month: 5,
+    weekday: 6,
+    nth: 4,
+    note: "Derived from the 2026-05-23 edition; not verified against the organizer",
+  },
+  "collemar-athon": {
+    month: 5,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the 2026-05-03 edition; not verified against the organizer",
+  },
+  "knysna-forest-marathon": {
+    month: 7,
+    weekday: 6,
+    nth: 1,
+    note: "Derived from the 2026-07-04 edition; not verified against the organizer",
+  },
+  "la-transleonarde": {
+    month: 6,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2026-06-28 edition; not verified against the organizer",
+  },
+  "maastricht-marathon": {
+    month: 5,
+    weekday: 0,
+    nth: 4,
+    note: "Derived from the 2026-05-24 edition; not verified against the organizer",
+  },
+  "mekong-delta-marathon-hau-giang": {
+    month: 7,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the 2026-07-05 edition; not verified against the organizer",
+  },
+  "paavo-nurmi-marathon": {
+    month: 8,
+    weekday: 5,
+    nth: 2,
+    note: "Derived from the 2026-08-14 edition; not verified against the organizer",
+  },
+  "santa-cruz-marathon": {
+    month: 7,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2026-07-19 edition; not verified against the organizer",
+  },
+  "samoa-international-marathon": {
+    month: 7,
+    weekday: 5,
+    nth: 1,
+    note: "Derived from the 2026-07-03 edition; not verified against the organizer",
+  },
+  "metropolmarathon": {
+    month: 6,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2026-06-14 edition; not verified against the organizer",
+  },
+  "terwa-marathon": {
+    month: 5,
+    weekday: 6,
+    nth: 4,
+    note: "Derived from the 2026-05-23 edition; not verified against the organizer",
+  },
 };
 
 export interface ConfirmedEdition {
@@ -1756,6 +1836,21 @@ export const CONFIRMED_EDITIONS: ConfirmedEdition[] = [
   { seriesSlug: "almaty-marathon", year: 2025, raceDate: "2025-09-28" },
   { seriesSlug: "ho-chi-minh-city-marathon", year: 2026, raceDate: "2026-01-11" },
   { seriesSlug: "la-paz-marathon", year: 2025, raceDate: "2025-03-09" },
+  // Imported from goandrace.com — batch 2026-08-09. Dates as published by
+  // the event listing; startTimeLocal is deliberately left unset.
+  { seriesSlug: "marsala-marathon", year: 2026, raceDate: "2026-04-26" },
+  { seriesSlug: "bastad-marathon", year: 2026, raceDate: "2026-07-04" },
+  { seriesSlug: "clare-burren-marathon-challenge", year: 2026, raceDate: "2026-05-23" },
+  { seriesSlug: "collemar-athon", year: 2026, raceDate: "2026-05-03" },
+  { seriesSlug: "knysna-forest-marathon", year: 2026, raceDate: "2026-07-04" },
+  { seriesSlug: "la-transleonarde", year: 2026, raceDate: "2026-06-28" },
+  { seriesSlug: "maastricht-marathon", year: 2026, raceDate: "2026-05-24" },
+  { seriesSlug: "mekong-delta-marathon-hau-giang", year: 2026, raceDate: "2026-07-05" },
+  { seriesSlug: "paavo-nurmi-marathon", year: 2026, raceDate: "2026-08-14" },
+  { seriesSlug: "santa-cruz-marathon", year: 2026, raceDate: "2026-07-19" },
+  { seriesSlug: "samoa-international-marathon", year: 2026, raceDate: "2026-07-03" },
+  { seriesSlug: "metropolmarathon", year: 2026, raceDate: "2026-06-14" },
+  { seriesSlug: "terwa-marathon", year: 2026, raceDate: "2026-05-23" },
 ];
 
 /**

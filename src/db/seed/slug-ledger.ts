@@ -269,6 +269,20 @@ export const PUBLISHED_COURSE_SLUGS: string[] = [
   "almaty-marathon",
   "ho-chi-minh-city-marathon",
   "la-paz-marathon",
+  // Batch 2026-08-09, imported from goandrace.com on 2026-08-09.
+  "marsala-marathon",
+  "bastad-marathon",
+  "clare-burren-marathon-challenge",
+  "collemar-athon",
+  "knysna-forest-marathon",
+  "la-transleonarde",
+  "maastricht-marathon",
+  "mekong-delta-marathon-hau-giang",
+  "paavo-nurmi-marathon",
+  "santa-cruz-marathon",
+  "samoa-international-marathon",
+  "metropolmarathon",
+  "terwa-marathon",
 ];
 
 /** The shape every course slug must take: lowercase, digits, single hyphens. */
