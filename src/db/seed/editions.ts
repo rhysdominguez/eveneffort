@@ -1428,6 +1428,26 @@ export const RECURRENCE: Record<string, RecurrenceRule> = {
     nth: -1,
     note: "Derived from the 2025-05-25 edition; not verified against the organizer",
   },
+  // Imported from goandrace.com — batch 2026-08-09. Each rule is derived
+  // from one observed date, not from the organizer's own statement.
+  "almaty-marathon": {
+    month: 9,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2025-09-28 edition; not verified against the organizer",
+  },
+  "ho-chi-minh-city-marathon": {
+    month: 1,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2026-01-11 edition; not verified against the organizer",
+  },
+  "la-paz-marathon": {
+    month: 3,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2025-03-09 edition; not verified against the organizer",
+  },
 };
 
 export interface ConfirmedEdition {
@@ -1731,6 +1751,11 @@ export const CONFIRMED_EDITIONS: ConfirmedEdition[] = [
   { seriesSlug: "verdi-marathon", year: 2025, raceDate: "2025-02-23" },
   { seriesSlug: "white-marble-marathon", year: 2025, raceDate: "2025-02-16" },
   { seriesSlug: "wurzburg-marathon", year: 2025, raceDate: "2025-05-25" },
+  // Imported from goandrace.com — batch 2026-08-09. Dates as published by
+  // the event listing; startTimeLocal is deliberately left unset.
+  { seriesSlug: "almaty-marathon", year: 2025, raceDate: "2025-09-28" },
+  { seriesSlug: "ho-chi-minh-city-marathon", year: 2026, raceDate: "2026-01-11" },
+  { seriesSlug: "la-paz-marathon", year: 2025, raceDate: "2025-03-09" },
 ];
 
 /**

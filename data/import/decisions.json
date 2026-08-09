@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-09T19:40:42.617Z",
+  "updatedAt": "2026-08-09T19:54:54.814Z",
   "courses": [
     {
       "courseSlug": "2-bologna-marathon",
@@ -187,6 +187,56 @@
         "seriesSlug": "alexander-the-great-marathon",
         "year": 2025,
         "raceDate": "2025-04-06"
+      }
+    },
+    {
+      "courseSlug": "almaty-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/almaty-marathon-2025-almaty.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/09/28/gpx_20250928_id10492_race1_20250914232011.gpx?t=1786305222",
+        "gpxSha256": "4cabc1c4002dd153413b38d6b0d3ec06c264b7031df4a0159fd440a9ecd9d6cc"
+      },
+      "stats": {
+        "totalKm": 42.37707154205808,
+        "gainM": 353.0999999999999
+      },
+      "city": {
+        "slug": "almaty-kz",
+        "name": "Almaty",
+        "countryCode": "KZ",
+        "countryName": "Kazakhstan",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 43.23822,
+        "longitude": 76.94601,
+        "timezone": "Asia/Almaty"
+      },
+      "citySlug": "almaty-kz",
+      "series": {
+        "slug": "almaty-marathon",
+        "name": "Almaty Marathon",
+        "citySlug": "almaty-kz",
+        "courseSlug": "almaty-marathon",
+        "isMajor": false,
+        "typicalMonth": 9,
+        "websiteUrl": "https://almaty-marathon.kz",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "almaty-marathon",
+        "month": 9,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2025-09-28 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "almaty-marathon",
+        "year": 2025,
+        "raceDate": "2025-09-28"
       }
     },
     {
@@ -3931,6 +3981,78 @@
       }
     },
     {
+      "courseSlug": "ho-chi-minh-city-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.617 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/ho-chi-minh-city-marathon-2026-ho-chi-minh-city.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/01/11/gpx_20260111_id10702_race1_20260102183604.gpx?t=1786305227",
+        "gpxSha256": "20ce2fb2738f0bc18118df9b780873383499d13312d7e094ce87ec55fd993843"
+      },
+      "stats": {
+        "totalKm": 42.61651232462896,
+        "gainM": 53.2
+      },
+      "city": {
+        "slug": "ho-chi-minh-city-vn",
+        "name": "Ho Chi Minh City",
+        "countryCode": "VN",
+        "countryName": "Vietnam",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 10.779146,
+        "longitude": 106.697412,
+        "timezone": "Asia/Ho_Chi_Minh"
+      },
+      "citySlug": "ho-chi-minh-city-vn",
+      "series": {
+        "slug": "ho-chi-minh-city-marathon",
+        "name": "Ho Chi Minh City Marathon",
+        "citySlug": "ho-chi-minh-city-vn",
+        "courseSlug": "ho-chi-minh-city-marathon",
+        "isMajor": false,
+        "typicalMonth": 1,
+        "websiteUrl": "https://hcmcmarathon.com/",
+        "organizer": "Pulse Active"
+      },
+      "recurrence": {
+        "seriesSlug": "ho-chi-minh-city-marathon",
+        "month": 1,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2026-01-11 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "ho-chi-minh-city-marathon",
+        "year": 2026,
+        "raceDate": "2026-01-11"
+      }
+    },
+    {
+      "courseSlug": "ho-chi-minh-city-midnight",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/ho-chi-minh-city-midnight-2025-ho-chi-minh.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "hogeye-marathon",
       "verdict": "rejected",
       "reasons": [
@@ -5569,6 +5691,57 @@
       }
     },
     {
+      "courseSlug": "la-paz-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 41.981 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/maraton-de-la-paz-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/03/09/gpx_20250309_id10207_race1_20250302115625.gpx?t=1786305233",
+        "gpxSha256": "05b090fdb004978db229c25aa5534ad9713ed566f15f5a0719f358bc8ea8be73"
+      },
+      "stats": {
+        "totalKm": 41.980624369299235,
+        "gainM": 858.8999999999996
+      },
+      "city": {
+        "slug": "la-paz-bo",
+        "name": "La Paz",
+        "countryCode": "BO",
+        "countryName": "Bolivia",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": -16.505191,
+        "longitude": -68.130194,
+        "timezone": "America/La_Paz"
+      },
+      "citySlug": "la-paz-bo",
+      "series": {
+        "slug": "la-paz-marathon",
+        "name": "La Paz Marathon",
+        "citySlug": "la-paz-bo",
+        "courseSlug": "la-paz-marathon",
+        "isMajor": false,
+        "typicalMonth": 3,
+        "websiteUrl": "https://www.maratondelapaz.com",
+        "organizer": "Conitzer Running"
+      },
+      "recurrence": {
+        "seriesSlug": "la-paz-marathon",
+        "month": 3,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2025-03-09 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "la-paz-marathon",
+        "year": 2025,
+        "raceDate": "2025-03-09"
+      }
+    },
+    {
       "courseSlug": "maraton-valencia-trinidad-alfonso",
       "verdict": "rejected",
       "reasons": [
@@ -6554,6 +6727,27 @@
       }
     },
     {
+      "courseSlug": "muscat-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/muscat-marathon-2025-muscat.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "myrtle-beach-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -6599,6 +6793,56 @@
         "seriesSlug": "myrtle-beach-marathon",
         "year": 2024,
         "raceDate": "2024-03-02"
+      }
+    },
+    {
+      "courseSlug": "n4-elands-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/trac-n4-elands-marathon-2025-waterval-boven.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/03/01/gpx_20250301_id10167_race1_20250201123046.gpx?t=1786291421",
+        "gpxSha256": "3c276a80a88f9093f7a5256fb447b5815b3e7806981c4b34b9e65f274e86dbb7"
+      },
+      "stats": {
+        "totalKm": 42.15291440986093,
+        "gainM": 51.19999999999993
+      },
+      "city": {
+        "slug": "waterval-boven-za",
+        "name": "Waterval Boven",
+        "countryCode": "ZA",
+        "countryName": "South Africa",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": -25.643705,
+        "longitude": 30.330372,
+        "timezone": "Africa/Johannesburg"
+      },
+      "citySlug": "waterval-boven-za",
+      "series": {
+        "slug": "n4-elands-marathon",
+        "name": "N4 Elands Marathon",
+        "citySlug": "waterval-boven-za",
+        "courseSlug": "n4-elands-marathon",
+        "isMajor": false,
+        "typicalMonth": 3,
+        "websiteUrl": "https://elandsmarathon.co.za",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "n4-elands-marathon",
+        "month": 3,
+        "weekday": 6,
+        "nth": 1,
+        "note": "Derived from the 2025-03-01 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "n4-elands-marathon",
+        "year": 2025,
+        "raceDate": "2025-03-01"
       }
     },
     {
@@ -9439,57 +9683,6 @@
       }
     },
     {
-      "courseSlug": "taipei-charity-marathon",
-      "verdict": "ready",
-      "reasons": [
-        "measured 41.852 km, outside the [42.0, 42.4] band",
-        "no organizer name published — fill SeriesSeed.organizer by hand"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/standard-chartered-taipei-charity-marathon-2025.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2025/01/12/gpx_20250112_id10092_race1_20241208234042.gpx?t=1786291343",
-        "gpxSha256": "4b8372b339861959eecd4e6a52457ec04fb2833533b1b06cefd0e0db55fe931c"
-      },
-      "stats": {
-        "totalKm": 41.85185091062053,
-        "gainM": 25.099999999999994
-      },
-      "city": {
-        "slug": "taipei-tw",
-        "name": "Taipei",
-        "countryCode": "TW",
-        "countryName": "Taiwan",
-        "regionCode": null,
-        "regionName": null,
-        "latitude": 25.039841,
-        "longitude": 121.513242,
-        "timezone": "Asia/Taipei"
-      },
-      "citySlug": "taipei-tw",
-      "series": {
-        "slug": "taipei-charity-marathon",
-        "name": "Taipei Charity Marathon",
-        "citySlug": "taipei-tw",
-        "courseSlug": "taipei-charity-marathon",
-        "isMajor": false,
-        "typicalMonth": 1,
-        "websiteUrl": "https://scbmarathon.com",
-        "organizer": ""
-      },
-      "recurrence": {
-        "seriesSlug": "taipei-charity-marathon",
-        "month": 1,
-        "weekday": 0,
-        "nth": 2,
-        "note": "Derived from the 2025-01-12 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "taipei-charity-marathon",
-        "year": 2025,
-        "raceDate": "2025-01-12"
-      }
-    },
-    {
       "courseSlug": "stockholm-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -9709,6 +9902,57 @@
         "seriesSlug": "sugarloaf-marathon",
         "year": 2026,
         "raceDate": "2026-05-17"
+      }
+    },
+    {
+      "courseSlug": "taipei-charity-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 41.852 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/standard-chartered-taipei-charity-marathon-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/01/12/gpx_20250112_id10092_race1_20241208234042.gpx?t=1786291343",
+        "gpxSha256": "4b8372b339861959eecd4e6a52457ec04fb2833533b1b06cefd0e0db55fe931c"
+      },
+      "stats": {
+        "totalKm": 41.85185091062053,
+        "gainM": 25.099999999999994
+      },
+      "city": {
+        "slug": "taipei-tw",
+        "name": "Taipei",
+        "countryCode": "TW",
+        "countryName": "Taiwan",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 25.039841,
+        "longitude": 121.513242,
+        "timezone": "Asia/Taipei"
+      },
+      "citySlug": "taipei-tw",
+      "series": {
+        "slug": "taipei-charity-marathon",
+        "name": "Taipei Charity Marathon",
+        "citySlug": "taipei-tw",
+        "courseSlug": "taipei-charity-marathon",
+        "isMajor": false,
+        "typicalMonth": 1,
+        "websiteUrl": "https://scbmarathon.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "taipei-charity-marathon",
+        "month": 1,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2025-01-12 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "taipei-charity-marathon",
+        "year": 2025,
+        "raceDate": "2025-01-12"
       }
     },
     {
@@ -10223,56 +10467,6 @@
         "seriesSlug": "township-marathon",
         "year": 2025,
         "raceDate": "2025-02-23"
-      }
-    },
-    {
-      "courseSlug": "n4-elands-marathon",
-      "verdict": "ready",
-      "reasons": [
-        "no organizer name published — fill SeriesSeed.organizer by hand"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/trac-n4-elands-marathon-2025-waterval-boven.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2025/03/01/gpx_20250301_id10167_race1_20250201123046.gpx?t=1786291421",
-        "gpxSha256": "3c276a80a88f9093f7a5256fb447b5815b3e7806981c4b34b9e65f274e86dbb7"
-      },
-      "stats": {
-        "totalKm": 42.15291440986093,
-        "gainM": 51.19999999999993
-      },
-      "city": {
-        "slug": "waterval-boven-za",
-        "name": "Waterval Boven",
-        "countryCode": "ZA",
-        "countryName": "South Africa",
-        "regionCode": null,
-        "regionName": null,
-        "latitude": -25.643705,
-        "longitude": 30.330372,
-        "timezone": "Africa/Johannesburg"
-      },
-      "citySlug": "waterval-boven-za",
-      "series": {
-        "slug": "n4-elands-marathon",
-        "name": "N4 Elands Marathon",
-        "citySlug": "waterval-boven-za",
-        "courseSlug": "n4-elands-marathon",
-        "isMajor": false,
-        "typicalMonth": 3,
-        "websiteUrl": "https://elandsmarathon.co.za",
-        "organizer": ""
-      },
-      "recurrence": {
-        "seriesSlug": "n4-elands-marathon",
-        "month": 3,
-        "weekday": 6,
-        "nth": 1,
-        "note": "Derived from the 2025-03-01 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "n4-elands-marathon",
-        "year": 2025,
-        "raceDate": "2025-03-01"
       }
     },
     {
