@@ -1146,6 +1146,62 @@ export const RECURRENCE: Record<string, RecurrenceRule> = {
     nth: 4,
     note: "Derived from the 2025-11-23 edition; not verified against the organizer",
   },
+  // Imported from goandrace.com — batch 2026-08-09. Each rule is derived
+  // from one observed date, not from the organizer's own statement.
+  "oslo-marathon": {
+    month: 9,
+    weekday: 6,
+    nth: 3,
+    note: "Derived from the 2025-09-20 edition; not verified against the organizer",
+  },
+  "lisbon-marathon": {
+    month: 10,
+    weekday: 6,
+    nth: -1,
+    note: "Derived from the 2025-10-25 edition; not verified against the organizer",
+  },
+  "enschede-marathon": {
+    month: 4,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2026-04-12 edition; not verified against the organizer",
+  },
+  "marathon-de-la-liberte": {
+    month: 6,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2025-06-15 edition; not verified against the organizer",
+  },
+  "marburger-nachtmarathon": {
+    month: 7,
+    weekday: 5,
+    nth: 1,
+    note: "Derived from the 2026-07-03 edition; not verified against the organizer",
+  },
+  "pisa-marathon": {
+    month: 12,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2025-12-21 edition; not verified against the organizer",
+  },
+  "midnight-sun-marathon": {
+    month: 6,
+    weekday: 6,
+    nth: 3,
+    note: "Derived from the 2025-06-21 edition; not verified against the organizer",
+  },
+  "limassol-marathon": {
+    month: 3,
+    weekday: 0,
+    nth: 4,
+    note: "Derived from the 2025-03-23 edition; not verified against the organizer",
+  },
+  "venice-marathon": {
+    month: 10,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2025-10-26 edition; not verified against the organizer",
+  },
 };
 
 export interface ConfirmedEdition {
@@ -1397,6 +1453,17 @@ export const CONFIRMED_EDITIONS: ConfirmedEdition[] = [
   { seriesSlug: "long-island-marathon", year: 2024, raceDate: "2024-05-05" },
   { seriesSlug: "zydeco-marathon", year: 2025, raceDate: "2025-03-16" },
   { seriesSlug: "route-66-marathon", year: 2025, raceDate: "2025-11-23" },
+  // Imported from goandrace.com — batch 2026-08-09. Dates as published by
+  // the event listing; startTimeLocal is deliberately left unset.
+  { seriesSlug: "oslo-marathon", year: 2025, raceDate: "2025-09-20" },
+  { seriesSlug: "lisbon-marathon", year: 2025, raceDate: "2025-10-25" },
+  { seriesSlug: "enschede-marathon", year: 2026, raceDate: "2026-04-12" },
+  { seriesSlug: "marathon-de-la-liberte", year: 2025, raceDate: "2025-06-15" },
+  { seriesSlug: "marburger-nachtmarathon", year: 2026, raceDate: "2026-07-03" },
+  { seriesSlug: "pisa-marathon", year: 2025, raceDate: "2025-12-21" },
+  { seriesSlug: "midnight-sun-marathon", year: 2025, raceDate: "2025-06-21" },
+  { seriesSlug: "limassol-marathon", year: 2025, raceDate: "2025-03-23" },
+  { seriesSlug: "venice-marathon", year: 2025, raceDate: "2025-10-26" },
 ];
 
 /**

@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-09T18:50:01.544Z",
+  "updatedAt": "2026-08-09T19:10:47.086Z",
   "courses": [
     {
       "courseSlug": "2-bologna-marathon",
@@ -1151,6 +1151,59 @@
       }
     },
     {
+      "courseSlug": "blue-ridge-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 43.078 km, outside the [42.0, 42.4] band",
+        "no addressRegion published; US city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone America/New_York was guessed from longitude (US spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/foot-levelers-blue-ridge-marathon-2026-roanoke.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/04/18/gpx_20260418_id10935_race1_20260407093908.gpx?t=1786286597",
+        "gpxSha256": "2b2cbbd03b839f7561e561e1159cce319c5d3277a8c63e0e879a005365dac775"
+      },
+      "stats": {
+        "totalKm": 43.078046499855944,
+        "gainM": 726.9999999999998
+      },
+      "city": {
+        "slug": "roanoke-va-us",
+        "name": "Roanoke",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-VA",
+        "regionName": "Virginia",
+        "latitude": 37.268597,
+        "longitude": -79.940634,
+        "timezone": "America/New_York"
+      },
+      "citySlug": "roanoke-va-us",
+      "series": {
+        "slug": "blue-ridge-marathon",
+        "name": "Blue Ridge Marathon",
+        "citySlug": "roanoke-va-us",
+        "courseSlug": "blue-ridge-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://blueridgemarathon.com/",
+        "organizer": "Roanoke Outside Foundation"
+      },
+      "recurrence": {
+        "seriesSlug": "blue-ridge-marathon",
+        "month": 4,
+        "weekday": 6,
+        "nth": 3,
+        "note": "Derived from the 2026-04-18 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "blue-ridge-marathon",
+        "year": 2026,
+        "raceDate": "2026-04-18"
+      }
+    },
+    {
       "courseSlug": "bmw-dallas-marathon",
       "verdict": "rejected",
       "reasons": [
@@ -1170,6 +1223,56 @@
       "series": null,
       "recurrence": null,
       "edition": null
+    },
+    {
+      "courseSlug": "oslo-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.730 km, outside the [42.0, 42.4] band"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/bmw-oslo-maraton-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/09/20/gpx_20250920_id10471_race2_20250821122528.gpx?t=1786302431",
+        "gpxSha256": "0d098c00dcbc23a9f785cf58c046faf674d81b96c0988531018ab95735012680"
+      },
+      "stats": {
+        "totalKm": 42.72971497943326,
+        "gainM": 177.39999999999998
+      },
+      "city": {
+        "slug": "oslo-no",
+        "name": "Oslo",
+        "countryCode": "NO",
+        "countryName": "Norway",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 59.911614,
+        "longitude": 10.733293,
+        "timezone": "Europe/Oslo"
+      },
+      "citySlug": "oslo-no",
+      "series": {
+        "slug": "oslo-marathon",
+        "name": "Oslo Marathon",
+        "citySlug": "oslo-no",
+        "courseSlug": "oslo-marathon",
+        "isMajor": false,
+        "typicalMonth": 9,
+        "websiteUrl": "https://oslomaraton.no",
+        "organizer": "Oslo Marathon As"
+      },
+      "recurrence": {
+        "seriesSlug": "oslo-marathon",
+        "month": 9,
+        "weekday": 6,
+        "nth": 3,
+        "note": "Derived from the 2025-09-20 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "oslo-marathon",
+        "year": 2025,
+        "raceDate": "2025-09-20"
+      }
     },
     {
       "courseSlug": "bologna-marathon",
@@ -2109,6 +2212,59 @@
       }
     },
     {
+      "courseSlug": "chattanooga-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 43.295 km, outside the [42.0, 42.4] band",
+        "no addressRegion published; US city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone America/Chicago was guessed from longitude (US spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/erlanger-chattanooga-marathon-2026.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/03/29/gpx_20260329_id10801_race1_20260317214952.gpx?t=1786286568",
+        "gpxSha256": "bf4f544f0b76f2ac758556ddda759accddb0b41e8a8ef35f71b80422b18f823a"
+      },
+      "stats": {
+        "totalKm": 43.29493678691025,
+        "gainM": 122.30000000000001
+      },
+      "city": {
+        "slug": "chattanooga-tn-us",
+        "name": "Chattanooga",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-TN",
+        "regionName": "Tennessee",
+        "latitude": 35.03674,
+        "longitude": -85.31662,
+        "timezone": "America/New_York"
+      },
+      "citySlug": "chattanooga-tn-us",
+      "series": {
+        "slug": "chattanooga-marathon",
+        "name": "Chattanooga Marathon",
+        "citySlug": "chattanooga-tn-us",
+        "courseSlug": "chattanooga-marathon",
+        "isMajor": false,
+        "typicalMonth": 3,
+        "websiteUrl": "https://www.chattanoogamarathon.com/",
+        "organizer": "Paceline Promotions"
+      },
+      "recurrence": {
+        "seriesSlug": "chattanooga-marathon",
+        "month": 3,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2026-03-29 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "chattanooga-marathon",
+        "year": 2026,
+        "raceDate": "2026-03-29"
+      }
+    },
+    {
       "courseSlug": "chicagoland-spring-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -2990,6 +3146,48 @@
       }
     },
     {
+      "courseSlug": "lisbon-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.411 km, outside the [42.0, 42.4] band",
+        "city lisbon-pt is already seeded (start lines 16.1 km apart); reusing its existing pin, emitting no city row",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/edp-lisbon-marathon-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/10/25/gpx_20251025_id10582_race1_20250925225441.gpx?t=1786302537",
+        "gpxSha256": "d59223473b25b65713515a7007549e0a7039c194e51c954a6dc352aee2962a84"
+      },
+      "stats": {
+        "totalKm": 42.410815686284806,
+        "gainM": 66.89999999999999
+      },
+      "city": null,
+      "citySlug": "lisbon-pt",
+      "series": {
+        "slug": "lisbon-marathon",
+        "name": "Lisbon Marathon",
+        "citySlug": "lisbon-pt",
+        "courseSlug": "lisbon-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://www.maratonalisboa.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "lisbon-marathon",
+        "month": 10,
+        "weekday": 6,
+        "nth": -1,
+        "note": "Derived from the 2025-10-25 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "lisbon-marathon",
+        "year": 2025,
+        "raceDate": "2025-10-25"
+      }
+    },
+    {
       "courseSlug": "eisenhower-marathon",
       "verdict": "ready",
       "reasons": [
@@ -3040,56 +3238,102 @@
       }
     },
     {
-      "courseSlug": "chattanooga-marathon",
+      "courseSlug": "enschede-marathon",
       "verdict": "ready",
       "reasons": [
-        "measured 43.295 km, outside the [42.0, 42.4] band",
-        "no addressRegion published; US city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
-        "timezone America/Chicago was guessed from longitude (US spans zones) — confirm it",
+        "measured 43.041 km, outside the [42.0, 42.4] band",
         "no organizer name published — fill SeriesSeed.organizer by hand"
       ],
       "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/erlanger-chattanooga-marathon-2026.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2026/03/29/gpx_20260329_id10801_race1_20260317214952.gpx?t=1786286568",
-        "gpxSha256": "bf4f544f0b76f2ac758556ddda759accddb0b41e8a8ef35f71b80422b18f823a"
+        "eventUrl": "https://www.goandrace.com/en/running-events/enschede-marathon-2026-enschede.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/04/12/gpx_20260412_id10927_race1_20260328173208.gpx?t=1786302351",
+        "gpxSha256": "dd985d76123e0fea96eecae1b23b85dff228c0413363892a291f42a08894090d"
       },
       "stats": {
-        "totalKm": 43.29493678691025,
-        "gainM": 122.30000000000001
+        "totalKm": 43.0408453251773,
+        "gainM": 81.30000000000001
       },
       "city": {
-        "slug": "chattanooga-tn-us",
-        "name": "Chattanooga",
-        "countryCode": "US",
-        "countryName": "United States",
-        "regionCode": "US-TN",
-        "regionName": "Tennessee",
-        "latitude": 35.03674,
-        "longitude": -85.31662,
-        "timezone": "America/New_York"
+        "slug": "enschede-nl",
+        "name": "Enschede",
+        "countryCode": "NL",
+        "countryName": "Netherlands",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 52.216642,
+        "longitude": 6.902174,
+        "timezone": "Europe/Amsterdam"
       },
-      "citySlug": "chattanooga-tn-us",
+      "citySlug": "enschede-nl",
       "series": {
-        "slug": "chattanooga-marathon",
-        "name": "Chattanooga Marathon",
-        "citySlug": "chattanooga-tn-us",
-        "courseSlug": "chattanooga-marathon",
+        "slug": "enschede-marathon",
+        "name": "Enschede Marathon",
+        "citySlug": "enschede-nl",
+        "courseSlug": "enschede-marathon",
         "isMajor": false,
-        "typicalMonth": 3,
-        "websiteUrl": "https://www.chattanoogamarathon.com/",
-        "organizer": "Paceline Promotions"
+        "typicalMonth": 4,
+        "websiteUrl": "https://www.enschedemarathon.nl",
+        "organizer": "Stichting Marathon Enschede"
       },
       "recurrence": {
-        "seriesSlug": "chattanooga-marathon",
-        "month": 3,
+        "seriesSlug": "enschede-marathon",
+        "month": 4,
         "weekday": 0,
-        "nth": -1,
-        "note": "Derived from the 2026-03-29 edition; not verified against the organizer"
+        "nth": 2,
+        "note": "Derived from the 2026-04-12 edition; not verified against the organizer"
       },
       "edition": {
-        "seriesSlug": "chattanooga-marathon",
+        "seriesSlug": "enschede-marathon",
         "year": 2026,
-        "raceDate": "2026-03-29"
+        "raceDate": "2026-04-12"
+      }
+    },
+    {
+      "courseSlug": "estes-park-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/estes-park-marathon-half-marathon-2024-estes-park.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/06/16/gpx_20240616_id9902_race1_20240609122641.gpx?t=1786286957",
+        "gpxSha256": "51e13acb4f5072a1663a992daf3236b4c29006bd5c589531dbcca5bc654a9189"
+      },
+      "stats": {
+        "totalKm": 42.24062172249168,
+        "gainM": 194.5
+      },
+      "city": {
+        "slug": "estes-park-co-us",
+        "name": "Estes Park",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-CO",
+        "regionName": "Colorado",
+        "latitude": 40.291532,
+        "longitude": -105.544127,
+        "timezone": "America/Denver"
+      },
+      "citySlug": "estes-park-co-us",
+      "series": {
+        "slug": "estes-park-marathon",
+        "name": "Estes Park Marathon",
+        "citySlug": "estes-park-co-us",
+        "courseSlug": "estes-park-marathon",
+        "isMajor": false,
+        "typicalMonth": 6,
+        "websiteUrl": "https://www.epmarathon.org",
+        "organizer": "Estes Park Running Club"
+      },
+      "recurrence": {
+        "seriesSlug": "estes-park-marathon",
+        "month": 6,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2024-06-16 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "estes-park-marathon",
+        "year": 2024,
+        "raceDate": "2024-06-16"
       }
     },
     {
@@ -3146,54 +3390,6 @@
       }
     },
     {
-      "courseSlug": "estes-park-marathon",
-      "verdict": "ready",
-      "reasons": [],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/estes-park-marathon-half-marathon-2024-estes-park.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2024/06/16/gpx_20240616_id9902_race1_20240609122641.gpx?t=1786286957",
-        "gpxSha256": "51e13acb4f5072a1663a992daf3236b4c29006bd5c589531dbcca5bc654a9189"
-      },
-      "stats": {
-        "totalKm": 42.24062172249168,
-        "gainM": 194.5
-      },
-      "city": {
-        "slug": "estes-park-co-us",
-        "name": "Estes Park",
-        "countryCode": "US",
-        "countryName": "United States",
-        "regionCode": "US-CO",
-        "regionName": "Colorado",
-        "latitude": 40.291532,
-        "longitude": -105.544127,
-        "timezone": "America/Denver"
-      },
-      "citySlug": "estes-park-co-us",
-      "series": {
-        "slug": "estes-park-marathon",
-        "name": "Estes Park Marathon",
-        "citySlug": "estes-park-co-us",
-        "courseSlug": "estes-park-marathon",
-        "isMajor": false,
-        "typicalMonth": 6,
-        "websiteUrl": "https://www.epmarathon.org",
-        "organizer": "Estes Park Running Club"
-      },
-      "recurrence": {
-        "seriesSlug": "estes-park-marathon",
-        "month": 6,
-        "weekday": 0,
-        "nth": 3,
-        "note": "Derived from the 2024-06-16 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "estes-park-marathon",
-        "year": 2024,
-        "raceDate": "2024-06-16"
-      }
-    },
-    {
       "courseSlug": "florence-marathon",
       "verdict": "ready",
       "reasons": [
@@ -3241,59 +3437,6 @@
         "seriesSlug": "florence-marathon",
         "year": 2024,
         "raceDate": "2024-11-24"
-      }
-    },
-    {
-      "courseSlug": "blue-ridge-marathon",
-      "verdict": "ready",
-      "reasons": [
-        "measured 43.078 km, outside the [42.0, 42.4] band",
-        "no addressRegion published; US city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
-        "timezone America/New_York was guessed from longitude (US spans zones) — confirm it",
-        "no organizer name published — fill SeriesSeed.organizer by hand"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/foot-levelers-blue-ridge-marathon-2026-roanoke.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2026/04/18/gpx_20260418_id10935_race1_20260407093908.gpx?t=1786286597",
-        "gpxSha256": "2b2cbbd03b839f7561e561e1159cce319c5d3277a8c63e0e879a005365dac775"
-      },
-      "stats": {
-        "totalKm": 43.078046499855944,
-        "gainM": 726.9999999999998
-      },
-      "city": {
-        "slug": "roanoke-va-us",
-        "name": "Roanoke",
-        "countryCode": "US",
-        "countryName": "United States",
-        "regionCode": "US-VA",
-        "regionName": "Virginia",
-        "latitude": 37.268597,
-        "longitude": -79.940634,
-        "timezone": "America/New_York"
-      },
-      "citySlug": "roanoke-va-us",
-      "series": {
-        "slug": "blue-ridge-marathon",
-        "name": "Blue Ridge Marathon",
-        "citySlug": "roanoke-va-us",
-        "courseSlug": "blue-ridge-marathon",
-        "isMajor": false,
-        "typicalMonth": 4,
-        "websiteUrl": "https://blueridgemarathon.com/",
-        "organizer": "Roanoke Outside Foundation"
-      },
-      "recurrence": {
-        "seriesSlug": "blue-ridge-marathon",
-        "month": 4,
-        "weekday": 6,
-        "nth": 3,
-        "note": "Derived from the 2026-04-18 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "blue-ridge-marathon",
-        "year": 2026,
-        "raceDate": "2026-04-18"
       }
     },
     {
@@ -3492,59 +3635,6 @@
         "seriesSlug": "galveston-marathon",
         "year": 2024,
         "raceDate": "2024-02-25"
-      }
-    },
-    {
-      "courseSlug": "kansas-city-marathon",
-      "verdict": "ready",
-      "reasons": [
-        "measured 43.044 km, outside the [42.0, 42.4] band",
-        "no addressRegion published; US city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
-        "timezone America/Chicago was guessed from longitude (US spans zones) — confirm it",
-        "no organizer name published — fill SeriesSeed.organizer by hand"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/garmin-kansas-city-marathon-2025.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2025/10/18/gpx_20251018_id10460_race1_20251007093754.gpx?t=1786215521",
-        "gpxSha256": "fa5d5e7928ec5d631debfb9470c4c36d78eec5fb4a6374aa48695e8afee6fe32"
-      },
-      "stats": {
-        "totalKm": 43.043700079216805,
-        "gainM": 250.59999999999982
-      },
-      "city": {
-        "slug": "kansas-city-mo-us",
-        "name": "Kansas City",
-        "countryCode": "US",
-        "countryName": "United States",
-        "regionCode": "US-MO",
-        "regionName": "Missouri",
-        "latitude": 39.042099,
-        "longitude": -94.581004,
-        "timezone": "America/Chicago"
-      },
-      "citySlug": "kansas-city-mo-us",
-      "series": {
-        "slug": "kansas-city-marathon",
-        "name": "Kansas City Marathon",
-        "citySlug": "kansas-city-mo-us",
-        "courseSlug": "kansas-city-marathon",
-        "isMajor": false,
-        "typicalMonth": 10,
-        "websiteUrl": "https://www.sportkc.org/marathon",
-        "organizer": "Greater Kansas City Sports Commission & Foundation"
-      },
-      "recurrence": {
-        "seriesSlug": "kansas-city-marathon",
-        "month": 10,
-        "weekday": 6,
-        "nth": 3,
-        "note": "Derived from the 2025-10-18 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "kansas-city-marathon",
-        "year": 2025,
-        "raceDate": "2025-10-18"
       }
     },
     {
@@ -4274,56 +4364,56 @@
       }
     },
     {
-      "courseSlug": "long-island-marathon",
+      "courseSlug": "kansas-city-marathon",
       "verdict": "ready",
       "reasons": [
-        "measured 43.121 km, outside the [42.0, 42.4] band",
+        "measured 43.044 km, outside the [42.0, 42.4] band",
         "no addressRegion published; US city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
-        "timezone America/New_York was guessed from longitude (US spans zones) — confirm it",
+        "timezone America/Chicago was guessed from longitude (US spans zones) — confirm it",
         "no organizer name published — fill SeriesSeed.organizer by hand"
       ],
       "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/jovia-long-island-marathon-festival-of-races-2024-east-meadow.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2024/05/05/gpx_20240505_id9801_race1_20240426123250.gpx?t=1786287974",
-        "gpxSha256": "a7985652a340d8d4e07bcc72dd53fd12b2ae81c0ceb6914e6ce360103f8923b8"
+        "eventUrl": "https://www.goandrace.com/en/running-events/garmin-kansas-city-marathon-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/10/18/gpx_20251018_id10460_race1_20251007093754.gpx?t=1786215521",
+        "gpxSha256": "fa5d5e7928ec5d631debfb9470c4c36d78eec5fb4a6374aa48695e8afee6fe32"
       },
       "stats": {
-        "totalKm": 43.121221132536675,
-        "gainM": 45.30000000000001
+        "totalKm": 43.043700079216805,
+        "gainM": 250.59999999999982
       },
       "city": {
-        "slug": "east-meadow-ny-us",
-        "name": "East Meadow",
+        "slug": "kansas-city-mo-us",
+        "name": "Kansas City",
         "countryCode": "US",
         "countryName": "United States",
-        "regionCode": "US-NY",
-        "regionName": "New York",
-        "latitude": 40.72888,
-        "longitude": -73.56788,
-        "timezone": "America/New_York"
+        "regionCode": "US-MO",
+        "regionName": "Missouri",
+        "latitude": 39.042099,
+        "longitude": -94.581004,
+        "timezone": "America/Chicago"
       },
-      "citySlug": "east-meadow-ny-us",
+      "citySlug": "kansas-city-mo-us",
       "series": {
-        "slug": "long-island-marathon",
-        "name": "Long Island Marathon",
-        "citySlug": "east-meadow-ny-us",
-        "courseSlug": "long-island-marathon",
+        "slug": "kansas-city-marathon",
+        "name": "Kansas City Marathon",
+        "citySlug": "kansas-city-mo-us",
+        "courseSlug": "kansas-city-marathon",
         "isMajor": false,
-        "typicalMonth": 5,
-        "websiteUrl": "https://www.runlongislandmarathon.com",
-        "organizer": "RaceAwesome.com"
+        "typicalMonth": 10,
+        "websiteUrl": "https://www.sportkc.org/marathon",
+        "organizer": "Greater Kansas City Sports Commission & Foundation"
       },
       "recurrence": {
-        "seriesSlug": "long-island-marathon",
-        "month": 5,
-        "weekday": 0,
-        "nth": 1,
-        "note": "Derived from the 2024-05-05 edition; not verified against the organizer"
+        "seriesSlug": "kansas-city-marathon",
+        "month": 10,
+        "weekday": 6,
+        "nth": 3,
+        "note": "Derived from the 2025-10-18 edition; not verified against the organizer"
       },
       "edition": {
-        "seriesSlug": "long-island-marathon",
-        "year": 2024,
-        "raceDate": "2024-05-05"
+        "seriesSlug": "kansas-city-marathon",
+        "year": 2025,
+        "raceDate": "2025-10-18"
       }
     },
     {
@@ -4424,59 +4514,6 @@
         "seriesSlug": "kentucky-derby-festival-marathon",
         "year": 2024,
         "raceDate": "2024-04-27"
-      }
-    },
-    {
-      "courseSlug": "zydeco-marathon",
-      "verdict": "ready",
-      "reasons": [
-        "measured 43.390 km, outside the [42.0, 42.4] band",
-        "no addressRegion published; US city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
-        "timezone America/Chicago was guessed from longitude (US spans zones) — confirm it",
-        "no organizer name published — fill SeriesSeed.organizer by hand"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/lafayette-general-zydeco-marathon-2025-lafayette.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2025/03/16/gpx_20250316_id10220_race1_20250310231938.gpx?t=1786288031",
-        "gpxSha256": "780c0fa243ca8e3fba9cac7d2a2aef55a7884dec7b910d435be49726baac67d9"
-      },
-      "stats": {
-        "totalKm": 43.38973994480567,
-        "gainM": 24.900000000000002
-      },
-      "city": {
-        "slug": "lafayette-la-us",
-        "name": "Lafayette",
-        "countryCode": "US",
-        "countryName": "United States",
-        "regionCode": "US-LA",
-        "regionName": "Louisiana",
-        "latitude": 30.225746,
-        "longitude": -92.018334,
-        "timezone": "America/Chicago"
-      },
-      "citySlug": "lafayette-la-us",
-      "series": {
-        "slug": "zydeco-marathon",
-        "name": "Zydeco Marathon",
-        "citySlug": "lafayette-la-us",
-        "courseSlug": "zydeco-marathon",
-        "isMajor": false,
-        "typicalMonth": 3,
-        "websiteUrl": "https://www.zydecomarathon.com/Race/Events/LA/Lafayette/ZydecoMarathon",
-        "organizer": ""
-      },
-      "recurrence": {
-        "seriesSlug": "zydeco-marathon",
-        "month": 3,
-        "weekday": 0,
-        "nth": 3,
-        "note": "Derived from the 2025-03-16 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "zydeco-marathon",
-        "year": 2025,
-        "raceDate": "2025-03-16"
       }
     },
     {
@@ -4822,6 +4859,59 @@
         "seriesSlug": "long-beach-marathon",
         "year": 2023,
         "raceDate": "2023-10-15"
+      }
+    },
+    {
+      "courseSlug": "long-island-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 43.121 km, outside the [42.0, 42.4] band",
+        "no addressRegion published; US city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone America/New_York was guessed from longitude (US spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/jovia-long-island-marathon-festival-of-races-2024-east-meadow.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/05/05/gpx_20240505_id9801_race1_20240426123250.gpx?t=1786287974",
+        "gpxSha256": "a7985652a340d8d4e07bcc72dd53fd12b2ae81c0ceb6914e6ce360103f8923b8"
+      },
+      "stats": {
+        "totalKm": 43.121221132536675,
+        "gainM": 45.30000000000001
+      },
+      "city": {
+        "slug": "east-meadow-ny-us",
+        "name": "East Meadow",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-NY",
+        "regionName": "New York",
+        "latitude": 40.72888,
+        "longitude": -73.56788,
+        "timezone": "America/New_York"
+      },
+      "citySlug": "east-meadow-ny-us",
+      "series": {
+        "slug": "long-island-marathon",
+        "name": "Long Island Marathon",
+        "citySlug": "east-meadow-ny-us",
+        "courseSlug": "long-island-marathon",
+        "isMajor": false,
+        "typicalMonth": 5,
+        "websiteUrl": "https://www.runlongislandmarathon.com",
+        "organizer": "RaceAwesome.com"
+      },
+      "recurrence": {
+        "seriesSlug": "long-island-marathon",
+        "month": 5,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the 2024-05-05 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "long-island-marathon",
+        "year": 2024,
+        "raceDate": "2024-05-05"
       }
     },
     {
@@ -5177,6 +5267,57 @@
       }
     },
     {
+      "courseSlug": "marathon-de-la-liberte",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.756 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/marathon-de-la-liberte-2025-caen.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/06/15/gpx_20250615_id10338_race1_20250612171332.gpx?t=1786302541",
+        "gpxSha256": "20ccf1e7390d5bb753f31a59b52d66ebc2ad78afcdc9d0262695e1c4a7a0be35"
+      },
+      "stats": {
+        "totalKm": 42.75601669949333,
+        "gainM": 83.1
+      },
+      "city": {
+        "slug": "caen-fr",
+        "name": "Caen",
+        "countryCode": "FR",
+        "countryName": "France",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 49.32985,
+        "longitude": -0.44132,
+        "timezone": "Europe/Paris"
+      },
+      "citySlug": "caen-fr",
+      "series": {
+        "slug": "marathon-de-la-liberte",
+        "name": "Marathon de La Liberté",
+        "citySlug": "caen-fr",
+        "courseSlug": "marathon-de-la-liberte",
+        "isMajor": false,
+        "typicalMonth": 6,
+        "websiteUrl": "https://www.marathondelaliberte.fr",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "marathon-de-la-liberte",
+        "month": 6,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2025-06-15 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "marathon-de-la-liberte",
+        "year": 2025,
+        "raceDate": "2025-06-15"
+      }
+    },
+    {
       "courseSlug": "maraton-valencia-trinidad-alfonso",
       "verdict": "rejected",
       "reasons": [
@@ -5280,6 +5421,56 @@
       "series": null,
       "recurrence": null,
       "edition": null
+    },
+    {
+      "courseSlug": "marburger-nachtmarathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/07/marburger-nachtmarathon-2026.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/07/03/gpx_20260703_id11046_race1_20260622093421.gpx?t=1786302532",
+        "gpxSha256": "e76aaa765e75bfb9f3240786d2d96739b6d3e697e8bdee7aa069d5e9d1b74958"
+      },
+      "stats": {
+        "totalKm": 42.291811712326435,
+        "gainM": 21.30000000000001
+      },
+      "city": {
+        "slug": "marburg-de",
+        "name": "Marburg",
+        "countryCode": "DE",
+        "countryName": "Germany",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 50.80901,
+        "longitude": 8.77032,
+        "timezone": "Europe/Berlin"
+      },
+      "citySlug": "marburg-de",
+      "series": {
+        "slug": "marburger-nachtmarathon",
+        "name": "Marburger Nachtmarathon",
+        "citySlug": "marburg-de",
+        "courseSlug": "marburger-nachtmarathon",
+        "isMajor": false,
+        "typicalMonth": 7,
+        "websiteUrl": "https://ultra-marburg.de/nachtmarathon/",
+        "organizer": "Ultra Sport Club Marburg"
+      },
+      "recurrence": {
+        "seriesSlug": "marburger-nachtmarathon",
+        "month": 7,
+        "weekday": 5,
+        "nth": 1,
+        "note": "Derived from the 2026-07-03 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "marburger-nachtmarathon",
+        "year": 2026,
+        "raceDate": "2026-07-03"
+      }
     },
     {
       "courseSlug": "marine-corps-marathon",
@@ -5502,6 +5693,54 @@
       }
     },
     {
+      "courseSlug": "pisa-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/mezza-maratona-la-pisanina-xviii-edizione-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/12/21/gpx_20251221_id10667_race1_20251216215237.gpx?t=1786302437",
+        "gpxSha256": "32d66dbbe53bd6d0724b61bb35df77dbbbf315c191f68f27c0ebc8b3da065e09"
+      },
+      "stats": {
+        "totalKm": 42.22615606223845,
+        "gainM": 26.599999999999998
+      },
+      "city": {
+        "slug": "pisa-it",
+        "name": "Pisa",
+        "countryCode": "IT",
+        "countryName": "Italy",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 43.72315,
+        "longitude": 10.39216,
+        "timezone": "Europe/Rome"
+      },
+      "citySlug": "pisa-it",
+      "series": {
+        "slug": "pisa-marathon",
+        "name": "Pisa Marathon",
+        "citySlug": "pisa-it",
+        "courseSlug": "pisa-marathon",
+        "isMajor": false,
+        "typicalMonth": 12,
+        "websiteUrl": "https://maratonadipisa.com/",
+        "organizer": "1063AD e TriO Events"
+      },
+      "recurrence": {
+        "seriesSlug": "pisa-marathon",
+        "month": 12,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2025-12-21 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "pisa-marathon",
+        "year": 2025,
+        "raceDate": "2025-12-21"
+      }
+    },
+    {
       "courseSlug": "mezza-maratona-una-corsa-da-re-torino",
       "verdict": "rejected",
       "reasons": [
@@ -5568,6 +5807,56 @@
         "seriesSlug": "miami-marathon",
         "year": 2026,
         "raceDate": "2026-01-25"
+      }
+    },
+    {
+      "courseSlug": "midnight-sun-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/midnight-sun-marathon-2025-tromso.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/06/21/gpx_20250621_id10344_race1_20250616233851.gpx?t=1786302546",
+        "gpxSha256": "6aece0a851b05d0ba79e9307f9c6509bc9dda7f0c27dc5db9379421f706d97d7"
+      },
+      "stats": {
+        "totalKm": 42.254091137073004,
+        "gainM": 108.5
+      },
+      "city": {
+        "slug": "tromso-no",
+        "name": "Tromsø",
+        "countryCode": "NO",
+        "countryName": "Norway",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 69.64791,
+        "longitude": 18.96105,
+        "timezone": "Europe/Oslo"
+      },
+      "citySlug": "tromso-no",
+      "series": {
+        "slug": "midnight-sun-marathon",
+        "name": "Midnight Sun Marathon",
+        "citySlug": "tromso-no",
+        "courseSlug": "midnight-sun-marathon",
+        "isMajor": false,
+        "typicalMonth": 6,
+        "websiteUrl": "https://msm.no",
+        "organizer": "Stiftelsen Midnight Sun Marathon"
+      },
+      "recurrence": {
+        "seriesSlug": "midnight-sun-marathon",
+        "month": 6,
+        "weekday": 6,
+        "nth": 3,
+        "note": "Derived from the 2025-06-21 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "midnight-sun-marathon",
+        "year": 2025,
+        "raceDate": "2025-06-21"
       }
     },
     {
@@ -6553,6 +6842,56 @@
       }
     },
     {
+      "courseSlug": "limassol-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/opap-limassol-marathon-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/03/23/gpx_20250323_id10224_race1_20250312233924.gpx?t=1786302441",
+        "gpxSha256": "9bc653e718c0722d56c210f844e184edfe094dfdde38c34032e7679274477c96"
+      },
+      "stats": {
+        "totalKm": 42.212274958592296,
+        "gainM": 60.00000000000001
+      },
+      "city": {
+        "slug": "limassol-cy",
+        "name": "Limassol",
+        "countryCode": "CY",
+        "countryName": "Cyprus",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 34.673364,
+        "longitude": 33.046264,
+        "timezone": "Asia/Nicosia"
+      },
+      "citySlug": "limassol-cy",
+      "series": {
+        "slug": "limassol-marathon",
+        "name": "Limassol Marathon",
+        "citySlug": "limassol-cy",
+        "courseSlug": "limassol-marathon",
+        "isMajor": false,
+        "typicalMonth": 3,
+        "websiteUrl": "https://www.limassolmarathon.com",
+        "organizer": "Eleven Blue Events Ltd"
+      },
+      "recurrence": {
+        "seriesSlug": "limassol-marathon",
+        "month": 3,
+        "weekday": 0,
+        "nth": 4,
+        "note": "Derived from the 2025-03-23 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "limassol-marathon",
+        "year": 2025,
+        "raceDate": "2025-03-23"
+      }
+    },
+    {
       "courseSlug": "orange-county-marathon",
       "verdict": "ready",
       "reasons": [
@@ -7346,6 +7685,59 @@
         "seriesSlug": "rotterdam-marathon",
         "year": 2024,
         "raceDate": "2024-04-14"
+      }
+    },
+    {
+      "courseSlug": "route-66-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 43.063 km, outside the [42.0, 42.4] band",
+        "no addressRegion published; US city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone America/Chicago was guessed from longitude (US spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/williams-route-66-marathon-2025-tulsa.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/11/23/gpx_20251123_id10615_race1_20251110230537.gpx?t=1786215550",
+        "gpxSha256": "8b97b0b7dc4d1a06af37660fec7d076190e15fda96c4dbc19c88c8dafe2f65c8"
+      },
+      "stats": {
+        "totalKm": 43.06301566803245,
+        "gainM": 81.30000000000001
+      },
+      "city": {
+        "slug": "tulsa-ok-us",
+        "name": "Tulsa",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-OK",
+        "regionName": "Oklahoma",
+        "latitude": 36.149715,
+        "longitude": -95.989119,
+        "timezone": "America/Chicago"
+      },
+      "citySlug": "tulsa-ok-us",
+      "series": {
+        "slug": "route-66-marathon",
+        "name": "Route 66 Marathon",
+        "citySlug": "tulsa-ok-us",
+        "courseSlug": "route-66-marathon",
+        "isMajor": false,
+        "typicalMonth": 11,
+        "websiteUrl": "https://organizations.hakuapp.com/sites/organization_sites/4e4a1babfb986f62bd16",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "route-66-marathon",
+        "month": 11,
+        "weekday": 0,
+        "nth": 4,
+        "note": "Derived from the 2025-11-23 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "route-66-marathon",
+        "year": 2025,
+        "raceDate": "2025-11-23"
       }
     },
     {
@@ -8617,6 +9009,56 @@
       }
     },
     {
+      "courseSlug": "venice-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.530 km, outside the [42.0, 42.4] band"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/venice-marathon-2025-venezia.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/10/26/gpx_20251026_id10296_race1_20250927233938.gpx?t=1786302452",
+        "gpxSha256": "7a2ccf31bbff8fae6d35c9eb21a0de779cf2b509adf5262ea6fa7c28a1ce8df6"
+      },
+      "stats": {
+        "totalKm": 42.530418900999685,
+        "gainM": 29.200000000000006
+      },
+      "city": {
+        "slug": "venice-it",
+        "name": "Venice",
+        "countryCode": "IT",
+        "countryName": "Italy",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 45.407804,
+        "longitude": 12.013121,
+        "timezone": "Europe/Rome"
+      },
+      "citySlug": "venice-it",
+      "series": {
+        "slug": "venice-marathon",
+        "name": "Venice Marathon",
+        "citySlug": "venice-it",
+        "courseSlug": "venice-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://www.venicemarathon.it/",
+        "organizer": "Venicemarathon S.S.D"
+      },
+      "recurrence": {
+        "seriesSlug": "venice-marathon",
+        "month": 10,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2025-10-26 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "venice-marathon",
+        "year": 2025,
+        "raceDate": "2025-10-26"
+      }
+    },
+    {
       "courseSlug": "vermont-city-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -8835,59 +9277,6 @@
       }
     },
     {
-      "courseSlug": "route-66-marathon",
-      "verdict": "ready",
-      "reasons": [
-        "measured 43.063 km, outside the [42.0, 42.4] band",
-        "no addressRegion published; US city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
-        "timezone America/Chicago was guessed from longitude (US spans zones) — confirm it",
-        "no organizer name published — fill SeriesSeed.organizer by hand"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/williams-route-66-marathon-2025-tulsa.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2025/11/23/gpx_20251123_id10615_race1_20251110230537.gpx?t=1786215550",
-        "gpxSha256": "8b97b0b7dc4d1a06af37660fec7d076190e15fda96c4dbc19c88c8dafe2f65c8"
-      },
-      "stats": {
-        "totalKm": 43.06301566803245,
-        "gainM": 81.30000000000001
-      },
-      "city": {
-        "slug": "tulsa-ok-us",
-        "name": "Tulsa",
-        "countryCode": "US",
-        "countryName": "United States",
-        "regionCode": "US-OK",
-        "regionName": "Oklahoma",
-        "latitude": 36.149715,
-        "longitude": -95.989119,
-        "timezone": "America/Chicago"
-      },
-      "citySlug": "tulsa-ok-us",
-      "series": {
-        "slug": "route-66-marathon",
-        "name": "Route 66 Marathon",
-        "citySlug": "tulsa-ok-us",
-        "courseSlug": "route-66-marathon",
-        "isMajor": false,
-        "typicalMonth": 11,
-        "websiteUrl": "https://organizations.hakuapp.com/sites/organization_sites/4e4a1babfb986f62bd16",
-        "organizer": ""
-      },
-      "recurrence": {
-        "seriesSlug": "route-66-marathon",
-        "month": 11,
-        "weekday": 0,
-        "nth": 4,
-        "note": "Derived from the 2025-11-23 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "route-66-marathon",
-        "year": 2025,
-        "raceDate": "2025-11-23"
-      }
-    },
-    {
       "courseSlug": "wilmington-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -9055,6 +9444,59 @@
       "series": null,
       "recurrence": null,
       "edition": null
+    },
+    {
+      "courseSlug": "zydeco-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 43.390 km, outside the [42.0, 42.4] band",
+        "no addressRegion published; US city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone America/Chicago was guessed from longitude (US spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/lafayette-general-zydeco-marathon-2025-lafayette.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/03/16/gpx_20250316_id10220_race1_20250310231938.gpx?t=1786288031",
+        "gpxSha256": "780c0fa243ca8e3fba9cac7d2a2aef55a7884dec7b910d435be49726baac67d9"
+      },
+      "stats": {
+        "totalKm": 43.38973994480567,
+        "gainM": 24.900000000000002
+      },
+      "city": {
+        "slug": "lafayette-la-us",
+        "name": "Lafayette",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-LA",
+        "regionName": "Louisiana",
+        "latitude": 30.225746,
+        "longitude": -92.018334,
+        "timezone": "America/Chicago"
+      },
+      "citySlug": "lafayette-la-us",
+      "series": {
+        "slug": "zydeco-marathon",
+        "name": "Zydeco Marathon",
+        "citySlug": "lafayette-la-us",
+        "courseSlug": "zydeco-marathon",
+        "isMajor": false,
+        "typicalMonth": 3,
+        "websiteUrl": "https://www.zydecomarathon.com/Race/Events/LA/Lafayette/ZydecoMarathon",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "zydeco-marathon",
+        "month": 3,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2025-03-16 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "zydeco-marathon",
+        "year": 2025,
+        "raceDate": "2025-03-16"
+      }
     }
   ]
 }

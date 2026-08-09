@@ -216,6 +216,16 @@ export const PUBLISHED_COURSE_SLUGS: string[] = [
   "long-island-marathon",
   "zydeco-marathon",
   "route-66-marathon",
+  // Batch 2026-08-09, imported from goandrace.com on 2026-08-09.
+  "oslo-marathon",
+  "lisbon-marathon",
+  "enschede-marathon",
+  "marathon-de-la-liberte",
+  "marburger-nachtmarathon",
+  "pisa-marathon",
+  "midnight-sun-marathon",
+  "limassol-marathon",
+  "venice-marathon",
 ];
 
 /** The shape every course slug must take: lowercase, digits, single hyphens. */
