@@ -81,7 +81,7 @@ Cowtown Marathon,"Fort Worth, TX 02/28/2027",TX,02/28/2027,cowtown-marathon,in-d
 Cummins Falls Marathon,"Cookeville, TN 02/28/2026",TN,02/28/2026,cummins-falls-marathon,in-db,,Cummins Falls Marathon
 Oak Ridge to Kingston Express Marathon,"Oak Ridge, TN 02/28/2027",TN,02/28/2027,,not-on-source,,no goandrace listing in any crawl
 Every Womans Marathon,"New Orleans, LA 02/28/2027",LA,02/28/2027,,not-on-source,,no goandrace listing in any crawl
-Hyannis Marathon,"Hyannis, MA 03/02/2025",MA,03/02/2025,hyannis-marathon,parser-rejected,https://www.goandrace.com/en/running-events/hyannis-marathon-2025-hyannis.php,"parser failed: total route length 43.105 km is outside [41.5, 43.0] km"
+Hyannis Marathon,"Hyannis, MA 03/02/2025",MA,03/02/2025,hyannis-marathon,in-db,,Hyannis Marathon
 Combos Marathon,"Albany, GA 03/06/2027",GA,03/06/2027,albany-combos-marathon,in-db,https://www.goandrace.com/en/running-events/albany-combos-marathon-2025-albany.php,already imported from albany-combos-marathon
 Myrtle Beach Marathon,"Myrtle Beach, SC 03/06/2027",SC,03/06/2027,myrtle-beach-marathon,in-db,,Myrtle Beach Marathon
 Run the Alamo 26.2 Marathon,"San Antonio, TX 03/06/2027",TX,03/06/2027,alamo-marathon,in-db,,Alamo Marathon
@@ -93,7 +93,7 @@ Umstead Marathon,"Raleigh, NC 03/07/2026",NC,03/07/2026,,not-on-source,,no goand
 Seneca Creek Greenway Trail Marathon,"Damascus, MD 03/07/2026",MD,03/07/2026,,not-on-source,,no goandrace listing in any crawl
 Cross Timbers Trail Runs Marathon,"Lake Texoma, TX 03/07/2026",TX,03/07/2026,,not-on-source,,no goandrace listing in any crawl
 Sand Hollow Marathon,"Hurricane, UT 03/07/2026",UT,03/07/2026,,not-on-source,,no goandrace listing in any crawl
-Zydeco Marathon,"Lafayette, LA 03/07/2027",LA,03/07/2027,lafayette-general-zydeco-marathon,parser-rejected,https://www.goandrace.com/en/running-events/lafayette-general-zydeco-marathon-2025-lafayette.php,"parser failed: total route length 43.390 km is outside [41.5, 43.0] km"
+Zydeco Marathon,"Lafayette, LA 03/07/2027",LA,03/07/2027,zydeco-marathon,in-db,,Zydeco Marathon
 Marathon of the Treasure Coast,"Stuart, FL 03/07/2027",FL,03/07/2027,,not-on-source,,no goandrace listing in any crawl
 Newport News One City Marathon,"Newport News, VA 03/07/2027",VA,03/07/2027,newport-marathon,in-db,,Newport Marathon
 Tokyo Marathon,"Tokyo, JP 03/07/2027",JP,03/07/2027,tokyo,in-db,,Tokyo Marathon
@@ -135,7 +135,7 @@ Heckscher State Park Marathon,"East Islip, NY 03/28/2026",NY,03/28/2026,,not-on-
 B and A Marathon,"Severna Park, MD 03/29/2026",MD,03/29/2026,,not-on-source,,no goandrace listing in any crawl
 Ohio River Road Runners Club Marathon,"Xenia, OH 03/29/2026",OH,03/29/2026,,not-on-source,,no goandrace listing in any crawl
 Trailbreaker Marathon,"Waukesha, WI 03/29/2026",WI,03/29/2026,,not-on-source,,no goandrace listing in any crawl
-Chattanooga Marathon,"Chattanooga, TN 03/29/2026",TN,03/29/2026,erlanger-chattanooga-marathon,parser-rejected,https://www.goandrace.com/en/running-events/erlanger-chattanooga-marathon-2026.php,"parser failed: total route length 43.295 km is outside [41.5, 43.0] km"
+Chattanooga Marathon,"Chattanooga, TN 03/29/2026",TN,03/29/2026,chattanooga-marathon,in-db,,Chattanooga Marathon
 McKirdy Micro Marathon (MicroOTQ),"Valley Cottage, NY 03/29/2026",NY,03/29/2026,,not-on-source,,no goandrace listing in any crawl
 Charlottesville Marathon,"Charlottesville, VA 04/03/2027",VA,04/03/2027,,not-on-source,,no goandrace listing in any crawl
 Greater St. Louis Marathon,"St. Louis, MO 04/03/2027",MO,04/03/2027,st-louis-marathon,in-db,,St. Louis Marathon
@@ -176,7 +176,7 @@ Bend Marathon,"Bend, OR 04/12/2026",OR,04/12/2026,,not-on-source,,no goandrace l
 Chasing Jefferson Davis Marathon,"Abbeville, GA 04/12/2025",GA,04/12/2025,,past-event,,listed 04/12/2025
 Hogeye Marathon,"Springdale, AR 04/17/2027",AR,04/17/2027,hogeye-marathon,parser-rejected,https://www.goandrace.com/en/running-events/hogeye-marathon-2023-springdale.php,"parser failed: total route length 41.404 km is outside [41.5, 43.0] km"
 Wenatchee Marathon,"Wenatchee, WA 04/17/2027",WA,04/17/2027,,not-on-source,,no goandrace listing in any crawl
-Blue Ridge Marathon,"Roanoke, VA 04/17/2027",VA,04/17/2027,foot-levelers-blue-ridge-marathon,parser-rejected,https://www.goandrace.com/en/running-events/foot-levelers-blue-ridge-marathon-2026-roanoke.php,"parser failed: total route length 43.078 km is outside [41.5, 43.0] km"
+Blue Ridge Marathon,"Roanoke, VA 04/17/2027",VA,04/17/2027,blue-ridge-marathon,in-db,,Blue Ridge Marathon
 Horseshoe Lake Trail Run Marathon,"Palo Alto, CA 04/17/2027",CA,04/17/2027,,not-on-source,,no goandrace listing in any crawl
 Carmel Marathon,"Carmel, IN 04/17/2027",IN,04/17/2027,carmel-marathon,in-db,,Carmel Marathon
 Golden Driller Marathon,"Tulsa, OK 04/17/2027",OK,04/17/2027,,not-on-source,,no goandrace listing in any crawl
@@ -258,7 +258,7 @@ Providence Rhode Races Marathon,"Providence, RI 05/02/2027",RI,05/02/2027,,not-o
 Garmin Durham Marathon,"Durham, NC 05/02/2026",NC,05/02/2026,,not-on-source,,no goandrace listing in any crawl
 Vancouver Marathon,"Vancouver, BC 05/03/2026",BC,05/03/2026,vancouver-marathon,in-db,,Vancouver Marathon
 Walter Childs Memorial Race of Champions Marathon,"Holyoke, MA 05/03/2026",MA,05/03/2026,,not-on-source,,no goandrace listing in any crawl
-Long Island Marathon,"East Meadow, NY 05/03/2026",NY,05/03/2026,jovia-long-island-marathon-festival-of-races,parser-rejected,https://www.goandrace.com/en/running-events/jovia-long-island-marathon-festival-of-races-2024-east-meadow.php,"parser failed: total route length 43.121 km is outside [41.5, 43.0] km"
+Long Island Marathon,"East Meadow, NY 05/03/2026",NY,05/03/2026,long-island-marathon,in-db,,Long Island Marathon
 York Marathon,"York, PA 05/03/2026",PA,05/03/2026,new-york-city-marathon,in-db,,New York City Marathon
 Charles River Marathon,"Boston, MA 05/03/2026",MA,05/03/2026,,not-on-source,,no goandrace listing in any crawl
 Sombrero Marathon,"Santa Clarita, CA 05/03/2026",CA,05/03/2026,,not-on-source,,no goandrace listing in any crawl
@@ -270,7 +270,7 @@ Fredericton Marathon,"Fredericton, NB 05/09/2027",NB,05/09/2027,,not-on-source,,
 Grizzly Peak Trail Run Marathon,"Berkeley, CA 05/09/2026",CA,05/09/2026,,not-on-source,,no goandrace listing in any crawl
 Starved Rock Country Marathon,"Ottawa, IL 05/09/2026",IL,05/09/2026,,not-on-source,,no goandrace listing in any crawl
 Granite State Marathon,"Nashua, NH 05/09/2026",NH,05/09/2026,,not-on-source,,no goandrace listing in any crawl
-Copenhagen Marathon,"Copenhagen, DK 05/09/2027",DK,05/09/2027,copenhagen-marathon,parser-rejected,https://www.goandrace.com/en/running-events/copenhagen-marathon-2024-copenhagen.php,"parser failed: total route length 43.175 km is outside [41.5, 43.0] km"
+Copenhagen Marathon,"Copenhagen, DK 05/09/2027",DK,05/09/2027,copenhagen-marathon,in-db,,Copenhagen marathon
 Pine Tree Marathon,"Portland, ME 05/10/2026",ME,05/10/2026,,not-on-source,,no goandrace listing in any crawl
 Wildflower Trail Races Marathon,"Bastrop, TX 05/10/2026",TX,05/10/2026,,not-on-source,,no goandrace listing in any crawl
 Famous Idaho Potato Marathon,"Boise, ID 05/15/2027",ID,05/15/2027,,not-on-source,,no goandrace listing in any crawl
@@ -295,7 +295,7 @@ Med City Marathon,"Rochester, MN 05/17/2026",MN,05/17/2026,,not-on-source,,no go
 Armed Services Marathon,"Grand Haven, MI 05/17/2026",MI,05/17/2026,,not-on-source,,no goandrace listing in any crawl
 Steel Rail Marathon,"Pittsfield, MA 05/17/2026",MA,05/17/2026,,not-on-source,,no goandrace listing in any crawl
 Revel Reno Tahoe Marathon,"Reno, NV 05/17/2026",NV,05/17/2026,,not-on-source,,no goandrace listing in any crawl
-Fargo Marathon,"Fargo, ND 05/22/2027",ND,05/22/2027,essentia-health-fargo-marathon,parser-rejected,https://www.goandrace.com/en/running-events/2026/05/essentia-health-fargo-marathon-2026.php,"parser failed: total route length 43.036 km is outside [41.5, 43.0] km"
+Fargo Marathon,"Fargo, ND 05/22/2027",ND,05/22/2027,fargo-marathon,in-db,,Fargo Marathon
 Whitefish Marathon,"Whitefish, MT 05/22/2027",MT,05/22/2027,,not-on-source,,no goandrace listing in any crawl
 Blue Nose Marathon,"Halifax, NS 05/23/2027",NS,05/23/2027,,not-on-source,,no goandrace listing in any crawl
 Prince of Wales Island Marathon,"Craig, AK 05/23/2026",AK,05/23/2026,prince-of-wales-island-marathon,in-db,,Prince of Wales Island Marathon
@@ -313,7 +313,7 @@ Calgary Marathon,"Calgary, AB 05/30/2027",AB,05/30/2027,calgary-marathon,in-db,,
 Ottawa Marathon,"Ottawa, ON 05/30/2027",ON,05/30/2027,ottawa-marathon,in-db,,Ottawa Marathon
 Saskatchewan Marathon,"Saskatoon, SK 05/30/2027",SK,05/30/2027,saskatchewan-marathon,in-db,,Saskatchewan Marathon
 Coeur d Alene Marathon,"Coeur d' Alene, ID 05/30/2027",ID,05/30/2027,coeur-d-alene-marathon,in-db,,Coeur d'Alene Marathon
-Buffalo Marathon,"Buffalo, NY 05/30/2027",NY,05/30/2027,buffalo-marathon,parser-rejected,https://www.goandrace.com/en/running-events/2026/05/buffalo-marathon-2026.php,"parser failed: total route length 43.001 km is outside [41.5, 43.0] km"
+Buffalo Marathon,"Buffalo, NY 05/30/2027",NY,05/30/2027,buffalo-marathon,in-db,,Buffalo Marathon
 Edinburgh Marathon,"Edinburgh, UK 05/30/2027",UK,05/30/2027,edinburgh-marathon,in-db,,Edinburgh Marathon
 Nutmeg State Marathon,"Hartford, CT 05/30/2026",CT,05/30/2026,,not-on-source,,no goandrace listing in any crawl
 Course des Pompiers Marathon,"Laval, QC 05/30/2027",QC,05/30/2027,,not-on-source,,no goandrace listing in any crawl
@@ -338,7 +338,7 @@ Aruba Marathon,"Noord, AA 06/06/2027",AA,06/06/2027,aruba-marathon,in-db,,Aruba 
 Williston Marathon,"Williston, ND 06/06/2026",ND,06/06/2026,,not-on-source,,no goandrace listing in any crawl
 Drumheller Marathon,"Seattle, WA 06/06/2026",WA,06/06/2026,,not-on-source,,no goandrace listing in any crawl
 Sevier Valley Marathon,"Richfield, UT 06/06/2026",UT,06/06/2026,,not-on-source,,no goandrace listing in any crawl
-Cork City Marathon,"Cork, IE 06/06/2027",IE,06/06/2027,cork-city-marathon,parser-rejected,https://www.goandrace.com/en/running-events/cork-city-marathon-2024-cork.php,"parser failed: total route length 43.022 km is outside [41.5, 43.0] km"
+Cork City Marathon,"Cork, IE 06/06/2027",IE,06/06/2027,cork-city-marathon,in-db,,Cork City Marathon
 Casper Marathon,"Casper, WY 06/07/2026",WY,06/07/2026,casper-marathon,in-db,,Casper Marathon
 North Olympic Discovery Marathon,"Port Angeles, WA 06/07/2026",WA,06/07/2026,north-olympic-discovery-marathon,in-db,,North Olympic Discovery Marathon
 Deadwood-Mickelson Trail Marathon,"Deadwood, SD 06/07/2026",SD,06/07/2026,,not-on-source,,no goandrace listing in any crawl
@@ -601,7 +601,7 @@ Montreal Marathon,"Montreal, QC 10/11/2026",QC,10/11/2026,,not-on-source,,no goa
 Original Las Vegas Marathon,"Henderson, NV 10/11/2026",NV,10/11/2026,,not-on-source,,no goandrace listing in any crawl
 Durango Marathon,"Durango, CO 10/11/2026",CO,10/11/2026,,not-on-source,,no goandrace listing in any crawl
 Lakeside Marathon,"Spooner Lake, NV 10/16/2026",NV,10/16/2026,,not-on-source,,no goandrace listing in any crawl
-Kansas City Marathon,"Kansas City, MO 10/17/2026",MO,10/17/2026,garmin-kansas-city-marathon,parser-rejected,https://www.goandrace.com/en/running-events/garmin-kansas-city-marathon-2025.php,"parser failed: total route length 43.044 km is outside [41.5, 43.0] km"
+Kansas City Marathon,"Kansas City, MO 10/17/2026",MO,10/17/2026,kansas-city-marathon,in-db,,Kansas City Marathon
 Baltimore Marathon,"Baltimore, MD 10/17/2026",MD,10/17/2026,,not-on-source,,no goandrace listing in any crawl
 Tecumseh Trail Marathon,"Bloomington, IN 10/17/2026",IN,10/17/2026,,not-on-source,,no goandrace listing in any crawl
 Mankato Marathon,"Mankato, MN 10/17/2026",MN,10/17/2026,,not-on-source,,no goandrace listing in any crawl
@@ -710,7 +710,7 @@ Laredo Marathon,"Laredo, TX TBD",TX,TBD,,no-date,,"date is ""TBD"""
 White River Marathon,"Cotter, AR 11/21/2026",AR,11/21/2026,,not-on-source,,no goandrace listing in any crawl
 Honoring Our Heroes Marathon,"Rolla, MO 11/21/2026",MO,11/21/2026,,not-on-source,,no goandrace listing in any crawl
 Monument Valley Veterans Marathon,"Monument Valley Navajo Tribal , UT 11/21/2026",UT,11/21/2026,,not-on-source,,no goandrace listing in any crawl
-Route 66 Marathon,"Tulsa, OK 11/22/2026",OK,11/22/2026,williams-route-66-marathon,parser-rejected,https://www.goandrace.com/en/running-events/williams-route-66-marathon-2025-tulsa.php,"parser failed: total route length 43.063 km is outside [41.5, 43.0] km"
+Route 66 Marathon,"Tulsa, OK 11/22/2026",OK,11/22/2026,route-66-marathon,in-db,,Route 66 Marathon
 Philadelphia Marathon,"Philadelphia, PA 11/22/2026",PA,11/22/2026,philadelphia-marathon,in-db,,Philadelphia Marathon
 Space Coast Marathon,"Cocoa, FL 11/22/2026",FL,11/22/2026,,not-on-source,,no goandrace listing in any crawl
 Gobbler Grind Marathon,"Overland Park, KS 11/22/2026",KS,11/22/2026,,not-on-source,,no goandrace listing in any crawl
