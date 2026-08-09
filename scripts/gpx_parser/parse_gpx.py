@@ -173,11 +173,13 @@ def parse_gpx(
         )
 
     # The ceiling was 43.0 km through 2026-08-09. Widened to 43.5 after a real
-    # cluster of losses: Buffalo (43.001), Long Beach (43.098), Pittsburgh
-    # (43.026), Cork City (43.022), Fargo (43.036), Kansas City (43.044), Tulsa
-    # (43.063), Blue Ridge (43.078), Hyannis (43.105), Long Island (43.121),
-    # Copenhagen (43.175), Cleveland (43.21) and Chattanooga (43.295) were all
-    # rejected within 300 m of the old line, every one a real marathon.
+    # cluster of rejections at the old line: Buffalo (43.001), Cork City
+    # (43.022), Fargo (43.036), Kansas City (43.044), Tulsa (43.063), Blue
+    # Ridge (43.078), Hyannis (43.105), Long Island (43.121), Copenhagen
+    # (43.175) and Chattanooga (43.295), every one a real marathon. (Cleveland,
+    # Long Beach and Pittsburgh measured similarly over the old line at various
+    # points too, but are not part of what 43.5 recovers — they were already
+    # seeded via a different, shorter-measuring GPX by the time this changed.)
     #
     # These GPX files are not recorded activities with GPS jitter to smooth —
     # they carry no per-point timestamps, just a hand-traced or Garmin
@@ -192,9 +194,9 @@ def parse_gpx(
     #
     # 43.5 is not "wide enough to pass everything" — it is chosen at the real
     # gap in the data. The worst genuine near-miss above is Zydeco at 43.390;
-    # the next rejection past that is Amsterdam-adjacent Marine Corps at
-    # 50.535 km, a different failure entirely (wrong event, not course drift).
-    # A GPX that fails at 43.5 is not a marathon course with a long tail.
+    # the next rejection past that is a different failure mode entirely —
+    # Thelma & Louise at 48.713 km and Marine Corps at 50.535 km are wrong
+    # events, not a marathon course with a long tail.
     total_km = cum / 1000.0
     if not (41.5 <= total_km <= 43.5):
         raise ValueError(
