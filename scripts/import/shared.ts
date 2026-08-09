@@ -195,6 +195,7 @@ export const COUNTRY_NAMES: Record<string, string> = {
   UY: "Uruguay",
   VE: "Venezuela",
   VN: "Vietnam",
+  WS: "Samoa",
   ZA: "South Africa",
 };
 
@@ -270,6 +271,7 @@ const ZONE_BY_COUNTRY: Record<string, string> = {
   VE: "America/Caracas",
   PY: "America/Asuncion",
   VN: "Asia/Ho_Chi_Minh",
+  WS: "Pacific/Apia",
   ZA: "Africa/Johannesburg",
   AR: "America/Argentina/Buenos_Aires",
   NZ: "Pacific/Auckland", // Chatham Islands differ
