@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-09T15:16:30.050Z",
+  "updatedAt": "2026-08-09T16:17:14.374Z",
   "courses": [
     {
       "courseSlug": "2-bologna-marathon",
@@ -410,6 +410,59 @@
       }
     },
     {
+      "courseSlug": "gold-coast-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.723 km, outside the [42.0, 42.4] band",
+        "no addressRegion published; AU city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone Australia/Sydney was guessed from longitude (AU spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/07/asics-gold-coast-marathon-2026-southport.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/07/04/gpx_20260704_id11049_race1_20260619154945.gpx?t=1786287270",
+        "gpxSha256": "b911f630c2b0fbf4b3c5ade9e8451c8cd147174ffc6b35db79b7910cd9f08c71"
+      },
+      "stats": {
+        "totalKm": 42.722783010531565,
+        "gainM": 8.7
+      },
+      "city": {
+        "slug": "southport-qld-au",
+        "name": "Southport",
+        "countryCode": "AU",
+        "countryName": "Australia",
+        "regionCode": "AU-QLD",
+        "regionName": "Queensland",
+        "latitude": -27.966322,
+        "longitude": 153.416349,
+        "timezone": "Australia/Brisbane"
+      },
+      "citySlug": "southport-qld-au",
+      "series": {
+        "slug": "gold-coast-marathon",
+        "name": "Gold Coast Marathon",
+        "citySlug": "southport-qld-au",
+        "courseSlug": "gold-coast-marathon",
+        "isMajor": false,
+        "typicalMonth": 7,
+        "websiteUrl": "https://goldcoastmarathon.com.au/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "gold-coast-marathon",
+        "month": 7,
+        "weekday": 5,
+        "nth": 1,
+        "note": "Derived from the 2026-07-03 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "gold-coast-marathon",
+        "year": 2026,
+        "raceDate": "2026-07-03"
+      }
+    },
+    {
       "courseSlug": "aspen-valley-marathon",
       "verdict": "ready",
       "reasons": [
@@ -657,6 +710,57 @@
       }
     },
     {
+      "courseSlug": "auckland-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.838 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/barfoot-thompson-auckland-marathon-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/11/02/gpx_20251102_id10606_race1_20251027173310.gpx?t=1786287538",
+        "gpxSha256": "d14c5ce98a54265d1715e528eedd91a2a6a848fe1241c070f91f449c7c4e3c2c"
+      },
+      "stats": {
+        "totalKm": 42.83815047403488,
+        "gainM": 90.49999999999999
+      },
+      "city": {
+        "slug": "auckland-nz",
+        "name": "Auckland",
+        "countryCode": "NZ",
+        "countryName": "New Zealand",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": -36.830966,
+        "longitude": 174.802381,
+        "timezone": "Pacific/Auckland"
+      },
+      "citySlug": "auckland-nz",
+      "series": {
+        "slug": "auckland-marathon",
+        "name": "Auckland Marathon",
+        "citySlug": "auckland-nz",
+        "courseSlug": "auckland-marathon",
+        "isMajor": false,
+        "typicalMonth": 11,
+        "websiteUrl": "https://aucklandmarathon.co.nz",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "auckland-marathon",
+        "month": 11,
+        "weekday": 6,
+        "nth": 1,
+        "note": "Derived from the 2025-11-01 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "auckland-marathon",
+        "year": 2025,
+        "raceDate": "2025-11-01"
+      }
+    },
+    {
       "courseSlug": "barletta-marathon",
       "verdict": "ready",
       "reasons": [
@@ -704,6 +808,56 @@
         "seriesSlug": "barletta-marathon",
         "year": 2026,
         "raceDate": "2026-02-08"
+      }
+    },
+    {
+      "courseSlug": "loch-ness-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/baxters-loch-ness-marathon-festival-of-running-2025-inverness.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/09/28/gpx_20250928_id10574_race1_20250917173232.gpx?t=1786287548",
+        "gpxSha256": "942591ae3ea3147e7d34355461a7d2a3d5d1481ce2858bb6160d5819bcd6542e"
+      },
+      "stats": {
+        "totalKm": 42.25564590072517,
+        "gainM": 95.99999999999999
+      },
+      "city": {
+        "slug": "inverness-gb",
+        "name": "Inverness",
+        "countryCode": "GB",
+        "countryName": "United Kingdom",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 57.174901,
+        "longitude": -4.5464,
+        "timezone": "Europe/London"
+      },
+      "citySlug": "inverness-gb",
+      "series": {
+        "slug": "loch-ness-marathon",
+        "name": "Loch Ness Marathon",
+        "citySlug": "inverness-gb",
+        "courseSlug": "loch-ness-marathon",
+        "isMajor": false,
+        "typicalMonth": 9,
+        "websiteUrl": "https://www.lochnessmarathon.com/",
+        "organizer": "Loch Ness Marathon Ltd"
+      },
+      "recurrence": {
+        "seriesSlug": "loch-ness-marathon",
+        "month": 9,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2025-09-28 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "loch-ness-marathon",
+        "year": 2025,
+        "raceDate": "2025-09-28"
       }
     },
     {
@@ -898,6 +1052,59 @@
         "seriesSlug": "belfast-marathon",
         "year": 2024,
         "raceDate": "2024-05-05"
+      }
+    },
+    {
+      "courseSlug": "mississauga-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.960 km, outside the [42.0, 42.4] band",
+        "no addressRegion published; CA city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone America/Toronto was guessed from longitude (CA spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/beneva-mississauga-marathon-2024.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/04/28/gpx_20240428_id9675_race1_20240417223358.gpx?t=1786287556",
+        "gpxSha256": "20343b1896b55d133071755eb5dd71093ac5ad7ec5a9dd1e27145802da4fca33"
+      },
+      "stats": {
+        "totalKm": 42.95991947400057,
+        "gainM": 74.20000000000003
+      },
+      "city": {
+        "slug": "mississauga-on-ca",
+        "name": "Mississauga",
+        "countryCode": "CA",
+        "countryName": "Canada",
+        "regionCode": "CA-ON",
+        "regionName": "Ontario",
+        "latitude": 43.588381,
+        "longitude": -79.643643,
+        "timezone": "America/Toronto"
+      },
+      "citySlug": "mississauga-on-ca",
+      "series": {
+        "slug": "mississauga-marathon",
+        "name": "Mississauga Marathon",
+        "citySlug": "mississauga-on-ca",
+        "courseSlug": "mississauga-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://www.mississaugamarathon.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "mississauga-marathon",
+        "month": 4,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2024-04-28 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "mississauga-marathon",
+        "year": 2024,
+        "raceDate": "2024-04-28"
       }
     },
     {
@@ -1944,6 +2151,56 @@
       "edition": null
     },
     {
+      "courseSlug": "bermuda-triangle-challenge",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/chubb-bermuda-triangle-challenge-2025-hamilton.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/01/19/gpx_20250119_id10089_race1_20241206182016.gpx?t=1786287700",
+        "gpxSha256": "fb6b86a65f4868c3840a03cbbc76bab7183c7f5eaa0e35c462fc61700d8d63b5"
+      },
+      "stats": {
+        "totalKm": 42.217177203972966,
+        "gainM": 137.70000000000002
+      },
+      "city": {
+        "slug": "hamilton-bm",
+        "name": "Hamilton",
+        "countryCode": "BM",
+        "countryName": "Bermuda",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 32.325583,
+        "longitude": -64.83448,
+        "timezone": "Atlantic/Bermuda"
+      },
+      "citySlug": "hamilton-bm",
+      "series": {
+        "slug": "bermuda-triangle-challenge",
+        "name": "Bermuda Triangle Challenge",
+        "citySlug": "hamilton-bm",
+        "courseSlug": "bermuda-triangle-challenge",
+        "isMajor": false,
+        "typicalMonth": 1,
+        "websiteUrl": "https://www.bermudatrianglechallenge.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "bermuda-triangle-challenge",
+        "month": 1,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2025-01-19 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "bermuda-triangle-challenge",
+        "year": 2025,
+        "raceDate": "2025-01-19"
+      }
+    },
+    {
       "courseSlug": "cincinnati-flying-pig-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -2246,6 +2503,27 @@
       "source": {
         "eventUrl": "https://www.goandrace.com/en/running-events/copenhagen-marathon-2024-copenhagen.php",
         "gpxUrl": "https://www.goandrace.com/gpx/2024/05/05/gpx_20240505_id9645_race1_20240325215115.gpx?t=1786217496",
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "cork-city-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "parser failed: total route length 43.022 km is outside [41.5, 43.0] km"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/cork-city-marathon-2024-cork.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/06/02/gpx_20240602_id9867_race1_20240525105802.gpx?t=1786287714",
         "gpxSha256": null
       },
       "stats": {
@@ -2573,6 +2851,57 @@
         "seriesSlug": "detroit-free-press-marathon",
         "year": 2023,
         "raceDate": "2023-10-15"
+      }
+    },
+    {
+      "courseSlug": "dublin-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.610 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/dublin-marathon-2023-dublin.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2023/10/29/gpx_20231029_id8173_race1_20230820191225.gpx?t=1786287754",
+        "gpxSha256": "627fbcf0516f8dade9b7f6467f804f90b22b10ad0cd63a6b7482b017e12015ec"
+      },
+      "stats": {
+        "totalKm": 42.610208590068446,
+        "gainM": 138.29999999999998
+      },
+      "city": {
+        "slug": "dublin-ie",
+        "name": "Dublin",
+        "countryCode": "IE",
+        "countryName": "Ireland",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 53.335651,
+        "longitude": -6.250114,
+        "timezone": "Europe/Dublin"
+      },
+      "citySlug": "dublin-ie",
+      "series": {
+        "slug": "dublin-marathon",
+        "name": "Dublin Marathon",
+        "citySlug": "dublin-ie",
+        "courseSlug": "dublin-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://irishlifedublinmarathon.ie",
+        "organizer": "Dublin Marathon Group"
+      },
+      "recurrence": {
+        "seriesSlug": "dublin-marathon",
+        "month": 10,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2023-10-29 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "dublin-marathon",
+        "year": 2023,
+        "raceDate": "2023-10-29"
       }
     },
     {
@@ -3493,6 +3822,57 @@
       }
     },
     {
+      "courseSlug": "reykjavik-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 41.669 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/islandsbanki-reykjavik-marathon-2023.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2023/08/19/gpx_20230819_id7958_race1_20230316214607.gpx?t=1786287957",
+        "gpxSha256": "5d0fc2e8bbc43b0d71931e481c7bfd59057fb17810a5e44cee4502034b4bcd7f"
+      },
+      "stats": {
+        "totalKm": 41.66866479984688,
+        "gainM": 103.09999999999998
+      },
+      "city": {
+        "slug": "reykjavik-is",
+        "name": "Reykjavik",
+        "countryCode": "IS",
+        "countryName": "Iceland",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 64.141534,
+        "longitude": -21.939292,
+        "timezone": "Atlantic/Reykjavik"
+      },
+      "citySlug": "reykjavik-is",
+      "series": {
+        "slug": "reykjavik-marathon",
+        "name": "Reykjavik Marathon",
+        "citySlug": "reykjavik-is",
+        "courseSlug": "reykjavik-marathon",
+        "isMajor": false,
+        "typicalMonth": 8,
+        "websiteUrl": "https://www.rmi.is",
+        "organizer": "Íþróttabandalag Reykjavíkur"
+      },
+      "recurrence": {
+        "seriesSlug": "reykjavik-marathon",
+        "month": 8,
+        "weekday": 6,
+        "nth": 3,
+        "note": "Derived from the 2023-08-19 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "reykjavik-marathon",
+        "year": 2023,
+        "raceDate": "2023-08-19"
+      }
+    },
+    {
       "courseSlug": "istanbul-marathon",
       "verdict": "ready",
       "reasons": [
@@ -3761,6 +4141,56 @@
         "seriesSlug": "kentucky-derby-festival-marathon",
         "year": 2024,
         "raceDate": "2024-04-27"
+      }
+    },
+    {
+      "courseSlug": "aruba-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/klm-aruba-marathon-2024-eagle-beach.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/06/02/gpx_20240602_id9651_race1_20240403220825.gpx?t=1786288009",
+        "gpxSha256": "bff119dd5aaeb7e6f193f6ccf8809558e63d6b29a941a1cdc7d4438a19489431"
+      },
+      "stats": {
+        "totalKm": 42.378307154448294,
+        "gainM": 54.39999999999999
+      },
+      "city": {
+        "slug": "eagle-beach-aw",
+        "name": "Eagle beach",
+        "countryCode": "AW",
+        "countryName": "Aruba",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 12.569546,
+        "longitude": -70.046144,
+        "timezone": "America/Aruba"
+      },
+      "citySlug": "eagle-beach-aw",
+      "series": {
+        "slug": "aruba-marathon",
+        "name": "Aruba Marathon",
+        "citySlug": "eagle-beach-aw",
+        "courseSlug": "aruba-marathon",
+        "isMajor": false,
+        "typicalMonth": 6,
+        "websiteUrl": "https://arubainternationalmarathon.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "aruba-marathon",
+        "month": 6,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the 2024-06-02 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "aruba-marathon",
+        "year": 2024,
+        "raceDate": "2024-06-02"
       }
     },
     {
@@ -4324,6 +4754,111 @@
         "seriesSlug": "manchester-marathon",
         "year": 2026,
         "raceDate": "2026-04-19"
+      }
+    },
+    {
+      "courseSlug": "manitoba-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.670 km, outside the [42.0, 42.4] band",
+        "no addressRegion published; CA city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone America/Winnipeg was guessed from longitude (CA spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/manitoba-marathon-2024-winnipeg.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/06/16/gpx_20240616_id9904_race1_20240611125638.gpx?t=1786288091",
+        "gpxSha256": "d17813fcea42c080e3693b2db4449d31e609d7933a87627b8e0495527d00f829"
+      },
+      "stats": {
+        "totalKm": 42.66966031269104,
+        "gainM": 16.999999999999943
+      },
+      "city": {
+        "slug": "winnipeg-mb-ca",
+        "name": "Winnipeg",
+        "countryCode": "CA",
+        "countryName": "Canada",
+        "regionCode": "CA-MB",
+        "regionName": "Manitoba",
+        "latitude": 49.804914,
+        "longitude": -97.146368,
+        "timezone": "America/Winnipeg"
+      },
+      "citySlug": "winnipeg-mb-ca",
+      "series": {
+        "slug": "manitoba-marathon",
+        "name": "Manitoba Marathon",
+        "citySlug": "winnipeg-mb-ca",
+        "courseSlug": "manitoba-marathon",
+        "isMajor": false,
+        "typicalMonth": 6,
+        "websiteUrl": "https://manitobamarathon.mb.ca",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "manitoba-marathon",
+        "month": 6,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2024-06-16 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "manitoba-marathon",
+        "year": 2024,
+        "raceDate": "2024-06-16"
+      }
+    },
+    {
+      "courseSlug": "marathon-baie-des-chaleurs",
+      "verdict": "ready",
+      "reasons": [
+        "no addressRegion published; CA city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone America/Toronto was guessed from longitude (CA spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/marathon-baie-des-chaleurs-2024-carleton-sur-mer.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/06/02/gpx_20240602_id9869_race1_20240526142243.gpx?t=1786288102",
+        "gpxSha256": "91431c112f3e2c7c06067559f4a4f8a3e8bf219642bf33f40730c8619602795a"
+      },
+      "stats": {
+        "totalKm": 42.395667589458675,
+        "gainM": 79.6
+      },
+      "city": {
+        "slug": "carleton-sur-mer-qc-ca",
+        "name": "Carleton-sur-Mer",
+        "countryCode": "CA",
+        "countryName": "Canada",
+        "regionCode": "CA-QC",
+        "regionName": "Quebec",
+        "latitude": 48.10075,
+        "longitude": -66.12284,
+        "timezone": "America/Toronto"
+      },
+      "citySlug": "carleton-sur-mer-qc-ca",
+      "series": {
+        "slug": "marathon-baie-des-chaleurs",
+        "name": "Marathon Baie-des-Chaleurs",
+        "citySlug": "carleton-sur-mer-qc-ca",
+        "courseSlug": "marathon-baie-des-chaleurs",
+        "isMajor": false,
+        "typicalMonth": 6,
+        "websiteUrl": "https://www.marathonbdc.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "marathon-baie-des-chaleurs",
+        "month": 6,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the 2024-06-02 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "marathon-baie-des-chaleurs",
+        "year": 2024,
+        "raceDate": "2024-06-02"
       }
     },
     {
@@ -5305,6 +5840,58 @@
       }
     },
     {
+      "courseSlug": "niagara-falls-international-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no addressRegion published; CA city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone America/Toronto was guessed from longitude (CA spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/niagara-falls-international-marathon-2023-niagara-falls.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2023/10/22/gpx_20231022_id8235_race1_20231017142912.gpx?t=1786288292",
+        "gpxSha256": "7af1c17e566a310e06743e22f3be47d6185e31012217cb3e247eb5d7a71ae9a9"
+      },
+      "stats": {
+        "totalKm": 42.0943637965457,
+        "gainM": 48.80000000000001
+      },
+      "city": {
+        "slug": "niagara-falls-on-ca",
+        "name": "Niagara Falls",
+        "countryCode": "CA",
+        "countryName": "Canada",
+        "regionCode": "CA-ON",
+        "regionName": "Ontario",
+        "latitude": 43.070116,
+        "longitude": -79.07196,
+        "timezone": "America/Toronto"
+      },
+      "citySlug": "niagara-falls-on-ca",
+      "series": {
+        "slug": "niagara-falls-international-marathon",
+        "name": "Niagara Falls International Marathon",
+        "citySlug": "niagara-falls-on-ca",
+        "courseSlug": "niagara-falls-international-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://niagarafallsmarathon.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "niagara-falls-international-marathon",
+        "month": 10,
+        "weekday": 0,
+        "nth": 4,
+        "note": "Derived from the 2023-10-22 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "niagara-falls-international-marathon",
+        "year": 2023,
+        "raceDate": "2023-10-22"
+      }
+    },
+    {
       "courseSlug": "nice-cannes-marathon",
       "verdict": "ready",
       "reasons": [
@@ -5796,6 +6383,57 @@
       }
     },
     {
+      "courseSlug": "pikes-peak-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no addressRegion published; US city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone America/Denver was guessed from longitude (US spans zones) — confirm it"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/pikes-peak-marathon-2025-manitou-springs.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/09/21/gpx_20250921_id10472_race1_20250821151313.gpx?t=1786291578",
+        "gpxSha256": "e392864672a82e23904415b86fc157d720d570b3f9a683dec34e26aad4135c0e"
+      },
+      "stats": {
+        "totalKm": 42.01061311265973,
+        "gainM": 2350.3999999999996
+      },
+      "city": {
+        "slug": "manitou-springs-co-us",
+        "name": "Manitou Springs",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-CO",
+        "regionName": "Colorado",
+        "latitude": 38.857555,
+        "longitude": -104.912412,
+        "timezone": "America/Denver"
+      },
+      "citySlug": "manitou-springs-co-us",
+      "series": {
+        "slug": "pikes-peak-marathon",
+        "name": "Pikes Peak Marathon",
+        "citySlug": "manitou-springs-co-us",
+        "courseSlug": "pikes-peak-marathon",
+        "isMajor": false,
+        "typicalMonth": 9,
+        "websiteUrl": "https://www.pikespeakmarathon.org",
+        "organizer": "Pikes Peak Marathon, Inc."
+      },
+      "recurrence": {
+        "seriesSlug": "pikes-peak-marathon",
+        "month": 9,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2025-09-21 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "pikes-peak-marathon",
+        "year": 2025,
+        "raceDate": "2025-09-21"
+      }
+    },
+    {
       "courseSlug": "pittsburgh-marathon",
       "verdict": "ready",
       "reasons": [
@@ -5891,6 +6529,110 @@
         "seriesSlug": "prague-marathon",
         "year": 2025,
         "raceDate": "2025-05-04"
+      }
+    },
+    {
+      "courseSlug": "prince-of-wales-island-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no addressRegion published; US city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone America/Anchorage was guessed from longitude (US spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/prince-of-wales-island-international-marathon-2025-craig.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/05/24/gpx_20250524_id10309_race1_20250519224939.gpx?t=1786291520",
+        "gpxSha256": "4553e814111e715242b8a9def4f1ed19036af22f63625be24af1cb10db8123c8"
+      },
+      "stats": {
+        "totalKm": 42.35218371051492,
+        "gainM": 203.8
+      },
+      "city": {
+        "slug": "craig-ak-us",
+        "name": "Craig",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-AK",
+        "regionName": "Alaska",
+        "latitude": 55.488369,
+        "longitude": -133.128942,
+        "timezone": "America/Anchorage"
+      },
+      "citySlug": "craig-ak-us",
+      "series": {
+        "slug": "prince-of-wales-island-marathon",
+        "name": "Prince of Wales Island Marathon",
+        "citySlug": "craig-ak-us",
+        "courseSlug": "prince-of-wales-island-marathon",
+        "isMajor": false,
+        "typicalMonth": 5,
+        "websiteUrl": "https://www.powmarathon.org",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "prince-of-wales-island-marathon",
+        "month": 5,
+        "weekday": 6,
+        "nth": 4,
+        "note": "Derived from the 2025-05-24 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "prince-of-wales-island-marathon",
+        "year": 2025,
+        "raceDate": "2025-05-24"
+      }
+    },
+    {
+      "courseSlug": "fort-lauderdale-a1a-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no addressRegion published; US city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone America/New_York was guessed from longitude (US spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/publix-fort-lauderdale-a1a-marathon-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/02/16/gpx_20250216_id10106_race1_20241229004637.gpx?t=1786291386",
+        "gpxSha256": "63c737518908fbbbe95599d8f33899c5631c8eea4dffe7353beed0567240709e"
+      },
+      "stats": {
+        "totalKm": 42.094863651735174,
+        "gainM": 10.4
+      },
+      "city": {
+        "slug": "fort-lauderdale-fl-us",
+        "name": "Fort Lauderdale",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-FL",
+        "regionName": "Florida",
+        "latitude": 26.120429,
+        "longitude": -80.148568,
+        "timezone": "America/New_York"
+      },
+      "citySlug": "fort-lauderdale-fl-us",
+      "series": {
+        "slug": "fort-lauderdale-a1a-marathon",
+        "name": "Fort Lauderdale A1A Marathon",
+        "citySlug": "fort-lauderdale-fl-us",
+        "courseSlug": "fort-lauderdale-a1a-marathon",
+        "isMajor": false,
+        "typicalMonth": 2,
+        "websiteUrl": "https://a1amarathon.com",
+        "organizer": "Exclusive Sports Marketing, Inc."
+      },
+      "recurrence": {
+        "seriesSlug": "fort-lauderdale-a1a-marathon",
+        "month": 2,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2025-02-16 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "fort-lauderdale-a1a-marathon",
+        "year": 2025,
+        "raceDate": "2025-02-16"
       }
     },
     {
@@ -6188,6 +6930,59 @@
       }
     },
     {
+      "courseSlug": "salt-lake-city-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.745 km, outside the [42.0, 42.4] band",
+        "no addressRegion published; US city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone America/Denver was guessed from longitude (US spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/salt-lake-city-marathon-2025-salt-lake-city.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/04/26/gpx_20250426_id10274_race1_20250421235221.gpx?t=1786291478",
+        "gpxSha256": "3fc673838a362a46e4cfbff06007203199b81961e8c13f7cd2d4d97f1fadf756"
+      },
+      "stats": {
+        "totalKm": 42.744953194823935,
+        "gainM": 173.50000000000045
+      },
+      "city": {
+        "slug": "salt-lake-city-ut-us",
+        "name": "Salt Lake City",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-UT",
+        "regionName": "Utah",
+        "latitude": 40.768505,
+        "longitude": -111.840259,
+        "timezone": "America/Denver"
+      },
+      "citySlug": "salt-lake-city-ut-us",
+      "series": {
+        "slug": "salt-lake-city-marathon",
+        "name": "Salt Lake City Marathon",
+        "citySlug": "salt-lake-city-ut-us",
+        "courseSlug": "salt-lake-city-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://saltlakecitymarathon.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "salt-lake-city-marathon",
+        "month": 4,
+        "weekday": 6,
+        "nth": -1,
+        "note": "Derived from the 2025-04-26 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "salt-lake-city-marathon",
+        "year": 2025,
+        "raceDate": "2025-04-26"
+      }
+    },
+    {
       "courseSlug": "san-francisco-marathon",
       "verdict": "ready",
       "reasons": [
@@ -6235,6 +7030,59 @@
         "seriesSlug": "san-francisco-marathon",
         "year": 2026,
         "raceDate": "2026-07-26"
+      }
+    },
+    {
+      "courseSlug": "santa-rosa-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.508 km, outside the [42.0, 42.4] band",
+        "no addressRegion published; US city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone America/Los_Angeles was guessed from longitude (US spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/santa-rosa-marathon-2025-santa-rosa.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/08/23/gpx_20250823_id10456_race1_20250818082040.gpx?t=1786291552",
+        "gpxSha256": "77151a5d2b9c46e35c77ab90e96d9e3f14197f48efc77cc2988bede204e8cc18"
+      },
+      "stats": {
+        "totalKm": 42.507903690302086,
+        "gainM": 56.300000000000004
+      },
+      "city": {
+        "slug": "santa-rosa-ca-us",
+        "name": "Santa Rosa",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-CA",
+        "regionName": "California",
+        "latitude": 38.440774,
+        "longitude": -122.713306,
+        "timezone": "America/Los_Angeles"
+      },
+      "citySlug": "santa-rosa-ca-us",
+      "series": {
+        "slug": "santa-rosa-marathon",
+        "name": "Santa Rosa Marathon",
+        "citySlug": "santa-rosa-ca-us",
+        "courseSlug": "santa-rosa-marathon",
+        "isMajor": false,
+        "typicalMonth": 8,
+        "websiteUrl": "https://santarosamarathon.com",
+        "organizer": "Ventures Endurance Events LLC"
+      },
+      "recurrence": {
+        "seriesSlug": "santa-rosa-marathon",
+        "month": 8,
+        "weekday": 6,
+        "nth": 4,
+        "note": "Derived from the 2025-08-23 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "santa-rosa-marathon",
+        "year": 2025,
+        "raceDate": "2025-08-23"
       }
     },
     {
@@ -6286,6 +7134,59 @@
       }
     },
     {
+      "courseSlug": "saskatchewan-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.508 km, outside the [42.0, 42.4] band",
+        "no addressRegion published; CA city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone America/Winnipeg was guessed from longitude (CA spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/2026/05/saskatchewan-marathon-2026-saskatoon.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/05/31/gpx_20260531_id11013_race1_20260521105153.gpx?t=1786287234",
+        "gpxSha256": "bbb0d8e2a02506b93214f21cccc7e1beb9b78445e69bb3707a34e93edfad74f3"
+      },
+      "stats": {
+        "totalKm": 42.508425223530516,
+        "gainM": 111.39999999999998
+      },
+      "city": {
+        "slug": "saskatoon-sk-ca",
+        "name": "Saskatoon",
+        "countryCode": "CA",
+        "countryName": "Canada",
+        "regionCode": "CA-SK",
+        "regionName": "Saskatchewan",
+        "latitude": 52.098246,
+        "longitude": -106.682375,
+        "timezone": "America/Regina"
+      },
+      "citySlug": "saskatoon-sk-ca",
+      "series": {
+        "slug": "saskatchewan-marathon",
+        "name": "Saskatchewan Marathon",
+        "citySlug": "saskatoon-sk-ca",
+        "courseSlug": "saskatchewan-marathon",
+        "isMajor": false,
+        "typicalMonth": 5,
+        "websiteUrl": "https://www.saskmarathon.ca/",
+        "organizer": "Saskatoon Road Runners Association"
+      },
+      "recurrence": {
+        "seriesSlug": "saskatchewan-marathon",
+        "month": 5,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2026-05-31 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "saskatchewan-marathon",
+        "year": 2026,
+        "raceDate": "2026-05-31"
+      }
+    },
+    {
       "courseSlug": "seattle-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -6331,6 +7232,57 @@
         "seriesSlug": "seattle-marathon",
         "year": 2024,
         "raceDate": "2024-12-01"
+      }
+    },
+    {
+      "courseSlug": "seoul-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.456 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/seoul-marathon-2025-seoul.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/03/16/gpx_20250316_id10215_race1_20250306003118.gpx?t=1786291445",
+        "gpxSha256": "01bdad720c2af258008ef73efb849ee13cab95820dac004557a97e3e529feda8"
+      },
+      "stats": {
+        "totalKm": 42.45564757617295,
+        "gainM": 69.1
+      },
+      "city": {
+        "slug": "seoul-kr",
+        "name": "Seoul",
+        "countryCode": "KR",
+        "countryName": "South Korea",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 37.573131,
+        "longitude": 126.977258,
+        "timezone": "Asia/Seoul"
+      },
+      "citySlug": "seoul-kr",
+      "series": {
+        "slug": "seoul-marathon",
+        "name": "Seoul Marathon",
+        "citySlug": "seoul-kr",
+        "courseSlug": "seoul-marathon",
+        "isMajor": false,
+        "typicalMonth": 3,
+        "websiteUrl": "https://en.seoul-marathon.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "seoul-marathon",
+        "month": 3,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2025-03-16 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "seoul-marathon",
+        "year": 2025,
+        "raceDate": "2025-03-16"
       }
     },
     {
@@ -6382,6 +7334,111 @@
         "seriesSlug": "seville-marathon",
         "year": 2025,
         "raceDate": "2025-02-23"
+      }
+    },
+    {
+      "courseSlug": "sioux-falls-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.602 km, outside the [42.0, 42.4] band",
+        "no addressRegion published; US city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone America/Chicago was guessed from longitude (US spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/sioux-falls-marathon-2025-sioux-falls.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/09/21/gpx_20250921_id10462_race1_20250819222607.gpx?t=1786291573",
+        "gpxSha256": "653e929fe868480d8c51d74058ee2efa863f5ed6f317293a9311460242be76bd"
+      },
+      "stats": {
+        "totalKm": 42.602116621721585,
+        "gainM": 87.39999999999998
+      },
+      "city": {
+        "slug": "sioux-falls-sd-us",
+        "name": "Sioux Falls",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-SD",
+        "regionName": "South Dakota",
+        "latitude": 43.56319,
+        "longitude": -96.74995,
+        "timezone": "America/Chicago"
+      },
+      "citySlug": "sioux-falls-sd-us",
+      "series": {
+        "slug": "sioux-falls-marathon",
+        "name": "Sioux Falls Marathon",
+        "citySlug": "sioux-falls-sd-us",
+        "courseSlug": "sioux-falls-marathon",
+        "isMajor": false,
+        "typicalMonth": 9,
+        "websiteUrl": "https://www.siouxfallsmarathon.com",
+        "organizer": "Sioux Falls Sports Authority"
+      },
+      "recurrence": {
+        "seriesSlug": "sioux-falls-marathon",
+        "month": 9,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2025-09-21 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "sioux-falls-marathon",
+        "year": 2025,
+        "raceDate": "2025-09-21"
+      }
+    },
+    {
+      "courseSlug": "st-george-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no addressRegion published; US city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone America/Denver was guessed from longitude (US spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/st-george-marathon-and-half-marathon-2025-st-george.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/10/04/gpx_20251004_id10578_race1_20250923173508.gpx?t=1786291593",
+        "gpxSha256": "3e911d1409bf53bdb11f72452c84d96107c970058c8d2ace13822637417e0d67"
+      },
+      "stats": {
+        "totalKm": 42.368790563491416,
+        "gainM": 77.09999999999991
+      },
+      "city": {
+        "slug": "st-george-ut-us",
+        "name": "St. George",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-UT",
+        "regionName": "Utah",
+        "latitude": 37.420656,
+        "longitude": -113.631345,
+        "timezone": "America/Denver"
+      },
+      "citySlug": "st-george-ut-us",
+      "series": {
+        "slug": "st-george-marathon",
+        "name": "St. George Marathon",
+        "citySlug": "st-george-ut-us",
+        "courseSlug": "st-george-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://www.stgeorgemarathon.com/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "st-george-marathon",
+        "month": 10,
+        "weekday": 6,
+        "nth": 1,
+        "note": "Derived from the 2025-10-04 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "st-george-marathon",
+        "year": 2025,
+        "raceDate": "2025-10-04"
       }
     },
     {
@@ -6478,6 +7535,59 @@
         "seriesSlug": "stockholm-marathon",
         "year": 2026,
         "raceDate": "2026-05-30"
+      }
+    },
+    {
+      "courseSlug": "suffolk-county-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.456 km, outside the [42.0, 42.4] band",
+        "no addressRegion published; US city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone America/New_York was guessed from longitude (US spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/suffolk-county-marathon-2025-bay-shore.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/10/18/gpx_20251018_id10514_race1_20251012191230.gpx?t=1786291597",
+        "gpxSha256": "3020a48f641b09ee88266348bea5aaa122fb8ec335235f90ea7b2a19f475e07e"
+      },
+      "stats": {
+        "totalKm": 42.45562615340494,
+        "gainM": 29.900000000000002
+      },
+      "city": {
+        "slug": "bay-shore-ny-us",
+        "name": "Bay Shore",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-NY",
+        "regionName": "New York",
+        "latitude": 40.70004,
+        "longitude": -73.32248,
+        "timezone": "America/New_York"
+      },
+      "citySlug": "bay-shore-ny-us",
+      "series": {
+        "slug": "suffolk-county-marathon",
+        "name": "Suffolk County Marathon",
+        "citySlug": "bay-shore-ny-us",
+        "courseSlug": "suffolk-county-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://runsignup.com/Race/NY/BayShore/SuffolkCountyMarathonHalfMarathonand5K",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "suffolk-county-marathon",
+        "month": 10,
+        "weekday": 6,
+        "nth": 3,
+        "note": "Derived from the 2025-10-18 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "suffolk-county-marathon",
+        "year": 2025,
+        "raceDate": "2025-10-18"
       }
     },
     {
@@ -6579,6 +7689,58 @@
       }
     },
     {
+      "courseSlug": "ottawa-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no addressRegion published; CA city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone America/Toronto was guessed from longitude (CA spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/tamarack-ottawa-race-weekend-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/05/25/gpx_20250525_id10305_race1_20250516155604.gpx?t=1786291529",
+        "gpxSha256": "61d1dc499a3194141ecd703225369eb8f88de65766218ec660b208cb43c4ea88"
+      },
+      "stats": {
+        "totalKm": 42.35669173572626,
+        "gainM": 85.1
+      },
+      "city": {
+        "slug": "ottawa-on-ca",
+        "name": "Ottawa",
+        "countryCode": "CA",
+        "countryName": "Canada",
+        "regionCode": "CA-ON",
+        "regionName": "Ontario",
+        "latitude": 45.421321,
+        "longitude": -75.692371,
+        "timezone": "America/Toronto"
+      },
+      "citySlug": "ottawa-on-ca",
+      "series": {
+        "slug": "ottawa-marathon",
+        "name": "Ottawa Marathon",
+        "citySlug": "ottawa-on-ca",
+        "courseSlug": "ottawa-marathon",
+        "isMajor": false,
+        "typicalMonth": 5,
+        "websiteUrl": "https://www.runottawa.ca",
+        "organizer": "Run Ottawa"
+      },
+      "recurrence": {
+        "seriesSlug": "ottawa-marathon",
+        "month": 5,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2025-05-25 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "ottawa-marathon",
+        "year": 2025,
+        "raceDate": "2025-05-25"
+      }
+    },
+    {
       "courseSlug": "tcs-amsterdam-marathon",
       "verdict": "rejected",
       "reasons": [
@@ -6598,6 +7760,48 @@
       "series": null,
       "recurrence": null,
       "edition": null
+    },
+    {
+      "courseSlug": "toronto-waterfront-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no addressRegion published; CA city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone America/Toronto was guessed from longitude (CA spans zones) — confirm it",
+        "city toronto-ca is already seeded (start lines 11.6 km apart); reusing its existing pin, emitting no city row"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/tcs-toronto-waterfront-marathon-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/10/19/gpx_20251019_id10592_race1_20251008171511.gpx?t=1786291606",
+        "gpxSha256": "f59b8df62de00f2ad7d9355d31bb41205112b0c8b719ebd600690a54bd8b7cbd"
+      },
+      "stats": {
+        "totalKm": 42.15833427124534,
+        "gainM": 102.09999999999997
+      },
+      "city": null,
+      "citySlug": "toronto-on-ca",
+      "series": {
+        "slug": "toronto-waterfront-marathon",
+        "name": "Toronto Waterfront Marathon",
+        "citySlug": "toronto-on-ca",
+        "courseSlug": "toronto-waterfront-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://www.torontowaterfrontmarathon.com",
+        "organizer": "Canada Running Series"
+      },
+      "recurrence": {
+        "seriesSlug": "toronto-waterfront-marathon",
+        "month": 10,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2025-10-19 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "toronto-waterfront-marathon",
+        "year": 2025,
+        "raceDate": "2025-10-19"
+      }
     },
     {
       "courseSlug": "texas-triple",
@@ -6621,6 +7825,58 @@
       "edition": null
     },
     {
+      "courseSlug": "the-woodlands-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no addressRegion published; US city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone America/Chicago was guessed from longitude (US spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/the-woodlands-marathon-2025-the-woodlands.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/03/01/gpx_20250301_id10169_race1_20250201154252.gpx?t=1786291416",
+        "gpxSha256": "68952e1ea77de3855ae28f48a2c27760be60b17ee76d74cd00e97aceb32425fe"
+      },
+      "stats": {
+        "totalKm": 42.20702291788707,
+        "gainM": 40.49999999999999
+      },
+      "city": {
+        "slug": "the-woodlands-tx-us",
+        "name": "The Woodlands",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-TX",
+        "regionName": "Texas",
+        "latitude": 30.162638,
+        "longitude": -95.465752,
+        "timezone": "America/Chicago"
+      },
+      "citySlug": "the-woodlands-tx-us",
+      "series": {
+        "slug": "the-woodlands-marathon",
+        "name": "The Woodlands Marathon",
+        "citySlug": "the-woodlands-tx-us",
+        "courseSlug": "the-woodlands-marathon",
+        "isMajor": false,
+        "typicalMonth": 3,
+        "websiteUrl": "https://www.thewoodlandsmarathon.com",
+        "organizer": "The Woodlands Marathon Management, LLC"
+      },
+      "recurrence": {
+        "seriesSlug": "the-woodlands-marathon",
+        "month": 3,
+        "weekday": 6,
+        "nth": 1,
+        "note": "Derived from the 2025-03-01 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "the-woodlands-marathon",
+        "year": 2025,
+        "raceDate": "2025-03-01"
+      }
+    },
+    {
       "courseSlug": "thelma-and-louise-marathon",
       "verdict": "rejected",
       "reasons": [
@@ -6640,6 +7896,111 @@
       "series": null,
       "recurrence": null,
       "edition": null
+    },
+    {
+      "courseSlug": "toronto-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.547 km, outside the [42.0, 42.4] band",
+        "no addressRegion published; CA city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone America/Toronto was guessed from longitude (CA spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/toronto-marathon-2025-toronto.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/05/04/gpx_20250504_id10290_race1_20250428170413.gpx?t=1786291491",
+        "gpxSha256": "c17816638a51c5d24fdc7b40ff01444254dcc5faf848c98bcd265c65d98bcd78"
+      },
+      "stats": {
+        "totalKm": 42.54739305844473,
+        "gainM": 66.00000000000001
+      },
+      "city": {
+        "slug": "toronto-on-ca",
+        "name": "Toronto",
+        "countryCode": "CA",
+        "countryName": "Canada",
+        "regionCode": "CA-ON",
+        "regionName": "Ontario",
+        "latitude": 43.763493,
+        "longitude": -79.411316,
+        "timezone": "America/Toronto"
+      },
+      "citySlug": "toronto-on-ca",
+      "series": {
+        "slug": "toronto-marathon",
+        "name": "Toronto Marathon",
+        "citySlug": "toronto-on-ca",
+        "courseSlug": "toronto-marathon",
+        "isMajor": false,
+        "typicalMonth": 5,
+        "websiteUrl": "https://www.torontomarathon.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "toronto-marathon",
+        "month": 5,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the 2025-05-04 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "toronto-marathon",
+        "year": 2025,
+        "raceDate": "2025-05-04"
+      }
+    },
+    {
+      "courseSlug": "celebration-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no addressRegion published; US city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone America/New_York was guessed from longitude (US spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/town-of-celebration-marathon-half-marathon-2026.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/01/25/gpx_20260125_id10716_race1_20260116175642.gpx?t=1786291642",
+        "gpxSha256": "c1328f940db69dbf7a19c572485bf7ced8c536a39677c3f0cac0334a6eddc87f"
+      },
+      "stats": {
+        "totalKm": 42.074062134534074,
+        "gainM": 17.4
+      },
+      "city": {
+        "slug": "celebration-fl-us",
+        "name": "Celebration",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-FL",
+        "regionName": "Florida",
+        "latitude": 28.317915,
+        "longitude": -81.538912,
+        "timezone": "America/New_York"
+      },
+      "citySlug": "celebration-fl-us",
+      "series": {
+        "slug": "celebration-marathon",
+        "name": "Celebration Marathon",
+        "citySlug": "celebration-fl-us",
+        "courseSlug": "celebration-marathon",
+        "isMajor": false,
+        "typicalMonth": 1,
+        "websiteUrl": "https://www.celebrationmarathon.com/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "celebration-marathon",
+        "month": 1,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2026-01-25 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "celebration-marathon",
+        "year": 2026,
+        "raceDate": "2026-01-25"
+      }
     },
     {
       "courseSlug": "turin-marathon",
@@ -6889,6 +8250,58 @@
       }
     },
     {
+      "courseSlug": "tobacco-road-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no addressRegion published; US city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone America/New_York was guessed from longitude (US spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/veradigm-tobacco-road-marathon-and-half-marathon-2026-cary.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2026/03/15/gpx_20260315_id10773_race1_20260304111003.gpx?t=1786291650",
+        "gpxSha256": "6bd7d405edfed2f017ba132cf32d0dc370ac20290255f4420e9bb5c3ac89d63a"
+      },
+      "stats": {
+        "totalKm": 42.1727359723531,
+        "gainM": 148.49999999999997
+      },
+      "city": {
+        "slug": "cary-nc-us",
+        "name": "Cary",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-NC",
+        "regionName": "North Carolina",
+        "latitude": 35.79789,
+        "longitude": -78.89411,
+        "timezone": "America/New_York"
+      },
+      "citySlug": "cary-nc-us",
+      "series": {
+        "slug": "tobacco-road-marathon",
+        "name": "Tobacco Road Marathon",
+        "citySlug": "cary-nc-us",
+        "courseSlug": "tobacco-road-marathon",
+        "isMajor": false,
+        "typicalMonth": 3,
+        "websiteUrl": "https://tobaccoroadmarathon.com/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "tobacco-road-marathon",
+        "month": 3,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2026-03-15 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "tobacco-road-marathon",
+        "year": 2026,
+        "raceDate": "2026-03-15"
+      }
+    },
+    {
       "courseSlug": "vermont-city-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -7054,6 +8467,59 @@
       }
     },
     {
+      "courseSlug": "walt-disney-world-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.673 km, outside the [42.0, 42.4] band",
+        "no addressRegion published; US city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone America/New_York was guessed from longitude (US spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/walt-disney-world-marathon-weekend-2025-orlando.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/01/12/gpx_20250112_id10081_race1_20241203161002.gpx?t=1786291339",
+        "gpxSha256": "029558cb9af34f4acc6f53c8a9a308421cd81d939854a50fd9b4fe18a4c44398"
+      },
+      "stats": {
+        "totalKm": 42.672798122274834,
+        "gainM": 17.799999999999997
+      },
+      "city": {
+        "slug": "orlando-fl-us",
+        "name": "Orlando",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-FL",
+        "regionName": "Florida",
+        "latitude": 28.380575,
+        "longitude": -81.542062,
+        "timezone": "America/New_York"
+      },
+      "citySlug": "orlando-fl-us",
+      "series": {
+        "slug": "walt-disney-world-marathon",
+        "name": "Walt Disney World Marathon",
+        "citySlug": "orlando-fl-us",
+        "courseSlug": "walt-disney-world-marathon",
+        "isMajor": false,
+        "typicalMonth": 1,
+        "websiteUrl": "https://www.rundisney.com/events/disneyworld/disneyworld-marathon-weekend",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "walt-disney-world-marathon",
+        "month": 1,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2025-01-12 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "walt-disney-world-marathon",
+        "year": 2025,
+        "raceDate": "2025-01-12"
+      }
+    },
+    {
       "courseSlug": "williams-route-66-marathon",
       "verdict": "rejected",
       "reasons": [
@@ -7168,6 +8634,58 @@
         "seriesSlug": "windermere-marathon",
         "year": 2024,
         "raceDate": "2024-05-19"
+      }
+    },
+    {
+      "courseSlug": "wisconsin-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no addressRegion published; US city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone America/Chicago was guessed from longitude (US spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/wisconsin-marathon-2025-kenosha.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/05/03/gpx_20250503_id10292_race1_20250429183159.gpx?t=1786291487",
+        "gpxSha256": "02e4b49c5b5e43e061d29d6e61dbe48ac2f4fbc6efe1ed99a36de3835bd4f5a6"
+      },
+      "stats": {
+        "totalKm": 42.319127210572084,
+        "gainM": 46.900000000000034
+      },
+      "city": {
+        "slug": "kenosha-wi-us",
+        "name": "Kenosha",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-WI",
+        "regionName": "Wisconsin",
+        "latitude": 42.586858,
+        "longitude": -87.808425,
+        "timezone": "America/Chicago"
+      },
+      "citySlug": "kenosha-wi-us",
+      "series": {
+        "slug": "wisconsin-marathon",
+        "name": "Wisconsin Marathon",
+        "citySlug": "kenosha-wi-us",
+        "courseSlug": "wisconsin-marathon",
+        "isMajor": false,
+        "typicalMonth": 5,
+        "websiteUrl": "https://wisconsinmarathon.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "wisconsin-marathon",
+        "month": 5,
+        "weekday": 6,
+        "nth": 1,
+        "note": "Derived from the 2025-05-03 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "wisconsin-marathon",
+        "year": 2025,
+        "raceDate": "2025-05-03"
       }
     },
     {
