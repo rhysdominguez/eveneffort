@@ -2,6 +2,7 @@
 //
 //   node scripts/import/reconcile-csv.ts            # rewrite the tracker
 //   node scripts/import/reconcile-csv.ts --summary  # print counts, write nothing
+//   node scripts/import/reconcile-csv.ts --emit-batch csv-batch-01   # + a raw batch
 //
 // The CSV is a 766-row list of US-centric marathon events. Our only geometry
 // source is goandrace.com, whose forward calendar is ~377 events, so most of
@@ -15,10 +16,19 @@
 // rest alone. That is what makes "is this list finished yet" a question you can
 // answer by running a command rather than by reading a spreadsheet.
 
-import { readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { COURSE_DIR, IMPORT_DIR, RAW_DIR, REPO_ROOT, type RawEvent } from "./shared.ts";
+import {
+  COURSE_DIR,
+  DECISIONS_PATH,
+  IMPORT_DIR,
+  RAW_DIR,
+  REPO_ROOT,
+  flagValue,
+  type RawBatch,
+  type RawEvent,
+} from "./shared.ts";
 
 const SOURCE_CSV = join(IMPORT_DIR, "findmymarathon_766_entries_no_url.csv");
 const TRACKER_CSV = join(IMPORT_DIR, "findmymarathon-tracker.csv");
@@ -203,6 +213,30 @@ function parsedSourceSlugs(): Set<string> {
   );
 }
 
+/**
+ * Verdicts already recorded against an event URL. A course the parser threw out
+ * is not work waiting to happen — its GPX is quarantined and re-fetching it just
+ * re-derives the same measurement. The event URL is the key because the slug is
+ * the thing that changes.
+ */
+function priorVerdicts(): Map<string, { verdict: string; reason: string }> {
+  const byUrl = new Map<string, { verdict: string; reason: string }>();
+  if (!existsSync(DECISIONS_PATH)) return byUrl;
+  const file = JSON.parse(readFileSync(DECISIONS_PATH, "utf8")) as {
+    courses?: {
+      source?: { eventUrl?: string };
+      verdict?: string;
+      reasons?: string[];
+    }[];
+  };
+  for (const c of file.courses ?? []) {
+    const url = c.source?.eventUrl;
+    if (!url || !c.verdict) continue;
+    byUrl.set(url, { verdict: c.verdict, reason: (c.reasons ?? []).join("; ") });
+  }
+  return byUrl;
+}
+
 /** Every event any crawl has ever seen, newest file wins on duplicate URLs. */
 function crawledEvents(): RawEvent[] {
   const byUrl = new Map<string, RawEvent>();
@@ -232,6 +266,7 @@ function classify(
   series: { slug: string; name: string }[],
   slugs: Set<string>,
   parsed: Set<string>,
+  verdicts: Map<string, { verdict: string; reason: string }>,
   events: RawEvent[],
 ): TrackerRow {
   const city = cityOf(row.cityField);
@@ -303,6 +338,12 @@ function classify(
     return { ...shared, status: "in-db", note: `already imported from ${event.courseSlug}` };
   }
 
+  // A verdict already recorded is the answer; do not re-queue settled work.
+  const prior = verdicts.get(event.eventUrl);
+  if (prior?.verdict === "rejected") {
+    return { ...shared, status: "parser-rejected", note: prior.reason || "rejected at QA" };
+  }
+
   if (event.gpxUrl) return { ...shared, status: "queued", note: event.name };
   return {
     ...shared,
@@ -330,7 +371,8 @@ function main(argv: string[]): void {
   const slugs = new Set(seededSlugs());
   const events = crawledEvents();
   const parsedSlugs = parsedSourceSlugs();
-  const rows = csv.map((r) => classify(r, series, slugs, parsedSlugs, events));
+  const verdicts = priorVerdicts();
+  const rows = csv.map((r) => classify(r, series, slugs, parsedSlugs, verdicts, events));
 
   const counts = new Map<Status, number>();
   for (const r of rows) counts.set(r.status, (counts.get(r.status) ?? 0) + 1);
@@ -345,6 +387,28 @@ function main(argv: string[]): void {
   }
   console.log("");
   console.log(open === 0 ? "No rows left to import." : `${open} rows still importable.`);
+
+  // The queued rows are spread across every crawl we have ever run, but qa.ts
+  // assesses exactly one raw batch file. Gathering them into a synthetic batch
+  // is what lets a slice of this CSV enter the normal pipeline unchanged.
+  const emit = flagValue(argv, "--emit-batch");
+  if (emit) {
+    const byUrl = new Map(events.map((e) => [e.eventUrl, e]));
+    const queued = rows
+      .filter((r) => r.status === "queued")
+      .map((r) => byUrl.get(r.sourceUrl))
+      .filter((e): e is RawEvent => Boolean(e));
+    const batch: RawBatch = {
+      batch: emit,
+      fetchedAt: new Date().toISOString(),
+      query: { source: "findmymarathon CSV reconciliation", rows: String(queued.length) },
+      events: queued,
+    };
+    const path = join(RAW_DIR, `${emit}.raw.json`);
+    writeFileSync(path, `${JSON.stringify(batch, null, 2)}\n`);
+    console.log(`\nwrote ${path} — ${queued.length} events`);
+    console.log(`\nnext: npm run import:parse -- --only ${queued.map((e) => e.courseSlug).join(",")} --report data/import/reports/${emit}.qa.json`);
+  }
 
   if (summaryOnly) return;
 
