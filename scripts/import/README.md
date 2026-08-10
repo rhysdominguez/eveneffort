@@ -76,7 +76,14 @@ region codes or organizer names, and any timezone in a multi-zone country is a
 longitude guess. Those all need a person.
 
 Re-running qa **never overwrites an entry that already exists** — your edits are
-safe. To re-assess a course, delete its entry first.
+safe. To re-assess a course, delete its entry first — except a `rejected`
+entry from a different `eventUrl`, which is reassessed automatically. A
+`rejected` verdict is a settled negative about *one event page*, not the
+slug forever: an organizer can republish a better GPX next year under a new
+URL that still proposes the same courseSlug (Hogeye Marathon 2023 measured
+41.4 km and was rejected; 2026 measures a real 42.56 km). Nothing about a
+rejected entry can be in-progress human review to protect, unlike `ready` or
+`review`, so there's nothing to lose by letting a fresh page reassess it.
 
 ### 4. promote — apply
 

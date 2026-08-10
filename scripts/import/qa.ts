@@ -290,15 +290,38 @@ function main(): void {
   // decisions.json accumulates across batches and is committed. An entry that
   // already exists is left exactly as it is: it may carry a human's edits, and
   // silently recomputing over those would throw away the review this whole
-  // two-step exists to capture. Re-assessing a course means deleting its entry.
+  // two-step exists to capture. Re-assessing a course normally means deleting
+  // its entry by hand — except for a stale rejection (see isStaleRejection
+  // below), which is reassessed automatically because nothing about it can be
+  // a human's in-progress work to protect.
   const existing: StagedCourse[] = existsSync(DECISIONS_PATH)
     ? (JSON.parse(readFileSync(DECISIONS_PATH, "utf8")) as DecisionFile).courses
     : [];
   const decided = new Map(existing.map((c) => [c.courseSlug, c]));
 
+  // A `rejected` verdict is a settled negative about *one event page*, not a
+  // permanent judgment on the slug — an organizer can republish a better GPX
+  // next year under a fresh eventUrl that still proposes the same courseSlug
+  // (Hogeye Marathon 2023 measured 41.4 km and was rejected; 2026 measures a
+  // real 42.56 km). `ready` and `review` never get this treatment: a course
+  // already promoted is filtered out before it ever reaches this batch (its
+  // slug is in PUBLISHED_COURSE_SLUGS, which fetch.ts checks), so the only way
+  // a *live* ready/review entry meets a same-slug newcomer here is genuine
+  // in-progress human review this run must not clobber.
+  function isStaleRejection(entry: StagedCourse, event: RawEvent): boolean {
+    return entry.verdict === "rejected" && entry.source.eventUrl !== event.eventUrl;
+  }
+
   const taken = {
-    // Slugs already decided in an earlier batch are spent for this one too.
-    courses: new Set(decided.keys()),
+    // Slugs already decided in an earlier batch are spent for this one too —
+    // except a rejected one, which was never actually claimed. Without this
+    // exclusion a stale rejection would still block itself: isStaleRejection
+    // lets main()'s loop reassess it, but assess() would immediately reject it
+    // again anyway at the "claimed twice" check below, for a reason that has
+    // nothing to do with why it was rejected the first time.
+    courses: new Set(
+      [...decided.entries()].filter(([, c]) => c.verdict !== "rejected").map(([slug]) => slug),
+    ),
     cities: new Map(CITY_SEED.map((c) => [c.slug, c])),
     series: new Set(SERIES_SEED.map((s) => s.slug)),
   };
@@ -310,11 +333,14 @@ function main(): void {
 
   const fresh: StagedCourse[] = [];
   let kept = 0;
+  let reassessed = 0;
   for (const event of raw.events) {
-    if (decided.has(event.courseSlug)) {
+    const priorDecision = decided.get(event.courseSlug);
+    if (priorDecision && !isStaleRejection(priorDecision, event)) {
       kept += 1;
       continue;
     }
+    if (priorDecision) reassessed += 1;
     const staged = assess(event, report.get(event.courseSlug), taken);
     if (staged.verdict !== "rejected") {
       taken.courses.add(staged.courseSlug);
@@ -347,7 +373,8 @@ function main(): void {
   const tally = (v: Verdict) => fresh.filter((c) => c.verdict === v).length;
   console.log(
     `\n${tally("ready")} ready · ${tally("review")} need review · ` +
-      `${tally("rejected")} rejected${kept > 0 ? ` · ${kept} already decided` : ""}`,
+      `${tally("rejected")} rejected${kept > 0 ? ` · ${kept} already decided` : ""}` +
+      `${reassessed > 0 ? ` · ${reassessed} stale rejection(s) reassessed` : ""}`,
   );
   console.log(`wrote ${DECISIONS_PATH}`);
   if (tally("review") > 0) {
