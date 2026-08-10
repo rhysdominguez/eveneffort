@@ -33,8 +33,15 @@ written for bulk use; this pipeline just feeds it.
 Discovery pages `/it/api_calendario.php`, the JSON endpoint the calendar's own
 "load more" button calls. This matters: the calendar **page** only ever renders
 its first 28 results, so scraping the HTML caps you at 28 while the endpoint
-reports the real total — 128 marathons across 2026–27 at the time of writing,
-28 per page over 5 pages.
+reports the real total and pages through all of it, 28 at a time.
+
+`--year-start`/`--year-end` decide how much of the catalogue you see, and the
+default window is spent: 2026–27 is 129 marathons, all imported, and 2025–2029
+is 378, likewise. The full catalogue is ~1,086 events back to 2015. Since a
+course's geometry does not expire — a 2019 page traces the route the race still
+runs — widening the year range is where new courses now come from. An archived
+race has to be confirmed as still running before it is seeded; the skill spells
+out that check.
 
 Not every event has geometry. Those fail later with "links no course map",
 which is cheap and honest — plenty of well-known races have an event page and
@@ -62,7 +69,7 @@ this; see the import-races skill's hard rules for how it's wired in.
 
 Standard parser run. Its validation is the first real gate: it rejects GPX with
 more than one track or segment, fewer than 100 points, any point missing
-elevation, a gap over 5 km, or a total outside [41.5, 43.5] km. Expect losses —
+elevation, a gap over 5 km, or a total outside [41.5, 43.6] km. Expect losses —
 community-uploaded tracks are uneven, and that filter working is the point.
 
 ### 3. qa — propose rows, flag what needs a human
