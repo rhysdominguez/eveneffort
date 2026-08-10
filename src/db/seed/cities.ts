@@ -3195,4 +3195,27 @@ export const CITY_SEED: CitySeed[] = [
     longitude: 4.8616,
     timezone: "Europe/Amsterdam",
   },
+  // Imported from goandrace.com — batch 2026-08-10.
+  {
+    slug: "riyadh-sa",
+    name: "Riyadh",
+    countryCode: "SA",
+    countryName: "Saudi Arabia",
+    regionCode: null,
+    regionName: null,
+    latitude: 24.78082,
+    longitude: 46.599989,
+    timezone: "Asia/Riyadh",
+  },
+  {
+    slug: "palma-es",
+    name: "Palma",
+    countryCode: "ES",
+    countryName: "Spain",
+    regionCode: null,
+    regionName: null,
+    latitude: 39.565089,
+    longitude: 2.64844,
+    timezone: "Europe/Madrid",
+  },
 ];

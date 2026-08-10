@@ -2973,4 +2973,25 @@ export const SERIES_SEED: SeriesSeed[] = [
     websiteUrl: "https://www.tcsamsterdammarathon.eu",
     organizer: "Le Champion",
   },
+  // Imported from goandrace.com — batch 2026-08-10.
+  {
+    slug: "riyadh-marathon",
+    name: "Riyadh Marathon",
+    citySlug: "riyadh-sa",
+    courseSlug: "riyadh-marathon",
+    isMajor: false,
+    typicalMonth: 2,
+    websiteUrl: "https://www.riyadhmarathon.org",
+    organizer: "",
+  },
+  {
+    slug: "palma-marathon",
+    name: "Palma de Mallorca Marathon",
+    citySlug: "palma-es",
+    courseSlug: "palma-marathon",
+    isMajor: false,
+    typicalMonth: 10,
+    websiteUrl: "https://www.palmademallorcamarathon.com/",
+    organizer: "Kumulus Active World 2012 S.L.",
+  },
 ];

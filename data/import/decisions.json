@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-10T01:20:14.808Z",
+  "updatedAt": "2026-08-10T01:39:18.673Z",
   "courses": [
     {
       "courseSlug": "2-bologna-marathon",
@@ -488,6 +488,57 @@
       "series": null,
       "recurrence": null,
       "edition": null
+    },
+    {
+      "courseSlug": "amsterdam-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.766 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/tcs-amsterdam-marathon-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/10/19/gpx_20251019_id10593_race1_20251008174616.gpx?t=1786324755",
+        "gpxSha256": "bef73502f7cbd1529a44d99f6f812e011d0109537090cc33be02af605480f644"
+      },
+      "stats": {
+        "totalKm": 42.765856813545525,
+        "gainM": 43.00000000000001
+      },
+      "city": {
+        "slug": "amsterdam-nl",
+        "name": "Amsterdam",
+        "countryCode": "NL",
+        "countryName": "Netherlands",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 52.345746,
+        "longitude": 4.8616,
+        "timezone": "Europe/Amsterdam"
+      },
+      "citySlug": "amsterdam-nl",
+      "series": {
+        "slug": "amsterdam-marathon",
+        "name": "Amsterdam Marathon",
+        "citySlug": "amsterdam-nl",
+        "courseSlug": "amsterdam-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://www.tcsamsterdammarathon.eu",
+        "organizer": "Le Champion"
+      },
+      "recurrence": {
+        "seriesSlug": "amsterdam-marathon",
+        "month": 10,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2025-10-19 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "amsterdam-marathon",
+        "year": 2025,
+        "raceDate": "2025-10-19"
+      }
     },
     {
       "courseSlug": "anchorage-mayor-s-marathon",
@@ -13601,24 +13652,54 @@
     },
     {
       "courseSlug": "riyadh-marathon",
-      "verdict": "rejected",
+      "verdict": "ready",
       "reasons": [
-        "parser failed: total route length 43.519 km is outside [41.5, 43.5] km"
+        "measured 43.519 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
       ],
       "source": {
         "eventUrl": "https://www.goandrace.com/en/running-events/riyadh-marathon-2025-riyadh.php",
         "gpxUrl": "https://www.goandrace.com/gpx/2025/02/08/gpx_20250208_id10083_race1_20241208183310.gpx?t=1786291361",
-        "gpxSha256": null
+        "gpxSha256": "dd973ca189b4161a01f5653d098b145929633f5437fd872a5d483e3e67edd7bc"
       },
       "stats": {
-        "totalKm": null,
-        "gainM": null
+        "totalKm": 43.51900820003519,
+        "gainM": 120.0999999999998
       },
-      "city": null,
-      "citySlug": "",
-      "series": null,
-      "recurrence": null,
-      "edition": null
+      "city": {
+        "slug": "riyadh-sa",
+        "name": "Riyadh",
+        "countryCode": "SA",
+        "countryName": "Saudi Arabia",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 24.78082,
+        "longitude": 46.599989,
+        "timezone": "Asia/Riyadh"
+      },
+      "citySlug": "riyadh-sa",
+      "series": {
+        "slug": "riyadh-marathon",
+        "name": "Riyadh Marathon",
+        "citySlug": "riyadh-sa",
+        "courseSlug": "riyadh-marathon",
+        "isMajor": false,
+        "typicalMonth": 2,
+        "websiteUrl": "https://www.riyadhmarathon.org",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "riyadh-marathon",
+        "month": 2,
+        "weekday": 6,
+        "nth": 2,
+        "note": "Derived from the 2025-02-08 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "riyadh-marathon",
+        "year": 2025,
+        "raceDate": "2025-02-08"
+      }
     },
     {
       "courseSlug": "rock-n-roll-san-diego-marathon",
@@ -15415,57 +15496,6 @@
       "edition": null
     },
     {
-      "courseSlug": "amsterdam-marathon",
-      "verdict": "ready",
-      "reasons": [
-        "measured 42.766 km, outside the [42.0, 42.4] band",
-        "no organizer name published — fill SeriesSeed.organizer by hand"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/tcs-amsterdam-marathon-2025.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2025/10/19/gpx_20251019_id10593_race1_20251008174616.gpx?t=1786324755",
-        "gpxSha256": "bef73502f7cbd1529a44d99f6f812e011d0109537090cc33be02af605480f644"
-      },
-      "stats": {
-        "totalKm": 42.765856813545525,
-        "gainM": 43.00000000000001
-      },
-      "city": {
-        "slug": "amsterdam-nl",
-        "name": "Amsterdam",
-        "countryCode": "NL",
-        "countryName": "Netherlands",
-        "regionCode": null,
-        "regionName": null,
-        "latitude": 52.345746,
-        "longitude": 4.8616,
-        "timezone": "Europe/Amsterdam"
-      },
-      "citySlug": "amsterdam-nl",
-      "series": {
-        "slug": "amsterdam-marathon",
-        "name": "Amsterdam Marathon",
-        "citySlug": "amsterdam-nl",
-        "courseSlug": "amsterdam-marathon",
-        "isMajor": false,
-        "typicalMonth": 10,
-        "websiteUrl": "https://www.tcsamsterdammarathon.eu",
-        "organizer": "Le Champion"
-      },
-      "recurrence": {
-        "seriesSlug": "amsterdam-marathon",
-        "month": 10,
-        "weekday": 0,
-        "nth": 3,
-        "note": "Derived from the 2025-10-19 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "amsterdam-marathon",
-        "year": 2025,
-        "raceDate": "2025-10-19"
-      }
-    },
-    {
       "courseSlug": "tel-aviv-marathon",
       "verdict": "ready",
       "reasons": [
@@ -16109,25 +16139,55 @@
       "edition": null
     },
     {
-      "courseSlug": "tui-palma-marathon-mallorca",
-      "verdict": "rejected",
+      "courseSlug": "palma-marathon",
+      "verdict": "ready",
       "reasons": [
-        "parser failed: total route length 43.521 km is outside [41.5, 43.5] km"
+        "measured 43.521 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
       ],
       "source": {
         "eventUrl": "https://www.goandrace.com/en/running-events/tui-palma-marathon-mallorca-2025.php",
         "gpxUrl": "https://www.goandrace.com/gpx/2025/10/19/gpx_20251019_id10596_race1_20251009125458.gpx?t=1786291615",
-        "gpxSha256": null
+        "gpxSha256": "76b4cffeb75b3bcc4a9f0c657717eaf2d4471c8e852d2b83a319fbfeeb12d842"
       },
       "stats": {
-        "totalKm": null,
-        "gainM": null
+        "totalKm": 43.521266768959315,
+        "gainM": 99.69999999999999
       },
-      "city": null,
-      "citySlug": "",
-      "series": null,
-      "recurrence": null,
-      "edition": null
+      "city": {
+        "slug": "palma-es",
+        "name": "Palma",
+        "countryCode": "ES",
+        "countryName": "Spain",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 39.565089,
+        "longitude": 2.64844,
+        "timezone": "Europe/Madrid"
+      },
+      "citySlug": "palma-es",
+      "series": {
+        "slug": "palma-marathon",
+        "name": "Palma de Mallorca Marathon",
+        "citySlug": "palma-es",
+        "courseSlug": "palma-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://www.palmademallorcamarathon.com/",
+        "organizer": "Kumulus Active World 2012 S.L."
+      },
+      "recurrence": {
+        "seriesSlug": "palma-marathon",
+        "month": 10,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2025-10-19 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "palma-marathon",
+        "year": 2025,
+        "raceDate": "2025-10-19"
+      }
     },
     {
       "courseSlug": "turin-marathon",
