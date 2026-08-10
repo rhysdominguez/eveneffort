@@ -130,18 +130,30 @@ export const MATCH_STOP_WORDS = new Set([
 /**
  * Words that change what race this *is*, not just how it's phrased — a half
  * marathon is not a marathon, a relay splits the distance across runners, a
- * kids' fun run is not a competitive field. Unlike MATCH_STOP_WORDS these are
- * never dropped: findNameMatch refuses a match where exactly one side has one,
- * regardless of how high the token overlap scores otherwise. Without this
- * guard, "Rotterdam Half Marathon" matches the seeded "Rotterdam Marathon" at
- * a perfect 1.0 — the smaller token set (the seeded name, just "rotterdam")
- * is a subset of the larger one, and dividing by the smaller set is exactly
- * what makes a sponsor prefix not sink a real match, so the same property
- * blinds it to a genuinely distinguishing suffix on the other side.
+ * kids' fun run is not a competitive field, and two marathons in one city can
+ * be distinguished by a single word in their names. Unlike MATCH_STOP_WORDS
+ * these are never dropped: findNameMatch refuses a match where exactly one
+ * side has one, regardless of how high the token overlap scores otherwise.
+ *
+ * The guard exists because of how the score is computed. Dividing token
+ * overlap by the *smaller* set is what stops a sponsor prefix sinking a real
+ * match — but the same property makes a distinguishing word on the *larger*
+ * side invisible. "Rotterdam Half Marathon" scores a perfect 1.0 against the
+ * seeded "Rotterdam Marathon", because {rotterdam} is a subset of
+ * {rotterdam, half}.
+ *
+ * `charity` is here for the same reason and is worth spelling out, since it is
+ * neither a distance nor a format: Taipei has two separate marathons, the
+ * Standard Chartered Taipei *Charity* Marathon (January, since 2013 — the one
+ * seeded) and the plain Taipei Marathon (December, World Athletics Gold Label,
+ * since 1986). Without the guard the second scores 1.0 against the first and
+ * gets skipped as a duplicate, which is exactly what happened on 2026-08-10.
+ * When a word turns out to be the only thing separating two real races in one
+ * city, it belongs in this set.
  */
-const DISTANCE_OR_FORMAT_WORDS = new Set([
+const DISCRIMINATING_WORDS = new Set([
   "half", "quarter", "ultra", "relay", "virtual", "kids", "youth",
-  "junior", "5k", "10k", "trail",
+  "junior", "5k", "10k", "trail", "charity",
 ]);
 
 /**
@@ -255,9 +267,9 @@ export function findNameMatch<T extends { name: string; citySlug: string }>(
   if (!best || best.score < threshold) return null;
 
   // A perfect token-subset score does not survive a differentiator that only
-  // one side carries — see the comment on DISTANCE_OR_FORMAT_WORDS.
+  // one side carries — see the comment on DISCRIMINATING_WORDS.
   const candidateTokens = matchTokens(best.name);
-  for (const word of DISTANCE_OR_FORMAT_WORDS) {
+  for (const word of DISCRIMINATING_WORDS) {
     if (nameTokens.has(word) !== candidateTokens.has(word)) return null;
   }
   return best;
@@ -594,7 +606,19 @@ export interface StagedCourse {
     nth: number;
     note: string;
   } | null;
-  edition: { seriesSlug: string; year: number; raceDate: string } | null;
+  /**
+   * `startTimeLocal` is optional and stays unset for a scraped date — the
+   * listing does not publish one, and a guessed start silently keys the
+   * weather forecast to the wrong hour. Set it only when a real start time was
+   * read off the organizer's own page, which the archive workflow's
+   * still-runs check tends to surface anyway.
+   */
+  edition: {
+    seriesSlug: string;
+    year: number;
+    raceDate: string;
+    startTimeLocal?: string;
+  } | null;
 }
 
 /**

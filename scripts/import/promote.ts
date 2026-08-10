@@ -132,13 +132,18 @@ function editionBlock(courses: StagedCourse[], batch: string): string {
   const editions = courses.map((c) => c.edition).filter((e) => e !== null);
   if (editions.length === 0) return "";
   const entries = editions
-    .map(
-      (e) =>
-        `  { seriesSlug: ${lit(e.seriesSlug)}, year: ${e.year}, raceDate: ${lit(e.raceDate)} },\n`,
-    )
+    .map((e) => {
+      const time = e.startTimeLocal
+        ? `, startTimeLocal: ${lit(e.startTimeLocal)}`
+        : "";
+      return `  { seriesSlug: ${lit(e.seriesSlug)}, year: ${e.year}, raceDate: ${lit(e.raceDate)}${time} },\n`;
+    })
     .join("");
   return `  // Imported from goandrace.com — batch ${batch}. Dates as published by\n` +
-    `  // the event listing; startTimeLocal is deliberately left unset.\n${entries}`;
+    `  // the event listing, or verified against the organizer during review.\n` +
+    `  // startTimeLocal appears only where a real one was read off the\n` +
+    `  // organizer's page — never guessed, since a wrong hour silently keys\n` +
+    `  // the weather forecast to it.\n${entries}`;
 }
 
 function ledgerBlock(courses: StagedCourse[], batch: string): string {
