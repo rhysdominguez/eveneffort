@@ -192,15 +192,28 @@ def parse_gpx(
     # line almost always runs long against that, the same reason Berlin has
     # measured 42.76 km since it was added.
     #
-    # 43.5 is not "wide enough to pass everything" — it is chosen at the real
-    # gap in the data. The worst genuine near-miss above is Zydeco at 43.390;
-    # the next rejection past that is a different failure mode entirely —
-    # Thelma & Louise at 48.713 km and Marine Corps at 50.535 km are wrong
-    # events, not a marathon course with a long tail.
+    # Widened again to 43.6 on 2026-08-10, for two courses and no more: Riyadh
+    # (43.519) and TUI Palma de Mallorca (43.521), both real city marathons
+    # that missed the 43.5 line by 19 and 21 metres. Same Douglas-Peucker check
+    # as above, same result — at 20 m tolerance both come down to 43.13, so
+    # roughly 390 m of the excess is smoothable and the remaining ~930 m is
+    # real path length, consistent with every other course in the band. Both
+    # retrace heavily (65% and 79% of points revisit an earlier 50 m cell),
+    # which is ordinary for a city course with loops and out-and-backs.
+    #
+    # Neither 43.5 nor 43.6 is "wide enough to pass everything" — both are
+    # chosen at a real gap in the data, and the gap here is wide. The worst
+    # genuine near-miss under the new line is Palma at 43.521; the next
+    # rejection past it is Gornergrat Zermatt at 45.690 km, 2.2 km further
+    # out, and past that the failures are a different mode entirely — trail
+    # ultras and wrong events (Thelma & Louise 48.713, Strasimeno 58.010,
+    # Marine Corps 50.535), not a marathon course with a long tail. Anything
+    # landing between 43.6 and 45.6 in future is genuinely novel and deserves
+    # its own look, not another nudge of this number.
     total_km = cum / 1000.0
-    if not (41.5 <= total_km <= 43.5):
+    if not (41.5 <= total_km <= 43.6):
         raise ValueError(
-            f"total route length {total_km:.3f} km is outside [41.5, 43.5] km"
+            f"total route length {total_km:.3f} km is outside [41.5, 43.6] km"
         )
     if not (42.0 <= total_km <= 42.4):
         print(
@@ -355,9 +368,9 @@ def build_profile(points: list[tuple[float, float]]) -> list[list[float]]:
             f"profile has only {len(profile)} points (need >= 100)"
         )
     total_km = profile[-1][0]
-    if not (41.5 <= total_km <= 43.5):
+    if not (41.5 <= total_km <= 43.6):
         raise ValueError(
-            f"profile length {total_km:.3f} km is outside [41.5, 43.5] km"
+            f"profile length {total_km:.3f} km is outside [41.5, 43.6] km"
         )
     return profile
 

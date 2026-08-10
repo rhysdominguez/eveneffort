@@ -50,13 +50,19 @@ describe("course profile integrity", () => {
       const lastKm = profile[profile.length - 1][0];
       expect(lastKm).toBeGreaterThanOrEqual(41.5);
       // Matches scripts/gpx_parser/parse_gpx.py's ceiling — see the comment
-      // there for why it is 43.5 and not 42.4 or 43.0. A digitized or
+      // there for why it is 43.6 and not 42.4, 43.0 or 43.5. A digitized or
       // GPS-built course line runs long against the officially certified
       // shortest-possible-route distance; several real marathons (Cleveland,
       // Cork City, Copenhagen among them) measure past 43.0 for that reason
-      // alone, and 43.5 sits at the real gap before the next failure mode
-      // (a wrong-distance event, not a long marathon) starts at 48.7 km.
-      expect(lastKm).toBeLessThanOrEqual(43.5);
+      // alone. 43.6 sits at a real gap: the last course under it is Palma at
+      // 43.521, and the next rejection is 2.2 km further out at 45.690, past
+      // which the failures are a different mode entirely (trail ultras and
+      // wrong events, not a long marathon).
+      //
+      // This number and the parser's must move together or the two disagree
+      // about what a marathon is — the parser would write geometry this test
+      // then fails on, breaking CI with no bad data actually involved.
+      expect(lastKm).toBeLessThanOrEqual(43.6);
     });
   });
 });

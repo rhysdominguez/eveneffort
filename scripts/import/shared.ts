@@ -336,6 +336,7 @@ export const COUNTRY_NAMES: Record<string, string> = {
   PY: "Paraguay",
   RO: "Romania",
   RS: "Serbia",
+  SA: "Saudi Arabia",
   SE: "Sweden",
   SG: "Singapore",
   SI: "Slovenia",
@@ -412,6 +413,7 @@ const ZONE_BY_COUNTRY: Record<string, string> = {
   PT: "Europe/Lisbon", // Azores/Madeira differ
   RO: "Europe/Bucharest",
   RS: "Europe/Belgrade",
+  SA: "Asia/Riyadh",
   SE: "Europe/Stockholm",
   SG: "Asia/Singapore",
   SI: "Europe/Ljubljana",
