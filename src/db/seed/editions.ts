@@ -1706,6 +1706,110 @@ export const RECURRENCE: Record<string, RecurrenceRule> = {
     nth: 2,
     note: "Derived from the 2025-03-09 edition; not verified against the organizer",
   },
+  // Imported from goandrace.com — batch 2026-08-10. Each rule is derived
+  // from one observed date, not from the organizer's own statement.
+  "ehime-marathon": {
+    month: 2,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2025-02-09 edition; not verified against the organizer",
+  },
+  "eva-air-brisbane-marathon": {
+    month: 5,
+    weekday: 6,
+    nth: -1,
+    note: "Derived from the 2025-05-31 edition; not verified against the organizer",
+  },
+  "finlandia-marathon": {
+    month: 9,
+    weekday: 5,
+    nth: 1,
+    note: "Derived from the 2025-09-05 edition; not verified against the organizer",
+  },
+  "glendalough-lap-of-the-gap-marathon": {
+    month: 5,
+    weekday: 6,
+    nth: 4,
+    note: "Derived from the 2025-05-24 edition; not verified against the organizer",
+  },
+  "gyeongju-marathon": {
+    month: 10,
+    weekday: 6,
+    nth: 3,
+    note: "Derived from the 2025-10-18 edition; not verified against the organizer",
+  },
+  "heuvelland-marathon": {
+    month: 3,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2025-03-16 edition; not verified against the organizer",
+  },
+  "ing-night-marathon-luxembourg": {
+    month: 5,
+    weekday: 6,
+    nth: -1,
+    note: "Derived from the 2025-05-31 edition; not verified against the organizer",
+  },
+  "koenig-ludwig-marathon": {
+    month: 7,
+    weekday: 6,
+    nth: -1,
+    note: "Derived from the 2025-07-26 edition; not verified against the organizer",
+  },
+  "kitakyushu-marathon": {
+    month: 2,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2025-02-16 edition; not verified against the organizer",
+  },
+  "kyoto-marathon": {
+    month: 2,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2025-02-16 edition; not verified against the organizer",
+  },
+  "la-valette-marathon": {
+    month: 3,
+    weekday: 0,
+    nth: 4,
+    note: "Derived from the 2025-03-23 edition; not verified against the organizer",
+  },
+  "langdale-marathon": {
+    month: 9,
+    weekday: 6,
+    nth: 2,
+    note: "Derived from the 2025-09-13 edition; not verified against the organizer",
+  },
+  "logicom-cyprus-marathon": {
+    month: 3,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2025-03-09 edition; not verified against the organizer",
+  },
+  "malta-marathon": {
+    month: 2,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2025-02-23 edition; not verified against the organizer",
+  },
+  "marathon-des-grands-crus": {
+    month: 10,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2025-10-12 edition; not verified against the organizer",
+  },
+  "castello-marathon": {
+    month: 2,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2025-02-16 edition; not verified against the organizer",
+  },
+  "maraton-lala": {
+    month: 3,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the 2025-03-02 edition; not verified against the organizer",
+  },
 };
 
 export interface ConfirmedEdition {
@@ -2062,6 +2166,25 @@ export const CONFIRMED_EDITIONS: ConfirmedEdition[] = [
   { seriesSlug: "daegu-marathon", year: 2025, raceDate: "2025-02-23" },
   { seriesSlug: "danang-international-marathon", year: 2025, raceDate: "2025-03-23" },
   { seriesSlug: "edenvale-marathon", year: 2025, raceDate: "2025-03-09" },
+  // Imported from goandrace.com — batch 2026-08-10. Dates as published by
+  // the event listing; startTimeLocal is deliberately left unset.
+  { seriesSlug: "ehime-marathon", year: 2025, raceDate: "2025-02-09" },
+  { seriesSlug: "eva-air-brisbane-marathon", year: 2025, raceDate: "2025-05-31" },
+  { seriesSlug: "finlandia-marathon", year: 2025, raceDate: "2025-09-05" },
+  { seriesSlug: "glendalough-lap-of-the-gap-marathon", year: 2025, raceDate: "2025-05-24" },
+  { seriesSlug: "gyeongju-marathon", year: 2025, raceDate: "2025-10-18" },
+  { seriesSlug: "heuvelland-marathon", year: 2025, raceDate: "2025-03-16" },
+  { seriesSlug: "ing-night-marathon-luxembourg", year: 2025, raceDate: "2025-05-31" },
+  { seriesSlug: "koenig-ludwig-marathon", year: 2025, raceDate: "2025-07-26" },
+  { seriesSlug: "kitakyushu-marathon", year: 2025, raceDate: "2025-02-16" },
+  { seriesSlug: "kyoto-marathon", year: 2025, raceDate: "2025-02-16" },
+  { seriesSlug: "la-valette-marathon", year: 2025, raceDate: "2025-03-23" },
+  { seriesSlug: "langdale-marathon", year: 2025, raceDate: "2025-09-13" },
+  { seriesSlug: "logicom-cyprus-marathon", year: 2025, raceDate: "2025-03-09" },
+  { seriesSlug: "malta-marathon", year: 2025, raceDate: "2025-02-23" },
+  { seriesSlug: "marathon-des-grands-crus", year: 2025, raceDate: "2025-10-12" },
+  { seriesSlug: "castello-marathon", year: 2025, raceDate: "2025-02-16" },
+  { seriesSlug: "maraton-lala", year: 2025, raceDate: "2025-03-02" },
 ];
 
 /**

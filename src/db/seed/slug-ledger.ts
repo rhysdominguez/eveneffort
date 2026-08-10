@@ -314,6 +314,24 @@ export const PUBLISHED_COURSE_SLUGS: string[] = [
   "daegu-marathon",
   "danang-international-marathon",
   "edenvale-marathon",
+  // Batch 2026-08-10, imported from goandrace.com on 2026-08-10.
+  "ehime-marathon",
+  "eva-air-brisbane-marathon",
+  "finlandia-marathon",
+  "glendalough-lap-of-the-gap-marathon",
+  "gyeongju-marathon",
+  "heuvelland-marathon",
+  "ing-night-marathon-luxembourg",
+  "koenig-ludwig-marathon",
+  "kitakyushu-marathon",
+  "kyoto-marathon",
+  "la-valette-marathon",
+  "langdale-marathon",
+  "logicom-cyprus-marathon",
+  "malta-marathon",
+  "marathon-des-grands-crus",
+  "castello-marathon",
+  "maraton-lala",
 ];
 
 /** The shape every course slug must take: lowercase, digits, single hyphens. */
