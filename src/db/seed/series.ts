@@ -2994,4 +2994,25 @@ export const SERIES_SEED: SeriesSeed[] = [
     websiteUrl: "https://www.palmademallorcamarathon.com/",
     organizer: "Kumulus Active World 2012 S.L.",
   },
+  // Imported from goandrace.com — batch 2026-08-10.
+  {
+    slug: "split-marathon",
+    name: "Split Marathon",
+    citySlug: "split-hr",
+    courseSlug: "split-marathon",
+    isMajor: false,
+    typicalMonth: 2,
+    websiteUrl: "https://www.splitmarathon.com",
+    organizer: "",
+  },
+  {
+    slug: "taipei-marathon",
+    name: "Taipei Marathon",
+    citySlug: "taipei-tw",
+    courseSlug: "taipei-marathon",
+    isMajor: false,
+    typicalMonth: 12,
+    websiteUrl: "https://www.taipeicitymarathon.com",
+    organizer: "Taipei City Government / Chinese Taipei Athletics Association",
+  },
 ];

@@ -340,6 +340,9 @@ export const PUBLISHED_COURSE_SLUGS: string[] = [
   // Batch 2026-08-10, imported from goandrace.com on 2026-08-10.
   "riyadh-marathon",
   "palma-marathon",
+  // Batch 2026-08-10, imported from goandrace.com on 2026-08-10.
+  "split-marathon",
+  "taipei-marathon",
 ];
 
 /** The shape every course slug must take: lowercase, digits, single hyphens. */

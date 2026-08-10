@@ -1850,6 +1850,20 @@ export const RECURRENCE: Record<string, RecurrenceRule> = {
     nth: 3,
     note: "Derived from the 2025-10-19 edition; not verified against the organizer",
   },
+  // Imported from goandrace.com — batch 2026-08-10. Each rule is derived
+  // from one observed date, not from the organizer's own statement.
+  "split-marathon": {
+    month: 2,
+    weekday: 0,
+    nth: 3,
+    note: "Mid-February Sunday. 2026 ran 15 Feb (3rd Sun), 2027 confirmed 14 Feb (2nd Sun) — nth is not stable year to year",
+  },
+  "taipei-marathon": {
+    month: 12,
+    weekday: 0,
+    nth: 3,
+    note: "Third Sunday of December, per the organizer; 2026 confirmed 20 Dec",
+  },
 };
 
 export interface ConfirmedEdition {
@@ -2235,6 +2249,10 @@ export const CONFIRMED_EDITIONS: ConfirmedEdition[] = [
   // the event listing; startTimeLocal is deliberately left unset.
   { seriesSlug: "riyadh-marathon", year: 2025, raceDate: "2025-02-08" },
   { seriesSlug: "palma-marathon", year: 2025, raceDate: "2025-10-19" },
+  // Imported from goandrace.com — batch 2026-08-10. Dates as published by
+  // the event listing; startTimeLocal is deliberately left unset.
+  { seriesSlug: "split-marathon", year: 2027, raceDate: "2027-02-14", startTimeLocal: "09:00" },
+  { seriesSlug: "taipei-marathon", year: 2026, raceDate: "2026-12-20" },
 ];
 
 /**

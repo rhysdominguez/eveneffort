@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-10T01:39:18.673Z",
+  "updatedAt": "2026-08-10T02:01:13.455Z",
   "courses": [
     {
       "courseSlug": "2-bologna-marathon",
@@ -12744,6 +12744,57 @@
       }
     },
     {
+      "courseSlug": "palma-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 43.521 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/tui-palma-marathon-mallorca-2025.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2025/10/19/gpx_20251019_id10596_race1_20251009125458.gpx?t=1786291615",
+        "gpxSha256": "76b4cffeb75b3bcc4a9f0c657717eaf2d4471c8e852d2b83a319fbfeeb12d842"
+      },
+      "stats": {
+        "totalKm": 43.521266768959315,
+        "gainM": 99.69999999999999
+      },
+      "city": {
+        "slug": "palma-es",
+        "name": "Palma",
+        "countryCode": "ES",
+        "countryName": "Spain",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 39.565089,
+        "longitude": 2.64844,
+        "timezone": "Europe/Madrid"
+      },
+      "citySlug": "palma-es",
+      "series": {
+        "slug": "palma-marathon",
+        "name": "Palma de Mallorca Marathon",
+        "citySlug": "palma-es",
+        "courseSlug": "palma-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://www.palmademallorcamarathon.com/",
+        "organizer": "Kumulus Active World 2012 S.L."
+      },
+      "recurrence": {
+        "seriesSlug": "palma-marathon",
+        "month": 10,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2025-10-19 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "palma-marathon",
+        "year": 2025,
+        "raceDate": "2025-10-19"
+      }
+    },
+    {
       "courseSlug": "paris-marathon",
       "verdict": "ready",
       "reasons": [
@@ -14963,24 +15014,55 @@
     },
     {
       "courseSlug": "split-marathon",
-      "verdict": "rejected",
+      "verdict": "ready",
       "reasons": [
-        "fetch: event page links no course map"
+        "measured 42.623 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
       ],
       "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/split-marathon-2025-split.php",
-        "gpxUrl": null,
-        "gpxSha256": null
+        "eventUrl": "https://www.goandrace.com/en/running-events/split-marathon-2024-split.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/02/25/gpx_20240225_id9388_race1_20240206230308.gpx?t=1786327044",
+        "gpxSha256": "650bf1d8ad55009ac91f453e11a43d90000519941ae5afa83a18a5958b93d83a"
       },
       "stats": {
-        "totalKm": null,
-        "gainM": null
+        "totalKm": 42.62291519790935,
+        "gainM": 143.1
       },
-      "city": null,
-      "citySlug": "",
-      "series": null,
-      "recurrence": null,
-      "edition": null
+      "city": {
+        "slug": "split-hr",
+        "name": "Split",
+        "countryCode": "HR",
+        "countryName": "Croatia",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 43.50834,
+        "longitude": 16.43648,
+        "timezone": "Europe/Zagreb"
+      },
+      "citySlug": "split-hr",
+      "series": {
+        "slug": "split-marathon",
+        "name": "Split Marathon",
+        "citySlug": "split-hr",
+        "courseSlug": "split-marathon",
+        "isMajor": false,
+        "typicalMonth": 2,
+        "websiteUrl": "https://www.splitmarathon.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "split-marathon",
+        "month": 2,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Mid-February Sunday. 2026 ran 15 Feb (3rd Sun), 2027 confirmed 14 Feb (2nd Sun) — nth is not stable year to year"
+      },
+      "edition": {
+        "seriesSlug": "split-marathon",
+        "year": 2027,
+        "raceDate": "2027-02-14",
+        "startTimeLocal": "09:00"
+      }
     },
     {
       "courseSlug": "st-george-marathon",
@@ -15425,6 +15507,48 @@
       "series": null,
       "recurrence": null,
       "edition": null
+    },
+    {
+      "courseSlug": "taipei-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.877 km, outside the [42.0, 42.4] band",
+        "city taipei-tw is already seeded (start lines 5.1 km apart); reusing its existing pin, emitting no city row",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/taipei-marathon-2024-taipei.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/12/15/gpx_20241215_id10072_race1_20241117181517.gpx?t=1786327217",
+        "gpxSha256": "03a180a99304409ce2178c6ddfb11b3f86c5267a9bba77974f8fb6fe86104231"
+      },
+      "stats": {
+        "totalKm": 42.87692741501748,
+        "gainM": 70.9
+      },
+      "city": null,
+      "citySlug": "taipei-tw",
+      "series": {
+        "slug": "taipei-marathon",
+        "name": "Taipei Marathon",
+        "citySlug": "taipei-tw",
+        "courseSlug": "taipei-marathon",
+        "isMajor": false,
+        "typicalMonth": 12,
+        "websiteUrl": "https://www.taipeicitymarathon.com",
+        "organizer": "Taipei City Government / Chinese Taipei Athletics Association"
+      },
+      "recurrence": {
+        "seriesSlug": "taipei-marathon",
+        "month": 12,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Third Sunday of December, per the organizer; 2026 confirmed 20 Dec"
+      },
+      "edition": {
+        "seriesSlug": "taipei-marathon",
+        "year": 2026,
+        "raceDate": "2026-12-20"
+      }
     },
     {
       "courseSlug": "tallinn-marathon",
@@ -16137,57 +16261,6 @@
       "series": null,
       "recurrence": null,
       "edition": null
-    },
-    {
-      "courseSlug": "palma-marathon",
-      "verdict": "ready",
-      "reasons": [
-        "measured 43.521 km, outside the [42.0, 42.4] band",
-        "no organizer name published — fill SeriesSeed.organizer by hand"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/tui-palma-marathon-mallorca-2025.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2025/10/19/gpx_20251019_id10596_race1_20251009125458.gpx?t=1786291615",
-        "gpxSha256": "76b4cffeb75b3bcc4a9f0c657717eaf2d4471c8e852d2b83a319fbfeeb12d842"
-      },
-      "stats": {
-        "totalKm": 43.521266768959315,
-        "gainM": 99.69999999999999
-      },
-      "city": {
-        "slug": "palma-es",
-        "name": "Palma",
-        "countryCode": "ES",
-        "countryName": "Spain",
-        "regionCode": null,
-        "regionName": null,
-        "latitude": 39.565089,
-        "longitude": 2.64844,
-        "timezone": "Europe/Madrid"
-      },
-      "citySlug": "palma-es",
-      "series": {
-        "slug": "palma-marathon",
-        "name": "Palma de Mallorca Marathon",
-        "citySlug": "palma-es",
-        "courseSlug": "palma-marathon",
-        "isMajor": false,
-        "typicalMonth": 10,
-        "websiteUrl": "https://www.palmademallorcamarathon.com/",
-        "organizer": "Kumulus Active World 2012 S.L."
-      },
-      "recurrence": {
-        "seriesSlug": "palma-marathon",
-        "month": 10,
-        "weekday": 0,
-        "nth": 3,
-        "note": "Derived from the 2025-10-19 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "palma-marathon",
-        "year": 2025,
-        "raceDate": "2025-10-19"
-      }
     },
     {
       "courseSlug": "turin-marathon",

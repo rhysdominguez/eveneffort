@@ -3218,4 +3218,16 @@ export const CITY_SEED: CitySeed[] = [
     longitude: 2.64844,
     timezone: "Europe/Madrid",
   },
+  // Imported from goandrace.com — batch 2026-08-10.
+  {
+    slug: "split-hr",
+    name: "Split",
+    countryCode: "HR",
+    countryName: "Croatia",
+    regionCode: null,
+    regionName: null,
+    latitude: 43.50834,
+    longitude: 16.43648,
+    timezone: "Europe/Zagreb",
+  },
 ];
