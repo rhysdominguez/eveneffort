@@ -1810,6 +1810,32 @@ export const RECURRENCE: Record<string, RecurrenceRule> = {
     nth: 1,
     note: "Derived from the 2025-03-02 edition; not verified against the organizer",
   },
+  // Imported from goandrace.com — batch 2026-08-10. Each rule is derived
+  // from one observed date, not from the organizer's own statement.
+  "nagano-marathon": {
+    month: 4,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2025-04-20 edition; not verified against the organizer",
+  },
+  "newcastle-marathon": {
+    month: 4,
+    weekday: 5,
+    nth: 3,
+    note: "Derived from the 2025-04-18 edition; not verified against the organizer",
+  },
+  "portofino-marathon": {
+    month: 2,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the 2025-02-02 edition; not verified against the organizer",
+  },
+  "amsterdam-marathon": {
+    month: 10,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2025-10-19 edition; not verified against the organizer",
+  },
 };
 
 export interface ConfirmedEdition {
@@ -2185,6 +2211,12 @@ export const CONFIRMED_EDITIONS: ConfirmedEdition[] = [
   { seriesSlug: "marathon-des-grands-crus", year: 2025, raceDate: "2025-10-12" },
   { seriesSlug: "castello-marathon", year: 2025, raceDate: "2025-02-16" },
   { seriesSlug: "maraton-lala", year: 2025, raceDate: "2025-03-02" },
+  // Imported from goandrace.com — batch 2026-08-10. Dates as published by
+  // the event listing; startTimeLocal is deliberately left unset.
+  { seriesSlug: "nagano-marathon", year: 2025, raceDate: "2025-04-20" },
+  { seriesSlug: "newcastle-marathon", year: 2025, raceDate: "2025-04-18" },
+  { seriesSlug: "portofino-marathon", year: 2025, raceDate: "2025-02-02" },
+  { seriesSlug: "amsterdam-marathon", year: 2025, raceDate: "2025-10-19" },
 ];
 
 /**
