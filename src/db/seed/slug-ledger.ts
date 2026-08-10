@@ -296,6 +296,24 @@ export const PUBLISHED_COURSE_SLUGS: string[] = [
   "marathon-de-montauban",
   "marathon-du-golfe-de-saint-tropez",
   "marathon-zeeuws-vlaanderen",
+  // Batch 2026-08-10, imported from goandrace.com on 2026-08-10.
+  "abingdon-marathon",
+  "adelaide-marathon-festival",
+  "bacolod-city-marathon",
+  "bhutan-international-marathon",
+  "bodh-gaya-marathon",
+  "borneo-international-marathon",
+  "buller-gorge-marathon",
+  "buriram-marathon",
+  "busselton-marathon",
+  "cambridge-boundary-run",
+  "cape-gate-vaal-marathon",
+  "chelmsford-marathon",
+  "china-coast-marathon",
+  "illinois-marathon",
+  "daegu-marathon",
+  "danang-international-marathon",
+  "edenvale-marathon",
 ];
 
 /** The shape every course slug must take: lowercase, digits, single hyphens. */

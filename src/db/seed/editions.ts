@@ -1602,6 +1602,110 @@ export const RECURRENCE: Record<string, RecurrenceRule> = {
     nth: 2,
     note: "Derived from the 2026-04-11 edition; not verified against the organizer",
   },
+  // Imported from goandrace.com — batch 2026-08-10. Each rule is derived
+  // from one observed date, not from the organizer's own statement.
+  "abingdon-marathon": {
+    month: 10,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2025-10-19 edition; not verified against the organizer",
+  },
+  "adelaide-marathon-festival": {
+    month: 5,
+    weekday: 6,
+    nth: 1,
+    note: "Derived from the 2025-05-03 edition; not verified against the organizer",
+  },
+  "bacolod-city-marathon": {
+    month: 6,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2025-06-15 edition; not verified against the organizer",
+  },
+  "bhutan-international-marathon": {
+    month: 3,
+    weekday: 6,
+    nth: 1,
+    note: "Derived from the 2025-03-01 edition; not verified against the organizer",
+  },
+  "bodh-gaya-marathon": {
+    month: 2,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2025-02-16 edition; not verified against the organizer",
+  },
+  "borneo-international-marathon": {
+    month: 5,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2025-05-11 edition; not verified against the organizer",
+  },
+  "buller-gorge-marathon": {
+    month: 2,
+    weekday: 5,
+    nth: 1,
+    note: "Derived from the 2025-02-07 edition; not verified against the organizer",
+  },
+  "buriram-marathon": {
+    month: 1,
+    weekday: 6,
+    nth: -1,
+    note: "Derived from the 2025-01-25 edition; not verified against the organizer",
+  },
+  "busselton-marathon": {
+    month: 2,
+    weekday: 5,
+    nth: 1,
+    note: "Derived from the 2025-02-07 edition; not verified against the organizer",
+  },
+  "cambridge-boundary-run": {
+    month: 3,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2025-03-16 edition; not verified against the organizer",
+  },
+  "cape-gate-vaal-marathon": {
+    month: 2,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2025-02-23 edition; not verified against the organizer",
+  },
+  "chelmsford-marathon": {
+    month: 10,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2025-10-12 edition; not verified against the organizer",
+  },
+  "china-coast-marathon": {
+    month: 1,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2025-01-12 edition; not verified against the organizer",
+  },
+  "illinois-marathon": {
+    month: 4,
+    weekday: 6,
+    nth: -1,
+    note: "Derived from the 2025-04-26 edition; not verified against the organizer",
+  },
+  "daegu-marathon": {
+    month: 2,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2025-02-23 edition; not verified against the organizer",
+  },
+  "danang-international-marathon": {
+    month: 3,
+    weekday: 0,
+    nth: 4,
+    note: "Derived from the 2025-03-23 edition; not verified against the organizer",
+  },
+  "edenvale-marathon": {
+    month: 3,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2025-03-09 edition; not verified against the organizer",
+  },
 };
 
 export interface ConfirmedEdition {
@@ -1939,6 +2043,25 @@ export const CONFIRMED_EDITIONS: ConfirmedEdition[] = [
   { seriesSlug: "marathon-de-montauban", year: 2026, raceDate: "2026-03-29" },
   { seriesSlug: "marathon-du-golfe-de-saint-tropez", year: 2026, raceDate: "2026-03-29" },
   { seriesSlug: "marathon-zeeuws-vlaanderen", year: 2026, raceDate: "2026-04-11" },
+  // Imported from goandrace.com — batch 2026-08-10. Dates as published by
+  // the event listing; startTimeLocal is deliberately left unset.
+  { seriesSlug: "abingdon-marathon", year: 2025, raceDate: "2025-10-19" },
+  { seriesSlug: "adelaide-marathon-festival", year: 2025, raceDate: "2025-05-03" },
+  { seriesSlug: "bacolod-city-marathon", year: 2025, raceDate: "2025-06-15" },
+  { seriesSlug: "bhutan-international-marathon", year: 2025, raceDate: "2025-03-01" },
+  { seriesSlug: "bodh-gaya-marathon", year: 2025, raceDate: "2025-02-16" },
+  { seriesSlug: "borneo-international-marathon", year: 2025, raceDate: "2025-05-11" },
+  { seriesSlug: "buller-gorge-marathon", year: 2025, raceDate: "2025-02-07" },
+  { seriesSlug: "buriram-marathon", year: 2025, raceDate: "2025-01-25" },
+  { seriesSlug: "busselton-marathon", year: 2025, raceDate: "2025-02-07" },
+  { seriesSlug: "cambridge-boundary-run", year: 2025, raceDate: "2025-03-16" },
+  { seriesSlug: "cape-gate-vaal-marathon", year: 2025, raceDate: "2025-02-23" },
+  { seriesSlug: "chelmsford-marathon", year: 2025, raceDate: "2025-10-12" },
+  { seriesSlug: "china-coast-marathon", year: 2025, raceDate: "2025-01-12" },
+  { seriesSlug: "illinois-marathon", year: 2025, raceDate: "2025-04-26" },
+  { seriesSlug: "daegu-marathon", year: 2025, raceDate: "2025-02-23" },
+  { seriesSlug: "danang-international-marathon", year: 2025, raceDate: "2025-03-23" },
+  { seriesSlug: "edenvale-marathon", year: 2025, raceDate: "2025-03-09" },
 ];
 
 /**
