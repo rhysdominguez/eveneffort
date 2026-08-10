@@ -159,16 +159,58 @@ export const MATCH_ALIASES: Record<string, string> = {
   ste: "st",
   "&": "and",
   n: "and",
+
+  // A race's own event name is sometimes published in its local language
+  // even though this repo already seeded the city under its English exonym
+  // (matching the rest of SERIES_SEED — Cologne, not Köln; Munich, not
+  // München). Accent-folding alone doesn't bridge these: "firenze" and
+  // "florence" share zero characters, let alone tokens. "Estra Firenze
+  // Marathon" was about to ship as a second, duplicate series for the
+  // already-seeded Florence Marathon — identical GPS start line — before
+  // this was added. Not exhaustive; add the next one here when it bites.
+  firenze: "florence",
+  roma: "rome",
+  milano: "milan",
+  napoli: "naples",
+  torino: "turin",
+  venezia: "venice",
+  genova: "genoa",
+  koln: "cologne",
+  munchen: "munich",
 };
 
 /** Lowercased, alias-folded, stop-word-stripped identity tokens for a name. */
 export function matchTokens(input: string): Set<string> {
   return new Set(
     input
+      // Strip accents before anything else, the same way slugify() does —
+      // without this, the ASCII-only filter a few lines down treats "ö" and
+      // "ü" as punctuation and cuts the word in half around them: "Köln"
+      // became the tokens "k" and "ln", "Zürich" became "z" and "rich",
+      // neither of which can ever match "Cologne" or "Zurich" (or, for that
+      // matter, match a second scrape of "Köln" whose diacritic arrived via
+      // a different Unicode normalization form). Found comparing "Estra
+      // Firenze Marathon" against the already-seeded "Florence Marathon" —
+      // a same-city, different-language pair the exonym alias below handles,
+      // but only once the accent isn't mangling the tokens in the first place.
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
       .toLowerCase()
       // Drop apostrophes rather than turning them into a word break — "Jill's"
-      // must fold to the same token as a source that writes "Jills".
-      .replace(/['']/g, "")
+      // must fold to the same token as a source that writes "Jills". This was
+      // written as /['']/g, intending a straight quote plus a curly one, but
+      // both characters between the brackets were the same U+0027 — the
+      // typography got lost copying the comment's example into the regex, and
+      // the smart quote goandrace actually publishes ("Grandma's" as
+      // U+2019) was never one of the two. Every mark a name is realistically
+      // apostrophized with is listed explicitly now, not "however many quote
+      // characters happen to be between two brackets."
+      .replace(/['‘’ʼ]/g, "")
+      // A bare distance shorthand attached to a number ("42K", matching this
+      // repo's own "Lake Garda 42K") is the same token as the source that
+      // spells it "42" with no letter — fold before the letters get stripped
+      // by the next line, or "42k" and "42" end up as unrelated tokens.
+      .replace(/\b(\d+)k\b/g, "$1")
       .replace(/[^a-z0-9 ]/g, " ")
       .split(/\s+/)
       // A bare edition year ("Flying Pig Marathon 2026") carries no identity
