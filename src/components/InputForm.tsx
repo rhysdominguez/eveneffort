@@ -10,6 +10,7 @@ import type {
 } from "@/types";
 import { DEFAULT_BODY, DEFAULT_FUELING } from "@/types";
 import { toSeconds } from "@/lib/units/time";
+import { CourseSearch } from "@/components/CourseSearch";
 import { DatePicker } from "@/components/DatePicker";
 import { TimePicker } from "@/components/TimePicker";
 import { WeatherFields } from "@/components/WeatherFields";
@@ -125,12 +126,11 @@ export function InputForm({
   const [raceStartTime, setRaceStartTime] = useState<string>(
     initial?.raceStartTime ?? "",
   );
-  // One disclosure for weather + body metrics — the body feeds the wind drag
-  // model, so the two are one setting, not two. Expanded from the start when
-  // a shared URL already carried either.
-  const [showWeatherWind, setShowWeatherWind] = useState<boolean>(
-    initial?.weather !== undefined || initial?.body !== undefined,
-  );
+  // Weather + body metrics are one section, not two — the body feeds the wind
+  // drag model, so they're a single setting. It's always open: on the
+  // dashboard these are the controls people came to adjust, and hiding them
+  // behind a disclosure only cost a click.
+  //
   // Body metrics are stored canonically (kg / cm); the toggles convert only
   // for display, matching how weather conditions are handled.
   const [massKg, setMassKg] = useState<number | null>(
@@ -142,9 +142,7 @@ export function InputForm({
 
   // Fueling defaults ON for a fresh form — the app has always shown gel cues,
   // and most marathoners fuel. When seeded from a URL, absence of `fueling`
-  // is meaningful (the runner turned it off), so it's honoured. The disclosure
-  // starts closed either way; the collapsed header shows the rate.
-  const [showFueling, setShowFueling] = useState<boolean>(false);
+  // is meaningful (the runner turned it off), so it's honoured.
   const [fuelingEnabled, setFuelingEnabled] = useState<boolean>(
     initial ? initial.fueling !== undefined : true,
   );
@@ -344,33 +342,12 @@ export function InputForm({
         <label htmlFor="course" className={`mb-2 ${eyebrowClass}`}>
           Course
         </label>
-        {/* appearance-none + our own chevron: the native arrow sits hard
-            against the edge and can't be inset with CSS. This also matches
-            the icon position in the date/time pickers. */}
-        <div className="relative">
-          <select
-            id="course"
-            value={courseId}
-            onChange={(e) => selectCourse(e.target.value)}
-            className="w-full appearance-none rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] px-4 py-3 pr-11 text-base focus:border-[var(--color-border-focus)] focus:outline-none transition-colors"
-          >
-            {catalog.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.displayName}
-              </option>
-            ))}
-          </select>
-          <svg
-            viewBox="0 0 20 20"
-            aria-hidden="true"
-            className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-text-tertiary)]"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.75"
-          >
-            <path d="M5 7.5l5 5 5-5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </div>
+        <CourseSearch
+          id="course"
+          catalog={catalog}
+          value={courseId}
+          onSelect={selectCourse}
+        />
       </div>
 
       {/* Stacked full-width: the dashboard sidebar is too narrow to show a
@@ -426,161 +403,114 @@ export function InputForm({
           matters once `live`, so hiding them here leaves the built input
           (weather off, fueling at its default rate) unaffected. */}
       {live && (
-        <div>
-          <button
-            type="button"
-            onClick={() => setShowWeatherWind((s) => !s)}
-            className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-primary)]"
-            aria-expanded={showWeatherWind}
-          >
-            <svg
-              viewBox="0 0 20 20"
-              aria-hidden="true"
-              className={`h-3.5 w-3.5 shrink-0 transition-transform duration-150 ${
-                showWeatherWind ? "rotate-90" : ""
+        <div className="border-t border-[var(--color-border)] pt-6">
+          <h3 className={eyebrowClass}>Weather &amp; Wind</h3>
+          <div className="mt-3 space-y-4">
+            <WeatherFields
+              weather={weather}
+              distanceUnit={unit}
+              tempUnit={tempUnit}
+              onTempUnitChange={setTempUnit}
+              speedUnit={speedUnit}
+              onSpeedUnitChange={setSpeedUnit}
+              hasTiming={Boolean(raceDate && raceStartTime)}
+            />
+            {/* Body metrics feed the wind drag model, so they live in this
+                section rather than a separate "Advanced" disclosure — and they
+                dim with it, since they have no effect when weather is off.
+                The note says why they're asked for: absent it, a pacing tool
+                asking your weight reads as calorie tracking. */}
+            <div
+              className={`space-y-3 border-t border-[var(--color-border)] pt-4 ${
+                weather.enabled ? "" : "opacity-50"
               }`}
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.75"
-              strokeLinecap="round"
-              strokeLinejoin="round"
             >
-              <path d="M7.5 4.5 13 10l-5.5 5.5" />
-            </svg>
-            Weather &amp; Wind
-            {weather.enabled && !showWeatherWind ? " (on)" : ""}
-          </button>
-          {showWeatherWind && (
-            <div className="mt-3 space-y-4">
-              <WeatherFields
-                weather={weather}
-                distanceUnit={unit}
-                tempUnit={tempUnit}
-                onTempUnitChange={setTempUnit}
-                speedUnit={speedUnit}
-                onSpeedUnitChange={setSpeedUnit}
-                hasTiming={Boolean(raceDate && raceStartTime)}
-              />
-              {/* Body metrics feed the wind drag model, so they live in this
-                  section rather than a separate "Advanced" disclosure — and they
-                  dim with it, since they have no effect when weather is off.
-                  The note says why they're asked for: absent it, a pacing tool
-                  asking your weight reads as calorie tracking. */}
-              <div
-                className={`space-y-3 border-t border-[var(--color-border)] pt-4 ${
-                  weather.enabled ? "" : "opacity-50"
-                }`}
-              >
-                <div className="grid grid-cols-2 gap-3">
-                  <NumericField
-                    id="mass"
-                    label="Weight"
-                    labelAction={
-                      <UnitToggle
-                        label="Weight unit"
-                        value={weightUnit}
-                        options={[
-                          ["kg", "kg"],
-                          ["lb", "lb"],
-                        ]}
-                        onChange={setWeightUnit}
-                        disabled={!weather.enabled}
-                      />
-                    }
-                    value={
-                      massKg === null
-                        ? null
-                        : roundForDisplay(massToDisplay(massKg, weightUnit))
-                    }
-                    onCommit={(n) => setMassKg(massFromDisplay(n, weightUnit))}
-                    disabled={!weather.enabled}
-                    placeholder={String(
-                      roundForDisplay(
-                        massToDisplay(DEFAULT_BODY.massKg, weightUnit),
-                      ),
-                    )}
-                    min={0}
-                  />
-                  <HeightField
-                    value={heightCm}
-                    onChange={setHeightCm}
-                    unit={heightUnit}
-                    onUnitChange={setHeightUnit}
-                    disabled={!weather.enabled}
-                  />
-                </div>
-                <p className="text-xs text-[var(--color-text-tertiary)]">
-                  Your weight and height determine how much the wind slows you
-                  down or speeds you up. The lower your body weight, the less
-                  the wind affects your pace.
-                </p>
+              <div className="grid grid-cols-2 gap-3">
+                <NumericField
+                  id="mass"
+                  label="Weight"
+                  labelAction={
+                    <UnitToggle
+                      label="Weight unit"
+                      value={weightUnit}
+                      options={[
+                        ["kg", "kg"],
+                        ["lb", "lb"],
+                      ]}
+                      onChange={setWeightUnit}
+                      disabled={!weather.enabled}
+                    />
+                  }
+                  value={
+                    massKg === null
+                      ? null
+                      : roundForDisplay(massToDisplay(massKg, weightUnit))
+                  }
+                  onCommit={(n) => setMassKg(massFromDisplay(n, weightUnit))}
+                  disabled={!weather.enabled}
+                  placeholder={String(
+                    roundForDisplay(
+                      massToDisplay(DEFAULT_BODY.massKg, weightUnit),
+                    ),
+                  )}
+                  min={0}
+                />
+                <HeightField
+                  value={heightCm}
+                  onChange={setHeightCm}
+                  unit={heightUnit}
+                  onUnitChange={setHeightUnit}
+                  disabled={!weather.enabled}
+                />
               </div>
+              <p className="text-xs text-[var(--color-text-tertiary)]">
+                Your weight and height determine how much the wind slows you
+                down or speeds you up. The lower your body weight, the less the
+                wind affects your pace.
+              </p>
             </div>
-          )}
+          </div>
         </div>
       )}
 
       {live && (
-        <div>
-          <button
-            type="button"
-            onClick={() => setShowFueling((s) => !s)}
-            className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-primary)]"
-            aria-expanded={showFueling}
-          >
-            <svg
-              viewBox="0 0 20 20"
-              aria-hidden="true"
-              className={`h-3.5 w-3.5 shrink-0 transition-transform duration-150 ${
-                showFueling ? "rotate-90" : ""
-              }`}
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.75"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M7.5 4.5 13 10l-5.5 5.5" />
-            </svg>
-            Fueling Strategy
-          </button>
-          {showFueling && (
-            <div className="mt-3 space-y-4">
-              <div className="inline-flex overflow-hidden rounded-lg border border-[var(--color-border)]">
-                {([true, false] as const).map((on) => (
-                  <button
-                    key={String(on)}
-                    type="button"
-                    aria-pressed={fuelingEnabled === on}
-                    onClick={() => setFuelingEnabled(on)}
-                    className={`px-4 py-1.5 text-sm font-medium transition-colors ${
-                      fuelingEnabled === on
-                        ? "bg-[var(--color-red-primary)] text-white"
-                        : "bg-[var(--color-bg-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-elevated)]"
-                    }`}
-                  >
-                    {on ? "On" : "Off"}
-                  </button>
-                ))}
-              </div>
-              <div className={fuelingEnabled ? "" : "opacity-50"}>
-                <RangeField
-                  id="carbs-per-hour"
-                  label="Carbs per hour"
-                  value={carbsPerHour}
-                  min={CARBS_PER_HOUR_MIN}
-                  max={CARBS_PER_HOUR_MAX}
-                  step={CARBS_PER_HOUR_STEP}
-                  onChange={setCarbsPerHour}
-                  disabled={!fuelingEnabled}
-                  valueLabel={`${carbsPerHour} g/hr`}
-                  hint={`About one gel every ${Math.round(
-                    gelIntervalSeconds(carbsPerHour) / 60,
-                  )} min`}
-                />
-              </div>
+        <div className="border-t border-[var(--color-border)] pt-6">
+          <h3 className={eyebrowClass}>Fueling Strategy</h3>
+          <div className="mt-3 space-y-4">
+            <div className="inline-flex overflow-hidden rounded-lg border border-[var(--color-border)]">
+              {([true, false] as const).map((on) => (
+                <button
+                  key={String(on)}
+                  type="button"
+                  aria-pressed={fuelingEnabled === on}
+                  onClick={() => setFuelingEnabled(on)}
+                  className={`px-4 py-1.5 text-sm font-medium transition-colors ${
+                    fuelingEnabled === on
+                      ? "bg-[var(--color-red-primary)] text-white"
+                      : "bg-[var(--color-bg-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-elevated)]"
+                  }`}
+                >
+                  {on ? "On" : "Off"}
+                </button>
+              ))}
             </div>
-          )}
+            <div className={fuelingEnabled ? "" : "opacity-50"}>
+              <RangeField
+                id="carbs-per-hour"
+                label="Carbs per hour"
+                value={carbsPerHour}
+                min={CARBS_PER_HOUR_MIN}
+                max={CARBS_PER_HOUR_MAX}
+                step={CARBS_PER_HOUR_STEP}
+                onChange={setCarbsPerHour}
+                disabled={!fuelingEnabled}
+                valueLabel={`${carbsPerHour} g/hr`}
+                hint={`About one gel every ${Math.round(
+                  gelIntervalSeconds(carbsPerHour) / 60,
+                )} min`}
+              />
+            </div>
+          </div>
         </div>
       )}
 

@@ -1,22 +1,22 @@
 import { describe, it, expect } from "vitest";
-import { render, fireEvent } from "@testing-library/react";
+import { render, fireEvent, within } from "@testing-library/react";
 import { InputForm } from "./InputForm";
 import type { PacingInput } from "@/types";
 import { FIXTURE_CATALOG } from "@/data/courses.fixture";
 
 // Weather/Wind and Fueling are dashboard-only (live mode) — the homepage
-// form is core race setup + Calculate. The disclosure is collapsed by
-// default, and jsdom has no network, so these assertions are structural: one
-// merged section exists, expanding it reveals both weather and body-metric
-// fields together, body metrics are inert (and therefore disabled) while
-// weather is off, and the per-field unit toggles convert what's displayed.
-const openSection = () => {
-  const utils = render(
-    <InputForm catalog={FIXTURE_CATALOG} onChange={() => {}} />,
-  );
-  fireEvent.click(utils.getByText(/Weather & Wind/));
-  return utils;
-};
+// form is core race setup + Calculate. Both are permanently expanded, and
+// jsdom has no network, so these assertions are structural: one merged
+// section exists, showing both weather and body-metric fields together, body
+// metrics are inert (and therefore disabled) while weather is off, and the
+// per-field unit toggles convert what's displayed.
+const openSection = () =>
+  render(<InputForm catalog={FIXTURE_CATALOG} onChange={() => {}} />);
+
+// Both sections are on screen at once now, so "Off" is ambiguous — it's both
+// a weather mode and the fueling switch. Scope to the section under test.
+const section = (container: HTMLElement, heading: RegExp) =>
+  within(within(container).getByText(heading).closest("div")!);
 
 describe("InputForm — Weather & Wind", () => {
   it("renders exactly one merged disclosure, not separate Weather/Advanced sections", () => {
@@ -162,7 +162,7 @@ describe("InputForm — Weather forecast mode is read-only", () => {
       "Add a race date and start time",
     );
 
-    fireEvent.click(getByText("Off"));
+    fireEvent.click(section(container, /Weather & Wind/).getByText("Off"));
     expect(container.textContent).not.toContain("Enter conditions below.");
   });
 });
@@ -255,16 +255,10 @@ describe("InputForm — height in feet and inches", () => {
   });
 });
 
-// Fueling lives in its own disclosure, collapsed by default like Weather &
-// Wind, and is likewise dashboard-only (live mode). Opening only this one
-// keeps the "On"/"Off" buttons unambiguous.
-const openFueling = () => {
-  const utils = render(
-    <InputForm catalog={FIXTURE_CATALOG} onChange={() => {}} />,
-  );
-  fireEvent.click(utils.getByText(/Fueling Strategy/));
-  return utils;
-};
+// Fueling is its own permanently-expanded section, dashboard-only (live
+// mode) like Weather & Wind.
+const openFueling = () =>
+  render(<InputForm catalog={FIXTURE_CATALOG} onChange={() => {}} />);
 
 describe("InputForm — Fueling strategy", () => {
   it("is hidden on the homepage (button mode)", () => {
@@ -274,14 +268,14 @@ describe("InputForm — Fueling strategy", () => {
     expect(container.textContent).not.toContain("Fueling Strategy");
   });
 
-  it("starts collapsed, with no rate shown in the header", () => {
-    const { container } = render(
+  it("is expanded from the start, with no disclosure to click", () => {
+    const { container, getByText } = render(
       <InputForm catalog={FIXTURE_CATALOG} onChange={() => {}} />,
     );
-    expect(container.textContent).toContain("Fueling Strategy");
-    expect(container.textContent).not.toContain("g/hr)");
-    // Collapsed ⇒ the slider itself isn't mounted yet.
-    expect(container.querySelector("#carbs-per-hour")).toBeNull();
+    expect(container.querySelector("#carbs-per-hour")).not.toBeNull();
+    // Both headings are plain labels now, not disclosure toggles.
+    expect(getByText(/Fueling Strategy/).closest("button")).toBeNull();
+    expect(getByText(/Weather & Wind/).closest("button")).toBeNull();
   });
 
   it("exposes a 30–100 slider in steps of 5", () => {
@@ -309,22 +303,21 @@ describe("InputForm — Fueling strategy", () => {
   });
 
   it("disables the slider when fueling is switched off", () => {
-    const { getByLabelText, getByText } = openFueling();
+    const { getByLabelText, container } = openFueling();
     const slider = getByLabelText("Carbs per hour") as HTMLInputElement;
     expect(slider.disabled).toBe(false);
-    fireEvent.click(getByText("Off"));
+    fireEvent.click(section(container, /Fueling Strategy/).getByText("Off"));
     expect(slider.disabled).toBe(true);
   });
 
   it("emits fueling by default and drops it once switched off", () => {
     const seen: PacingInput[] = [];
-    const { getByText } = render(
+    const { container } = render(
       <InputForm catalog={FIXTURE_CATALOG} onChange={(i) => seen.push(i)} />,
     );
     expect(seen.at(-1)?.fueling).toEqual({ carbsPerHour: 60 });
 
-    fireEvent.click(getByText(/Fueling Strategy/));
-    fireEvent.click(getByText("Off"));
+    fireEvent.click(section(container, /Fueling Strategy/).getByText("Off"));
     expect(seen.at(-1)?.fueling).toBeUndefined();
   });
 });
@@ -333,6 +326,15 @@ describe("InputForm — Fueling strategy", () => {
 // race can fill in its date. The rule that matters is that it never clobbers a
 // date the runner chose themselves.
 describe("InputForm — race date prefill from the next edition", () => {
+  // The course picker is a search combobox now, so a change is typed and
+  // confirmed rather than set as a `<select>` value.
+  const pickCourse = (container: HTMLElement, displayName: string) => {
+    const input = container.querySelector("#course") as HTMLInputElement;
+    fireEvent.focus(input);
+    fireEvent.change(input, { target: { value: displayName } });
+    fireEvent.keyDown(input, { key: "Enter" });
+  };
+
   const withDates = FIXTURE_CATALOG.map((c, i) => ({
     ...c,
     nextRaceDateISO: `2026-0${i + 1}-11`,
@@ -349,9 +351,7 @@ describe("InputForm — race date prefill from the next edition", () => {
     const { container } = render(
       <InputForm catalog={withDates} onChange={(i) => seen.push(i)} />,
     );
-    fireEvent.change(container.querySelector("#course")!, {
-      target: { value: withDates[2].id },
-    });
+    pickCourse(container, withDates[2].displayName);
     expect(seen.at(-1)?.courseId).toBe(withDates[2].id);
     expect(seen.at(-1)?.raceDateISO).toBe(withDates[2].nextRaceDateISO);
   });
@@ -374,9 +374,7 @@ describe("InputForm — race date prefill from the next edition", () => {
     expect(seen.at(-1)?.raceDateISO).toBe("2026-12-25");
 
     // Still the runner's date after switching course — their choice wins.
-    fireEvent.change(container.querySelector("#course")!, {
-      target: { value: withDates[3].id },
-    });
+    pickCourse(container, withDates[3].displayName);
     expect(seen.at(-1)?.raceDateISO).toBe("2026-12-25");
   });
 
