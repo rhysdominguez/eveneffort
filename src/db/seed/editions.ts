@@ -1884,6 +1884,92 @@ export const RECURRENCE: Record<string, RecurrenceRule> = {
     nth: 3,
     note: "Derived from the 2024-02-18 edition; not verified against the organizer",
   },
+  // Imported from goandrace.com — batch 2026-08-11. Each rule is derived
+  // from one observed date, not from the organizer's own statement.
+  "treviso-marathon": {
+    month: 3,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2022-03-27 edition; not verified against the organizer",
+  },
+  "padova-marathon": {
+    month: 4,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2024-04-21 edition; not verified against the organizer",
+  },
+  "reggio-emilia-marathon": {
+    month: 12,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2023-12-10 edition; not verified against the organizer",
+  },
+  "catania-marathon": {
+    month: 12,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2021-12-12 edition; not verified against the organizer",
+  },
+  "belgrade-marathon": {
+    month: 4,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2024-04-28 edition; not verified against the organizer",
+  },
+  "medoc-marathon": {
+    month: 9,
+    weekday: 6,
+    nth: 1,
+    note: "Derived from the 2024-09-07 edition; not verified against the organizer",
+  },
+  "grecia-salentina-marathon": {
+    month: 10,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2023-10-29 edition; not verified against the organizer",
+  },
+  "mugello-marathon": {
+    month: 10,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the 2023-10-01 edition; not verified against the organizer",
+  },
+  "salzkammergut-marathon": {
+    month: 10,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2023-10-15 edition; not verified against the organizer",
+  },
+  "parma-marathon": {
+    month: 10,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2023-10-15 edition; not verified against the organizer",
+  },
+  "elba-marathon": {
+    month: 5,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the 2024-05-05 edition; not verified against the organizer",
+  },
+  "aabenraa-mountain-marathon": {
+    month: 6,
+    weekday: 6,
+    nth: 4,
+    note: "Derived from the 2024-06-22 edition; not verified against the organizer",
+  },
+  "beirut-marathon": {
+    month: 11,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2022-11-13 edition; not verified against the organizer",
+  },
+  "blackpool-festival-of-running": {
+    month: 4,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2024-04-21 edition; not verified against the organizer",
+  },
 };
 
 export interface ConfirmedEdition {
@@ -2281,6 +2367,25 @@ export const CONFIRMED_EDITIONS: ConfirmedEdition[] = [
   { seriesSlug: "prosecco-marathon", year: 2026, raceDate: "2026-12-06" },
   { seriesSlug: "eker-i-run-marathon", year: 2026, raceDate: "2026-10-04" },
   { seriesSlug: "maratona-di-san-valentino", year: 2027, raceDate: "2027-02-21" },
+  // Imported from goandrace.com — batch 2026-08-11. Dates as published by
+  // the event listing, or verified against the organizer during review.
+  // startTimeLocal appears only where a real one was read off the
+  // organizer's page — never guessed, since a wrong hour silently keys
+  // the weather forecast to it.
+  { seriesSlug: "treviso-marathon", year: 2022, raceDate: "2022-03-27" },
+  { seriesSlug: "padova-marathon", year: 2024, raceDate: "2024-04-21" },
+  { seriesSlug: "reggio-emilia-marathon", year: 2023, raceDate: "2023-12-10" },
+  { seriesSlug: "catania-marathon", year: 2021, raceDate: "2021-12-12" },
+  { seriesSlug: "belgrade-marathon", year: 2024, raceDate: "2024-04-28" },
+  { seriesSlug: "medoc-marathon", year: 2024, raceDate: "2024-09-07" },
+  { seriesSlug: "grecia-salentina-marathon", year: 2023, raceDate: "2023-10-29" },
+  { seriesSlug: "mugello-marathon", year: 2023, raceDate: "2023-10-01" },
+  { seriesSlug: "salzkammergut-marathon", year: 2023, raceDate: "2023-10-15" },
+  { seriesSlug: "parma-marathon", year: 2023, raceDate: "2023-10-15" },
+  { seriesSlug: "elba-marathon", year: 2024, raceDate: "2024-05-05" },
+  { seriesSlug: "aabenraa-mountain-marathon", year: 2024, raceDate: "2024-06-22" },
+  { seriesSlug: "beirut-marathon", year: 2022, raceDate: "2022-11-13" },
+  { seriesSlug: "blackpool-festival-of-running", year: 2024, raceDate: "2024-04-21" },
 ];
 
 /**

@@ -347,6 +347,21 @@ export const PUBLISHED_COURSE_SLUGS: string[] = [
   "prosecco-marathon",
   "eker-i-run-marathon",
   "maratona-di-san-valentino",
+  // Batch 2026-08-11, imported from goandrace.com on 2026-08-11.
+  "treviso-marathon",
+  "padova-marathon",
+  "reggio-emilia-marathon",
+  "catania-marathon",
+  "belgrade-marathon",
+  "medoc-marathon",
+  "grecia-salentina-marathon",
+  "mugello-marathon",
+  "salzkammergut-marathon",
+  "parma-marathon",
+  "elba-marathon",
+  "aabenraa-mountain-marathon",
+  "beirut-marathon",
+  "blackpool-festival-of-running",
 ];
 
 /** The shape every course slug must take: lowercase, digits, single hyphens. */
