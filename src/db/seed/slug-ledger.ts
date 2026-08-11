@@ -343,6 +343,10 @@ export const PUBLISHED_COURSE_SLUGS: string[] = [
   // Batch 2026-08-10, imported from goandrace.com on 2026-08-10.
   "split-marathon",
   "taipei-marathon",
+  // Batch 2026-08-11, imported from goandrace.com on 2026-08-11.
+  "prosecco-marathon",
+  "eker-i-run-marathon",
+  "maratona-di-san-valentino",
 ];
 
 /** The shape every course slug must take: lowercase, digits, single hyphens. */

@@ -1,6 +1,257 @@
 {
-  "updatedAt": "2026-08-10T02:01:13.455Z",
+  "updatedAt": "2026-08-11T00:27:16.163Z",
   "courses": [
+    {
+      "courseSlug": "prosecco-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/1-prosecco-marathon-2023-vidor.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2023/12/03/gpx_20231203_id8242_race1_20231115223735.gpx?t=1786407896",
+        "gpxSha256": "a3fdbe365ac601ea368883893f60e47bf248fee8d81aefb634f8134bef99a203"
+      },
+      "stats": {
+        "totalKm": 42.13738808752126,
+        "gainM": 287
+      },
+      "city": {
+        "slug": "vidor-it",
+        "name": "Vidor",
+        "countryCode": "IT",
+        "countryName": "Italy",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 45.862697,
+        "longitude": 12.05188,
+        "timezone": "Europe/Rome"
+      },
+      "citySlug": "vidor-it",
+      "series": {
+        "slug": "prosecco-marathon",
+        "name": "Prosecco Marathon",
+        "citySlug": "vidor-it",
+        "courseSlug": "prosecco-marathon",
+        "isMajor": false,
+        "typicalMonth": 12,
+        "websiteUrl": "https://www.prosecco.run",
+        "organizer": "GT Sport Srl"
+      },
+      "recurrence": {
+        "seriesSlug": "prosecco-marathon",
+        "month": 12,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the 2023-12-03 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "prosecco-marathon",
+        "year": 2026,
+        "raceDate": "2026-12-06"
+      }
+    },
+    {
+      "courseSlug": "11-maratona-di-crevalcore-7-maratonina",
+      "verdict": "rejected",
+      "reasons": [
+        "UISP posted an ANNULLATA (cancelled) notice for this race; multiple sources say the 2024 edition was the last. No 2025 or 2026 edition found — discontinued, not seeded."
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/11-maratona-di-crevalcore-7-maratonina-2023.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2023/04/16/gpx_20230416_id7716_race1_20221104232019.gpx?t=1786407921",
+        "gpxSha256": "4564cda85baf232a4d89e9808eb0d66c0f4ca797519529e07d04cd21e054ab3f"
+      },
+      "stats": {
+        "totalKm": 41.570956070835436,
+        "gainM": 19.39999999999999
+      },
+      "city": {
+        "slug": "crevalcore-it",
+        "name": "Crevalcore",
+        "countryCode": "IT",
+        "countryName": "Italy",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 44.714119,
+        "longitude": 11.152781,
+        "timezone": "Europe/Rome"
+      },
+      "citySlug": "crevalcore-it",
+      "series": {
+        "slug": "11-maratona-di-crevalcore-7-maratonina",
+        "name": "11° Maratona di Crevalcore - 7° Maratonina",
+        "citySlug": "crevalcore-it",
+        "courseSlug": "11-maratona-di-crevalcore-7-maratonina",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "http://www.maratonadicrevalcore.com/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "11-maratona-di-crevalcore-7-maratonina",
+        "month": 4,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2023-04-16 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "11-maratona-di-crevalcore-7-maratonina",
+        "year": 2023,
+        "raceDate": "2023-04-16"
+      }
+    },
+    {
+      "courseSlug": "eker-i-run-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 43.144 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/11th-eker-i-run-marathon-15k-2024-bursa.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/10/06/gpx_20241006_id9416_race1_20240818122525.gpx?t=1786407935",
+        "gpxSha256": "d9b35006ef213cde1fb3f721796a21152ed7d63bce5a3e546e91932dd0c2a2f7"
+      },
+      "stats": {
+        "totalKm": 43.1438209090642,
+        "gainM": 182.09999999999982
+      },
+      "city": {
+        "slug": "bursa-tr",
+        "name": "Bursa",
+        "countryCode": "TR",
+        "countryName": "Turkey",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 40.10911,
+        "longitude": 29.1422,
+        "timezone": "Europe/Istanbul"
+      },
+      "citySlug": "bursa-tr",
+      "series": {
+        "slug": "eker-i-run-marathon",
+        "name": "Eker'i Run Marathon",
+        "citySlug": "bursa-tr",
+        "courseSlug": "eker-i-run-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://www.ekerkosu.com/en/index",
+        "organizer": "Adım Adım"
+      },
+      "recurrence": {
+        "seriesSlug": "eker-i-run-marathon",
+        "month": 10,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the 2024-10-06 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "eker-i-run-marathon",
+        "year": 2026,
+        "raceDate": "2026-10-04"
+      }
+    },
+    {
+      "courseSlug": "maratona-di-san-valentino",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/13-maratona-di-san-valentino-2024-terni.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/02/18/gpx_20240218_id8415_race1_20240119230802.gpx?t=1786407963",
+        "gpxSha256": "6cf3121acea82143a56429c668d5c040dd30940296befc9a95b5b16b3960b533"
+      },
+      "stats": {
+        "totalKm": 42.31491700529504,
+        "gainM": 181.29999999999995
+      },
+      "city": {
+        "slug": "terni-it",
+        "name": "Terni",
+        "countryCode": "IT",
+        "countryName": "Italy",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 42.558446,
+        "longitude": 12.645776,
+        "timezone": "Europe/Rome"
+      },
+      "citySlug": "terni-it",
+      "series": {
+        "slug": "maratona-di-san-valentino",
+        "name": "Maratona di San Valentino",
+        "citySlug": "terni-it",
+        "courseSlug": "maratona-di-san-valentino",
+        "isMajor": false,
+        "typicalMonth": 2,
+        "websiteUrl": "https://amatoripodisticaterni.it",
+        "organizer": "Amatori Podistica Terni"
+      },
+      "recurrence": {
+        "seriesSlug": "maratona-di-san-valentino",
+        "month": 2,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2024-02-18 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "maratona-di-san-valentino",
+        "year": 2027,
+        "raceDate": "2027-02-21"
+      }
+    },
+    {
+      "courseSlug": "13-messina-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "The full 42km distance has been suspended since ~2025 in favor of a half-marathon (Eufemio da Messina, 21km) and a 10K (Shakespeare Run). Organizers state an intention to restore the full marathon in 2027, but no confirmed date or registration exists yet — not seeded until it actually runs again."
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/13-messina-marathon-2023.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2023/01/08/gpx_20230108_id7736_race1_20221105222225.gpx?t=1786407969",
+        "gpxSha256": "be5c4d3baac15864a49137a153040c76823ea40f0894dfab25940abf29649ecf"
+      },
+      "stats": {
+        "totalKm": 43.38291834985424,
+        "gainM": 140.4
+      },
+      "city": {
+        "slug": "messina-it",
+        "name": "Messina",
+        "countryCode": "IT",
+        "countryName": "Italy",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 38.193794,
+        "longitude": 15.556834,
+        "timezone": "Europe/Rome"
+      },
+      "citySlug": "messina-it",
+      "series": {
+        "slug": "13-messina-marathon",
+        "name": "13° Messina Marathon",
+        "citySlug": "messina-it",
+        "courseSlug": "13-messina-marathon",
+        "isMajor": false,
+        "typicalMonth": 1,
+        "websiteUrl": "http://www.messinamarathon.com/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "13-messina-marathon",
+        "month": 1,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2023-01-08 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "13-messina-marathon",
+        "year": 2023,
+        "raceDate": "2023-01-08"
+      }
+    },
     {
       "courseSlug": "2-bologna-marathon",
       "verdict": "rejected",
@@ -10170,27 +10421,6 @@
       ],
       "source": {
         "eventUrl": "https://www.goandrace.com/en/running-events/2026/10/maratona-di-napoli-2026.php",
-        "gpxUrl": null,
-        "gpxSha256": null
-      },
-      "stats": {
-        "totalKm": null,
-        "gainM": null
-      },
-      "city": null,
-      "citySlug": "",
-      "series": null,
-      "recurrence": null,
-      "edition": null
-    },
-    {
-      "courseSlug": "maratona-di-san-valentino",
-      "verdict": "rejected",
-      "reasons": [
-        "fetch: proposed slug \"maratona-di-san-valentino\" already has a GPX in data/gpx_sources"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/maratona-di-san-valentino-2025-terni.php",
         "gpxUrl": null,
         "gpxSha256": null
       },

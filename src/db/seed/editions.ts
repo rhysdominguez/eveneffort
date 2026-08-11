@@ -1864,6 +1864,26 @@ export const RECURRENCE: Record<string, RecurrenceRule> = {
     nth: 3,
     note: "Third Sunday of December, per the organizer; 2026 confirmed 20 Dec",
   },
+  // Imported from goandrace.com — batch 2026-08-11. Each rule is derived
+  // from one observed date, not from the organizer's own statement.
+  "prosecco-marathon": {
+    month: 12,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the 2023-12-03 edition; not verified against the organizer",
+  },
+  "eker-i-run-marathon": {
+    month: 10,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the 2024-10-06 edition; not verified against the organizer",
+  },
+  "maratona-di-san-valentino": {
+    month: 2,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2024-02-18 edition; not verified against the organizer",
+  },
 };
 
 export interface ConfirmedEdition {
@@ -2253,6 +2273,14 @@ export const CONFIRMED_EDITIONS: ConfirmedEdition[] = [
   // the event listing; startTimeLocal is deliberately left unset.
   { seriesSlug: "split-marathon", year: 2027, raceDate: "2027-02-14", startTimeLocal: "09:00" },
   { seriesSlug: "taipei-marathon", year: 2026, raceDate: "2026-12-20" },
+  // Imported from goandrace.com — batch 2026-08-11. Dates as published by
+  // the event listing, or verified against the organizer during review.
+  // startTimeLocal appears only where a real one was read off the
+  // organizer's page — never guessed, since a wrong hour silently keys
+  // the weather forecast to it.
+  { seriesSlug: "prosecco-marathon", year: 2026, raceDate: "2026-12-06" },
+  { seriesSlug: "eker-i-run-marathon", year: 2026, raceDate: "2026-10-04" },
+  { seriesSlug: "maratona-di-san-valentino", year: 2027, raceDate: "2027-02-21" },
 ];
 
 /**
