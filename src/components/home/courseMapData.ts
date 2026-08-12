@@ -13,13 +13,27 @@ export type LngLat = [number, number];
 /** `[[west, south], [east, north]]` — MapLibre's `LngLatBoundsLike` tuple form. */
 export type Bounds = [LngLat, LngLat];
 
-export interface CoursePinProperties {
+/** One race listed inside a pin's popup. */
+export interface PinRace {
   id: string;
   displayName: string;
-  city: string;
-  countryName: string;
   /** `YYYY-MM-DD` for the next scheduled edition, or null when none is booked. */
   nextRaceDateISO: string | null;
+}
+
+export interface CoursePinProperties {
+  /** The start line this pin sits on, as `"lon,lat"` — its stable identity. */
+  startKey: string;
+  city: string;
+  countryName: string;
+  /**
+   * JSON-encoded `PinRace[]`, never the array itself. Feature properties make
+   * a round trip through MapLibre before a click handler reads them back, and
+   * only primitives survive that intact — a nested array comes back already
+   * stringified. Encoding it here makes the shape the same on both sides
+   * instead of something that only misbehaves in the browser.
+   */
+  races: string;
 }
 
 export interface CoursePinFeature {
@@ -34,17 +48,38 @@ export interface CoursePinCollection {
 }
 
 const isPlottable = (c: CourseSummary): boolean =>
-  Number.isFinite(c.cityLat) &&
-  Number.isFinite(c.cityLon) &&
-  Math.abs(c.cityLat) <= 90 &&
-  Math.abs(c.cityLon) <= 180;
+  Number.isFinite(c.start.lat) &&
+  Number.isFinite(c.start.lon) &&
+  Math.abs(c.start.lat) <= 90 &&
+  Math.abs(c.start.lon) <= 180;
 
 /**
- * The catalog as map pins, one per course, at its host city's coordinate.
+ * Groups races that begin at the very same point. Rare now that pins use each
+ * race's own start line, but two races CAN genuinely share a start (a marathon
+ * and a variant setting off together), and coincident features are exactly
+ * what the map cannot render — so they are still merged into one pin.
+ */
+const pinKey = (c: CourseSummary): string => `${c.start.lon},${c.start.lat}`;
+
+/**
+ * The catalog as map pins, each at the race's OWN GPX start line.
  *
- * The city pin is deliberately used rather than `course.start`: two races in
- * one city share a city row (see the data model in CLAUDE.md), so pinning the
- * city is what makes them cluster into a single marker the way they should.
+ * It used to pin the host city instead, on the reasoning that races in one
+ * city should share a marker. That was wrong twice over. A city's coordinate
+ * IS one host race's start line — the first one seeded, and a second race
+ * never repoints it (see the data model in CLAUDE.md) — so in all eight cities
+ * with two races, the first sat at exactly 0 km from the pin and the second
+ * was drawn 2-16 km from where it actually starts (Lisbon Marathon was the
+ * worst, at 16.1 km). And because both then held identical coordinates, they
+ * stacked exactly: MapLibre drew a "2" cluster, clicking it only zoomed, and
+ * coincident points never separate at any zoom — so the second race was
+ * unreachable and only one popup could ever open.
+ *
+ * Starts fix both at once. Every pin is where its race truly begins, and races
+ * in one city sit kilometres apart, so they cluster when zoomed out and pull
+ * cleanly apart when zoomed in. The 292 courses that are the only race in
+ * their city do not move at all: their city coordinate was already their own
+ * start line.
  *
  * Entries whose coordinates are missing or out of range are dropped rather
  * than plotted at null island — a course with bad coordinates should be
@@ -53,26 +88,53 @@ const isPlottable = (c: CourseSummary): boolean =>
 export function coursesToGeoJSON(
   catalog: CourseSummary[],
 ): CoursePinCollection {
+  // Insertion order is catalog order (the query sorts by series name), so the
+  // races inside a shared pin come out in a stable, alphabetical order.
+  const byStart = new Map<string, CourseSummary[]>();
+  for (const c of catalog) {
+    if (!isPlottable(c)) continue;
+    const existing = byStart.get(pinKey(c));
+    if (existing) existing.push(c);
+    else byStart.set(pinKey(c), [c]);
+  }
+
   return {
     type: "FeatureCollection",
-    features: catalog.filter(isPlottable).map((c) => ({
+    features: [...byStart].map(([startKey, races]) => ({
       type: "Feature",
       geometry: {
         type: "Point",
         // Longitude first. GeoJSON and MapLibre both want [lng, lat]; the
         // database and every human-facing label say lat/lon. This is the one
         // place the swap happens.
-        coordinates: [c.cityLon, c.cityLat],
+        coordinates: [races[0].start.lon, races[0].start.lat],
       },
       properties: {
-        id: c.id,
-        displayName: c.displayName,
-        city: c.city,
-        countryName: c.countryName,
-        nextRaceDateISO: c.nextRaceDateISO,
+        startKey,
+        city: races[0].city,
+        countryName: races[0].countryName,
+        races: JSON.stringify(
+          races.map(
+            (c): PinRace => ({
+              id: c.id,
+              displayName: c.displayName,
+              nextRaceDateISO: c.nextRaceDateISO,
+            }),
+          ),
+        ),
       },
     })),
   };
+}
+
+/** The races on a pin, decoded from the property `coursesToGeoJSON` encoded. */
+export function pinRaces(props: CoursePinProperties): PinRace[] {
+  try {
+    const parsed: unknown = JSON.parse(props.races);
+    return Array.isArray(parsed) ? (parsed as PinRace[]) : [];
+  } catch {
+    return [];
+  }
 }
 
 /**
@@ -91,10 +153,10 @@ export function boundsOf(catalog: CourseSummary[]): Bounds | null {
   let east = -Infinity;
   let north = -Infinity;
   for (const c of points) {
-    west = Math.min(west, c.cityLon);
-    east = Math.max(east, c.cityLon);
-    south = Math.min(south, c.cityLat);
-    north = Math.max(north, c.cityLat);
+    west = Math.min(west, c.start.lon);
+    east = Math.max(east, c.start.lon);
+    south = Math.min(south, c.start.lat);
+    north = Math.max(north, c.start.lat);
   }
   return [
     [west, south],
@@ -125,6 +187,11 @@ export function haversineKm(
 /**
  * The course closest to a point, with its distance — what "Near me" reports
  * once it has the runner's location. Null when nothing is plottable.
+ *
+ * Measured to the start line, like the pins, and for the same reason: a race
+ * whose city coordinate belongs to a different race in that city could
+ * otherwise be reported at a distance it isn't, and with the displacements
+ * running up to 16 km that is enough to name the wrong nearest race.
  */
 export function nearestCourse(
   catalog: CourseSummary[],
@@ -134,7 +201,7 @@ export function nearestCourse(
   let best: { course: CourseSummary; distanceKm: number } | null = null;
   for (const course of catalog) {
     if (!isPlottable(course)) continue;
-    const distanceKm = haversineKm(lat, lon, course.cityLat, course.cityLon);
+    const distanceKm = haversineKm(lat, lon, course.start.lat, course.start.lon);
     if (best === null || distanceKm < best.distanceKm) {
       best = { course, distanceKm };
     }
@@ -158,9 +225,9 @@ export function pinLocationLabel(
  * `formatDateDisplay` is reused rather than `Intl` so the string is identical
  * in every locale and testable — see the rules atop `src/lib/units/date.ts`.
  */
-export function pinDateLabel(props: CoursePinProperties): string {
-  const formatted = props.nextRaceDateISO
-    ? formatDateDisplay(props.nextRaceDateISO)
+export function pinDateLabel(race: Pick<PinRace, "nextRaceDateISO">): string {
+  const formatted = race.nextRaceDateISO
+    ? formatDateDisplay(race.nextRaceDateISO)
     : "";
   return formatted || "Next date to be confirmed";
 }
@@ -178,6 +245,20 @@ export function escapeHtml(value: string): string {
 /** The attribute the popup's CTA carries; the map reads it via delegation. */
 export const POPUP_COURSE_ATTR = "data-course-id";
 
+/** One race's name, date and CTA — repeated per race on a shared pin. */
+function raceMarkup(race: PinRace): string {
+  const name = escapeHtml(race.displayName);
+  const date = escapeHtml(pinDateLabel(race));
+  const id = escapeHtml(race.id);
+  return [
+    `<div class="course-pin-race">`,
+    `<p class="course-pin-title">${name}</p>`,
+    `<p class="course-pin-meta">${date}</p>`,
+    `<button type="button" ${POPUP_COURSE_ATTR}="${id}" class="course-pin-cta">Build my paceband</button>`,
+    `</div>`,
+  ].join("");
+}
+
 /**
  * The pin popup, as an HTML string.
  *
@@ -186,18 +267,32 @@ export const POPUP_COURSE_ATTR = "data-course-id";
  * asserted. Every interpolated value is escaped: the strings come from the
  * database, and a race called "Rock 'n' Roll" would otherwise break the CTA's
  * attribute quoting.
+ *
+ * A pin is a city, so it can carry more than one race. With one it reads as a
+ * race card — name, place, date. With several the place is stated once at the
+ * top and each race gets its own name, date and CTA below it, because that is
+ * the only way the extra races are reachable at all (see `coursesToGeoJSON`).
  */
 export function popupMarkup(props: CoursePinProperties): string {
-  const title = escapeHtml(props.displayName);
   const place = escapeHtml(pinLocationLabel(props));
-  const date = escapeHtml(pinDateLabel(props));
-  const id = escapeHtml(props.id);
+  const races = pinRaces(props);
+
+  if (races.length === 1) {
+    const race = races[0];
+    return [
+      `<div class="course-pin">`,
+      `<p class="course-pin-title">${escapeHtml(race.displayName)}</p>`,
+      `<p class="course-pin-meta">${place}</p>`,
+      `<p class="course-pin-meta">${escapeHtml(pinDateLabel(race))}</p>`,
+      `<button type="button" ${POPUP_COURSE_ATTR}="${escapeHtml(race.id)}" class="course-pin-cta">Build my paceband</button>`,
+      `</div>`,
+    ].join("");
+  }
+
   return [
     `<div class="course-pin">`,
-    `<p class="course-pin-title">${title}</p>`,
-    `<p class="course-pin-meta">${place}</p>`,
-    `<p class="course-pin-meta">${date}</p>`,
-    `<button type="button" ${POPUP_COURSE_ATTR}="${id}" class="course-pin-cta">Build my paceband</button>`,
+    `<p class="course-pin-place">${place}</p>`,
+    ...races.map(raceMarkup),
     `</div>`,
   ].join("");
 }

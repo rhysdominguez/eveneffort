@@ -95,14 +95,24 @@ export interface CourseSummary {
   regionCode: string | null; // ISO 3166-2
   regionName: string | null;
   /**
-   * The map pin, seeded from a host race's GPX start line for precision.
-   * Every marathon in a city shares this one point, so two races in one
-   * city still render as a single pin. Not necessarily this race's OWN
-   * start line — `start` below is that, and is what the weather forecast
-   * is keyed to.
+   * The host city's shared coordinate. NOT this race's location and NOT the
+   * map pin — use `start` for both.
+   *
+   * It is seeded from *a* host race's GPX start line, whichever was added
+   * first, and a later race in that city never repoints it. So in a city with
+   * two races this is one of them standing in for the other: it put Toronto
+   * Waterfront 11.6 km from its real start and Lisbon Marathon 16.1 km from
+   * its own, stacked on top of the neighbour it was borrowed from. Pinning
+   * with it is what made those races unreachable on the map.
+   *
+   * Read by nothing today. Kept only as the city locator it honestly is.
    */
   cityLat: number;
   cityLon: number;
+  /**
+   * This race's own GPX start line. The map pins here, "Near me" measures
+   * here, and the weather forecast is keyed here.
+   */
   start: { lat: number; lon: number };
   timezone: string;
   /** Next scheduled edition, for prefilling the race-date picker. */
@@ -125,6 +135,14 @@ export interface EditionSummary {
   city: string;
   countryCode: string; // ISO 3166-1 alpha-2
   countryName: string;
+  /**
+   * ISO 3166-2 subdivision, or null where none is recorded. Only the countries
+   * whose city slugs carry one (US, CA, AU) reliably have it, which is exactly
+   * where a country filter is too coarse to be useful — 100+ US races on one
+   * option. Null elsewhere, and the calendar hides the state filter there.
+   */
+  regionCode: string | null;
+  regionName: string | null;
   raceDateISO: string; // "2026-09-27" — a wall-clock calendar date, not an instant
   /**
    * Local start as zero-padded "HH:MM", or null when the organizer hasn't
@@ -140,6 +158,10 @@ export interface Course {
   id: CourseId;
   displayName: string; // e.g. "Berlin Marathon"
   city: string; // e.g. "Berlin"
+  countryCode: string; // ISO 3166-1 alpha-2
+  countryName: string;
+  regionCode: string | null; // ISO 3166-2
+  regionName: string | null;
   /** 44 absolute elevations (m) at 0,1,…,42,42.195 km */
   elevations: number[];
   /**

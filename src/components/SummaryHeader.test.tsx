@@ -31,9 +31,14 @@ const resultWith = (
 describe("SummaryHeader", () => {
   it("shows three stats and no adjusted finish when weather is off", () => {
     const { container } = render(
-      <SummaryHeader result={resultWith()} courseName="Boston Marathon" />,
+      <SummaryHeader
+        result={resultWith()}
+        courseName="Boston Marathon"
+        location="Boston, MA, United States"
+      />,
     );
     const text = container.textContent ?? "";
+    expect(text).toContain("Boston, MA, United States");
     expect(text).toContain("Goal time");
     expect(text).toContain("3:00:00");
     expect(text).toContain("Average pace");

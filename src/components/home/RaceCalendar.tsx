@@ -15,6 +15,23 @@ import {
   monthLabel,
   stepMonth,
 } from "@/components/home/calendarData";
+import {
+  ALL_LOCATIONS,
+  type ContinentValue,
+  type FilterOption,
+  type LocationFilter,
+  continentOptions,
+  countryOptions,
+  filterEditions,
+  isFiltered,
+  locationLabel,
+  regionNouns,
+  regionOptions,
+  selectContinent,
+  selectCountry,
+  selectRegion,
+  upcomingSeriesCount,
+} from "@/components/home/calendarFilters";
 import { WEEKDAY_LABELS, monthGrid, todayISO } from "@/lib/units/date";
 
 /**
@@ -47,6 +64,7 @@ const navButtonClass =
 
 export function RaceCalendar({ editions, todayISO: serverToday }: Props) {
   const [today, setToday] = useState(serverToday);
+  const [filter, setFilter] = useState<LocationFilter>(ALL_LOCATIONS);
   const [view, setView] = useState(() => initialMonth(editions, serverToday));
   // Once the visitor moves the calendar themselves, the clock correction below
   // must not yank them back to a different month.
@@ -64,17 +82,38 @@ export function RaceCalendar({ editions, todayISO: serverToday }: Props) {
     if (!navigated.current) setView(initialMonth(editions, local));
   }, [editions, serverToday]);
 
-  const bounds = monthBounds(editions, today);
-  const byDate = groupEditionsByDate(editions);
+  // Everything below the filter reads `visible`, never `editions` — including
+  // the month bounds, so narrowing to Japan stops the arrows at Japan's own
+  // race range instead of walking months that now hold nothing.
+  const visible = filterEditions(editions, filter);
+  const bounds = monthBounds(visible, today);
+  const byDate = groupEditionsByDate(visible);
   const cells = monthGrid(view.year, view.month);
   const monthPrefix = `${monthKey(view)}-`;
-  const monthEditions = editionsInMonth(editions, view);
+  const monthEditions = editionsInMonth(visible, view);
   const label = monthLabel(view);
+  const place = locationLabel(editions, filter);
 
   const go = (delta: number) => {
     navigated.current = true;
     setView((v) => stepMonth(v, delta, bounds));
   };
+
+  /**
+   * Changing the filter jumps to the next race that survives it. Staying put
+   * would leave most narrowings looking like they returned nothing: pick a
+   * country with two races a year and the odds are the month on screen isn't
+   * one of them.
+   */
+  const applyFilter = (next: LocationFilter) => {
+    setFilter(next);
+    navigated.current = false;
+    setView(initialMonth(filterEditions(editions, next), today));
+  };
+
+  const continents = continentOptions(editions);
+  const countries = countryOptions(editions, filter.continent);
+  const regions = regionOptions(editions, filter.countryCode);
 
   return (
     <section className="w-full">
@@ -88,8 +127,9 @@ export function RaceCalendar({ editions, todayISO: serverToday }: Props) {
           </h2>
           <p className="text-base text-[var(--color-text-secondary)]">
             Every edition we hold a course profile for, on the day it&rsquo;s
-            run. Choose one and we&rsquo;ll open a plan for it straight away —
-            you can adjust your goal time from there.
+            run. Narrow it to where you&rsquo;ll be, then choose one and
+            we&rsquo;ll open a plan for it straight away — you can adjust your
+            goal time from there.
           </p>
         </div>
 
@@ -103,6 +143,66 @@ export function RaceCalendar({ editions, todayISO: serverToday }: Props) {
             </p>
           </div>
         ) : (
+          <>
+          {/* The location filter. Deliberately native `<select>`s rather than
+              the combobox CourseSearch uses: these are short, closed lists of
+              known names, and a native select is the one control that is
+              already keyboard-, screen-reader- and mobile-correct without a
+              line of our code. */}
+          <div className="flex flex-wrap items-end gap-3">
+            <FilterSelect
+              id="calendar-continent"
+              label="Continent"
+              allLabel="All continents"
+              value={filter.continent}
+              options={continents}
+              onChange={(value) =>
+                applyFilter(selectContinent(value as ContinentValue | null))
+              }
+            />
+            <FilterSelect
+              id="calendar-country"
+              label="Country"
+              allLabel="All countries"
+              value={filter.countryCode}
+              options={countries}
+              onChange={(value) => applyFilter(selectCountry(filter, value))}
+            />
+            {/* Only rendered where a country is big enough to need it — see
+                `regionOptions`. */}
+            {regions && (
+              <FilterSelect
+                id="calendar-region"
+                label={regionNouns(filter.countryCode).label}
+                allLabel={regionNouns(filter.countryCode).allLabel}
+                value={filter.regionCode}
+                options={regions}
+                onChange={(value) => applyFilter(selectRegion(filter, value))}
+              />
+            )}
+            {isFiltered(filter) && (
+              <button
+                type="button"
+                onClick={() => applyFilter(ALL_LOCATIONS)}
+                className="h-10 rounded-[var(--radius-control)] px-3 text-sm font-medium text-[var(--color-text-secondary)] underline-offset-4 transition-colors hover:text-[var(--color-text-primary)] hover:underline"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+
+          {/* The count is of RACES, not dated editions, and only of the ones
+              still ahead — it answers "is there anything here for me?", which
+              a total including last spring's races would answer wrongly. */}
+          <p
+            aria-live="polite"
+            className="text-sm text-[var(--color-text-secondary)]"
+          >
+            {upcomingSeriesCount(visible, today)} upcoming race
+            {upcomingSeriesCount(visible, today) === 1 ? "" : "s"}
+            {place ? ` in ${place}` : " worldwide"}.
+          </p>
+
           <div className="overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-surface)]">
             <div className="flex items-center justify-between border-b border-[var(--color-border)] px-4 py-3">
               <button
@@ -215,13 +315,65 @@ export function RaceCalendar({ editions, todayISO: serverToday }: Props) {
               // With seven series seeded, most months genuinely have nothing.
               // Say so plainly rather than leaving a grid that looks unloaded.
               <p className="px-6 py-8 text-center text-sm text-[var(--color-text-secondary)] sm:py-6">
-                No races scheduled in {label}. Use the arrows to keep looking.
+                No races scheduled in {label}
+                {place && ` in ${place}`}. Use the arrows to keep looking
+                {place && ", or widen the filter"}.
               </p>
             )}
           </div>
+          </>
         )}
       </div>
     </section>
+  );
+}
+
+/**
+ * One level of the location cascade. The empty string is the "no filter"
+ * option value, because a `<select>` value is always a string — null would
+ * make it uncontrolled and React would warn.
+ *
+ * Counts are in the option text rather than beside the label so they narrow
+ * with the level above: after choosing Europe, "Italy (42)" is Italy's races,
+ * and the number never has to be re-read against a different scope.
+ */
+function FilterSelect({
+  id,
+  label,
+  allLabel,
+  value,
+  options,
+  onChange,
+}: {
+  id: string;
+  label: string;
+  allLabel: string;
+  value: string | null;
+  options: FilterOption[];
+  onChange: (value: string | null) => void;
+}) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label
+        htmlFor={id}
+        className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-tertiary)]"
+      >
+        {label}
+      </label>
+      <select
+        id={id}
+        value={value ?? ""}
+        onChange={(e) => onChange(e.target.value || null)}
+        className="h-10 min-w-[10rem] rounded-[var(--radius-control)] border border-[var(--color-border)] bg-[var(--color-bg-surface)] px-3 text-sm text-[var(--color-text-primary)] transition-colors hover:border-[var(--color-text-tertiary)] focus:border-[var(--color-border-focus)] focus:outline-none"
+      >
+        <option value="">{allLabel}</option>
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label} ({option.count})
+          </option>
+        ))}
+      </select>
+    </div>
   );
 }
 

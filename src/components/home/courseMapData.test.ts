@@ -9,10 +9,22 @@ import {
   nearestCourse,
   pinDateLabel,
   pinLocationLabel,
+  pinRaces,
   popupMarkup,
   POPUP_COURSE_ATTR,
   type CoursePinProperties,
 } from "./courseMapData";
+
+/**
+ * `at` sets the START line — the coordinate the map plots. `cityLat/cityLon`
+ * are left at the same point unless a test deliberately pulls them apart, so
+ * a course reads as "the only race in its city", the 292-of-300 case.
+ */
+const at = (lat: number, lon: number): Partial<CourseSummary> => ({
+  start: { lat, lon },
+  cityLat: lat,
+  cityLon: lon,
+});
 
 const course = (over: Partial<CourseSummary>): CourseSummary => ({
   id: "test",
@@ -31,23 +43,84 @@ const course = (over: Partial<CourseSummary>): CourseSummary => ({
   ...over,
 });
 
-const props = (over: Partial<CoursePinProperties> = {}): CoursePinProperties => ({
-  id: "boston",
-  displayName: "Boston Marathon",
+/** A one-race pin, the common case. `races` is the JSON-encoded property. */
+const props = (
+  race: { id?: string; displayName?: string; nextRaceDateISO?: string | null } = {},
+  over: Partial<CoursePinProperties> = {},
+): CoursePinProperties => ({
+  startKey: "-71.06,42.36",
   city: "Boston",
   countryName: "United States",
-  nextRaceDateISO: null,
+  races: JSON.stringify([
+    {
+      id: "boston",
+      displayName: "Boston Marathon",
+      nextRaceDateISO: null,
+      ...race,
+    },
+  ]),
   ...over,
 });
 
 describe("coursesToGeoJSON", () => {
-  it("emits one feature per seeded course", () => {
+  it("emits one feature per seeded course when each is in its own city", () => {
+    // The core seven are seven distinct cities, so pins and courses are 1:1.
     const fc = coursesToGeoJSON(FIXTURE_CATALOG);
     expect(fc.type).toBe("FeatureCollection");
     expect(fc.features).toHaveLength(FIXTURE_CATALOG.length);
-    expect(fc.features.map((f) => f.properties.id).sort()).toEqual(
-      FIXTURE_CATALOG.map((c) => c.id).sort(),
+    expect(
+      fc.features.flatMap((f) => pinRaces(f.properties).map((r) => r.id)).sort(),
+    ).toEqual(FIXTURE_CATALOG.map((c) => c.id).sort());
+  });
+
+  it("plots each race at its own start line, not its city's coordinate", () => {
+    // The Toronto bug. A city's coordinate IS the first-seeded race's start
+    // line, and a second race never repoints it — so pinning the city put
+    // Toronto Waterfront 11.6 km from where it actually starts, exactly on top
+    // of Toronto Marathon. Stacked pins cluster into a "2" that no amount of
+    // zooming can separate, so the second race was unreachable.
+    const fc = coursesToGeoJSON([
+      course({
+        id: "toronto-marathon",
+        displayName: "Toronto Marathon",
+        city: "Toronto",
+        ...at(43.76349, -79.41132),
+      }),
+      course({
+        id: "toronto-waterfront-marathon",
+        displayName: "Toronto Waterfront Marathon",
+        city: "Toronto",
+        // Downtown — its real start, and the city row does NOT point here.
+        start: { lat: 43.66097, lon: -79.38293 },
+        cityLat: 43.76349,
+        cityLon: -79.41132,
+      }),
+    ]);
+
+    expect(fc.features).toHaveLength(2);
+    expect(fc.features.map((f) => f.geometry.coordinates)).toEqual([
+      [-79.41132, 43.76349],
+      [-79.38293, 43.66097],
+    ]);
+    // Far enough apart to pull cleanly apart when zoomed in.
+    expect(haversineKm(43.76349, -79.41132, 43.66097, -79.38293)).toBeGreaterThan(
+      10,
     );
+  });
+
+  it("merges only races that genuinely share one start line", () => {
+    // Rare, but possible — a marathon and a variant setting off together.
+    // Coincident features are the one thing the map cannot render, so they
+    // still collapse into a single pin listing both.
+    const fc = coursesToGeoJSON([
+      course({ id: "a", displayName: "A Marathon", ...at(43.65, -79.38) }),
+      course({ id: "b", displayName: "B Marathon", ...at(43.65, -79.38) }),
+    ]);
+    expect(fc.features).toHaveLength(1);
+    expect(pinRaces(fc.features[0].properties).map((r) => r.id)).toEqual([
+      "a",
+      "b",
+    ]);
   });
 
   it("orders coordinates longitude-first", () => {
@@ -57,8 +130,8 @@ describe("coursesToGeoJSON", () => {
     const boston = FIXTURE_CATALOG.find((c) => c.id === "boston")!;
     const feature = coursesToGeoJSON([boston]).features[0];
     expect(feature.geometry.coordinates).toEqual([
-      boston.cityLon,
-      boston.cityLat,
+      boston.start.lon,
+      boston.start.lat,
     ]);
     expect(feature.geometry.coordinates[0]).toBeLessThan(0); // west of Greenwich
     expect(feature.geometry.coordinates[1]).toBeGreaterThan(40); // northern
@@ -69,22 +142,31 @@ describe("coursesToGeoJSON", () => {
       course({ id: "x", displayName: "X Marathon", nextRaceDateISO: "2027-03-01" }),
     ]).features[0];
     expect(feature.properties).toEqual({
-      id: "x",
-      displayName: "X Marathon",
+      startKey: "0,0",
       city: "Testville",
       countryName: "United States",
-      nextRaceDateISO: "2027-03-01",
+      races: JSON.stringify([
+        { id: "x", displayName: "X Marathon", nextRaceDateISO: "2027-03-01" },
+      ]),
     });
+  });
+
+  it("encodes races as a string, since MapLibre stringifies nested values", () => {
+    const feature = coursesToGeoJSON([course({ id: "x" })]).features[0];
+    expect(typeof feature.properties.races).toBe("string");
+    expect(pinRaces(feature.properties)).toHaveLength(1);
   });
 
   it("drops courses with missing or out-of-range coordinates", () => {
     const fc = coursesToGeoJSON([
-      course({ id: "nan", cityLat: Number.NaN, cityLon: 10 }),
-      course({ id: "over", cityLat: 91, cityLon: 10 }),
-      course({ id: "wrapped", cityLat: 10, cityLon: 181 }),
-      course({ id: "good", cityLat: 10, cityLon: 10 }),
+      course({ id: "nan", ...at(Number.NaN, 10) }),
+      course({ id: "over", ...at(91, 10) }),
+      course({ id: "wrapped", ...at(10, 181) }),
+      course({ id: "good", ...at(10, 10) }),
     ]);
-    expect(fc.features.map((f) => f.properties.id)).toEqual(["good"]);
+    expect(fc.features.flatMap((f) => pinRaces(f.properties).map((r) => r.id))).toEqual([
+      "good",
+    ]);
   });
 
   it("returns an empty collection for an empty catalog", () => {
@@ -95,17 +177,17 @@ describe("coursesToGeoJSON", () => {
 describe("boundsOf", () => {
   it("returns null when nothing is plottable", () => {
     expect(boundsOf([])).toBeNull();
-    expect(boundsOf([course({ cityLat: Number.NaN })])).toBeNull();
+    expect(boundsOf([course(at(Number.NaN, 10))])).toBeNull();
   });
 
   it("boxes every seeded course", () => {
     const bounds = boundsOf(FIXTURE_CATALOG)!;
     const [[west, south], [east, north]] = bounds;
     for (const c of FIXTURE_CATALOG) {
-      expect(c.cityLon).toBeGreaterThanOrEqual(west);
-      expect(c.cityLon).toBeLessThanOrEqual(east);
-      expect(c.cityLat).toBeGreaterThanOrEqual(south);
-      expect(c.cityLat).toBeLessThanOrEqual(north);
+      expect(c.start.lon).toBeGreaterThanOrEqual(west);
+      expect(c.start.lon).toBeLessThanOrEqual(east);
+      expect(c.start.lat).toBeGreaterThanOrEqual(south);
+      expect(c.start.lat).toBeLessThanOrEqual(north);
     }
     // Sydney is the southern and eastern extreme of the seeded seven.
     expect(south).toBeLessThan(-30);
@@ -113,7 +195,7 @@ describe("boundsOf", () => {
   });
 
   it("degenerates to a point for a single course", () => {
-    expect(boundsOf([course({ cityLat: 5, cityLon: 6 })])).toEqual([
+    expect(boundsOf([course(at(5, 6))])).toEqual([
       [6, 5],
       [6, 5],
     ]);
@@ -152,7 +234,7 @@ describe("nearestCourse", () => {
 
   it("returns null when nothing is plottable", () => {
     expect(nearestCourse([], 0, 0)).toBeNull();
-    expect(nearestCourse([course({ cityLon: Number.NaN })], 0, 0)).toBeNull();
+    expect(nearestCourse([course(at(0, Number.NaN))], 0, 0)).toBeNull();
   });
 });
 
@@ -162,16 +244,35 @@ describe("pin labels", () => {
   });
 
   it("formats a scheduled date without Intl", () => {
-    expect(pinDateLabel(props({ nextRaceDateISO: "2027-04-19" }))).toBe(
+    expect(pinDateLabel({ nextRaceDateISO: "2027-04-19" })).toBe(
       "April 19th, 2027",
     );
   });
 
   it("falls back honestly when no edition is booked", () => {
-    expect(pinDateLabel(props())).toBe("Next date to be confirmed");
-    expect(pinDateLabel(props({ nextRaceDateISO: "not-a-date" }))).toBe(
+    expect(pinDateLabel({ nextRaceDateISO: null })).toBe(
       "Next date to be confirmed",
     );
+    expect(pinDateLabel({ nextRaceDateISO: "not-a-date" })).toBe(
+      "Next date to be confirmed",
+    );
+  });
+});
+
+describe("pinRaces", () => {
+  it("round-trips what coursesToGeoJSON encoded", () => {
+    expect(pinRaces(props({ nextRaceDateISO: "2027-04-19" }))).toEqual([
+      {
+        id: "boston",
+        displayName: "Boston Marathon",
+        nextRaceDateISO: "2027-04-19",
+      },
+    ]);
+  });
+
+  it("degrades to an empty list rather than throwing on bad JSON", () => {
+    expect(pinRaces(props({}, { races: "not json" }))).toEqual([]);
+    expect(pinRaces(props({}, { races: '{"not":"an array"}' }))).toEqual([]);
   });
 });
 
@@ -191,6 +292,37 @@ describe("popupMarkup", () => {
     expect(html).not.toContain("<b>");
     expect(html).toContain("&lt;b&gt;");
     expect(html).toContain("&#39;n&#39;");
+  });
+
+  it("lists every race on a shared pin, each with its own CTA", () => {
+    // The whole point of the fix: both Toronto races have to be reachable
+    // from the one pin they share.
+    const html = popupMarkup(
+      props({}, {
+        city: "Toronto",
+        countryName: "Canada",
+        races: JSON.stringify([
+          {
+            id: "toronto-marathon",
+            displayName: "Toronto Marathon",
+            nextRaceDateISO: "2027-05-02",
+          },
+          {
+            id: "toronto-waterfront-marathon",
+            displayName: "Toronto Waterfront Marathon",
+            nextRaceDateISO: null,
+          },
+        ]),
+      }),
+    );
+    expect(html).toContain("Toronto Marathon");
+    expect(html).toContain("Toronto Waterfront Marathon");
+    expect(html).toContain("May 2nd, 2027");
+    expect(html).toContain("Next date to be confirmed");
+    expect(html).toContain(`${POPUP_COURSE_ATTR}="toronto-marathon"`);
+    expect(html).toContain(`${POPUP_COURSE_ATTR}="toronto-waterfront-marathon"`);
+    // The place is stated once, not repeated under each race.
+    expect(html.match(/Toronto, Canada/g)).toHaveLength(1);
   });
 });
 

@@ -129,6 +129,8 @@ async function loadEventCalendar(): Promise<EditionSummary[]> {
       cityName: eventCalendar.cityName,
       countryCode: eventCalendar.countryCode,
       countryName: eventCalendar.countryName,
+      regionCode: eventCalendar.regionCode,
+      regionName: eventCalendar.regionName,
       raceDate: eventCalendar.raceDate,
       startTimeLocal: eventCalendar.startTimeLocal,
       dateConfidence: eventCalendar.dateConfidence,
@@ -152,6 +154,8 @@ async function loadEventCalendar(): Promise<EditionSummary[]> {
     city: r.cityName,
     countryCode: r.countryCode,
     countryName: r.countryName,
+    regionCode: r.regionCode,
+    regionName: r.regionName,
     raceDateISO: r.raceDate,
     // Postgres `time` comes back as "08:00:00". src/lib/units/date.ts treats
     // "HH:MM" as a hard contract — `parseTime` rejects anything longer, and
@@ -182,6 +186,10 @@ async function loadCourseBySlug(slug: string): Promise<Course | null> {
       startLon: courses.startLon,
       seriesName: eventSeries.name,
       cityName: cities.name,
+      countryCode: cities.countryCode,
+      countryName: cities.countryName,
+      regionCode: cities.regionCode,
+      regionName: cities.regionName,
       timezone: cities.timezone,
     })
     .from(courses)
@@ -196,6 +204,10 @@ async function loadCourseBySlug(slug: string): Promise<Course | null> {
     id: r.slug,
     displayName: r.seriesName,
     city: r.cityName,
+    countryCode: r.countryCode,
+    countryName: r.countryName,
+    regionCode: r.regionCode,
+    regionName: r.regionName,
     elevations: r.elevations,
     coords: r.coords,
     profile: r.profile,

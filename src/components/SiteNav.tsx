@@ -3,8 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-// Shared top nav, rendered for every page via the root layout. Links are
-// intentionally inert (href="#") — slots for future routes, not built yet.
+// Shared top nav, rendered for every page via the root layout.
 //
 // Sticky to the top of the viewport on every page EXCEPT home (see isHome
 // below) — those pages are ordinary document scrolls, so this stays visible
@@ -12,9 +11,8 @@ import { useEffect, useState } from "react";
 // (z-20), which should slide under it rather than over.
 //
 // On those same pages it also COMPRESSES once scrolled: only the vertical
-// padding changes, so the wordmark and link text stay exactly the same size
-// and stay vertically centred — the bar just gets shorter.
-const NAV_LINKS = [{ label: "Our Methodology", href: "/methodology" }] as const;
+// padding changes, so the wordmark stays exactly the same size and stays
+// vertically centred — the bar just gets shorter.
 
 // Hysteresis, not a single threshold. A trackpad delivers sub-pixel scroll
 // deltas, so one boundary would let the state flip back and forth between
@@ -70,7 +68,7 @@ export function SiteNav() {
       }`}
     >
       <div
-        className={`mx-auto flex max-w-7xl items-center justify-between px-6 transition-[padding] duration-200 ease-out ${
+        className={`mx-auto flex max-w-7xl items-center px-6 transition-[padding] duration-200 ease-out ${
           compressed ? "py-2" : "py-6"
         }`}
       >
@@ -80,18 +78,6 @@ export function SiteNav() {
         >
           eveneffort
         </Link>
-        <ul className="flex items-center gap-10">
-          {NAV_LINKS.map(({ label, href }) => (
-            <li key={label}>
-              <Link
-                href={href}
-                className="text-lg font-medium text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-primary)]"
-              >
-                {label}
-              </Link>
-            </li>
-          ))}
-        </ul>
       </div>
     </nav>
   );

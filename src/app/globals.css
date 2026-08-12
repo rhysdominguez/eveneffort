@@ -428,6 +428,25 @@ html {
   margin-top: 0.125rem;
 }
 
+/* A pin is a city, and a city can host more than one marathon (Toronto hosts
+   two). Those races share one popup: the place is stated once as an eyebrow
+   here, and each race below is separated by a rule so the two names, dates and
+   CTAs don't read as one run-on block. */
+.course-pin-place {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-tertiary);
+  margin-bottom: 0.625rem;
+}
+
+.course-pin-race + .course-pin-race {
+  margin-top: 0.875rem;
+  padding-top: 0.875rem;
+  border-top: 1px solid var(--color-border);
+}
+
 /* The map's one red action, and the only red on this band — same rule as the
    hero's Calculate and the closing CTA. */
 .course-pin-cta {

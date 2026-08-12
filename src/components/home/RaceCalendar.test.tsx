@@ -16,6 +16,10 @@ const prevButton = (c: HTMLElement) =>
   c.querySelector<HTMLButtonElement>('button[aria-label="Previous month"]')!;
 const nextButton = (c: HTMLElement) =>
   c.querySelector<HTMLButtonElement>('button[aria-label="Next month"]')!;
+/** A location-filter select by id. Non-null asserted; a missing one reads as
+ *  null in the assertions that check a level is hidden. */
+const select = (c: HTMLElement, id: string) =>
+  c.querySelector<HTMLSelectElement>(`#${id}`)!;
 
 describe("RaceCalendar", () => {
   it("opens on the month holding the next upcoming race", () => {
@@ -93,6 +97,68 @@ describe("RaceCalendar", () => {
     for (let i = 0; i < 11; i++) fireEvent.click(nextButton(container));
     expect(container.querySelector("h3")?.textContent).toBe("March 2027");
     expect(nextButton(container).disabled).toBe(true);
+  });
+
+  it("jumps to the next race that survives a location filter", () => {
+    const { container } = renderCalendar();
+    // Opens on August 2026 (Sydney). Narrowing to Europe has to land on
+    // Berlin's month, not sit on an August that now holds nothing.
+    fireEvent.change(select(container, "calendar-continent"), {
+      target: { value: "EU" },
+    });
+    expect(container.querySelector("h3")?.textContent).toBe("September 2026");
+    expect(container.textContent).toContain("Berlin Marathon");
+    expect(container.textContent).not.toContain("Sydney Marathon");
+  });
+
+  it("bounds the arrows to the filtered range", () => {
+    const { container } = renderCalendar();
+    fireEvent.change(select(container, "calendar-country"), {
+      target: { value: "JP" },
+    });
+    // Tokyo 2027-03-07 is Japan's only fixture race, so there is nowhere
+    // forward to go even though the unfiltered list ends in the same month.
+    expect(container.querySelector("h3")?.textContent).toBe("March 2027");
+    expect(nextButton(container).disabled).toBe(true);
+  });
+
+  it("shows a state filter only for a country with more than one", () => {
+    const { container } = renderCalendar();
+    expect(select(container, "calendar-region")).toBeNull();
+
+    fireEvent.change(select(container, "calendar-country"), {
+      target: { value: "US" },
+    });
+    expect(select(container, "calendar-region")).not.toBeNull();
+
+    fireEvent.change(select(container, "calendar-country"), {
+      target: { value: "AU" },
+    });
+    expect(select(container, "calendar-region")).toBeNull();
+  });
+
+  it("reports how many races are still ahead in the chosen place", () => {
+    const { container } = renderCalendar();
+    fireEvent.change(select(container, "calendar-country"), {
+      target: { value: "GB" },
+    });
+    expect(container.textContent).toContain(
+      "1 upcoming race in United Kingdom",
+    );
+  });
+
+  it("puts everything back when the filter is cleared", () => {
+    const { container } = renderCalendar();
+    fireEvent.change(select(container, "calendar-continent"), {
+      target: { value: "EU" },
+    });
+    const clear = Array.from(container.querySelectorAll("button")).find(
+      (b) => b.textContent === "Clear",
+    );
+    fireEvent.click(clear!);
+    expect(select(container, "calendar-continent").value).toBe("");
+    expect(container.querySelector("h3")?.textContent).toBe("August 2026");
+    expect(container.textContent).toContain("Sydney Marathon");
   });
 
   it("degrades to a placeholder with no editions, and offers no arrows", () => {

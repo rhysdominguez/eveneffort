@@ -50,7 +50,7 @@ data/
 
 Three levels plus geometry. The split is deliberate:
 
-- **`city`** owns the map pin — seeded from a host race's actual GPX start line for precision, not a guessed centroid — and the country/region ISO codes the calendar filters on. Every event in a city shares this one row, so two marathons in one city still render as a single pin; a second race added to an already-seeded city does not repoint it.
+- **`city`** owns the place name and the country/region ISO codes the calendar filters on. Its coordinate is seeded from a host race's actual GPX start line for precision, not a guessed centroid, and a second race added to an already-seeded city does not repoint it. That makes it a *city locator*, not a race location: in a city with two races it is the first-seeded race's start line and can sit 16 km from the second's. **The map pins each race at its own `course.startLat/startLon`**, never here — see the header of `src/components/home/courseMapData.ts` for the bug that rule was written from.
 - **`event_series`** is the marathon as a recurring brand — "Boston Marathon", one row forever.
 - **`event_edition`** is one running of it, `unique (series_id, race_date)`. Boston 2026 and Boston 2027 are two editions of one series. Deliberately not unique per year: a series can run twice in one year (London 2027 splits elite/mass across April 24 and 25) — two rows, same series and year, different dates.
 - **`course`** is GPX-derived geometry hanging off the **series**, not the edition — one geometry row serves every year until the route actually changes, at which point you add a row with `effective_from_year` and repoint later editions.

@@ -35,7 +35,7 @@ const columnClass =
   "max-h-32 flex-1 overflow-y-auto rounded-lg border border-[var(--color-border)] p-1";
 
 // Default when the user opens the picker with nothing set: a typical race start.
-const DEFAULT_HOUR_24 = 8;
+const DEFAULT_HOUR_24 = 7;
 const DEFAULT_MINUTE = 0;
 
 const HOURS_12 = Array.from({ length: 12 }, (_, i) => i + 1);

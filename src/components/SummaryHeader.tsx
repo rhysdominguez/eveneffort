@@ -12,6 +12,7 @@ import { track } from "@/lib/analytics";
 interface Props {
   result: PacingResult;
   courseName: string;
+  location?: string;
 }
 
 const MARATHON_MILES = MARATHON_KM / MILE_IN_KM;
@@ -39,7 +40,7 @@ function Stat({
   );
 }
 
-export function SummaryHeader({ result, courseName }: Props) {
+export function SummaryHeader({ result, courseName, location }: Props) {
   const printPopover = usePopover();
   const orderPopover = usePopover();
   const { goalTimeSeconds, unit } = result.input;
@@ -57,9 +58,16 @@ export function SummaryHeader({ result, courseName }: Props) {
   return (
     <header className="space-y-6">
       <div className="flex items-center justify-between gap-4">
-        <h2 className="text-3xl font-display tracking-tight text-[var(--color-text-primary)]">
-          {courseName}
-        </h2>
+        <div>
+          <h2 className="text-3xl font-display tracking-tight text-[var(--color-text-primary)]">
+            {courseName}
+          </h2>
+          {location && (
+            <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
+              {location}
+            </p>
+          )}
+        </div>
         {/* Two peer entry points to the paceband, each opening its own small
             modal instead of one dialog stacking both options: order the
             printed one, or print it here (PaceBand.tsx — everything else is

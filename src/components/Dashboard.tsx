@@ -10,6 +10,7 @@ import { SummaryHeader } from "@/components/SummaryHeader";
 import { ElevationChart } from "@/components/ElevationChart";
 import { PaceChartTable } from "@/components/PaceChartTable";
 import { PaceBand } from "@/components/PaceBand";
+import { formatLocation } from "@/lib/location";
 
 // Paceband-style split dashboard: config on the left, live outputs on the
 // right. Reuses the locked pacing engine via usePacingChart so the math
@@ -94,6 +95,11 @@ export function Dashboard({
               <SummaryHeader
                 result={result}
                 courseName={course.displayName}
+                location={formatLocation(
+                  course.city,
+                  course.regionCode,
+                  course.countryName,
+                )}
               />
               <ElevationChart
                 profile={course.profile}

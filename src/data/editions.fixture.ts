@@ -29,6 +29,8 @@ export const FIXTURE_EDITIONS: EditionSummary[] = [
     city: "Boston",
     countryCode: "US",
     countryName: "United States",
+    regionCode: "US-MA",
+    regionName: "Massachusetts",
     raceDateISO: "2026-04-20", // already run, relative to FIXTURE_TODAY
     startTimeLocal: "09:00",
     dateConfidence: "confirmed",
@@ -41,6 +43,8 @@ export const FIXTURE_EDITIONS: EditionSummary[] = [
     city: "Sydney",
     countryCode: "AU",
     countryName: "Australia",
+    regionCode: "AU-NSW",
+    regionName: "New South Wales",
     raceDateISO: "2026-08-30",
     startTimeLocal: null, // no announced start — the link must omit `start`
     dateConfidence: "confirmed",
@@ -53,6 +57,8 @@ export const FIXTURE_EDITIONS: EditionSummary[] = [
     city: "Berlin",
     countryCode: "DE",
     countryName: "Germany",
+    regionCode: null,
+    regionName: null,
     raceDateISO: "2026-09-27",
     startTimeLocal: "09:15",
     dateConfidence: "confirmed",
@@ -65,6 +71,8 @@ export const FIXTURE_EDITIONS: EditionSummary[] = [
     city: "Chicago",
     countryCode: "US",
     countryName: "United States",
+    regionCode: "US-IL",
+    regionName: "Illinois",
     raceDateISO: "2026-10-11",
     startTimeLocal: "07:30",
     dateConfidence: "estimated",
@@ -77,6 +85,8 @@ export const FIXTURE_EDITIONS: EditionSummary[] = [
     city: "London",
     countryCode: "GB",
     countryName: "United Kingdom",
+    regionCode: null,
+    regionName: null,
     raceDateISO: "2026-10-11", // deliberately shares Chicago's cell
     startTimeLocal: null,
     dateConfidence: "estimated",
@@ -89,6 +99,8 @@ export const FIXTURE_EDITIONS: EditionSummary[] = [
     city: "Tokyo",
     countryCode: "JP",
     countryName: "Japan",
+    regionCode: null,
+    regionName: null,
     raceDateISO: "2027-03-07", // the far end of the fixture's range
     startTimeLocal: "09:10",
     dateConfidence: "confirmed",

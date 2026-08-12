@@ -151,6 +151,13 @@ export function CourseMap({ catalog, onSelectCourse }: Props) {
         // A map mid-page must not swallow the scroll wheel. Ctrl/⌘-scroll and
         // two-finger drag still zoom; a plain scroll passes to the page.
         cooperativeGestures: true,
+        // MapLibre's default AttributionControl only collapses to an icon
+        // below 640px wide; at full desktop width it spells out all four
+        // credits (MapLibre, OpenFreeMap, OpenMapTiles, OpenStreetMap) inline.
+        // The credits are required by OSM's ODbL and OpenFreeMap's terms — they
+        // can't be dropped — but collapsing to the same "ⓘ" icon at every width
+        // keeps them one click away instead of permanently cluttering the corner.
+        attributionControl: { compact: true },
       });
       mapRef.current = map;
 
