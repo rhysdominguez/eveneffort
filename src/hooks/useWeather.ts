@@ -2,6 +2,8 @@
 import { useCallback, useEffect, useState } from "react";
 import type { WeatherConditions } from "@/types";
 import { zonedWallClockToUTC } from "@/lib/weather/timezone";
+import { useStoredState } from "@/hooks/useStoredState";
+import { WEATHER_MODE } from "@/lib/stateKeys";
 
 /**
  * Weather & Wind is a three-way choice, not an on/off switch layered with an
@@ -58,10 +60,33 @@ export function useWeather(
   dateISO?: string,
   startTime?: string,
   initial?: WeatherConditions,
+  /**
+   * Remember the chosen mode across a reload. Opt-in so the hook stays pure for
+   * any caller that doesn't want a shared session store — and so a single test
+   * can exercise the fetch logic without touching storage.
+   */
+  persistMode = false,
 ): UseWeather {
-  const [mode, setModeState] = useState<WeatherMode>(
-    initial !== undefined ? "manual" : "off",
-  );
+  // Mode is the one weather setting the URL cannot carry. A shared /results
+  // link spells out temp/humidity/wind as numbers, and those always parse back
+  // as "manual" — so a runner who chose Forecast and then reloaded (or
+  // cancelled a Stripe checkout, which returns as a cold page load) landed in
+  // manual mode holding a frozen copy of the forecast they had asked to keep
+  // live.
+  //
+  // Only "forecast" is ever restored. Restoring "manual" or "off" would let
+  // stale session state contradict the query string, which IS authoritative for
+  // everything it can express; restoring "forecast" only re-enables a fetch
+  // that recomputes from scratch.
+  const [storedMode, storeMode] = useStoredState(WEATHER_MODE);
+  const [chosenMode, setChosenMode] = useState<WeatherMode | null>(null);
+  const mode: WeatherMode =
+    chosenMode ??
+    (persistMode && storedMode === "forecast"
+      ? "forecast"
+      : initial !== undefined
+        ? "manual"
+        : "off");
   const [conditions, setConditions] = useState<WeatherConditions | null>(
     initial ?? null,
   );
@@ -115,7 +140,8 @@ export function useWeather(
   }, [mode, start.lat, start.lon, start.timezone, dateISO, startTime, reloadKey]);
 
   const setMode = useCallback((next: WeatherMode) => {
-    setModeState(next);
+    setChosenMode(next);
+    if (persistMode) storeMode(next);
     setError(null);
     if (next === "off") return;
     // Switching modes always starts from a clean forecast series — "manual"
@@ -124,7 +150,7 @@ export function useWeather(
     // Never on-but-empty: prefill the visible defaults so every value that
     // will affect the chart is on screen before it applies.
     setConditions((prev) => prev ?? FALLBACK_CONDITIONS);
-  }, []);
+  }, [persistMode, storeMode]);
 
   const updateManual = useCallback((patch: Partial<WeatherConditions>) => {
     setConditions((prev) => ({ ...(prev ?? FALLBACK_CONDITIONS), ...patch }));

@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import type { EditionSummary } from "@/types";
 import {
   canStep,
@@ -33,6 +33,8 @@ import {
   upcomingSeriesCount,
 } from "@/components/home/calendarFilters";
 import { WEEKDAY_LABELS, monthGrid, todayISO } from "@/lib/units/date";
+import { useStoredState } from "@/hooks/useStoredState";
+import { HOME_CALENDAR, type CalendarSnapshot } from "@/lib/stateKeys";
 
 /**
  * The race calendar band — the catalogue's second entry point, answering
@@ -64,11 +66,6 @@ const navButtonClass =
 
 export function RaceCalendar({ editions, todayISO: serverToday }: Props) {
   const [today, setToday] = useState(serverToday);
-  const [filter, setFilter] = useState<LocationFilter>(ALL_LOCATIONS);
-  const [view, setView] = useState(() => initialMonth(editions, serverToday));
-  // Once the visitor moves the calendar themselves, the clock correction below
-  // must not yank them back to a different month.
-  const navigated = useRef(false);
 
   // This band renders inside a page Next prerenders at build time, so
   // `serverToday` can be days stale by the time anyone reads it — and it is a
@@ -77,10 +74,33 @@ export function RaceCalendar({ editions, todayISO: serverToday }: Props) {
   // reading the clock can no longer cause a mismatch.
   useEffect(() => {
     const local = todayISO();
-    if (local === serverToday) return;
-    setToday(local);
-    if (!navigated.current) setView(initialMonth(editions, local));
-  }, [editions, serverToday]);
+    if (local !== serverToday) setToday(local);
+  }, [serverToday]);
+
+  // Filter and month are ONE stored snapshot, not two, because they are only
+  // ever meaningful together: restoring "March 2027" without the Italy filter
+  // that made March interesting would land the visitor on an empty grid.
+  //
+  // Stored value overrides the default rather than seeding state, which is what
+  // lets the clock correction above stay a plain effect. `defaults` recomputes
+  // from the corrected `today`, so an untouched calendar still lands on the
+  // right month — while a visitor who HAS chosen one has written that choice to
+  // the store, where it takes precedence and the correction can't reach it.
+  const [stored, store] = useStoredState(HOME_CALENDAR);
+  const defaults: CalendarSnapshot = {
+    filter: ALL_LOCATIONS,
+    view: initialMonth(editions, today),
+  };
+
+  // A stored filter can outlive the data it names — the catalogue is imported
+  // in batches, and a country's only race can fall out of the seeded window. A
+  // filter matching nothing is indistinguishable from a broken calendar, so it
+  // is dropped back to everything rather than shown.
+  const usable =
+    stored && filterEditions(editions, stored.filter).length > 0
+      ? stored
+      : defaults;
+  const { filter, view } = usable;
 
   // Everything below the filter reads `visible`, never `editions` — including
   // the month bounds, so narrowing to Japan stops the arrows at Japan's own
@@ -95,8 +115,7 @@ export function RaceCalendar({ editions, todayISO: serverToday }: Props) {
   const place = locationLabel(editions, filter);
 
   const go = (delta: number) => {
-    navigated.current = true;
-    setView((v) => stepMonth(v, delta, bounds));
+    store({ filter, view: stepMonth(view, delta, bounds) });
   };
 
   /**
@@ -106,9 +125,10 @@ export function RaceCalendar({ editions, todayISO: serverToday }: Props) {
    * one of them.
    */
   const applyFilter = (next: LocationFilter) => {
-    setFilter(next);
-    navigated.current = false;
-    setView(initialMonth(filterEditions(editions, next), today));
+    store({
+      filter: next,
+      view: initialMonth(filterEditions(editions, next), today),
+    });
   };
 
   const continents = continentOptions(editions);

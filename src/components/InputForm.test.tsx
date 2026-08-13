@@ -1,8 +1,11 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { render, fireEvent, within } from "@testing-library/react";
 import { InputForm } from "./InputForm";
 import type { PacingInput } from "@/types";
 import { FIXTURE_CATALOG } from "@/data/courses.fixture";
+import { clearStoredState } from "@/test/storage";
+import { writeState } from "@/lib/clientState";
+import { DISPLAY_UNITS, HOME_FORM } from "@/lib/stateKeys";
 
 // Weather/Wind and Fueling are dashboard-only (live mode) — the homepage
 // form is core race setup + Calculate. Both are permanently expanded, and
@@ -10,6 +13,11 @@ import { FIXTURE_CATALOG } from "@/data/courses.fixture";
 // section exists, showing both weather and body-metric fields together, body
 // metrics are inert (and therefore disabled) while weather is off, and the
 // per-field unit toggles convert what's displayed.
+// The display-unit toggles persist to localStorage, and jsdom shares one
+// store across every test in a file — so flipping to feet in one test would
+// otherwise open the next one already in feet.
+beforeEach(clearStoredState);
+
 const openSection = () =>
   render(<InputForm catalog={FIXTURE_CATALOG} onChange={() => {}} />);
 
@@ -384,5 +392,264 @@ describe("InputForm — race date prefill from the next edition", () => {
       <InputForm catalog={FIXTURE_CATALOG} onChange={(i) => seen.push(i)} />,
     );
     expect(seen.at(-1)?.raceDateISO).toBeUndefined();
+  });
+});
+
+// The hero form remembers what was typed into it across a navigation away and
+// back. The dashboard's copy never does — there, `initial` comes from the query
+// string, and a shared link has to mean the same thing to everyone who opens it.
+describe("InputForm — remembering the hero form", () => {
+  const pickCourse = (container: HTMLElement, displayName: string) => {
+    const input = container.querySelector("#course") as HTMLInputElement;
+    fireEvent.focus(input);
+    fireEvent.change(input, { target: { value: displayName } });
+    fireEvent.keyDown(input, { key: "Enter" });
+  };
+
+  const typeGoal = (
+    { getByLabelText }: ReturnType<typeof render>,
+    hours: string,
+    minutes: string,
+  ) => {
+    fireEvent.change(getByLabelText("hours"), { target: { value: hours } });
+    fireEvent.change(getByLabelText("minutes"), { target: { value: minutes } });
+  };
+
+  const hero = () =>
+    render(<InputForm catalog={FIXTURE_CATALOG} persist onCalculate={() => {}} />);
+
+  it("comes back to the goal time that was typed", () => {
+    const first = hero();
+    typeGoal(first, "3", "45");
+    first.unmount();
+
+    const second = hero();
+    expect(
+      (second.getByLabelText("hours") as HTMLInputElement).value,
+    ).toBe("3");
+    expect(
+      (second.getByLabelText("minutes") as HTMLInputElement).value,
+    ).toBe("45");
+  });
+
+  it("comes back to the course that was chosen", () => {
+    const first = hero();
+    pickCourse(first.container, FIXTURE_CATALOG[2].displayName);
+    first.unmount();
+
+    const second = hero();
+    expect(
+      (second.container.querySelector("#course") as HTMLInputElement).value,
+    ).toContain(FIXTURE_CATALOG[2].displayName);
+  });
+
+  it("opens on its own defaults when nothing was ever typed", () => {
+    const { getByLabelText } = hero();
+    expect((getByLabelText("hours") as HTMLInputElement).value).toBe("4");
+    expect((getByLabelText("minutes") as HTMLInputElement).value).toBe("0");
+  });
+
+  it("does not remember anything without the persist flag", () => {
+    // The dashboard's copy of this form. Typing here must leave no trace, or a
+    // session snapshot would start overriding shared /results links.
+    const first = render(
+      <InputForm catalog={FIXTURE_CATALOG} onChange={() => {}} />,
+    );
+    typeGoal(first, "3", "45");
+    first.unmount();
+    expect(window.sessionStorage.getItem(HOME_FORM.key)).toBeNull();
+
+    const second = hero();
+    expect((second.getByLabelText("hours") as HTMLInputElement).value).toBe("4");
+  });
+
+  it("lets a URL-seeded dashboard form beat a stored hero snapshot", () => {
+    const first = hero();
+    typeGoal(first, "3", "45");
+    first.unmount();
+
+    // Same tab, same session store — but this form is driven by the query
+    // string and must show exactly what the link said.
+    const initial: PacingInput = {
+      courseId: FIXTURE_CATALOG[0].id,
+      unit: "km",
+      goalTimeSeconds: 5 * 3600,
+    };
+    const dash = render(
+      <InputForm
+        catalog={FIXTURE_CATALOG}
+        initial={initial}
+        onChange={() => {}}
+      />,
+    );
+    expect((dash.getByLabelText("hours") as HTMLInputElement).value).toBe("5");
+  });
+
+  it("falls back to the default course when the stored one has left the catalog", () => {
+    // Courses are database rows; a slug can leave the seed between two visits.
+    writeState(HOME_FORM, {
+      courseId: "a-race-we-no-longer-hold",
+      goalTime: { hours: 3, minutes: 45, seconds: 0 },
+      unit: "km",
+      raceDate: "",
+      raceStartTime: "",
+    });
+    const { container, getByLabelText } = hero();
+    expect(
+      (container.querySelector("#course") as HTMLInputElement).value,
+    ).toContain(FIXTURE_CATALOG[0].displayName);
+    // The rest of the snapshot still applies — one dead slug is not a reason to
+    // throw away a goal time.
+    expect((getByLabelText("hours") as HTMLInputElement).value).toBe("3");
+  });
+
+  it("ignores a stored snapshot that no longer parses", () => {
+    window.sessionStorage.setItem(HOME_FORM.key, '{"goalTime":"3:45"}');
+    const { getByLabelText } = hero();
+    expect((getByLabelText("hours") as HTMLInputElement).value).toBe("4");
+  });
+});
+
+// Display units are the one preference that outlives the tab, and the one that
+// persists on BOTH pages.
+describe("InputForm — remembering display units", () => {
+  const dashboard = () =>
+    render(<InputForm catalog={FIXTURE_CATALOG} onChange={() => {}} />);
+
+  it("comes back to the temperature unit that was chosen", () => {
+    const first = dashboard();
+    fireEvent.click(first.getByText("Manual"));
+    fireEvent.click(first.getByText("°F"));
+    first.unmount();
+
+    const second = dashboard();
+    fireEvent.click(second.getByText("Manual"));
+    expect(
+      window.localStorage.getItem(DISPLAY_UNITS.key),
+    ).toContain('"tempUnit":"F"');
+    expect(
+      (second.getByText("°F") as HTMLElement).getAttribute("aria-pressed"),
+    ).toBe("true");
+  });
+
+  it("stores the preference in localStorage, not the session", () => {
+    // The durability decision, asserted where it is visible: a runner who
+    // prefers °F should not have to re-pick it next week.
+    const first = dashboard();
+    fireEvent.click(first.getByText("Manual"));
+    fireEvent.click(first.getByText("°F"));
+    expect(window.localStorage.getItem(DISPLAY_UNITS.key)).not.toBeNull();
+    expect(window.sessionStorage.getItem(DISPLAY_UNITS.key)).toBeNull();
+  });
+
+  it("still guesses from the distance unit on a first visit", () => {
+    const initial: PacingInput = {
+      courseId: FIXTURE_CATALOG[0].id,
+      unit: "miles",
+      goalTimeSeconds: 14400,
+    };
+    const { getByText } = render(
+      <InputForm
+        catalog={FIXTURE_CATALOG}
+        initial={initial}
+        onChange={() => {}}
+      />,
+    );
+    fireEvent.click(getByText("Manual"));
+    expect(getByText("°F").getAttribute("aria-pressed")).toBe("true");
+  });
+
+  it("lets a stored preference beat that guess", () => {
+    writeState(DISPLAY_UNITS, {
+      tempUnit: "C",
+      speedUnit: "kph",
+      weightUnit: "kg",
+      heightUnit: "cm",
+    });
+    const initial: PacingInput = {
+      courseId: FIXTURE_CATALOG[0].id,
+      unit: "miles",
+      goalTimeSeconds: 14400,
+    };
+    const { getByText } = render(
+      <InputForm
+        catalog={FIXTURE_CATALOG}
+        initial={initial}
+        onChange={() => {}}
+      />,
+    );
+    fireEvent.click(getByText("Manual"));
+    expect(getByText("°C").getAttribute("aria-pressed")).toBe("true");
+  });
+});
+
+// Weather mode is the one weather setting the URL cannot carry: temp/hum/wind
+// always parse back as "manual", so a runner who chose Forecast used to lose it
+// on any reload — including the cold load Stripe's cancel_url produces.
+describe("InputForm — remembering weather mode", () => {
+  // FIXTURE_CATALOG carries no scheduled editions, so raceDate stays empty and
+  // useWeather's `if (!dateISO || !startTime) return` guard means no fetch is
+  // ever attempted here.
+  const dashboard = (initial?: PacingInput) =>
+    render(
+      <InputForm
+        catalog={FIXTURE_CATALOG}
+        initial={initial}
+        onChange={() => {}}
+      />,
+    );
+
+  // "Off" names both a weather mode and the fueling switch, so mode assertions
+  // are scoped to the Weather & Wind section the same way the tests above are.
+  const weather = (r: ReturnType<typeof render>) =>
+    section(r.container, /Weather & Wind/);
+  const pressed = (r: ReturnType<typeof render>, label: string) =>
+    weather(r).getByText(label).getAttribute("aria-pressed");
+
+  it("comes back in Forecast mode after a reload", () => {
+    const first = dashboard();
+    fireEvent.click(weather(first).getByText("Forecast"));
+    first.unmount();
+
+    expect(pressed(dashboard(), "Forecast")).toBe("true");
+  });
+
+  it("does not restore Manual over what the URL said", () => {
+    // Manual IS expressible in the query string, so the link is authoritative
+    // and a stale session choice must not contradict it.
+    const first = dashboard();
+    fireEvent.click(weather(first).getByText("Manual"));
+    first.unmount();
+
+    expect(pressed(dashboard(), "Off")).toBe("true");
+  });
+
+  it("does not restore Off either", () => {
+    const first = dashboard();
+    fireEvent.click(weather(first).getByText("Forecast"));
+    fireEvent.click(weather(first).getByText("Off"));
+    first.unmount();
+
+    const initial: PacingInput = {
+      courseId: FIXTURE_CATALOG[0].id,
+      unit: "km",
+      goalTimeSeconds: 14400,
+      weather: { tempC: 20, humidity: 60, windSpeed: 3, windDirection: 90 },
+    };
+    // A shared link carrying conditions still opens in manual, as it always has.
+    expect(pressed(dashboard(initial), "Manual")).toBe("true");
+  });
+
+  it("leaves the hero form alone", () => {
+    // The hero hides the weather section entirely, and restoring "forecast"
+    // there would fire a forecast request for a race nobody has committed to.
+    const first = dashboard();
+    fireEvent.click(weather(first).getByText("Forecast"));
+    first.unmount();
+
+    const heroForm = render(
+      <InputForm catalog={FIXTURE_CATALOG} persist onCalculate={() => {}} />,
+    );
+    expect(heroForm.queryByText("Forecast")).toBeNull();
   });
 });

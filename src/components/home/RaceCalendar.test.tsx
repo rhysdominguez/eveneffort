@@ -1,7 +1,10 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { fireEvent, render } from "@testing-library/react";
 import { RaceCalendar } from "@/components/home/RaceCalendar";
 import { FIXTURE_EDITIONS, FIXTURE_TODAY } from "@/data/editions.fixture";
+import { HOME_CALENDAR } from "@/lib/stateKeys";
+import { writeState } from "@/lib/clientState";
+import { clearStoredState } from "@/test/storage";
 
 // Every assertion is anchored to FIXTURE_TODAY (2026-08-04), never the real
 // clock. The component corrects to the visitor's own date in an effect, but in
@@ -22,6 +25,11 @@ const select = (c: HTMLElement, id: string) =>
   c.querySelector<HTMLSelectElement>(`#${id}`)!;
 
 describe("RaceCalendar", () => {
+  // The calendar now persists its filter and month to sessionStorage, and jsdom
+  // shares one store across every test in a file — so without this, changing a
+  // filter in one test silently sets up the next one.
+  beforeEach(clearStoredState);
+
   it("opens on the month holding the next upcoming race", () => {
     const { container } = renderCalendar();
     // Sydney 2026-08-30 is the soonest race after FIXTURE_TODAY.
@@ -167,5 +175,85 @@ describe("RaceCalendar", () => {
     expect(container.textContent).toContain("The race calendar is loading");
     expect(container.querySelector("table")).toBeNull();
     expect(container.querySelector("button")).toBeNull();
+  });
+
+  // Someone narrows the calendar, opens a race, then comes back. Everything
+  // below is about them finding the calendar as they left it.
+  describe("remembering where the visitor was", () => {
+    it("comes back to the filter and month it was left on", () => {
+      const { container, unmount } = renderCalendar();
+      fireEvent.change(select(container, "calendar-country"), {
+        target: { value: "JP" },
+      });
+      expect(container.querySelector("h3")?.textContent).toBe("March 2027");
+      unmount();
+
+      // A fresh mount is what a navigation back to the home page produces.
+      const second = renderCalendar().container;
+      expect(select(second, "calendar-country").value).toBe("JP");
+      expect(second.querySelector("h3")?.textContent).toBe("March 2027");
+      expect(second.textContent).toContain("Tokyo Marathon");
+    });
+
+    it("remembers a month stepped to by hand, with no filter", () => {
+      const { container, unmount } = renderCalendar();
+      fireEvent.click(nextButton(container));
+      fireEvent.click(nextButton(container));
+      const reached = container.querySelector("h3")?.textContent;
+      unmount();
+
+      expect(renderCalendar().container.querySelector("h3")?.textContent).toBe(
+        reached,
+      );
+    });
+
+    it("pins the continent alongside a restored country", () => {
+      // selectCountry sets both levels, so the two selects can never come back
+      // contradicting each other.
+      const { container, unmount } = renderCalendar();
+      fireEvent.change(select(container, "calendar-country"), {
+        target: { value: "JP" },
+      });
+      unmount();
+
+      const second = renderCalendar().container;
+      expect(select(second, "calendar-continent").value).toBe("AS");
+    });
+
+    it("opens fresh once the filter is cleared again", () => {
+      const { container, unmount } = renderCalendar();
+      fireEvent.change(select(container, "calendar-continent"), {
+        target: { value: "EU" },
+      });
+      const clear = Array.from(container.querySelectorAll("button")).find(
+        (b) => b.textContent === "Clear",
+      );
+      fireEvent.click(clear!);
+      unmount();
+
+      const second = renderCalendar().container;
+      expect(select(second, "calendar-continent").value).toBe("");
+      expect(second.querySelector("h3")?.textContent).toBe("August 2026");
+    });
+
+    it("drops a stored filter that no longer matches any race", () => {
+      // The catalogue is imported in batches and a country's only race can fall
+      // out of the seeded window between two visits. A filter matching nothing
+      // is indistinguishable from a broken calendar, so it must not be shown.
+      writeState(HOME_CALENDAR, {
+        filter: { continent: "SA", countryCode: "BR", regionCode: null },
+        view: { year: 2027, month: 5 },
+      });
+      const { container } = renderCalendar();
+      expect(select(container, "calendar-continent").value).toBe("");
+      expect(container.querySelector("h3")?.textContent).toBe("August 2026");
+      expect(container.textContent).toContain("Sydney Marathon");
+    });
+
+    it("ignores a stored snapshot that no longer parses", () => {
+      window.sessionStorage.setItem(HOME_CALENDAR.key, '{"filter":"europe"}');
+      const { container } = renderCalendar();
+      expect(container.querySelector("h3")?.textContent).toBe("August 2026");
+    });
   });
 });

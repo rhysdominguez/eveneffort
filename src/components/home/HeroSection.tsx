@@ -63,6 +63,10 @@ export function HeroSection({ catalog }: { catalog: CourseSummary[] }) {
             subtitle="Elevation-adjusted splits for your goal time, course, and conditions."
             catalog={catalog}
             requestedCourseId={selection?.courseId ?? null}
+            // Hero only: what someone typed here survives clicking through to a
+            // chart and coming back. The dashboard's copy of this form is
+            // driven by the URL instead.
+            persist
             onCalculate={(input) => router.push(buildResultsHref(input))}
           />
         </div>

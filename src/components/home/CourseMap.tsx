@@ -15,6 +15,8 @@ import {
   popupMarkup,
   type CoursePinProperties,
 } from "./courseMapData";
+import { readState, writeState } from "@/lib/clientState";
+import { HOME_MAP_CAMERA } from "@/lib/stateKeys";
 
 /**
  * OpenFreeMap's "positron" style — a near-white basemap with grey roads and no
@@ -163,10 +165,38 @@ export function CourseMap({ catalog, onSelectCourse }: Props) {
 
       map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
 
-      const bounds = boundsOf(catalog);
-      if (bounds) {
-        map.fitBounds(bounds, { padding: 64, duration: 0, maxZoom: 5 });
+      // Where the runner left the map last time wins over the default fit.
+      // Validated in stateKeys.ts rather than trusted: MapLibre throws on a
+      // non-finite center or an out-of-range latitude, and a throw HERE — inside
+      // the build, before any layer is added — leaves an empty grey box where
+      // the band should be.
+      const camera = readState(HOME_MAP_CAMERA);
+      if (camera) {
+        map.jumpTo(camera);
+      } else {
+        const bounds = boundsOf(catalog);
+        if (bounds) {
+          map.fitBounds(bounds, { padding: 64, duration: 0, maxZoom: 5 });
+        }
       }
+
+      // Attached after the opening camera is set, so the default fit isn't
+      // recorded as though the runner had chosen it. `moveend` covers pan,
+      // zoom, the cluster-click easeTo and "Near me" alike — every way the
+      // camera can end up somewhere deliberate.
+      map.on("moveend", () => {
+        if (cancelled) return;
+        // `.wrap()` because panning east past the dateline keeps counting up —
+        // getCenter() happily returns lng 200, which the validator would then
+        // reject on the way back in, silently losing the camera.
+        const center = map.getCenter().wrap();
+        writeState(HOME_MAP_CAMERA, {
+          center: [center.lng, center.lat],
+          zoom: map.getZoom(),
+          bearing: map.getBearing(),
+          pitch: map.getPitch(),
+        });
+      });
 
       map.on("load", () => {
         if (cancelled) return;

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type {
   CourseId,
   CourseSummary,
@@ -36,6 +36,8 @@ import {
   massToDisplay,
   roundForDisplay,
 } from "@/lib/units/weather";
+import { useStoredState } from "@/hooks/useStoredState";
+import { DISPLAY_UNITS, HOME_FORM } from "@/lib/stateKeys";
 
 // Two modes:
 // - Button mode (homepage): pass `onCalculate`. Owns its own state and
@@ -69,12 +71,24 @@ interface Props {
   title?: string;
   /** Supporting line under the title. Hero only — the dashboard omits it. */
   subtitle?: string;
+  /**
+   * Remember what was typed here across a navigation away and back.
+   *
+   * Hero only. The dashboard deliberately does NOT set this: there, `initial`
+   * comes from the query string, and a session snapshot quietly overriding a
+   * link someone was sent would make shared URLs mean different things to
+   * different people. Display units are the exception and persist in both
+   * modes — see below.
+   */
+  persist?: boolean;
 }
 
 const eyebrowBase = "block text-xs uppercase tracking-wider font-medium";
 
 const numClass =
   "w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] px-3 py-3 text-center text-xl font-tabular font-medium focus:border-[var(--color-border-focus)] focus:outline-none transition-colors";
+
+const DEFAULT_GOAL_TIME: GoalTimeInput = { hours: 4, minutes: 0, seconds: 0 };
 
 function secondsToGoalTime(total: number): GoalTimeInput {
   const t = Math.max(0, Math.floor(total));
@@ -94,6 +108,7 @@ export function InputForm({
   initial,
   title,
   subtitle,
+  persist = false,
 }: Props) {
   const live = onChange !== undefined;
 
@@ -107,25 +122,59 @@ export function InputForm({
       : "text-[var(--color-text-secondary)]"
   }`;
 
-  const [goalTime, setGoalTime] = useState<GoalTimeInput>(
-    initial
-      ? secondsToGoalTime(initial.goalTimeSeconds)
-      : { hours: 4, minutes: 0, seconds: 0 },
+  // The hero form remembers what was typed into it across a navigation away
+  // and back; the dashboard's copy never does, because `initial` there comes
+  // from the query string and a session snapshot silently overriding a link
+  // someone was SENT would make shared URLs mean different things to different
+  // people.
+  //
+  // The stored snapshot sits BETWEEN the props and local edits rather than
+  // seeding state: `edit ?? stored ?? prop default`. Written that way because
+  // the home page is statically prerendered — `useStoredState` reports null on
+  // the server and through hydration, so the first client render matches the
+  // HTML exactly, then React swaps in the stored values before paint. Seeding a
+  // `useState` initialiser from storage instead would be a hydration mismatch.
+  const [storedForm, storeForm] = useStoredState(HOME_FORM);
+  const restored = persist ? storedForm : null;
+
+  const [goalTimeEdit, setGoalTimeEdit] = useState<GoalTimeInput | null>(null);
+  // Memoized because it feeds the write-through effect's dependency list: a
+  // fresh object every render would re-run the effect every render.
+  const propGoalTime = useMemo(
+    () =>
+      initial ? secondsToGoalTime(initial.goalTimeSeconds) : DEFAULT_GOAL_TIME,
+    [initial],
   );
+  const goalTime = goalTimeEdit ?? restored?.goalTime ?? propGoalTime;
+
   const initialCourseId = initial?.courseId ?? catalog[0]?.id ?? "";
-  const [courseId, setCourseId] = useState<CourseId>(initialCourseId);
-  const [unit, setUnit] = useState<Unit>(initial?.unit ?? "km");
+  const [courseIdEdit, setCourseIdEdit] = useState<CourseId | null>(null);
+  // A restored slug is only honoured while the course is still selectable —
+  // courses are database rows, and one can leave the seed between two visits.
+  const restoredCourseId =
+    restored && catalog.some((c) => c.id === restored.courseId)
+      ? restored.courseId
+      : null;
+  const courseId = courseIdEdit ?? restoredCourseId ?? initialCourseId;
+
+  const [unitEdit, setUnitEdit] = useState<Unit | null>(null);
+  const unit = unitEdit ?? restored?.unit ?? initial?.unit ?? "km";
+
   // Seeded from the chosen course's next scheduled edition — the first thing
   // the edition table buys the user. A date carried in from a shared URL
   // always wins.
-  const [raceDate, setRaceDate] = useState<string>(
+  const [raceDateEdit, setRaceDateEdit] = useState<string | null>(null);
+  const raceDate =
+    raceDateEdit ??
+    restored?.raceDate ??
     initial?.raceDateISO ??
-      catalog.find((c) => c.id === initialCourseId)?.nextRaceDateISO ??
-      "",
+    catalog.find((c) => c.id === initialCourseId)?.nextRaceDateISO ??
+    "";
+  const [raceStartTimeEdit, setRaceStartTimeEdit] = useState<string | null>(
+    null,
   );
-  const [raceStartTime, setRaceStartTime] = useState<string>(
-    initial?.raceStartTime ?? "",
-  );
+  const raceStartTime =
+    raceStartTimeEdit ?? restored?.raceStartTime ?? initial?.raceStartTime ?? "";
   // Weather + body metrics are one section, not two — the body feeds the wind
   // drag model, so they're a single setting. It's always open: on the
   // dashboard these are the controls people came to adjust, and hiding them
@@ -152,18 +201,71 @@ export function InputForm({
 
   // Per-field display units. Seeded once from the distance unit so an imperial
   // user gets sensible defaults; independent from it thereafter.
-  const [tempUnit, setTempUnit] = useState<TempUnit>(
-    initial?.unit === "miles" ? "F" : "C",
-  );
-  const [speedUnit, setSpeedUnit] = useState<SpeedUnit>(
-    initial?.unit === "miles" ? "mph" : "kph",
-  );
-  const [weightUnit, setWeightUnit] = useState<WeightUnit>(
-    initial?.unit === "miles" ? "lb" : "kg",
-  );
-  const [heightUnit, setHeightUnit] = useState<HeightUnit>(
-    initial?.unit === "miles" ? "ftin" : "cm",
-  );
+  //
+  // These persist on BOTH pages, and in localStorage rather than session
+  // storage: preferring °F and pounds is a fact about the runner, not about
+  // this visit, and re-picking it every time is the actual annoyance. A stored
+  // preference outranks the `unit === "miles"` guess, which stays as the
+  // first-visit default.
+  const [storedUnits, storeUnits] = useStoredState(DISPLAY_UNITS);
+  const [tempUnitEdit, setTempUnitEdit] = useState<TempUnit | null>(null);
+  const tempUnit =
+    tempUnitEdit ?? storedUnits?.tempUnit ?? (initial?.unit === "miles" ? "F" : "C");
+  const [speedUnitEdit, setSpeedUnitEdit] = useState<SpeedUnit | null>(null);
+  const speedUnit =
+    speedUnitEdit ??
+    storedUnits?.speedUnit ??
+    (initial?.unit === "miles" ? "mph" : "kph");
+  const [weightUnitEdit, setWeightUnitEdit] = useState<WeightUnit | null>(null);
+  const weightUnit =
+    weightUnitEdit ??
+    storedUnits?.weightUnit ??
+    (initial?.unit === "miles" ? "lb" : "kg");
+  const [heightUnitEdit, setHeightUnitEdit] = useState<HeightUnit | null>(null);
+  const heightUnit =
+    heightUnitEdit ??
+    storedUnits?.heightUnit ??
+    (initial?.unit === "miles" ? "ftin" : "cm");
+
+  // Write-through. An effect rather than a write inside each setter, because
+  // several fields move together — picking a course also moves the race date —
+  // and per-setter writes would each persist a snapshot built from the OTHER
+  // fields' pre-update values, so the last one to run would undo the first.
+  //
+  // Gated on "the runner has actually touched this form", so simply mounting
+  // never writes defaults over a snapshot that is about to be read back. No
+  // write loop is possible: an identical write leaves the stored string
+  // unchanged, and `getStateSnapshot` hands back the same cached reference for
+  // an unchanged string, so nothing re-renders.
+  const formTouched =
+    goalTimeEdit !== null ||
+    courseIdEdit !== null ||
+    unitEdit !== null ||
+    raceDateEdit !== null ||
+    raceStartTimeEdit !== null;
+  useEffect(() => {
+    if (!persist || !formTouched) return;
+    storeForm({ courseId, goalTime, unit, raceDate, raceStartTime });
+  }, [
+    persist,
+    formTouched,
+    storeForm,
+    courseId,
+    goalTime,
+    unit,
+    raceDate,
+    raceStartTime,
+  ]);
+
+  const unitsTouched =
+    tempUnitEdit !== null ||
+    speedUnitEdit !== null ||
+    weightUnitEdit !== null ||
+    heightUnitEdit !== null;
+  useEffect(() => {
+    if (!unitsTouched) return;
+    storeUnits({ tempUnit, speedUnit, weightUnit, heightUnit });
+  }, [unitsTouched, storeUnits, tempUnit, speedUnit, weightUnit, heightUnit]);
 
   const selected = catalog.find((c) => c.id === courseId) ?? catalog[0];
 
@@ -182,6 +284,10 @@ export function InputForm({
     raceDate || undefined,
     raceStartTime || undefined,
     initial?.weather,
+    // Live mode only. The hero hides the whole weather section, so there is no
+    // mode to remember there — and restoring "forecast" would fire a forecast
+    // request on the home page for a race nobody has committed to yet.
+    live,
   );
 
   useEffect(() => {
@@ -195,8 +301,8 @@ export function InputForm({
   function selectCourse(nextId: CourseId) {
     const prev = catalog.find((c) => c.id === courseId)?.nextRaceDateISO;
     const next = catalog.find((c) => c.id === nextId)?.nextRaceDateISO;
-    setCourseId(nextId);
-    if (next && (raceDate === "" || raceDate === prev)) setRaceDate(next);
+    setCourseIdEdit(nextId);
+    if (next && (raceDate === "" || raceDate === prev)) setRaceDateEdit(next);
   }
 
   // A pin on the home map routes through the same handler as the dropdown, so
@@ -281,7 +387,7 @@ export function InputForm({
     // Integers only — strip anything but digits.
     const digits = value.replace(/\D/g, "");
     const n = digits === "" ? NaN : Number(digits);
-    setGoalTime((g) => ({ ...g, [key]: n }));
+    setGoalTimeEdit({ ...goalTime, [key]: n });
   };
 
   const handleSubmit = () => {
@@ -363,7 +469,7 @@ export function InputForm({
           <DatePicker
             id="race-date"
             value={raceDate}
-            onChange={setRaceDate}
+            onChange={setRaceDateEdit}
             placeholder="Select a date"
             placement={live ? "bottom" : "top"}
           />
@@ -375,7 +481,7 @@ export function InputForm({
           <TimePicker
             id="race-start"
             value={raceStartTime}
-            onChange={setRaceStartTime}
+            onChange={setRaceStartTimeEdit}
             placeholder="Select a time"
             placement={live ? "bottom" : "top"}
           />
@@ -392,7 +498,7 @@ export function InputForm({
             ["km", "km"],
             ["miles", "mi"],
           ]}
-          onChange={(value) => setUnit(value as Unit)}
+          onChange={(value) => setUnitEdit(value as Unit)}
           variant="prominent"
         />
       </div>
@@ -410,9 +516,9 @@ export function InputForm({
               weather={weather}
               distanceUnit={unit}
               tempUnit={tempUnit}
-              onTempUnitChange={setTempUnit}
+              onTempUnitChange={setTempUnitEdit}
               speedUnit={speedUnit}
-              onSpeedUnitChange={setSpeedUnit}
+              onSpeedUnitChange={setSpeedUnitEdit}
               hasTiming={Boolean(raceDate && raceStartTime)}
             />
             {/* Body metrics feed the wind drag model, so they live in this
@@ -437,7 +543,7 @@ export function InputForm({
                         ["kg", "kg"],
                         ["lb", "lb"],
                       ]}
-                      onChange={setWeightUnit}
+                      onChange={setWeightUnitEdit}
                       disabled={!weather.enabled}
                     />
                   }
@@ -459,7 +565,7 @@ export function InputForm({
                   value={heightCm}
                   onChange={setHeightCm}
                   unit={heightUnit}
-                  onUnitChange={setHeightUnit}
+                  onUnitChange={setHeightUnitEdit}
                   disabled={!weather.enabled}
                 />
               </div>

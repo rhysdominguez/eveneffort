@@ -8,6 +8,9 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     globals: true,
+    // Repairs window.localStorage, which jsdom leaves unreachable here. See the
+    // file for why.
+    setupFiles: ["src/test/setup.ts"],
     include: ["src/**/*.{test,spec}.{ts,tsx}"],
   },
   resolve: {
