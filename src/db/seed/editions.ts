@@ -1970,6 +1970,44 @@ export const RECURRENCE: Record<string, RecurrenceRule> = {
     nth: 3,
     note: "Derived from the 2024-04-21 edition; not verified against the organizer",
   },
+  // Imported from goandrace.com — batch 2026-08-17. Each rule is derived
+  // from one observed date, not from the organizer's own statement.
+  "buckeye-marathon": {
+    month: 1,
+    weekday: 6,
+    nth: 2,
+    note: "Confirmed 12th annual edition runs Jan 10, 2026 (2nd Saturday), matching the derived pattern. Timezone corrected from the longitude-banded guess (America/Denver) to America/Phoenix — Arizona does not observe DST.",
+  },
+  "can-tho-heritage-marathon": {
+    month: 12,
+    weekday: 0,
+    nth: 3,
+    note: "Confirmed still runs: 2025 edition held Dec 21, 2025 (8 months before this import). Weekday corrected from Saturday (2024's date) to Sunday (2025's date) — the race appears to hold its \"3rd weekend of December\" slot without a fixed weekday, so this is an approximation, not a confirmed rule.",
+  },
+  "cayman-islands-marathon": {
+    month: 12,
+    weekday: 0,
+    nth: 1,
+    note: "Confirmed still runs: caymanislandsmarathon.com states \"first Sunday in December every year\" and lists 2026 registration open for Dec 6, 2026 — matches the derived pattern exactly. Organizer left blank: the site names no producing club, only a business contact (Kelly Holding Ltd) that is not clearly the race organizer.",
+  },
+  "dingle-marathon": {
+    month: 9,
+    weekday: 6,
+    nth: 1,
+    note: "Confirmed still runs: dinglemarathon.ie lists Sept 5, 2026 (1st Saturday), matching the derived pattern (sold out, which is evidence of activity, not defunctness). Slug simplified from \"dingle-full-and-half-marathon\" to \"dingle-marathon\" per convention — measured 41.65 km confirms this GPX is the full-marathon course, not the half.",
+  },
+  "funchal-marathon": {
+    month: 1,
+    weekday: 0,
+    nth: -1,
+    note: "Corrected from the 2022 scrape's nth=4: madeiramarathon.com confirms Jan 31, 2027, the LAST Sunday of January (2022's 4th Sunday happened to not be the last that year). Recurrence re-derived from the current source per the still-runs check.",
+  },
+  "maratona-di-ravenna": {
+    month: 11,
+    weekday: 0,
+    nth: 2,
+    note: "Confirmed against maratonadiravenna.com: 2026 edition is Nov 8, 2026 (2nd Sunday), matching the derived pattern.",
+  },
 };
 
 export interface ConfirmedEdition {
@@ -2386,6 +2424,17 @@ export const CONFIRMED_EDITIONS: ConfirmedEdition[] = [
   { seriesSlug: "aabenraa-mountain-marathon", year: 2024, raceDate: "2024-06-22" },
   { seriesSlug: "beirut-marathon", year: 2022, raceDate: "2022-11-13" },
   { seriesSlug: "blackpool-festival-of-running", year: 2024, raceDate: "2024-04-21" },
+  // Imported from goandrace.com — batch 2026-08-17. Dates as published by
+  // the event listing, or verified against the organizer during review.
+  // startTimeLocal appears only where a real one was read off the
+  // organizer's page — never guessed, since a wrong hour silently keys
+  // the weather forecast to it.
+  { seriesSlug: "buckeye-marathon", year: 2022, raceDate: "2022-01-08" },
+  { seriesSlug: "can-tho-heritage-marathon", year: 2024, raceDate: "2024-12-21" },
+  { seriesSlug: "cayman-islands-marathon", year: 2021, raceDate: "2021-12-05" },
+  { seriesSlug: "dingle-marathon", year: 2024, raceDate: "2024-09-07" },
+  { seriesSlug: "funchal-marathon", year: 2022, raceDate: "2022-01-23" },
+  { seriesSlug: "maratona-di-ravenna", year: 2024, raceDate: "2024-11-10" },
 ];
 
 /**

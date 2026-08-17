@@ -362,6 +362,13 @@ export const PUBLISHED_COURSE_SLUGS: string[] = [
   "aabenraa-mountain-marathon",
   "beirut-marathon",
   "blackpool-festival-of-running",
+  // Batch 2026-08-17, imported from goandrace.com on 2026-08-17.
+  "buckeye-marathon",
+  "can-tho-heritage-marathon",
+  "cayman-islands-marathon",
+  "dingle-marathon",
+  "funchal-marathon",
+  "maratona-di-ravenna",
 ];
 
 /** The shape every course slug must take: lowercase, digits, single hyphens. */

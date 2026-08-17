@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-11T00:58:33.327Z",
+  "updatedAt": "2026-08-17T14:07:02.588Z",
   "courses": [
     {
       "courseSlug": "1-100-km-nel-gargano",
@@ -1089,6 +1089,27 @@
       "edition": null
     },
     {
+      "courseSlug": "16-maratona-di-ragusa",
+      "verdict": "rejected",
+      "reasons": [
+        "parser failed: total route length 41.443 km is outside [41.5, 43.6] km"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/16-maratona-di-ragusa-2019.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2019/01/27/gpx_20190127_id6804_race1_20181204003332.gpx?t=1786974731",
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "16-maratona-s-antonio",
       "verdict": "rejected",
       "reasons": [
@@ -1234,57 +1255,6 @@
       "series": null,
       "recurrence": null,
       "edition": null
-    },
-    {
-      "courseSlug": "treviso-marathon",
-      "verdict": "ready",
-      "reasons": [
-        "measured 41.771 km, outside the [42.0, 42.4] band",
-        "no organizer name published — fill SeriesSeed.organizer by hand"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/17-treviso-marathon-2022.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2022/03/27/gpx_20220327_id7390_race1_20211223113942.gpx?t=1786409074",
-        "gpxSha256": "820fa36cf55dc15ee25a43bcfd67b2b852b5a7f62d3b3dca9d1c1b080dd28821"
-      },
-      "stats": {
-        "totalKm": 41.77126851152488,
-        "gainM": 31.700000000000003
-      },
-      "city": {
-        "slug": "treviso-it",
-        "name": "Treviso",
-        "countryCode": "IT",
-        "countryName": "Italy",
-        "regionCode": null,
-        "regionName": null,
-        "latitude": 45.662775,
-        "longitude": 12.266382,
-        "timezone": "Europe/Rome"
-      },
-      "citySlug": "treviso-it",
-      "series": {
-        "slug": "treviso-marathon",
-        "name": "Treviso Marathon",
-        "citySlug": "treviso-it",
-        "courseSlug": "treviso-marathon",
-        "isMajor": false,
-        "typicalMonth": 3,
-        "websiteUrl": "https://www.trevisomarathon.com/",
-        "organizer": ""
-      },
-      "recurrence": {
-        "seriesSlug": "treviso-marathon",
-        "month": 3,
-        "weekday": 0,
-        "nth": -1,
-        "note": "Derived from the 2022-03-27 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "treviso-marathon",
-        "year": 2022,
-        "raceDate": "2022-03-27"
-      }
     },
     {
       "courseSlug": "18-collemar-athon-barchi",
@@ -1629,7 +1599,7 @@
         "fetch: looks like the already-seeded \"Bologna Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
       ],
       "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/2-bologna-marathon-2022.php",
+        "eventUrl": "https://www.goandrace.com/en/running-events/2-bologna-marathon-2023.php",
         "gpxUrl": null,
         "gpxSha256": null
       },
@@ -1797,7 +1767,7 @@
         "fetch: event page links no course map"
       ],
       "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/2-maratona-di-classe-2022.php",
+        "eventUrl": "https://www.goandrace.com/en/running-events/2-maratona-di-classe-2021.php",
         "gpxUrl": null,
         "gpxSha256": null
       },
@@ -2427,108 +2397,6 @@
       "edition": null
     },
     {
-      "courseSlug": "ravenna-marathon",
-      "verdict": "rejected",
-      "reasons": [
-        "no organizer name published — fill SeriesSeed.organizer by hand",
-        "All-zero elevation data: src/data/courses/ravenna-marathon.json elevations array was [0.0, ...] x44 — a placeholder/broken GPX from goandrace source, not a genuinely flat course (real courses show millimeter-scale GPS noise). Discovered post-promotion via courses.integrity.test.ts placeholder check. Course/GPX files moved to data/import/quarantine/. Seed files (cities.ts, series.ts, editions.ts, slug-ledger.ts) reverted."
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/24-maratona-internazionale-ravenna-citta-d-arte-2023.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2023/11/12/gpx_20231112_id8240_race1_20231020233325.gpx?t=1786409230",
-        "gpxSha256": "61e1253a66c5c2c7bf3cccb0a7c0035552b1454973042de2cc2dcf5a833185b4"
-      },
-      "stats": {
-        "totalKm": 42.158982790688896,
-        "gainM": 0
-      },
-      "city": {
-        "slug": "ravenna-it",
-        "name": "Ravenna",
-        "countryCode": "IT",
-        "countryName": "Italy",
-        "regionCode": null,
-        "regionName": null,
-        "latitude": 44.420906,
-        "longitude": 12.226382,
-        "timezone": "Europe/Rome"
-      },
-      "citySlug": "ravenna-it",
-      "series": {
-        "slug": "ravenna-marathon",
-        "name": "Ravenna Marathon",
-        "citySlug": "ravenna-it",
-        "courseSlug": "ravenna-marathon",
-        "isMajor": false,
-        "typicalMonth": 11,
-        "websiteUrl": "https://maratonadiravenna.com",
-        "organizer": ""
-      },
-      "recurrence": {
-        "seriesSlug": "ravenna-marathon",
-        "month": 11,
-        "weekday": 0,
-        "nth": 2,
-        "note": "Derived from the 2023-11-12 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "ravenna-marathon",
-        "year": 2023,
-        "raceDate": "2023-11-12"
-      }
-    },
-    {
-      "courseSlug": "padova-marathon",
-      "verdict": "ready",
-      "reasons": [
-        "city padova-it is already seeded (start lines 0.0 km apart); reusing its existing pin, emitting no city row",
-        "no organizer name published — fill SeriesSeed.organizer by hand"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/24-maratona-sant-antonio-2024-padova.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2024/04/21/gpx_20240421_id8561_race1_20240322232559.gpx?t=1786409236",
-        "gpxSha256": "6b1274e4f443212789a679eb6a7c8fd22da80daa0febdca8723c12fd9dbec002"
-      },
-      "stats": {
-        "totalKm": 42.37487743202851,
-        "gainM": 55.30000000000001
-      },
-      "city": {
-        "slug": "padova-it",
-        "name": "Padova",
-        "countryCode": "IT",
-        "countryName": "Italy",
-        "regionCode": null,
-        "regionName": null,
-        "latitude": 45.429296,
-        "longitude": 11.854082,
-        "timezone": "Europe/Rome"
-      },
-      "citySlug": "padova-it",
-      "series": {
-        "slug": "padova-marathon",
-        "name": "Padova Marathon",
-        "citySlug": "padova-it",
-        "courseSlug": "padova-marathon",
-        "isMajor": false,
-        "typicalMonth": 4,
-        "websiteUrl": "https://padovamarathon.com",
-        "organizer": "Assindustria Sport"
-      },
-      "recurrence": {
-        "seriesSlug": "padova-marathon",
-        "month": 4,
-        "weekday": 0,
-        "nth": 3,
-        "note": "Derived from the 2024-04-21 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "padova-marathon",
-        "year": 2024,
-        "raceDate": "2024-04-21"
-      }
-    },
-    {
       "courseSlug": "24-pisa-marathon-14-la-pisanina-10-corsa-dei-babbo-natale",
       "verdict": "rejected",
       "reasons": [
@@ -2556,7 +2424,7 @@
         "fetch: looks like the already-seeded \"Verdi Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
       ],
       "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/24-verdi-marathon-2023-salsomaggiore-terme.php",
+        "eventUrl": "https://www.goandrace.com/en/running-events/24-verdi-marathon-2022-salsomaggiore-terme.php",
         "gpxUrl": null,
         "gpxSha256": null
       },
@@ -2613,6 +2481,27 @@
       "edition": null
     },
     {
+      "courseSlug": "26-maratona-di-reggio-emilia-reggio-nell-emilia",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: looks like the already-seeded \"Reggio Emilia Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/26-maratona-di-reggio-emilia-2021-reggio-nell-emilia.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "26-maratonina-del-campanile",
       "verdict": "rejected",
       "reasons": [
@@ -2632,57 +2521,6 @@
       "series": null,
       "recurrence": null,
       "edition": null
-    },
-    {
-      "courseSlug": "reggio-emilia-marathon",
-      "verdict": "ready",
-      "reasons": [
-        "measured 43.278 km, outside the [42.0, 42.4] band",
-        "no organizer name published — fill SeriesSeed.organizer by hand"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/27-maratona-di-reggio-emilia-2-10-miglia-a-reggio-emilia-2023.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2023/12/10/gpx_20231210_id8246_race1_20231021185748.gpx?t=1786409257",
-        "gpxSha256": "a1ae3dcc318aad2377fe418955c270b5da20d40da848f0101f934bce8bb86f80"
-      },
-      "stats": {
-        "totalKm": 43.27750528760429,
-        "gainM": 114.69999999999999
-      },
-      "city": {
-        "slug": "reggio-emilia-it",
-        "name": "Reggio Emilia",
-        "countryCode": "IT",
-        "countryName": "Italy",
-        "regionCode": null,
-        "regionName": null,
-        "latitude": 44.700304,
-        "longitude": 10.630799,
-        "timezone": "Europe/Rome"
-      },
-      "citySlug": "reggio-emilia-it",
-      "series": {
-        "slug": "reggio-emilia-marathon",
-        "name": "Reggio Emilia Marathon",
-        "citySlug": "reggio-emilia-it",
-        "courseSlug": "reggio-emilia-marathon",
-        "isMajor": false,
-        "typicalMonth": 12,
-        "websiteUrl": "https://www.maratonadireggioemilia.it",
-        "organizer": "Tricolore Sport Marathon"
-      },
-      "recurrence": {
-        "seriesSlug": "reggio-emilia-marathon",
-        "month": 12,
-        "weekday": 0,
-        "nth": 2,
-        "note": "Derived from the 2023-12-10 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "reggio-emilia-marathon",
-        "year": 2023,
-        "raceDate": "2023-12-10"
-      }
     },
     {
       "courseSlug": "27-run-rome-the-marathon-roma",
@@ -2754,7 +2592,7 @@
         "fetch: looks like the already-seeded \"Rome Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
       ],
       "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/28-run-rome-the-marathon-2023-roma.php",
+        "eventUrl": "https://www.goandrace.com/en/running-events/28-run-rome-the-marathon-2022-roma.php",
         "gpxUrl": null,
         "gpxSha256": null
       },
@@ -2956,57 +2794,6 @@
       "series": null,
       "recurrence": null,
       "edition": null
-    },
-    {
-      "courseSlug": "catania-marathon",
-      "verdict": "ready",
-      "reasons": [
-        "measured 42.430 km, outside the [42.0, 42.4] band",
-        "no organizer name published — fill SeriesSeed.organizer by hand"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/3-maratona-di-catania-2021.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2021/12/12/gpx_20211212_id7283_race1_20211030183841.gpx?t=1786409293",
-        "gpxSha256": "831e3506acb3ab050b155d7b6fa83a78d2fdbb57d7a798e0e3be72489e5f5b3f"
-      },
-      "stats": {
-        "totalKm": 42.43037319700057,
-        "gainM": 8.899999999999999
-      },
-      "city": {
-        "slug": "catania-it",
-        "name": "Catania",
-        "countryCode": "IT",
-        "countryName": "Italy",
-        "regionCode": null,
-        "regionName": null,
-        "latitude": 37.475593,
-        "longitude": 15.08375,
-        "timezone": "Europe/Rome"
-      },
-      "citySlug": "catania-it",
-      "series": {
-        "slug": "catania-marathon",
-        "name": "Catania Marathon",
-        "citySlug": "catania-it",
-        "courseSlug": "catania-marathon",
-        "isMajor": false,
-        "typicalMonth": 12,
-        "websiteUrl": "http://www.maratonadicatania.it/",
-        "organizer": "Atletica Sicilia"
-      },
-      "recurrence": {
-        "seriesSlug": "catania-marathon",
-        "month": 12,
-        "weekday": 0,
-        "nth": 2,
-        "note": "Derived from the 2021-12-12 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "catania-marathon",
-        "year": 2021,
-        "raceDate": "2021-12-12"
-      }
     },
     {
       "courseSlug": "3-mytho-marathon",
@@ -3403,106 +3190,6 @@
       "edition": null
     },
     {
-      "courseSlug": "belgrade-marathon",
-      "verdict": "ready",
-      "reasons": [
-        "no organizer name published — fill SeriesSeed.organizer by hand"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/37th-comtrade-belgrade-maraton-2024.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2024/04/28/gpx_20240428_id9636_race1_20240318221954.gpx?t=1786409338",
-        "gpxSha256": "a568aca08ae1e2e19d7118a24f306120103ff1e46dce73664a39deb64edf4b2d"
-      },
-      "stats": {
-        "totalKm": 42.25318390469083,
-        "gainM": 91.49999999999999
-      },
-      "city": {
-        "slug": "belgrade-rs",
-        "name": "Belgrade",
-        "countryCode": "RS",
-        "countryName": "Serbia",
-        "regionCode": null,
-        "regionName": null,
-        "latitude": 44.809446,
-        "longitude": 20.467599,
-        "timezone": "Europe/Belgrade"
-      },
-      "citySlug": "belgrade-rs",
-      "series": {
-        "slug": "belgrade-marathon",
-        "name": "Belgrade Marathon",
-        "citySlug": "belgrade-rs",
-        "courseSlug": "belgrade-marathon",
-        "isMajor": false,
-        "typicalMonth": 4,
-        "websiteUrl": "https://bgdmarathon.org",
-        "organizer": ""
-      },
-      "recurrence": {
-        "seriesSlug": "belgrade-marathon",
-        "month": 4,
-        "weekday": 0,
-        "nth": -1,
-        "note": "Derived from the 2024-04-28 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "belgrade-marathon",
-        "year": 2024,
-        "raceDate": "2024-04-28"
-      }
-    },
-    {
-      "courseSlug": "medoc-marathon",
-      "verdict": "ready",
-      "reasons": [
-        "no organizer name published — fill SeriesSeed.organizer by hand"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/38-marathon-des-chateaux-du-medoc-2024-pauillac.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2024/09/07/gpx_20240907_id9930_race1_20240711112209.gpx?t=1786409343",
-        "gpxSha256": "36559168b7256d926936b0dd5e3e9c39365e599253dad2f0f947b9126d707dda"
-      },
-      "stats": {
-        "totalKm": 42.25001846162204,
-        "gainM": 60.70000000000001
-      },
-      "city": {
-        "slug": "pauillac-fr",
-        "name": "Pauillac",
-        "countryCode": "FR",
-        "countryName": "France",
-        "regionCode": null,
-        "regionName": null,
-        "latitude": 45.20283,
-        "longitude": -0.74694,
-        "timezone": "Europe/Paris"
-      },
-      "citySlug": "pauillac-fr",
-      "series": {
-        "slug": "medoc-marathon",
-        "name": "Marathon du Médoc",
-        "citySlug": "pauillac-fr",
-        "courseSlug": "medoc-marathon",
-        "isMajor": false,
-        "typicalMonth": 9,
-        "websiteUrl": "https://www.marathondumedoc.com",
-        "organizer": "AMCM (Association Marathon des Châteaux du Médoc)"
-      },
-      "recurrence": {
-        "seriesSlug": "medoc-marathon",
-        "month": 9,
-        "weekday": 6,
-        "nth": 1,
-        "note": "Derived from the 2024-09-07 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "medoc-marathon",
-        "year": 2024,
-        "raceDate": "2024-09-07"
-      }
-    },
-    {
       "courseSlug": "39-firenze-marathon",
       "verdict": "rejected",
       "reasons": [
@@ -3648,57 +3335,6 @@
       "series": null,
       "recurrence": null,
       "edition": null
-    },
-    {
-      "courseSlug": "grecia-salentina-marathon",
-      "verdict": "ready",
-      "reasons": [
-        "no official website published — SeriesSeed.websiteUrl needs one",
-        "no organizer name published — fill SeriesSeed.organizer by hand"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/4-maratona-della-grecia-salentina-2023-calimera.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2023/10/29/gpx_20231029_id8243_race1_20231021155847.gpx?t=1786409362",
-        "gpxSha256": "3342894501c028ede4cfaaf08d535f116c119c7607040fd441932ad7bd370f9c"
-      },
-      "stats": {
-        "totalKm": 42.22936653588147,
-        "gainM": 102.5
-      },
-      "city": {
-        "slug": "calimera-it",
-        "name": "Calimera",
-        "countryCode": "IT",
-        "countryName": "Italy",
-        "regionCode": null,
-        "regionName": null,
-        "latitude": 40.25103,
-        "longitude": 18.280029,
-        "timezone": "Europe/Rome"
-      },
-      "citySlug": "calimera-it",
-      "series": {
-        "slug": "grecia-salentina-marathon",
-        "name": "Maratona della Grecia Salentina",
-        "citySlug": "calimera-it",
-        "courseSlug": "grecia-salentina-marathon",
-        "isMajor": false,
-        "typicalMonth": 10,
-        "websiteUrl": "",
-        "organizer": ""
-      },
-      "recurrence": {
-        "seriesSlug": "grecia-salentina-marathon",
-        "month": 10,
-        "weekday": 0,
-        "nth": -1,
-        "note": "Derived from the 2023-10-29 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "grecia-salentina-marathon",
-        "year": 2023,
-        "raceDate": "2023-10-29"
-      }
     },
     {
       "courseSlug": "4-maratona-di-catania",
@@ -3995,56 +3631,6 @@
       "edition": null
     },
     {
-      "courseSlug": "mugello-marathon",
-      "verdict": "ready",
-      "reasons": [
-        "no organizer name published — fill SeriesSeed.organizer by hand"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/49-maratona-del-mugello-2023-borgo-san-lorenzo.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2023/10/01/gpx_20231001_id7856_race1_20230809191052.gpx?t=1786409405",
-        "gpxSha256": "58cea93cfe98a362a2c3b6039f7a506327c06c6010d614b4c33f51f4dc31010f"
-      },
-      "stats": {
-        "totalKm": 42.121741708889544,
-        "gainM": 239.19999999999996
-      },
-      "city": {
-        "slug": "borgo-san-lorenzo-it",
-        "name": "Borgo San Lorenzo",
-        "countryCode": "IT",
-        "countryName": "Italy",
-        "regionCode": null,
-        "regionName": null,
-        "latitude": 43.955367,
-        "longitude": 11.38808,
-        "timezone": "Europe/Rome"
-      },
-      "citySlug": "borgo-san-lorenzo-it",
-      "series": {
-        "slug": "mugello-marathon",
-        "name": "Mugello Marathon",
-        "citySlug": "borgo-san-lorenzo-it",
-        "courseSlug": "mugello-marathon",
-        "isMajor": false,
-        "typicalMonth": 10,
-        "websiteUrl": "http://www.maratonamugello.it/",
-        "organizer": ""
-      },
-      "recurrence": {
-        "seriesSlug": "mugello-marathon",
-        "month": 10,
-        "weekday": 0,
-        "nth": 1,
-        "note": "Derived from the 2023-10-01 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "mugello-marathon",
-        "year": 2023,
-        "raceDate": "2023-10-01"
-      }
-    },
-    {
       "courseSlug": "4th-mytho-marathon-the-42-195km-of-friuli-venezia-giulia-grado",
       "verdict": "rejected",
       "reasons": [
@@ -4213,56 +3799,6 @@
       "edition": null
     },
     {
-      "courseSlug": "salzkammergut-marathon",
-      "verdict": "ready",
-      "reasons": [
-        "no organizer name published — fill SeriesSeed.organizer by hand"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/51-int-wolfgangseelauf-salzkammergut-marathon-2023-st-wolfgang.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2023/10/15/gpx_20231015_id8210_race1_20230908162757.gpx?t=1786409429",
-        "gpxSha256": "4a9ace499846446b4bab869b21e2f38749f3fa537d0297e1bcae1b284d3c3c60"
-      },
-      "stats": {
-        "totalKm": 42.30779097482025,
-        "gainM": 426.0999999999999
-      },
-      "city": {
-        "slug": "st-wolfgang-at",
-        "name": "St. Wolfgang",
-        "countryCode": "AT",
-        "countryName": "Austria",
-        "regionCode": null,
-        "regionName": null,
-        "latitude": 47.711413,
-        "longitude": 13.623552,
-        "timezone": "Europe/Vienna"
-      },
-      "citySlug": "st-wolfgang-at",
-      "series": {
-        "slug": "salzkammergut-marathon",
-        "name": "Salzkammergut Marathon",
-        "citySlug": "st-wolfgang-at",
-        "courseSlug": "salzkammergut-marathon",
-        "isMajor": false,
-        "typicalMonth": 10,
-        "websiteUrl": "https://www.wolfgangseelauf.at",
-        "organizer": "WSV LG und Kurdirektion St. Wolfgang"
-      },
-      "recurrence": {
-        "seriesSlug": "salzkammergut-marathon",
-        "month": 10,
-        "weekday": 0,
-        "nth": 3,
-        "note": "Derived from the 2023-10-15 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "salzkammergut-marathon",
-        "year": 2023,
-        "raceDate": "2023-10-15"
-      }
-    },
-    {
       "courseSlug": "6-del-riso-la-maratona",
       "verdict": "rejected",
       "reasons": [
@@ -4392,51 +3928,22 @@
       "courseSlug": "6-parma-marathon",
       "verdict": "rejected",
       "reasons": [
-        "duplicate of the 7th edition of the same race, identical GPS start coordinates within GPS noise — kept the newer edition (parma-marathon)"
+        "fetch: looks like the already-seeded \"Parma Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
       ],
       "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/6-parma-marathon-2022.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2022/10/16/gpx_20221016_id7541_race1_20220508212110.gpx?t=1786409457",
-        "gpxSha256": "a40468b24bf81b758055ca40b8e49afd84b2606ba67a2d7a1614d6c705712de1"
+        "eventUrl": "https://www.goandrace.com/en/running-events/6-parma-marathon-2021.php",
+        "gpxUrl": null,
+        "gpxSha256": null
       },
       "stats": {
-        "totalKm": 41.543694270263934,
-        "gainM": 129.89999999999998
+        "totalKm": null,
+        "gainM": null
       },
-      "city": {
-        "slug": "parma-it",
-        "name": "Parma",
-        "countryCode": "IT",
-        "countryName": "Italy",
-        "regionCode": null,
-        "regionName": null,
-        "latitude": 44.793456,
-        "longitude": 10.332433,
-        "timezone": "Europe/Rome"
-      },
-      "citySlug": "parma-it",
-      "series": {
-        "slug": "6-parma-marathon",
-        "name": "6° Parma Marathon",
-        "citySlug": "parma-it",
-        "courseSlug": "6-parma-marathon",
-        "isMajor": false,
-        "typicalMonth": 10,
-        "websiteUrl": "https://www.parmamarathon.it/",
-        "organizer": ""
-      },
-      "recurrence": {
-        "seriesSlug": "6-parma-marathon",
-        "month": 10,
-        "weekday": 0,
-        "nth": 3,
-        "note": "Derived from the 2022-10-16 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "6-parma-marathon",
-        "year": 2022,
-        "raceDate": "2022-10-16"
-      }
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
     },
     {
       "courseSlug": "6-sanremo-marathon",
@@ -4607,57 +4114,6 @@
       "edition": null
     },
     {
-      "courseSlug": "parma-marathon",
-      "verdict": "ready",
-      "reasons": [
-        "city parma-it is already seeded (start lines 0.0 km apart); reusing its existing pin, emitting no city row",
-        "no organizer name published — fill SeriesSeed.organizer by hand"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/7-parma-marathon-2023.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2023/10/15/gpx_20231015_id8138_race1_20230727123936.gpx?t=1786409486",
-        "gpxSha256": "2b1208a6615459aa13c5711a1421cbc7c1992902e7678c24000ae3fa53f3bb80"
-      },
-      "stats": {
-        "totalKm": 42.148656002197114,
-        "gainM": 131.60000000000002
-      },
-      "city": {
-        "slug": "parma-it",
-        "name": "Parma",
-        "countryCode": "IT",
-        "countryName": "Italy",
-        "regionCode": null,
-        "regionName": null,
-        "latitude": 44.793456,
-        "longitude": 10.332433,
-        "timezone": "Europe/Rome"
-      },
-      "citySlug": "parma-it",
-      "series": {
-        "slug": "parma-marathon",
-        "name": "Parma Marathon",
-        "citySlug": "parma-it",
-        "courseSlug": "parma-marathon",
-        "isMajor": false,
-        "typicalMonth": 10,
-        "websiteUrl": "https://www.parmamarathon.it",
-        "organizer": ""
-      },
-      "recurrence": {
-        "seriesSlug": "parma-marathon",
-        "month": 10,
-        "weekday": 0,
-        "nth": 3,
-        "note": "Derived from the 2023-10-15 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "parma-marathon",
-        "year": 2023,
-        "raceDate": "2023-10-15"
-      }
-    },
-    {
       "courseSlug": "7-primiero-dolomiti-marathon",
       "verdict": "rejected",
       "reasons": [
@@ -4782,56 +4238,6 @@
       "series": null,
       "recurrence": null,
       "edition": null
-    },
-    {
-      "courseSlug": "elba-marathon",
-      "verdict": "ready",
-      "reasons": [
-        "no organizer name published — fill SeriesSeed.organizer by hand"
-      ],
-      "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/8-maratona-dell-isola-d-elba-2024-marina-di-campo.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2024/05/05/gpx_20240505_id8429_race1_20240317222534.gpx?t=1786409506",
-        "gpxSha256": "4c40c3738666c44f16c2ac1d2acf9c458acc6c139b9cf5be53b12a31eebced11"
-      },
-      "stats": {
-        "totalKm": 42.280907871203176,
-        "gainM": 318.6
-      },
-      "city": {
-        "slug": "marina-di-campo-it",
-        "name": "Marina di Campo",
-        "countryCode": "IT",
-        "countryName": "Italy",
-        "regionCode": null,
-        "regionName": null,
-        "latitude": 42.743353,
-        "longitude": 10.235193,
-        "timezone": "Europe/Rome"
-      },
-      "citySlug": "marina-di-campo-it",
-      "series": {
-        "slug": "elba-marathon",
-        "name": "Elba Island Marathon",
-        "citySlug": "marina-di-campo-it",
-        "courseSlug": "elba-marathon",
-        "isMajor": false,
-        "typicalMonth": 5,
-        "websiteUrl": "https://www.maratonadellisoladelba.it",
-        "organizer": "A.S.D. Elba Runners"
-      },
-      "recurrence": {
-        "seriesSlug": "elba-marathon",
-        "month": 5,
-        "weekday": 0,
-        "nth": 1,
-        "note": "Derived from the 2024-05-05 edition; not verified against the organizer"
-      },
-      "edition": {
-        "seriesSlug": "elba-marathon",
-        "year": 2024,
-        "raceDate": "2024-05-05"
-      }
     },
     {
       "courseSlug": "8-maratona-di-crevalcore-4-10-000-della-befana",
@@ -5288,7 +4694,7 @@
         "fetch: looks like the already-seeded \"Stockholm Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
       ],
       "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/adidas-stockholm-marathon-2024.php",
+        "eventUrl": "https://www.goandrace.com/en/running-events/adidas-stockholm-marathon-2023.php",
         "gpxUrl": null,
         "gpxSha256": null
       },
@@ -5950,7 +5356,7 @@
         "fetch: event page links no course map"
       ],
       "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/antarctic-ice-marathon-half-marathon-2022-antarctic-ice-marathon-half-marathon.php",
+        "eventUrl": "https://www.goandrace.com/en/running-events/antarctic-ice-marathon-half-marathon-2021-patriot-hills.php",
         "gpxUrl": null,
         "gpxSha256": null
       },
@@ -6706,7 +6112,7 @@
         "fetch: looks like the already-seeded \"Chicago Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
       ],
       "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/bank-of-america-chicago-marathon-2024.php",
+        "eventUrl": "https://www.goandrace.com/en/running-events/bank-of-america-chicago-marathon-2023.php",
         "gpxUrl": null,
         "gpxSha256": null
       },
@@ -7057,7 +6463,7 @@
         "fetch: event page links no course map"
       ],
       "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/bcs-marathon-and-half-marathon-2022-college-station.php",
+        "eventUrl": "https://www.goandrace.com/en/running-events/bcs-marathon-and-half-marathon-2021-college-station.php",
         "gpxUrl": null,
         "gpxSha256": null
       },
@@ -7237,6 +6643,56 @@
         "seriesSlug": "belfast-marathon",
         "year": 2024,
         "raceDate": "2024-05-05"
+      }
+    },
+    {
+      "courseSlug": "belgrade-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/37th-comtrade-belgrade-maraton-2024.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/04/28/gpx_20240428_id9636_race1_20240318221954.gpx?t=1786409338",
+        "gpxSha256": "a568aca08ae1e2e19d7118a24f306120103ff1e46dce73664a39deb64edf4b2d"
+      },
+      "stats": {
+        "totalKm": 42.25318390469083,
+        "gainM": 91.49999999999999
+      },
+      "city": {
+        "slug": "belgrade-rs",
+        "name": "Belgrade",
+        "countryCode": "RS",
+        "countryName": "Serbia",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 44.809446,
+        "longitude": 20.467599,
+        "timezone": "Europe/Belgrade"
+      },
+      "citySlug": "belgrade-rs",
+      "series": {
+        "slug": "belgrade-marathon",
+        "name": "Belgrade Marathon",
+        "citySlug": "belgrade-rs",
+        "courseSlug": "belgrade-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://bgdmarathon.org",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "belgrade-marathon",
+        "month": 4,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2024-04-28 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "belgrade-marathon",
+        "year": 2024,
+        "raceDate": "2024-04-28"
       }
     },
     {
@@ -7674,7 +7130,7 @@
         "fetch: looks like the already-seeded \"Berlin Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
       ],
       "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/bmw-berlin-marathon-2025.php",
+        "eventUrl": "https://www.goandrace.com/en/running-events/bmw-berlin-marathon-2024.php",
         "gpxUrl": null,
         "gpxSha256": null
       },
@@ -7697,6 +7153,90 @@
       "source": {
         "eventUrl": "https://www.goandrace.com/en/running-events/bmw-dallas-marathon-2024.php",
         "gpxUrl": "https://www.goandrace.com/gpx/2024/12/15/gpx_20241215_id10070_race1_20241113151622.gpx?t=1786286886",
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "bmw-dallas-marathon-festival",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/bmw-dallas-marathon-festival-2023.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "bmw-dallas-marathon-half-marathon-and-behringer-relay",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/bmw-dallas-marathon-half-marathon-and-behringer-relay-2021.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "bmw-oslo-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: looks like the already-seeded \"Oslo Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/bmw-oslo-marathon-2024.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "boavista-ultramarathon",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/boavista-ultramarathon-2021-boavista.php",
+        "gpxUrl": null,
         "gpxSha256": null
       },
       "stats": {
@@ -7908,13 +7448,34 @@
       }
     },
     {
+      "courseSlug": "borneo-marathon-kota-kinabalu",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: looks like the already-seeded \"Borneo International Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/borneo-marathon-2023-kota-kinabalu.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "boston-marathon-boston",
       "verdict": "rejected",
       "reasons": [
         "fetch: looks like the already-seeded \"Boston Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
       ],
       "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/boston-marathon-2025-boston.php",
+        "eventUrl": "https://www.goandrace.com/en/running-events/boston-marathon-2024-boston.php",
         "gpxUrl": null,
         "gpxSha256": null
       },
@@ -8118,6 +7679,27 @@
       "edition": null
     },
     {
+      "courseSlug": "brazos-bend-100",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/brazos-bend-100-2021-needville.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "bremen-marathon",
       "verdict": "ready",
       "reasons": [
@@ -8225,7 +7807,7 @@
         "fetch: looks like the already-seeded \"Brescia Art Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
       ],
       "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/brescia-art-marathon-2025-brescia.php",
+        "eventUrl": "https://www.goandrace.com/en/running-events/brescia-art-marathon-2015-brescia.php",
         "gpxUrl": null,
         "gpxSha256": null
       },
@@ -8345,7 +7927,7 @@
         "fetch: looks like the already-seeded \"Brighton Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
       ],
       "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/brighton-marathon-2025-brighton.php",
+        "eventUrl": "https://www.goandrace.com/en/running-events/brighton-marathon-2024-brighton.php",
         "gpxUrl": null,
         "gpxSha256": null
       },
@@ -8358,6 +7940,121 @@
       "series": null,
       "recurrence": null,
       "edition": null
+    },
+    {
+      "courseSlug": "brisbane-marathon-festival-brisbane",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: looks like the already-seeded \"Eva Air Brisbane Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/brisbane-marathon-festival-2024-brisbane.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "broadway-marathon-and-half",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/broadway-marathon-half-2022-broadway.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "brutal-wine-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/brutal-wine-marathon-2022-gattinara.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "buckeye-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no addressRegion published; US city slugs normally carry the subdivision (chicago-il-us) — set regionCode/regionName and the citySlug by hand",
+        "timezone America/Denver was guessed from longitude (US spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/buckeye-marathon-2022-buckeye.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2022/01/08/gpx_20220108_id7341_race1_20211123233117.gpx?t=1786975028",
+        "gpxSha256": "c9be7323dfec97008795f285b0708a0caebf00ee6bf1b9ce21d482399fdec103"
+      },
+      "stats": {
+        "totalKm": 42.216434668740796,
+        "gainM": 31.500000000000057
+      },
+      "city": {
+        "slug": "buckeye-az-us",
+        "name": "Buckeye",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-AZ",
+        "regionName": "Arizona",
+        "latitude": 33.672472,
+        "longitude": -112.643108,
+        "timezone": "America/Phoenix"
+      },
+      "citySlug": "buckeye-az-us",
+      "series": {
+        "slug": "buckeye-marathon",
+        "name": "Buckeye Marathon",
+        "citySlug": "buckeye-az-us",
+        "courseSlug": "buckeye-marathon",
+        "isMajor": false,
+        "typicalMonth": 1,
+        "websiteUrl": "https://raceroster.com/events/2022/47515/8th-annual-buckeye-marathon-half-marathon-10k-5k-and-1-mile-fun-run",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "buckeye-marathon",
+        "month": 1,
+        "weekday": 6,
+        "nth": 2,
+        "note": "Confirmed 12th annual edition runs Jan 10, 2026 (2nd Saturday), matching the derived pattern. Timezone corrected from the longitude-banded guess (America/Denver) to America/Phoenix — Arizona does not observe DST."
+      },
+      "edition": {
+        "seriesSlug": "buckeye-marathon",
+        "year": 2022,
+        "raceDate": "2022-01-08"
+      }
     },
     {
       "courseSlug": "budapest-marathon",
@@ -8513,16 +8210,16 @@
       "courseSlug": "buffalo-marathon-and-half-marathon",
       "verdict": "rejected",
       "reasons": [
-        "duplicate of already-seeded buffalo-marathon — identical GPS start coordinates (42.887887, -78.877685), same real race under a combined-event title"
+        "duplicate of already-seeded \"buffalo-marathon\": identical measured distance (43.00050870651022 km to 5 decimals) and start line ~77m away (same start corral, different year's GPS track) — this is the 2023 edition page of the same annual Buffalo, NY race, discovered under a differently-worded name that findNameMatch did not catch."
       ],
       "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/buffalo-marathon-half-marathon-2025-buffalo.php",
-        "gpxUrl": "https://www.goandrace.com/gpx/2025/05/25/gpx_20250525_id10303_race1_20250515104650.gpx?t=1786323211",
-        "gpxSha256": "6f13b4b5214aa6663de03d825e7cdf2e89bb25f5a31f69e1bf655176ec2d7809"
+        "eventUrl": "https://www.goandrace.com/en/running-events/buffalo-marathon-half-marathon-2023-buffalo.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2023/05/28/gpx_20230528_id8018_race1_20230425195037.gpx?t=1786975031",
+        "gpxSha256": "7bbc0b62e4096293a04433d5361db88772f421f42819bfb5655aed27b5f7c954"
       },
       "stats": {
-        "totalKm": 43.00050870651022,
-        "gainM": 107
+        "totalKm": 41.939998769348406,
+        "gainM": 103.00000000000003
       },
       "city": {
         "slug": "buffalo-us",
@@ -8531,8 +8228,8 @@
         "countryName": "United States",
         "regionCode": null,
         "regionName": null,
-        "latitude": 42.887887,
-        "longitude": -78.877685,
+        "latitude": 42.887191,
+        "longitude": -78.877829,
         "timezone": "America/New_York"
       },
       "citySlug": "buffalo-us",
@@ -8551,12 +8248,12 @@
         "month": 5,
         "weekday": 0,
         "nth": -1,
-        "note": "Derived from the 2025-05-25 edition; not verified against the organizer"
+        "note": "Derived from the 2023-05-28 edition; not verified against the organizer"
       },
       "edition": {
         "seriesSlug": "buffalo-marathon-and-half-marathon",
-        "year": 2025,
-        "raceDate": "2025-05-25"
+        "year": 2023,
+        "raceDate": "2023-05-28"
       }
     },
     {
@@ -8886,13 +8583,34 @@
       }
     },
     {
+      "courseSlug": "california-international-marathon-folsom",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: looks like the already-seeded \"California International Marathon\" (name+city match 1.00) — skipping to avoid a duplicate"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/california-international-marathon-2021-folsom.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "california-international-marathon-sacramento",
       "verdict": "rejected",
       "reasons": [
         "fetch: looks like the already-seeded \"California International Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
       ],
       "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/california-international-marathon-2025-sacramento.php",
+        "eventUrl": "https://www.goandrace.com/en/running-events/california-international-marathon-2023-sacramento.php",
         "gpxUrl": null,
         "gpxSha256": null
       },
@@ -8954,6 +8672,56 @@
         "seriesSlug": "cambridge-boundary-run",
         "year": 2025,
         "raceDate": "2025-03-16"
+      }
+    },
+    {
+      "courseSlug": "can-tho-heritage-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.511 km, outside the [42.0, 42.4] band"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/can-tho-heritage-marathon-2024-can-tho.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/12/22/gpx_20241222_id10079_race1_20241202223122.gpx?t=1786975041",
+        "gpxSha256": "90752dd2f5240966a10b374f12a0a5c13cda62ac77a1ad22355d890a7be02ed1"
+      },
+      "stats": {
+        "totalKm": 42.511152034390584,
+        "gainM": 23
+      },
+      "city": {
+        "slug": "can-tho-vn",
+        "name": "Can Tho",
+        "countryCode": "VN",
+        "countryName": "Vietnam",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 10.049462,
+        "longitude": 105.79059,
+        "timezone": "Asia/Ho_Chi_Minh"
+      },
+      "citySlug": "can-tho-vn",
+      "series": {
+        "slug": "can-tho-heritage-marathon",
+        "name": "Can Tho Heritage Marathon",
+        "citySlug": "can-tho-vn",
+        "courseSlug": "can-tho-heritage-marathon",
+        "isMajor": false,
+        "typicalMonth": 12,
+        "websiteUrl": "https://canthomarathon.com",
+        "organizer": "DHA Vietnam"
+      },
+      "recurrence": {
+        "seriesSlug": "can-tho-heritage-marathon",
+        "month": 12,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Confirmed still runs: 2025 edition held Dec 21, 2025 (8 months before this import). Weekday corrected from Saturday (2024's date) to Sunday (2025's date) — the race appears to hold its \"3rd weekend of December\" slot without a fixed weekday, so this is an approximation, not a confirmed rule."
+      },
+      "edition": {
+        "seriesSlug": "can-tho-heritage-marathon",
+        "year": 2024,
+        "raceDate": "2024-12-21"
       }
     },
     {
@@ -9314,6 +9082,56 @@
       "edition": null
     },
     {
+      "courseSlug": "carthage-race-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "no evidence this race still runs: its listed website (carthage-marathon.com) now resolves to an unrelated domain (classic expired/squatted-domain signal), and every independent search for \"Carthage Marathon Tunisia\" surfaces only a different, unrelated race — the COMAR Tunis-Carthage Marathon, which has run every December since 1986 (2021-2026 all confirmed December dates), never February. This February-dated \"Carthage Race Marathon\" appears to be a distinct, smaller event with no confirmable current existence."
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/carthage-race-marathon-2024-carthage.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/02/25/gpx_20240225_id9390_race1_20240207094603.gpx?t=1786975046",
+        "gpxSha256": "52f0dbe0b145c0a6cf9d787ee9844127a205780df36b82ebefc085ec0c3b5d2c"
+      },
+      "stats": {
+        "totalKm": 42.39224342832088,
+        "gainM": 137.29999999999998
+      },
+      "city": {
+        "slug": "carthage-tn",
+        "name": "Carthage",
+        "countryCode": "TN",
+        "countryName": "Tunisia",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 36.855945,
+        "longitude": 10.328595,
+        "timezone": "Africa/Tunis"
+      },
+      "citySlug": "carthage-tn",
+      "series": {
+        "slug": "carthage-race-marathon",
+        "name": "Carthage Race Marathon",
+        "citySlug": "carthage-tn",
+        "courseSlug": "carthage-race-marathon",
+        "isMajor": false,
+        "typicalMonth": 2,
+        "websiteUrl": "http://www.carthage-marathon.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "carthage-race-marathon",
+        "month": 2,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2024-02-25 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "carthage-race-marathon",
+        "year": 2024,
+        "raceDate": "2024-02-25"
+      }
+    },
+    {
       "courseSlug": "casper-marathon",
       "verdict": "ready",
       "reasons": [
@@ -9415,6 +9233,108 @@
       }
     },
     {
+      "courseSlug": "catania-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.430 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/3-maratona-di-catania-2021.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2021/12/12/gpx_20211212_id7283_race1_20211030183841.gpx?t=1786409293",
+        "gpxSha256": "831e3506acb3ab050b155d7b6fa83a78d2fdbb57d7a798e0e3be72489e5f5b3f"
+      },
+      "stats": {
+        "totalKm": 42.43037319700057,
+        "gainM": 8.899999999999999
+      },
+      "city": {
+        "slug": "catania-it",
+        "name": "Catania",
+        "countryCode": "IT",
+        "countryName": "Italy",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 37.475593,
+        "longitude": 15.08375,
+        "timezone": "Europe/Rome"
+      },
+      "citySlug": "catania-it",
+      "series": {
+        "slug": "catania-marathon",
+        "name": "Catania Marathon",
+        "citySlug": "catania-it",
+        "courseSlug": "catania-marathon",
+        "isMajor": false,
+        "typicalMonth": 12,
+        "websiteUrl": "http://www.maratonadicatania.it/",
+        "organizer": "Atletica Sicilia"
+      },
+      "recurrence": {
+        "seriesSlug": "catania-marathon",
+        "month": 12,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2021-12-12 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "catania-marathon",
+        "year": 2021,
+        "raceDate": "2021-12-12"
+      }
+    },
+    {
+      "courseSlug": "cayman-islands-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.909 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/cayman-islands-marathon-2021-george-town.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2021/12/05/gpx_20211205_id7094_race1_20211108113108.gpx?t=1786975050",
+        "gpxSha256": "4d7e1565dc3b2f7d898c7a5c431b4841604fff4c2a42814cbb0195a738c26693"
+      },
+      "stats": {
+        "totalKm": 42.90861764660752,
+        "gainM": 28.7
+      },
+      "city": {
+        "slug": "george-town-ky",
+        "name": "George Town",
+        "countryCode": "KY",
+        "countryName": "Cayman Islands",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 19.294831,
+        "longitude": -81.382866,
+        "timezone": "America/Cayman"
+      },
+      "citySlug": "george-town-ky",
+      "series": {
+        "slug": "cayman-islands-marathon",
+        "name": "Cayman Islands Marathon",
+        "citySlug": "george-town-ky",
+        "courseSlug": "cayman-islands-marathon",
+        "isMajor": false,
+        "typicalMonth": 12,
+        "websiteUrl": "https://www.caymanislandsmarathon.com/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "cayman-islands-marathon",
+        "month": 12,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Confirmed still runs: caymanislandsmarathon.com states \"first Sunday in December every year\" and lists 2026 registration open for Dec 6, 2026 — matches the derived pattern exactly. Organizer left blank: the site names no producing club, only a business contact (Kelly Holding Ltd) that is not clearly the race organizer."
+      },
+      "edition": {
+        "seriesSlug": "cayman-islands-marathon",
+        "year": 2021,
+        "raceDate": "2021-12-05"
+      }
+    },
+    {
       "courseSlug": "celebration-marathon",
       "verdict": "ready",
       "reasons": [
@@ -9465,6 +9385,27 @@
         "year": 2026,
         "raceDate": "2026-01-25"
       }
+    },
+    {
+      "courseSlug": "charleston-marathon-charleston",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: looks like the already-seeded \"REVEL Mt Charleston Marathon\" (name+city match 1.00) — skipping to avoid a duplicate"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/charleston-marathon-2022-charleston.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
     },
     {
       "courseSlug": "chattanooga-marathon",
@@ -9592,6 +9533,27 @@
       "edition": null
     },
     {
+      "courseSlug": "chiang-mai-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/chiang-mai-marathon-2022-chiang-mai.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "chicagoland-spring-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -9691,6 +9653,48 @@
       }
     },
     {
+      "courseSlug": "christie-clinic-illinois-marathon-champaign",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: looks like the already-seeded \"Illinois Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/christie-clinic-illinois-marathon-2024-champaign.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "chubb-bermuda-triangle-challenge-races-hamilton",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: looks like the already-seeded \"Bermuda Triangle Challenge\" (name+city match 1.15) — skipping to avoid a duplicate"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/chubb-bermuda-triangle-challenge-races-2024-hamilton.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "cincinnati-flying-pig-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -9737,6 +9741,27 @@
         "year": 2025,
         "raceDate": "2025-05-04"
       }
+    },
+    {
+      "courseSlug": "cincinnati-flying-pig-marathon-cincinnati",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: looks like the already-seeded \"Cincinnati Flying Pig Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/cincinnati-flying-pig-marathon-2024-cincinnati.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
     },
     {
       "courseSlug": "clare-burren-marathon-challenge",
@@ -9838,6 +9863,27 @@
         "year": 2026,
         "raceDate": "2026-05-16"
       }
+    },
+    {
+      "courseSlug": "cleveland-marathon-cleveland",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: looks like the already-seeded \"Cleveland Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/cleveland-marathon-2024-cleveland.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
     },
     {
       "courseSlug": "coastal-delaware-marathon",
@@ -10086,6 +10132,27 @@
       }
     },
     {
+      "courseSlug": "conegliano-valdobbiadene-prosecco-running-festival-vidor",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: looks like the already-seeded \"Prosecco Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/conegliano-valdobbiadene-prosecco-running-festival-2024-vidor.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "copenhagen-marathon",
       "verdict": "ready",
       "reasons": [
@@ -10280,6 +10347,27 @@
       "edition": null
     },
     {
+      "courseSlug": "crystal-springs-winter-trail-run",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/crystal-springs-winter-trail-run-2021-woodside.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "cummins-falls-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -10430,6 +10518,27 @@
       }
     },
     {
+      "courseSlug": "deauville-international-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "parser failed: total route length 41.485 km is outside [41.5, 43.6] km"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/deauville-international-marathon-2022-deauville.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2022/11/19/gpx_20221119_id7652_race1_20220602111739.gpx?t=1786975068",
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "delaware-marathon",
       "verdict": "ready",
       "reasons": [
@@ -10572,6 +10681,27 @@
       }
     },
     {
+      "courseSlug": "denver-colfax-marathon-denver",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: looks like the already-seeded \"Denver Colfax Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/denver-colfax-marathon-2024-denver.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "deseret-news-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -10627,6 +10757,27 @@
       ],
       "source": {
         "eventUrl": "https://www.goandrace.com/en/running-events/deseret-news-marathon-2025-salt-lake-city.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "desert-marathon-in-eliat",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/desert-marathon-in-eliat-2022.php",
         "gpxUrl": null,
         "gpxSha256": null
       },
@@ -10697,7 +10848,7 @@
         "fetch: looks like the already-seeded \"Detroit Free Press Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
       ],
       "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/detroit-free-press-marathon-2025-detroit.php",
+        "eventUrl": "https://www.goandrace.com/en/running-events/detroit-free-press-marathon-2024-detroit.php",
         "gpxUrl": null,
         "gpxSha256": null
       },
@@ -10733,6 +10884,27 @@
       "edition": null
     },
     {
+      "courseSlug": "dhara-nepalgunj-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/dhara-nepalgunj-marathon-2022.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "dick-s-sporting-goods-pittsburgh-marathon",
       "verdict": "rejected",
       "reasons": [
@@ -10740,6 +10912,77 @@
       ],
       "source": {
         "eventUrl": "https://www.goandrace.com/en/running-events/dick-s-sporting-goods-pittsburgh-marathon-2025.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "dingle-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 41.648 km, outside the [42.0, 42.4] band"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/dingle-full-and-half-marathon-2024-dingle.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/09/07/gpx_20240907_id9823_race1_20240730142700.gpx?t=1786975078",
+        "gpxSha256": "9adc827e74b89f0d3fe5740da6eeefcafe6cdba5f047f78f45d023d9083a118c"
+      },
+      "stats": {
+        "totalKm": 41.64837545201664,
+        "gainM": 278.29999999999995
+      },
+      "city": {
+        "slug": "dingle-ie",
+        "name": "Dingle",
+        "countryCode": "IE",
+        "countryName": "Ireland",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 52.139366,
+        "longitude": -10.277562,
+        "timezone": "Europe/Dublin"
+      },
+      "citySlug": "dingle-ie",
+      "series": {
+        "slug": "dingle-marathon",
+        "name": "Dingle Marathon",
+        "citySlug": "dingle-ie",
+        "courseSlug": "dingle-marathon",
+        "isMajor": false,
+        "typicalMonth": 9,
+        "websiteUrl": "www.dinglemarathon.ie",
+        "organizer": "Team Dingle Marathon"
+      },
+      "recurrence": {
+        "seriesSlug": "dingle-marathon",
+        "month": 9,
+        "weekday": 6,
+        "nth": 1,
+        "note": "Confirmed still runs: dinglemarathon.ie lists Sept 5, 2026 (1st Saturday), matching the derived pattern (sold out, which is evidence of activity, not defunctness). Slug simplified from \"dingle-full-and-half-marathon\" to \"dingle-marathon\" per convention — measured 41.65 km confirms this GPX is the full-marathon course, not the half."
+      },
+      "edition": {
+        "seriesSlug": "dingle-marathon",
+        "year": 2024,
+        "raceDate": "2024-09-07"
+      }
+    },
+    {
+      "courseSlug": "dogfunrun",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/dogfunrun-2021-ovunque-tu-sia.php",
         "gpxUrl": null,
         "gpxSha256": null
       },
@@ -10876,6 +11119,111 @@
       }
     },
     {
+      "courseSlug": "dublin-marathon-dublin",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: looks like the already-seeded \"Dublin Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/dublin-marathon-2024-dublin.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "duerocche",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/duerocche-2022-cornuda.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "dune-marathon-run-in-the-desert",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/dune-marathon-run-in-the-desert-2022-merzouga.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "eco-maratona-pratese",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/eco-maratona-pratese-2021-cascine-di-tavola.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "ecomaratona-dell-acquedotto-carolino",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/ecomaratona-dell-acquedotto-carolino-2021-caserta.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "edenvale-marathon",
       "verdict": "ready",
       "reasons": [
@@ -10980,7 +11328,7 @@
         "fetch: looks like the already-seeded \"Edinburgh Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
       ],
       "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/edinburgh-marathon-festival-2025-edinburgh.php",
+        "eventUrl": "https://www.goandrace.com/en/running-events/edinburgh-marathon-festival-2023-edinburgh.php",
         "gpxUrl": null,
         "gpxSha256": null
       },
@@ -11001,7 +11349,7 @@
         "fetch: event page links no course map"
       ],
       "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/egyptian-marathon-2025-luxor.php",
+        "eventUrl": "https://www.goandrace.com/en/running-events/egyptian-marathon-2022-luxor.php",
         "gpxUrl": null,
         "gpxSha256": null
       },
@@ -11186,6 +11534,56 @@
       "series": null,
       "recurrence": null,
       "edition": null
+    },
+    {
+      "courseSlug": "elba-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/8-maratona-dell-isola-d-elba-2024-marina-di-campo.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/05/05/gpx_20240505_id8429_race1_20240317222534.gpx?t=1786409506",
+        "gpxSha256": "4c40c3738666c44f16c2ac1d2acf9c458acc6c139b9cf5be53b12a31eebced11"
+      },
+      "stats": {
+        "totalKm": 42.280907871203176,
+        "gainM": 318.6
+      },
+      "city": {
+        "slug": "marina-di-campo-it",
+        "name": "Marina di Campo",
+        "countryCode": "IT",
+        "countryName": "Italy",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 42.743353,
+        "longitude": 10.235193,
+        "timezone": "Europe/Rome"
+      },
+      "citySlug": "marina-di-campo-it",
+      "series": {
+        "slug": "elba-marathon",
+        "name": "Elba Island Marathon",
+        "citySlug": "marina-di-campo-it",
+        "courseSlug": "elba-marathon",
+        "isMajor": false,
+        "typicalMonth": 5,
+        "websiteUrl": "https://www.maratonadellisoladelba.it",
+        "organizer": "A.S.D. Elba Runners"
+      },
+      "recurrence": {
+        "seriesSlug": "elba-marathon",
+        "month": 5,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the 2024-05-05 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "elba-marathon",
+        "year": 2024,
+        "raceDate": "2024-05-05"
+      }
     },
     {
       "courseSlug": "endurancelife-sussex",
@@ -11797,6 +12195,57 @@
       }
     },
     {
+      "courseSlug": "funchal-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 41.969 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/funchal-marathon-2022-funchal.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2022/01/23/gpx_20220123_id7351_race1_20211126082801.gpx?t=1786974736",
+        "gpxSha256": "7d15fa9660d322cc28ae2b37f36adb62de4410a1622cf89d499701a46ca12eee"
+      },
+      "stats": {
+        "totalKm": 41.96881006787086,
+        "gainM": 113.70000000000002
+      },
+      "city": {
+        "slug": "funchal-pt",
+        "name": "Funchal",
+        "countryCode": "PT",
+        "countryName": "Portugal",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 32.638655,
+        "longitude": -16.92819,
+        "timezone": "Europe/Lisbon"
+      },
+      "citySlug": "funchal-pt",
+      "series": {
+        "slug": "funchal-marathon",
+        "name": "Funchal Marathon",
+        "citySlug": "funchal-pt",
+        "courseSlug": "funchal-marathon",
+        "isMajor": false,
+        "typicalMonth": 1,
+        "websiteUrl": "https://www.madeiramarathon.com/",
+        "organizer": "Madeira Athletics Association"
+      },
+      "recurrence": {
+        "seriesSlug": "funchal-marathon",
+        "month": 1,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Corrected from the 2022 scrape's nth=4: madeiramarathon.com confirms Jan 31, 2027, the LAST Sunday of January (2022's 4th Sunday happened to not be the last that year). Recurrence re-derived from the current source per the still-runs check."
+      },
+      "edition": {
+        "seriesSlug": "funchal-marathon",
+        "year": 2022,
+        "raceDate": "2022-01-23"
+      }
+    },
+    {
       "courseSlug": "galveston-marathon",
       "verdict": "ready",
       "reasons": [
@@ -12270,6 +12719,57 @@
       "series": null,
       "recurrence": null,
       "edition": null
+    },
+    {
+      "courseSlug": "grecia-salentina-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no official website published — SeriesSeed.websiteUrl needs one",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/4-maratona-della-grecia-salentina-2023-calimera.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2023/10/29/gpx_20231029_id8243_race1_20231021155847.gpx?t=1786409362",
+        "gpxSha256": "3342894501c028ede4cfaaf08d535f116c119c7607040fd441932ad7bd370f9c"
+      },
+      "stats": {
+        "totalKm": 42.22936653588147,
+        "gainM": 102.5
+      },
+      "city": {
+        "slug": "calimera-it",
+        "name": "Calimera",
+        "countryCode": "IT",
+        "countryName": "Italy",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 40.25103,
+        "longitude": 18.280029,
+        "timezone": "Europe/Rome"
+      },
+      "citySlug": "calimera-it",
+      "series": {
+        "slug": "grecia-salentina-marathon",
+        "name": "Maratona della Grecia Salentina",
+        "citySlug": "calimera-it",
+        "courseSlug": "grecia-salentina-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "grecia-salentina-marathon",
+        "month": 10,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2023-10-29 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "grecia-salentina-marathon",
+        "year": 2023,
+        "raceDate": "2023-10-29"
+      }
     },
     {
       "courseSlug": "griffith-park-trail-marathon",
@@ -15844,6 +16344,27 @@
       "edition": null
     },
     {
+      "courseSlug": "maratona-dell-isola-d-elba",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/maratona-dell-isola-d-elba-2020-marina-di-campo.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "maratona-della-battaglia",
       "verdict": "rejected",
       "reasons": [
@@ -15928,6 +16449,77 @@
       "edition": null
     },
     {
+      "courseSlug": "maratona-di-ragusa",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/maratona-di-ragusa-2022.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "maratona-di-ravenna",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/maratona-di-ravenna-2024.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/11/10/gpx_20241110_id10052_race1_20241023165802.gpx?t=1786974574",
+        "gpxSha256": "09d75c850b7f95610f8e8b9a81913192dd85dde7564a4aeb6aa3c373314a5d52"
+      },
+      "stats": {
+        "totalKm": 42.146795034722544,
+        "gainM": 32.300000000000004
+      },
+      "city": {
+        "slug": "ravenna-it",
+        "name": "Ravenna",
+        "countryCode": "IT",
+        "countryName": "Italy",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 44.420906,
+        "longitude": 12.226382,
+        "timezone": "Europe/Rome"
+      },
+      "citySlug": "ravenna-it",
+      "series": {
+        "slug": "maratona-di-ravenna",
+        "name": "Maratona di Ravenna",
+        "citySlug": "ravenna-it",
+        "courseSlug": "maratona-di-ravenna",
+        "isMajor": false,
+        "typicalMonth": 11,
+        "websiteUrl": "https://maratonadiravenna.com",
+        "organizer": "Ravenna Runners Club A.S.D."
+      },
+      "recurrence": {
+        "seriesSlug": "maratona-di-ravenna",
+        "month": 11,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Confirmed against maratonadiravenna.com: 2026 edition is Nov 8, 2026 (2nd Sunday), matching the derived pattern."
+      },
+      "edition": {
+        "seriesSlug": "maratona-di-ravenna",
+        "year": 2024,
+        "raceDate": "2024-11-10"
+      }
+    },
+    {
       "courseSlug": "maratona-di-san-valentino",
       "verdict": "ready",
       "reasons": [
@@ -16006,6 +16598,27 @@
       ],
       "source": {
         "eventUrl": "https://www.goandrace.com/en/running-events/maratona-firenze-2026.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "maratona-internazionale-ravenna-citta-d-arte",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/maratona-internazionale-ravenna-citta-d-arte-2021.php",
         "gpxUrl": null,
         "gpxSha256": null
       },
@@ -16372,6 +16985,56 @@
       "series": null,
       "recurrence": null,
       "edition": null
+    },
+    {
+      "courseSlug": "medoc-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/38-marathon-des-chateaux-du-medoc-2024-pauillac.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/09/07/gpx_20240907_id9930_race1_20240711112209.gpx?t=1786409343",
+        "gpxSha256": "36559168b7256d926936b0dd5e3e9c39365e599253dad2f0f947b9126d707dda"
+      },
+      "stats": {
+        "totalKm": 42.25001846162204,
+        "gainM": 60.70000000000001
+      },
+      "city": {
+        "slug": "pauillac-fr",
+        "name": "Pauillac",
+        "countryCode": "FR",
+        "countryName": "France",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 45.20283,
+        "longitude": -0.74694,
+        "timezone": "Europe/Paris"
+      },
+      "citySlug": "pauillac-fr",
+      "series": {
+        "slug": "medoc-marathon",
+        "name": "Marathon du Médoc",
+        "citySlug": "pauillac-fr",
+        "courseSlug": "medoc-marathon",
+        "isMajor": false,
+        "typicalMonth": 9,
+        "websiteUrl": "https://www.marathondumedoc.com",
+        "organizer": "AMCM (Association Marathon des Châteaux du Médoc)"
+      },
+      "recurrence": {
+        "seriesSlug": "medoc-marathon",
+        "month": 9,
+        "weekday": 6,
+        "nth": 1,
+        "note": "Derived from the 2024-09-07 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "medoc-marathon",
+        "year": 2024,
+        "raceDate": "2024-09-07"
+      }
     },
     {
       "courseSlug": "mekong-delta-marathon-hau-giang",
@@ -17136,6 +17799,56 @@
         "seriesSlug": "montpellier-marathon",
         "year": 2026,
         "raceDate": "2026-04-18"
+      }
+    },
+    {
+      "courseSlug": "mugello-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/49-maratona-del-mugello-2023-borgo-san-lorenzo.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2023/10/01/gpx_20231001_id7856_race1_20230809191052.gpx?t=1786409405",
+        "gpxSha256": "58cea93cfe98a362a2c3b6039f7a506327c06c6010d614b4c33f51f4dc31010f"
+      },
+      "stats": {
+        "totalKm": 42.121741708889544,
+        "gainM": 239.19999999999996
+      },
+      "city": {
+        "slug": "borgo-san-lorenzo-it",
+        "name": "Borgo San Lorenzo",
+        "countryCode": "IT",
+        "countryName": "Italy",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 43.955367,
+        "longitude": 11.38808,
+        "timezone": "Europe/Rome"
+      },
+      "citySlug": "borgo-san-lorenzo-it",
+      "series": {
+        "slug": "mugello-marathon",
+        "name": "Mugello Marathon",
+        "citySlug": "borgo-san-lorenzo-it",
+        "courseSlug": "mugello-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "http://www.maratonamugello.it/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "mugello-marathon",
+        "month": 10,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the 2023-10-01 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "mugello-marathon",
+        "year": 2023,
+        "raceDate": "2023-10-01"
       }
     },
     {
@@ -18469,6 +19182,57 @@
       }
     },
     {
+      "courseSlug": "padova-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "city padova-it is already seeded (start lines 0.0 km apart); reusing its existing pin, emitting no city row",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/24-maratona-sant-antonio-2024-padova.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/04/21/gpx_20240421_id8561_race1_20240322232559.gpx?t=1786409236",
+        "gpxSha256": "6b1274e4f443212789a679eb6a7c8fd22da80daa0febdca8723c12fd9dbec002"
+      },
+      "stats": {
+        "totalKm": 42.37487743202851,
+        "gainM": 55.30000000000001
+      },
+      "city": {
+        "slug": "padova-it",
+        "name": "Padova",
+        "countryCode": "IT",
+        "countryName": "Italy",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 45.429296,
+        "longitude": 11.854082,
+        "timezone": "Europe/Rome"
+      },
+      "citySlug": "padova-it",
+      "series": {
+        "slug": "padova-marathon",
+        "name": "Padova Marathon",
+        "citySlug": "padova-it",
+        "courseSlug": "padova-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://padovamarathon.com",
+        "organizer": "Assindustria Sport"
+      },
+      "recurrence": {
+        "seriesSlug": "padova-marathon",
+        "month": 4,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2024-04-21 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "padova-marathon",
+        "year": 2024,
+        "raceDate": "2024-04-21"
+      }
+    },
+    {
       "courseSlug": "palermo-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -18615,6 +19379,57 @@
         "seriesSlug": "paris-marathon",
         "year": 2026,
         "raceDate": "2026-04-12"
+      }
+    },
+    {
+      "courseSlug": "parma-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "city parma-it is already seeded (start lines 0.0 km apart); reusing its existing pin, emitting no city row",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/7-parma-marathon-2023.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2023/10/15/gpx_20231015_id8138_race1_20230727123936.gpx?t=1786409486",
+        "gpxSha256": "2b1208a6615459aa13c5711a1421cbc7c1992902e7678c24000ae3fa53f3bb80"
+      },
+      "stats": {
+        "totalKm": 42.148656002197114,
+        "gainM": 131.60000000000002
+      },
+      "city": {
+        "slug": "parma-it",
+        "name": "Parma",
+        "countryCode": "IT",
+        "countryName": "Italy",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 44.793456,
+        "longitude": 10.332433,
+        "timezone": "Europe/Rome"
+      },
+      "citySlug": "parma-it",
+      "series": {
+        "slug": "parma-marathon",
+        "name": "Parma Marathon",
+        "citySlug": "parma-it",
+        "courseSlug": "parma-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://www.parmamarathon.it",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "parma-marathon",
+        "month": 10,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2023-10-15 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "parma-marathon",
+        "year": 2023,
+        "raceDate": "2023-10-15"
       }
     },
     {
@@ -19136,6 +19951,27 @@
       }
     },
     {
+      "courseSlug": "prima-maratona-e-mezza-maratona-dell-isola-d-elba",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/prima-maratona-e-mezza-maratona-dell-isola-d-elba-2016-marina-di-campo.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "prince-of-wales-island-marathon",
       "verdict": "ready",
       "reasons": [
@@ -19257,6 +20093,108 @@
       "series": null,
       "recurrence": null,
       "edition": null
+    },
+    {
+      "courseSlug": "ravenna-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand",
+        "All-zero elevation data: src/data/courses/ravenna-marathon.json elevations array was [0.0, ...] x44 — a placeholder/broken GPX from goandrace source, not a genuinely flat course (real courses show millimeter-scale GPS noise). Discovered post-promotion via courses.integrity.test.ts placeholder check. Course/GPX files moved to data/import/quarantine/. Seed files (cities.ts, series.ts, editions.ts, slug-ledger.ts) reverted."
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/24-maratona-internazionale-ravenna-citta-d-arte-2023.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2023/11/12/gpx_20231112_id8240_race1_20231020233325.gpx?t=1786409230",
+        "gpxSha256": "61e1253a66c5c2c7bf3cccb0a7c0035552b1454973042de2cc2dcf5a833185b4"
+      },
+      "stats": {
+        "totalKm": 42.158982790688896,
+        "gainM": 0
+      },
+      "city": {
+        "slug": "ravenna-it",
+        "name": "Ravenna",
+        "countryCode": "IT",
+        "countryName": "Italy",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 44.420906,
+        "longitude": 12.226382,
+        "timezone": "Europe/Rome"
+      },
+      "citySlug": "ravenna-it",
+      "series": {
+        "slug": "ravenna-marathon",
+        "name": "Ravenna Marathon",
+        "citySlug": "ravenna-it",
+        "courseSlug": "ravenna-marathon",
+        "isMajor": false,
+        "typicalMonth": 11,
+        "websiteUrl": "https://maratonadiravenna.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "ravenna-marathon",
+        "month": 11,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2023-11-12 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "ravenna-marathon",
+        "year": 2023,
+        "raceDate": "2023-11-12"
+      }
+    },
+    {
+      "courseSlug": "reggio-emilia-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 43.278 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/27-maratona-di-reggio-emilia-2-10-miglia-a-reggio-emilia-2023.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2023/12/10/gpx_20231210_id8246_race1_20231021185748.gpx?t=1786409257",
+        "gpxSha256": "a1ae3dcc318aad2377fe418955c270b5da20d40da848f0101f934bce8bb86f80"
+      },
+      "stats": {
+        "totalKm": 43.27750528760429,
+        "gainM": 114.69999999999999
+      },
+      "city": {
+        "slug": "reggio-emilia-it",
+        "name": "Reggio Emilia",
+        "countryCode": "IT",
+        "countryName": "Italy",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 44.700304,
+        "longitude": 10.630799,
+        "timezone": "Europe/Rome"
+      },
+      "citySlug": "reggio-emilia-it",
+      "series": {
+        "slug": "reggio-emilia-marathon",
+        "name": "Reggio Emilia Marathon",
+        "citySlug": "reggio-emilia-it",
+        "courseSlug": "reggio-emilia-marathon",
+        "isMajor": false,
+        "typicalMonth": 12,
+        "websiteUrl": "https://www.maratonadireggioemilia.it",
+        "organizer": "Tricolore Sport Marathon"
+      },
+      "recurrence": {
+        "seriesSlug": "reggio-emilia-marathon",
+        "month": 12,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2023-12-10 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "reggio-emilia-marathon",
+        "year": 2023,
+        "raceDate": "2023-12-10"
+      }
     },
     {
       "courseSlug": "revel-mt-charleston-marathon",
@@ -20023,6 +20961,56 @@
       }
     },
     {
+      "courseSlug": "salzkammergut-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/51-int-wolfgangseelauf-salzkammergut-marathon-2023-st-wolfgang.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2023/10/15/gpx_20231015_id8210_race1_20230908162757.gpx?t=1786409429",
+        "gpxSha256": "4a9ace499846446b4bab869b21e2f38749f3fa537d0297e1bcae1b284d3c3c60"
+      },
+      "stats": {
+        "totalKm": 42.30779097482025,
+        "gainM": 426.0999999999999
+      },
+      "city": {
+        "slug": "st-wolfgang-at",
+        "name": "St. Wolfgang",
+        "countryCode": "AT",
+        "countryName": "Austria",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 47.711413,
+        "longitude": 13.623552,
+        "timezone": "Europe/Vienna"
+      },
+      "citySlug": "st-wolfgang-at",
+      "series": {
+        "slug": "salzkammergut-marathon",
+        "name": "Salzkammergut Marathon",
+        "citySlug": "st-wolfgang-at",
+        "courseSlug": "salzkammergut-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://www.wolfgangseelauf.at",
+        "organizer": "WSV LG und Kurdirektion St. Wolfgang"
+      },
+      "recurrence": {
+        "seriesSlug": "salzkammergut-marathon",
+        "month": 10,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2023-10-15 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "salzkammergut-marathon",
+        "year": 2023,
+        "raceDate": "2023-10-15"
+      }
+    },
+    {
       "courseSlug": "samoa-international-marathon",
       "verdict": "ready",
       "reasons": [
@@ -20168,11 +21156,11 @@
       "courseSlug": "sanremo-marathon",
       "verdict": "rejected",
       "reasons": [
-        "fetch: event page links no course map"
+        "parser failed: total route length 10.446 km is outside [41.5, 43.6] km"
       ],
       "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/sanremo-marathon-2025-sanremo.php",
-        "gpxUrl": null,
+        "eventUrl": "https://www.goandrace.com/en/running-events/sanremo-marathon-2021-sanremo.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2021/12/05/gpx_20211205_id7095_race2_20210519234803.gpx?t=1786974580",
         "gpxSha256": null
       },
       "stats": {
@@ -20888,6 +21876,27 @@
       }
     },
     {
+      "courseSlug": "split-marathon-split",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: looks like the already-seeded \"Split Marathon\" (name+city match 1.15) — skipping to avoid a duplicate"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/split-marathon-2022-split.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "st-george-marathon",
       "verdict": "ready",
       "reasons": [
@@ -21318,6 +22327,27 @@
       ],
       "source": {
         "eventUrl": "https://www.goandrace.com/en/running-events/taipei-freeway-marathon-2025-taipei.php",
+        "gpxUrl": null,
+        "gpxSha256": null
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "taipei-international-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "fetch: event page links no course map"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/taipei-international-marathon-2021-taipei.php",
         "gpxUrl": null,
         "gpxSha256": null
       },
@@ -22041,6 +23071,57 @@
         "seriesSlug": "township-marathon",
         "year": 2025,
         "raceDate": "2025-02-23"
+      }
+    },
+    {
+      "courseSlug": "treviso-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 41.771 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/17-treviso-marathon-2022.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2022/03/27/gpx_20220327_id7390_race1_20211223113942.gpx?t=1786409074",
+        "gpxSha256": "820fa36cf55dc15ee25a43bcfd67b2b852b5a7f62d3b3dca9d1c1b080dd28821"
+      },
+      "stats": {
+        "totalKm": 41.77126851152488,
+        "gainM": 31.700000000000003
+      },
+      "city": {
+        "slug": "treviso-it",
+        "name": "Treviso",
+        "countryCode": "IT",
+        "countryName": "Italy",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 45.662775,
+        "longitude": 12.266382,
+        "timezone": "Europe/Rome"
+      },
+      "citySlug": "treviso-it",
+      "series": {
+        "slug": "treviso-marathon",
+        "name": "Treviso Marathon",
+        "citySlug": "treviso-it",
+        "courseSlug": "treviso-marathon",
+        "isMajor": false,
+        "typicalMonth": 3,
+        "websiteUrl": "https://www.trevisomarathon.com/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "treviso-marathon",
+        "month": 3,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2022-03-27 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "treviso-marathon",
+        "year": 2022,
+        "raceDate": "2022-03-27"
       }
     },
     {
