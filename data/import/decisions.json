@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-17T14:22:43.961Z",
+  "updatedAt": "2026-08-18T14:39:56.736Z",
   "courses": [
     {
       "courseSlug": "1-100-km-nel-gargano",
@@ -13012,6 +13012,57 @@
       }
     },
     {
+      "courseSlug": "heart-of-america-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://drive.google.com/uc?export=download&id=1ZQH8Oww35ucXiw71MihqX61U8ntwXkim",
+        "gpxUrl": "https://drive.google.com/uc?export=download&id=1ZQH8Oww35ucXiw71MihqX61U8ntwXkim",
+        "gpxSha256": "90e6687a9ea856d9c81c8404834394a1d27d8adb947659fc57e8d8abf32221e3",
+        "site": "drive.google.com",
+        "elevation": "dem:srtm30m",
+        "note": "organizer: Linked from the 'Map 2026' item in heartofamericamarathon.com's Course Overview nav — hosted on Google Drive rather than the organizer's own domain, but it is the file the organizer's own site links to as the current course. File is titled 'Heart of America Marathon (2021 and later)', single track, no elevation (DEM-filled). Measured 42.466 km before parsing. Retrieved 2026-08-18. Confirmed running 2026-09-07 via runsignup.com/Race/MO/Columbia/heartofamericamarathon. Cross-check 2026-08-18: findmymarathon.com reports max 809 ft (matches ours almost exactly) but min 558 ft vs our 606 ft (~15m higher), and total gain estimates disagree sharply across sources (findmymarathon ~252 ft, us 537 ft, Marathon Training Academy's race report ~2,072 ft) — no single-point jump >=25m was flagged, so no bridge/tunnel artifact, and gain totals are known to vary widely by measurement method without moving splits much (see calibrate-dem.ts); judged acceptable, but worth a second look if this course's hills feel off against a real report from someone who has run it."
+      },
+      "stats": {
+        "totalKm": 42.46613283183997,
+        "gainM": 163.8
+      },
+      "city": {
+        "slug": "columbia-mo-us",
+        "name": "Columbia",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-MO",
+        "regionName": "Missouri",
+        "latitude": 38.906235,
+        "longitude": -92.29301,
+        "timezone": "America/Chicago"
+      },
+      "citySlug": "columbia-mo-us",
+      "series": {
+        "slug": "heart-of-america-marathon",
+        "name": "Heart of America Marathon",
+        "citySlug": "columbia-mo-us",
+        "courseSlug": "heart-of-america-marathon",
+        "isMajor": false,
+        "typicalMonth": 9,
+        "websiteUrl": "https://heartofamericamarathon.com",
+        "organizer": "Columbia Track Club"
+      },
+      "recurrence": {
+        "seriesSlug": "heart-of-america-marathon",
+        "month": 9,
+        "weekday": 1,
+        "nth": 1,
+        "note": "Derived from the 2026-09-07 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "heart-of-america-marathon",
+        "year": 2026,
+        "raceDate": "2026-09-07"
+      }
+    },
+    {
       "courseSlug": "helsinki-city-run",
       "verdict": "ready",
       "reasons": [
@@ -16863,6 +16914,57 @@
         "seriesSlug": "marine-corps-marathon",
         "year": 2023,
         "raceDate": "2023-10-29"
+      }
+    },
+    {
+      "courseSlug": "marquette-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "data/import/raw/marquette-marathon.gpx",
+        "gpxUrl": null,
+        "gpxSha256": "5d1044863f004e24720b2839e3ae1d90997462e4bb2e97bce1236d39f3768b05",
+        "site": "marquettemarathon.com",
+        "elevation": "dem:srtm30m",
+        "note": "manual: marquettemarathon.com links a Google My Maps KML (mid=1m_PQ5y1PHAy7S-muKqewdkZBaMSk28sy) that bundles four routes in one file — Full Marathon Course, 1/2 Marathon, and two gravel-trail variants — so an automated fetch would need to merge unrelated tracks to use it directly. Hand-extracted just the 'Full Marathon Course' placemark (851 points) into a clean single-track GPX, saved at the routeUrl path (gitignored raw input, not committed). Measured 42.562 km before parsing, matching the certified distance. No elevation in the source (DEM-filled). Retrieved 2026-08-18. Confirmed running 2026-09-05 via marquettemarathon.com."
+      },
+      "stats": {
+        "totalKm": 42.56230569296238,
+        "gainM": 86.10000000000005
+      },
+      "city": {
+        "slug": "marquette-mi-us",
+        "name": "Marquette",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-MI",
+        "regionName": "Michigan",
+        "latitude": 46.492354,
+        "longitude": -87.676487,
+        "timezone": "America/New_York"
+      },
+      "citySlug": "marquette-mi-us",
+      "series": {
+        "slug": "marquette-marathon",
+        "name": "Marquette Marathon",
+        "citySlug": "marquette-mi-us",
+        "courseSlug": "marquette-marathon",
+        "isMajor": false,
+        "typicalMonth": 9,
+        "websiteUrl": "https://marquettemarathon.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "marquette-marathon",
+        "month": 9,
+        "weekday": 6,
+        "nth": 1,
+        "note": "Derived from the 2026-09-05 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "marquette-marathon",
+        "year": 2026,
+        "raceDate": "2026-09-05"
       }
     },
     {

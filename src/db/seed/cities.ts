@@ -3498,4 +3498,27 @@ export const CITY_SEED: CitySeed[] = [
     longitude: -121.31704,
     timezone: "America/Los_Angeles",
   },
+  // Imported from drive.google.com, marquettemarathon.com — batch 2026-08-18.
+  {
+    slug: "columbia-mo-us",
+    name: "Columbia",
+    countryCode: "US",
+    countryName: "United States",
+    regionCode: "US-MO",
+    regionName: "Missouri",
+    latitude: 38.906235,
+    longitude: -92.29301,
+    timezone: "America/Chicago",
+  },
+  {
+    slug: "marquette-mi-us",
+    name: "Marquette",
+    countryCode: "US",
+    countryName: "United States",
+    regionCode: "US-MI",
+    regionName: "Michigan",
+    latitude: 46.492354,
+    longitude: -87.676487,
+    timezone: "America/New_York",
+  },
 ];

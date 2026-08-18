@@ -371,6 +371,9 @@ export const PUBLISHED_COURSE_SLUGS: string[] = [
   "maratona-di-ravenna",
   // Batch 2026-08-17, imported from www.bend-marathon.com on 2026-08-17.
   "bend-marathon",
+  // Batch 2026-08-18, imported from drive.google.com, marquettemarathon.com on 2026-08-18.
+  "heart-of-america-marathon",
+  "marquette-marathon",
 ];
 
 /** The shape every course slug must take: lowercase, digits, single hyphens. */

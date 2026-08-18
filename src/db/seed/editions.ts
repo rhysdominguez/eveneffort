@@ -2016,6 +2016,20 @@ export const RECURRENCE: Record<string, RecurrenceRule> = {
     nth: 2,
     note: "Derived from the 2027-04-11 edition; not verified against the organizer",
   },
+  // Imported from drive.google.com, marquettemarathon.com — batch 2026-08-18. Each rule is derived
+  // from one observed date, not from the organizer's own statement.
+  "heart-of-america-marathon": {
+    month: 9,
+    weekday: 1,
+    nth: 1,
+    note: "Derived from the 2026-09-07 edition; not verified against the organizer",
+  },
+  "marquette-marathon": {
+    month: 9,
+    weekday: 6,
+    nth: 1,
+    note: "Derived from the 2026-09-05 edition; not verified against the organizer",
+  },
 };
 
 export interface ConfirmedEdition {
@@ -2449,6 +2463,13 @@ export const CONFIRMED_EDITIONS: ConfirmedEdition[] = [
   // organizer's page — never guessed, since a wrong hour silently keys
   // the weather forecast to it.
   { seriesSlug: "bend-marathon", year: 2027, raceDate: "2027-04-11" },
+  // Imported from drive.google.com, marquettemarathon.com — batch 2026-08-18. Dates as published by
+  // the event listing, or verified against the organizer during review.
+  // startTimeLocal appears only where a real one was read off the
+  // organizer's page — never guessed, since a wrong hour silently keys
+  // the weather forecast to it.
+  { seriesSlug: "heart-of-america-marathon", year: 2026, raceDate: "2026-09-07" },
+  { seriesSlug: "marquette-marathon", year: 2026, raceDate: "2026-09-05" },
 ];
 
 /**

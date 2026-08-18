@@ -14,7 +14,7 @@
     "parse -> qa -> promote run afterwards exactly as they do for a goandrace",
     "import, review step included."
   ],
-  "updatedAt": "2026-08-17",
+  "updatedAt": "2026-08-18",
   "races": [
     {
       "courseSlug": "bend-marathon",
@@ -27,6 +27,32 @@
       "region": "OR",
       "countryCode": "US",
       "websiteUrl": "https://www.bend-marathon.com",
+      "organizer": null
+    },
+    {
+      "courseSlug": "heart-of-america-marathon",
+      "name": "Heart of America Marathon",
+      "routeUrl": "https://drive.google.com/uc?export=download&id=1ZQH8Oww35ucXiw71MihqX61U8ntwXkim",
+      "routeSource": "organizer",
+      "routeNote": "Linked from the 'Map 2026' item in heartofamericamarathon.com's Course Overview nav — hosted on Google Drive rather than the organizer's own domain, but it is the file the organizer's own site links to as the current course. File is titled 'Heart of America Marathon (2021 and later)', single track, no elevation (DEM-filled). Measured 42.466 km before parsing. Retrieved 2026-08-18. Confirmed running 2026-09-07 via runsignup.com/Race/MO/Columbia/heartofamericamarathon.",
+      "startDate": "2026-09-07",
+      "locality": "Columbia",
+      "region": "MO",
+      "countryCode": "US",
+      "websiteUrl": "https://heartofamericamarathon.com",
+      "organizer": "Columbia Track Club"
+    },
+    {
+      "courseSlug": "marquette-marathon",
+      "name": "Marquette Marathon",
+      "routeUrl": "data/import/raw/marquette-marathon.gpx",
+      "routeSource": "manual",
+      "routeNote": "marquettemarathon.com links a Google My Maps KML (mid=1m_PQ5y1PHAy7S-muKqewdkZBaMSk28sy) that bundles four routes in one file — Full Marathon Course, 1/2 Marathon, and two gravel-trail variants — so an automated fetch would need to merge unrelated tracks to use it directly. Hand-extracted just the 'Full Marathon Course' placemark (851 points) into a clean single-track GPX, saved at the routeUrl path (gitignored raw input, not committed). Measured 42.562 km before parsing, matching the certified distance. No elevation in the source (DEM-filled). Retrieved 2026-08-18. Confirmed running 2026-09-05 via marquettemarathon.com.",
+      "startDate": "2026-09-05",
+      "locality": "Marquette",
+      "region": "MI",
+      "countryCode": "US",
+      "websiteUrl": "https://marquettemarathon.com",
       "organizer": null
     }
   ]

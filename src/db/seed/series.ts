@@ -3259,4 +3259,27 @@ export const SERIES_SEED: SeriesSeed[] = [
     websiteUrl: "https://www.bend-marathon.com",
     organizer: "",
   },
+  // Imported from drive.google.com, marquettemarathon.com — batch 2026-08-18.
+  // Elevation for 2 of these is sampled from a terrain
+  // model (dem:srtm30m), not surveyed from the source file.
+  {
+    slug: "heart-of-america-marathon",
+    name: "Heart of America Marathon",
+    citySlug: "columbia-mo-us",
+    courseSlug: "heart-of-america-marathon",
+    isMajor: false,
+    typicalMonth: 9,
+    websiteUrl: "https://heartofamericamarathon.com",
+    organizer: "Columbia Track Club",
+  },
+  {
+    slug: "marquette-marathon",
+    name: "Marquette Marathon",
+    citySlug: "marquette-mi-us",
+    courseSlug: "marquette-marathon",
+    isMajor: false,
+    typicalMonth: 9,
+    websiteUrl: "https://marquettemarathon.com",
+    organizer: "",
+  },
 ];
