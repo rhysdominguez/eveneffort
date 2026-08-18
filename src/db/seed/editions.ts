@@ -2008,6 +2008,14 @@ export const RECURRENCE: Record<string, RecurrenceRule> = {
     nth: 2,
     note: "Confirmed against maratonadiravenna.com: 2026 edition is Nov 8, 2026 (2nd Sunday), matching the derived pattern.",
   },
+  // Imported from www.bend-marathon.com — batch 2026-08-17. Each rule is derived
+  // from one observed date, not from the organizer's own statement.
+  "bend-marathon": {
+    month: 4,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2027-04-11 edition; not verified against the organizer",
+  },
 };
 
 export interface ConfirmedEdition {
@@ -2435,6 +2443,12 @@ export const CONFIRMED_EDITIONS: ConfirmedEdition[] = [
   { seriesSlug: "dingle-marathon", year: 2024, raceDate: "2024-09-07" },
   { seriesSlug: "funchal-marathon", year: 2022, raceDate: "2022-01-23" },
   { seriesSlug: "maratona-di-ravenna", year: 2024, raceDate: "2024-11-10" },
+  // Imported from www.bend-marathon.com — batch 2026-08-17. Dates as published by
+  // the event listing, or verified against the organizer during review.
+  // startTimeLocal appears only where a real one was read off the
+  // organizer's page — never guessed, since a wrong hour silently keys
+  // the weather forecast to it.
+  { seriesSlug: "bend-marathon", year: 2027, raceDate: "2027-04-11" },
 ];
 
 /**

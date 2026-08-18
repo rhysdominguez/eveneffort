@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-17T14:07:02.588Z",
+  "updatedAt": "2026-08-17T14:22:43.961Z",
   "courses": [
     {
       "courseSlug": "1-100-km-nel-gargano",
@@ -6693,6 +6693,57 @@
         "seriesSlug": "belgrade-marathon",
         "year": 2024,
         "raceDate": "2024-04-28"
+      }
+    },
+    {
+      "courseSlug": "bend-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://www.bend-marathon.com/uploads/2/2/4/9/22491678/bend_marathon_.gpx",
+        "gpxUrl": "https://www.bend-marathon.com/uploads/2/2/4/9/22491678/bend_marathon_.gpx",
+        "gpxSha256": "d3ed1386676900a9513bfd1b76f58eb4219b459aa95b3eeb42e6d2b49505e96a",
+        "site": "www.bend-marathon.com",
+        "elevation": "gpx",
+        "note": "organizer: Linked as the marathon course file from the race's own course-info.html; AllTrails export carrying surveyed elevation. Retrieved 2026-08-17. Race confirmed still running — 2027 registration open on the organiser's homepage."
+      },
+      "stats": {
+        "totalKm": 42.711352086666935,
+        "gainM": 223.80000000000018
+      },
+      "city": {
+        "slug": "bend-or-us",
+        "name": "Bend",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-OR",
+        "regionName": "Oregon",
+        "latitude": 44.04466,
+        "longitude": -121.31704,
+        "timezone": "America/Los_Angeles"
+      },
+      "citySlug": "bend-or-us",
+      "series": {
+        "slug": "bend-marathon",
+        "name": "Bend Marathon",
+        "citySlug": "bend-or-us",
+        "courseSlug": "bend-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://www.bend-marathon.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "bend-marathon",
+        "month": 4,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2027-04-11 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "bend-marathon",
+        "year": 2027,
+        "raceDate": "2027-04-11"
       }
     },
     {

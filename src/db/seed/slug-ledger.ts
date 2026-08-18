@@ -369,6 +369,8 @@ export const PUBLISHED_COURSE_SLUGS: string[] = [
   "dingle-marathon",
   "funchal-marathon",
   "maratona-di-ravenna",
+  // Batch 2026-08-17, imported from www.bend-marathon.com on 2026-08-17.
+  "bend-marathon",
 ];
 
 /** The shape every course slug must take: lowercase, digits, single hyphens. */

@@ -3486,4 +3486,16 @@ export const CITY_SEED: CitySeed[] = [
     longitude: 12.226382,
     timezone: "Europe/Rome",
   },
+  // Imported from www.bend-marathon.com — batch 2026-08-17.
+  {
+    slug: "bend-or-us",
+    name: "Bend",
+    countryCode: "US",
+    countryName: "United States",
+    regionCode: "US-OR",
+    regionName: "Oregon",
+    latitude: 44.04466,
+    longitude: -121.31704,
+    timezone: "America/Los_Angeles",
+  },
 ];

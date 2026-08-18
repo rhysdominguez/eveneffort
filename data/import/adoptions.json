@@ -1,0 +1,33 @@
+{
+  "_comment": [
+    "The hand-curated worklist for scripts/import/adopt.ts — races goandrace.com",
+    "does not list, whose course file a human found and vouched for.",
+    "",
+    "Committed for the same reason decisions.json is: each entry claims a",
+    "permanent public course slug (Rule 8) and records where that course's",
+    "geometry came from. routeSource 'organizer' is the one to prefer; a",
+    "'route-host' entry is user-uploaded geometry and wants a second look at the",
+    "rights before it ships. 'manual' means a person downloaded the file by hand",
+    "and routeUrl is a repo-relative path.",
+    "",
+    "Adding an entry does not publish anything. adopt.ts writes a raw batch, and",
+    "parse -> qa -> promote run afterwards exactly as they do for a goandrace",
+    "import, review step included."
+  ],
+  "updatedAt": "2026-08-17",
+  "races": [
+    {
+      "courseSlug": "bend-marathon",
+      "name": "Bend Marathon",
+      "routeUrl": "https://www.bend-marathon.com/uploads/2/2/4/9/22491678/bend_marathon_.gpx",
+      "routeSource": "organizer",
+      "routeNote": "Linked as the marathon course file from the race's own course-info.html; AllTrails export carrying surveyed elevation. Retrieved 2026-08-17. Race confirmed still running — 2027 registration open on the organiser's homepage.",
+      "startDate": "2027-04-11",
+      "locality": "Bend",
+      "region": "OR",
+      "countryCode": "US",
+      "websiteUrl": "https://www.bend-marathon.com",
+      "organizer": null
+    }
+  ]
+}

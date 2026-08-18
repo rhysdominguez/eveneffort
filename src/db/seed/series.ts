@@ -3248,4 +3248,15 @@ export const SERIES_SEED: SeriesSeed[] = [
     websiteUrl: "https://maratonadiravenna.com",
     organizer: "Ravenna Runners Club A.S.D.",
   },
+  // Imported from www.bend-marathon.com — batch 2026-08-17.
+  {
+    slug: "bend-marathon",
+    name: "Bend Marathon",
+    citySlug: "bend-or-us",
+    courseSlug: "bend-marathon",
+    isMajor: false,
+    typicalMonth: 4,
+    websiteUrl: "https://www.bend-marathon.com",
+    organizer: "",
+  },
 ];

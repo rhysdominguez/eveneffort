@@ -1,9 +1,9 @@
 Marathon Name,City,State/Country,Date,courseSlug,status,sourceUrl,note
-Texas Marathon,"Kingwood, TX 01/01/2027",TX,01/01/2027,texas-triple,parser-rejected,https://www.goandrace.com/en/running-events/2026/05/texas-triple-2026-dallas.php,fetch: event page links no course map
+Texas Marathon,"Kingwood, TX 01/01/2027",TX,01/01/2027,texas-marathon,no-course-map,https://www.goandrace.com/en/running-events/texas-marathon-2022-kingwood.php,event page links no course map
 New Years (Day) Double Marathon,"Allen, TX 01/01/2027",TX,01/01/2027,,not-on-source,,no goandrace listing in any crawl
 Revolution Run Marathon,"Kearns, UT 01/01/2027",UT,01/01/2027,,not-on-source,,no goandrace listing in any crawl
 Athens Big-Fork Trail Marathon,"Big Fork, AR 01/09/2027",AR,01/09/2027,athens-marathon,in-db,,Athens Marathon
-Buckeye Marathon,"Buckeye, AZ 01/09/2027",AZ,01/09/2027,,not-on-source,,no goandrace listing in any crawl
+Buckeye Marathon,"Buckeye, AZ 01/09/2027",AZ,01/09/2027,buckeye-marathon,in-db,,Buckeye Marathon
 State 47 Las Cruces Marathon,"Las Cruces, NM 01/09/2027",NM,01/09/2027,,not-on-source,,no goandrace listing in any crawl
 San Diego Trail Runs Marathon,"San Diego, CA 01/09/2027",CA,01/09/2027,,not-on-source,,no goandrace listing in any crawl
 River City Micro Marathon,"Decatur, AL 01/09/2027",AL,01/09/2027,,not-on-source,,no goandrace listing in any crawl
@@ -21,13 +21,13 @@ Carlsbad Marathon,"Carlsbad, CA 01/17/2027",CA,01/17/2027,carlsbad-marathon,in-d
 Redding Marathon,"Redding, CA 01/17/2027",CA,01/17/2027,,not-on-source,,no goandrace listing in any crawl
 Maui Oceanfront Marathon,"Maui, HI 01/17/2027",HI,01/17/2027,maui-oceanfront-marathon,in-db,,Maui Oceanfront Marathon
 Lost Dutchman Marathon,"Apache Junction, AZ 01/17/2027",AZ,01/17/2027,lost-dutchman-marathon,in-db,,Lost Dutchman Marathon
-Crystal Springs Trail Run Marathon,"Woodside, CA 01/17/2027",CA,01/17/2027,,not-on-source,,no goandrace listing in any crawl
+Crystal Springs Trail Run Marathon,"Woodside, CA 01/17/2027",CA,01/17/2027,crystal-springs-winter-trail-run,parser-rejected,https://www.goandrace.com/en/running-events/crystal-springs-winter-trail-run-2021-woodside.php,fetch: event page links no course map
 Louisiana Marathon,"Baton Rouge, LA 01/17/2027",LA,01/17/2027,,not-on-source,,no goandrace listing in any crawl
 Jekyll Island Marathon,"Jekyll Island, GA 01/17/2027",GA,01/17/2027,,not-on-source,,no goandrace listing in any crawl
 Bermuda Triangle Challenge Marathon,"Hamilton, BM 01/17/2027",BM,01/17/2027,bermuda-triangle-challenge,in-db,,Bermuda Triangle Challenge
 Renegade Rehab Run Marathon,"Lecanto, FL 01/18/2026",FL,01/18/2026,,not-on-source,,no goandrace listing in any crawl
 Red Rock Canyon Marathon,"Las Vegas, NV 01/23/2027",NV,01/23/2027,,not-on-source,,no goandrace listing in any crawl
-Sun Marathon,"Santa Clara, UT 01/23/2027",UT,01/23/2027,,not-on-source,,no goandrace listing in any crawl
+Sun Marathon,"Santa Clara, UT 01/23/2027",UT,01/23/2027,midnight-sun-marathon,in-db,,Midnight Sun Marathon
 Icebreaker Marathon,"East Meadow, NY 01/24/2026",NY,01/24/2026,,not-on-source,,no goandrace listing in any crawl
 USA Fit Marathon,"Sugar Land, TX 01/25/2026",TX,01/25/2026,,not-on-source,,no goandrace listing in any crawl
 ONU Polar Bear Indoor Marathon,"Ada, OH 01/26/2025",OH,01/26/2025,,past-event,,listed 01/26/2025
@@ -98,7 +98,7 @@ Marathon of the Treasure Coast,"Stuart, FL 03/07/2027",FL,03/07/2027,,not-on-sou
 Newport News One City Marathon,"Newport News, VA 03/07/2027",VA,03/07/2027,newport-marathon,in-db,,Newport Marathon
 Tokyo Marathon,"Tokyo, JP 03/07/2027",JP,03/07/2027,tokyo,in-db,,Tokyo Marathon
 Hachie Marathon,"Waxahachie, TX 03/07/2026",TX,03/07/2026,,not-on-source,,no goandrace listing in any crawl
-Flowerfest Marathon at Callaway Gardens,"Pine Mountain, GA 03/08/2025",GA,03/08/2025,,past-event,,listed 03/08/2025
+Flowerfest Marathon at Callaway Gardens,"Pine Mountain, GA 03/08/2025",GA,03/08/2025,flowerfest-marathon,parser-rejected,https://www.goandrace.com/en/running-events/flowerfest-marathon-2025-pine-mountain.php,fetch: event page links no course map
 Catalina Marathon,"Catalina Island, CA 03/13/2027",CA,03/13/2027,,not-on-source,,no goandrace listing in any crawl
 Seabrook Lucky Trail Marathon,"Seabrook, TX 03/13/2027",TX,03/13/2027,,not-on-source,,no goandrace listing in any crawl
 Run Through Time Marathon,"Salida, CO 03/13/2027",CO,03/13/2027,,not-on-source,,no goandrace listing in any crawl
@@ -127,7 +127,7 @@ Fort Smith Marathon,"Fort Smith, AR 03/21/2027",AR,03/21/2027,,not-on-source,,no
 Seoul Marathon,"Seoul, KR 03/21/2027",KR,03/21/2027,seoul-marathon,in-db,,Seoul Marathon
 Race to Space Marathon,"Huntsville, AL 03/21/2027",AL,03/21/2027,,not-on-source,,no goandrace listing in any crawl
 Two Rivers Marathon (Sunday),"Lackawaxen, PA 03/22/2026",PA,03/22/2026,,not-on-source,,no goandrace listing in any crawl
-Griffith Park Trail Marathon,"Los Angeles, CA 03/28/2026",CA,03/28/2026,griffith-park-trail-marathon,no-course-map,https://www.goandrace.com/en/running-events/griffith-park-trail-marathon-2025-los-angeles.php,event page links no course map
+Griffith Park Trail Marathon,"Los Angeles, CA 03/28/2026",CA,03/28/2026,griffith-park-trail-marathon,parser-rejected,https://www.goandrace.com/en/running-events/griffith-park-trail-marathon-2025-los-angeles.php,fetch: event page links no course map
 Mission Run in the Ozarks Marathon,"Mountain View, AR 03/27/2027",AR,03/27/2027,,not-on-source,,no goandrace listing in any crawl
 Rend Lake Marathon,"Whittington, IL 03/27/2027",IL,03/27/2027,,not-on-source,,no goandrace listing in any crawl
 McKirdy Micro Marathon (Breaking 3),"Valley Cottage, NY 03/28/2026",NY,03/28/2026,,not-on-source,,no goandrace listing in any crawl
@@ -154,7 +154,7 @@ Modesto Marathon,"Modesto, CA 04/04/2027",CA,04/04/2027,,not-on-source,,no goand
 Bakersfield Marathon,"Bakersfield, CA 04/04/2027",CA,04/04/2027,,not-on-source,,no goandrace listing in any crawl
 Coast Guard Marathon,"Elizabeth City, NC 04/04/2027",NC,04/04/2027,,not-on-source,,no goandrace listing in any crawl
 Raquette River Marathon,"Potsdam, NY 04/04/2026",NY,04/04/2026,,not-on-source,,no goandrace listing in any crawl
-Milano Marathon,"Milan, IT 04/04/2027",IT,04/04/2027,wizz-air-milano-marathon,in-db,https://www.goandrace.com/en/running-events/wizz-air-milano-marathon-2026.php,already imported from wizz-air-milano-marathon
+Milano Marathon,"Milan, IT 04/04/2027",IT,04/04/2027,milan-marathon,in-db,,Milan Marathon
 Andrew Jackson Marathon,"Jackson, TN TBD",TN,TBD,,no-date,,"date is ""TBD"""
 Milwaukee Marathon,"Milwaukee, WI 04/10/2027",WI,04/10/2027,milwaukee-marathon,in-db,,Milwaukee Marathon
 New South Trail Marathon,"Charlotte, NC 04/10/2027",NC,04/10/2027,,not-on-source,,no goandrace listing in any crawl
@@ -169,12 +169,12 @@ Mo Marathon,"Perrysville, OH 04/11/2026",OH,04/11/2026,,not-on-source,,no goandr
 London OH Marathon,"London, OH 04/11/2026",OH,04/11/2026,london-marathon,in-db,,London Marathon
 Streakers Marathon,"Provo, UT 04/11/2026",UT,04/11/2026,,not-on-source,,no goandrace listing in any crawl
 Philadelphia Trail Marathon,"Philadelphia, PA 04/11/2026",PA,04/11/2026,philadelphia-marathon,in-db,,Philadelphia Marathon
-University of Charleston Marathon,"Charleston, WV 04/11/2027",WV,04/11/2027,,not-on-source,,no goandrace listing in any crawl
+University of Charleston Marathon,"Charleston, WV 04/11/2027",WV,04/11/2027,charleston-marathon-charleston,parser-rejected,https://www.goandrace.com/en/running-events/charleston-marathon-2022-charleston.php,"fetch: looks like the already-seeded ""REVEL Mt Charleston Marathon"" (name+city match 1.00) — skipping to avoid a duplicate"
 Vernonia Marathon,"Banks, OR 04/12/2026",OR,04/12/2026,,not-on-source,,no goandrace listing in any crawl
 Paris Marathon,"Paris, FR 04/12/2026",FR,04/12/2026,paris-marathon,in-db,,Paris Marathon
-Bend Marathon,"Bend, OR 04/12/2026",OR,04/12/2026,,not-on-source,,no goandrace listing in any crawl
+Bend Marathon,"Bend, OR 04/12/2026",OR,04/12/2026,bend-marathon,in-db,,Bend Marathon
 Chasing Jefferson Davis Marathon,"Abbeville, GA 04/12/2025",GA,04/12/2025,,past-event,,listed 04/12/2025
-Hogeye Marathon,"Springdale, AR 04/17/2027",AR,04/17/2027,hogeye-marathon,parser-rejected,https://www.goandrace.com/en/running-events/hogeye-marathon-2023-springdale.php,"parser failed: total route length 41.404 km is outside [41.5, 43.0] km"
+Hogeye Marathon,"Springdale, AR 04/17/2027",AR,04/17/2027,hogeye-marathon,in-db,,Hogeye Marathon
 Wenatchee Marathon,"Wenatchee, WA 04/17/2027",WA,04/17/2027,,not-on-source,,no goandrace listing in any crawl
 Blue Ridge Marathon,"Roanoke, VA 04/17/2027",VA,04/17/2027,blue-ridge-marathon,in-db,,Blue Ridge Marathon
 Horseshoe Lake Trail Run Marathon,"Palo Alto, CA 04/17/2027",CA,04/17/2027,,not-on-source,,no goandrace listing in any crawl
@@ -194,7 +194,7 @@ Run the River Marathon,"Kennewick, WA 04/18/2026",WA,04/18/2026,,not-on-source,,
 Vienna City Marathon,"Vienna, AT 04/18/2027",AT,04/18/2027,vienna-city-marathon,in-db,,Vienna City Marathon
 Washington State Marathon,"Seattle, WA 04/18/2027",WA,04/18/2027,,not-on-source,,no goandrace listing in any crawl
 Boston Marathon,"Boston, MA 04/19/2027",MA,04/19/2027,boston,in-db,,Boston Marathon
-Illinois Marathon,"Champaign-Urbana, IL 04/24/2027",IL,04/24/2027,christie-clinic-illinois-marathon,parser-rejected,https://www.goandrace.com/en/running-events/christie-clinic-illinois-marathon-2023-champaign.php,"parser failed: total route length 21.384 km is outside [41.5, 43.0] km"
+Illinois Marathon,"Champaign-Urbana, IL 04/24/2027",IL,04/24/2027,illinois-marathon,in-db,,Illinois Marathon
 Rock n Roll Nashville Marathon,"Nashville, TN 04/24/2027",TN,04/24/2027,,not-on-source,,no goandrace listing in any crawl
 Kentucky Derby Festival Marathon,"Louisville, KY 04/24/2027",KY,04/24/2027,kentucky-derby-festival-marathon,in-db,,Kentucky Derby Festival Marathon
 Salt Lake City Marathon,"Salt Lake City, UT 04/24/2027",UT,04/24/2027,salt-lake-city-marathon,in-db,,Salt Lake City Marathon
@@ -213,7 +213,7 @@ Oklahoma City Memorial Marathon,"Oklahoma City, OK 04/25/2027",OK,04/25/2027,okl
 Glass City Marathon,"Toledo, OH 04/25/2027",OH,04/25/2027,,not-on-source,,no goandrace listing in any crawl
 Maui Marathon,"Kaanapali, HI 04/25/2027",HI,04/25/2027,maui-oceanfront-marathon,in-db,,Maui Oceanfront Marathon
 Trail Marathon,"Pinckney, MI 04/25/2026",MI,04/25/2026,leadville-trail-marathon,in-db,,Leadville Trail Marathon
-Gettysburg North-South Marathon,"Gettysburg, PA 04/25/2027",PA,04/25/2027,,not-on-source,,no goandrace listing in any crawl
+Gettysburg North-South Marathon,"Gettysburg, PA 04/25/2027",PA,04/25/2027,gettysburg-festival-of-races,no-course-map,https://www.goandrace.com/en/running-events/gettysburg-festival-of-races-2023-gettysburg.php,event page links no course map
 Kalamazoo Marathon,"Kalamazoo, MI 04/25/2027",MI,04/25/2027,,not-on-source,,no goandrace listing in any crawl
 Run with Scissors Marathon,"Brighton, CO 04/25/2026",CO,04/25/2026,,not-on-source,,no goandrace listing in any crawl
 Connemara International Marathon,"Galway, IE 04/25/2027",IE,04/25/2027,,not-on-source,,no goandrace listing in any crawl
@@ -322,7 +322,7 @@ Red Island Marathon,"Warwick, RI 05/31/2026",RI,05/31/2026,,not-on-source,,no go
 Bear Lake Wyoming Marathon,"Cokeville, WY 06/04/2026",WY,06/04/2026,,not-on-source,,no goandrace listing in any crawl
 Utah Valley Marathon,"Provo, UT 06/05/2027",UT,06/05/2027,utah-valley-marathon,in-db,,Utah Valley Marathon
 Newport Marathon (OR),"Newport, OR 06/05/2027",OR,06/05/2027,newport-marathon,in-db,,Newport Marathon
-Bear Lake Idaho Marathon,"Bear Lake, ID 06/05/2026",ID,06/05/2026,bear-lake-trifecta-idaho,no-course-map,https://www.goandrace.com/en/running-events/2026/06/bear-lake-trifecta-idaho-2026-st-charles.php,event page links no course map
+Bear Lake Idaho Marathon,"Bear Lake, ID 06/05/2026",ID,06/05/2026,bear-lake-trifecta-idaho,parser-rejected,https://www.goandrace.com/en/running-events/2026/06/bear-lake-trifecta-idaho-2026-st-charles.php,fetch: event page links no course map
 MISH Waterfront Marathon,"Gladstone, MI 06/05/2027",MI,06/05/2027,,not-on-source,,no goandrace listing in any crawl
 Rock n Roll San Diego Marathon,"San Diego, CA 06/06/2027",CA,06/06/2027,rock-n-roll-san-diego-marathon,in-db,,Rock 'n' Roll San Diego Marathon
 Steamboat Marathon,"Steamboat Springs, CO 06/06/2027",CO,06/06/2027,,not-on-source,,no goandrace listing in any crawl
@@ -410,7 +410,7 @@ Valentine Marathon,"Valentine, NE 08/01/2026",NE,08/01/2026,,not-on-source,,no g
 Yukon River Trail Marathon,"Whitehorse, YT 08/02/2026",YT,08/02/2026,,not-on-source,,no goandrace listing in any crawl
 Camarillo Marathon,"Camarillo, CA 08/02/2026",CA,08/02/2026,,not-on-source,,no goandrace listing in any crawl
 Bound for Boston (Denver) Marathon,"Denver, CO 08/02/2026",CO,08/02/2026,boston-marathon,in-db,,Boston Marathon
-Paavo Marathon,"Hurley, WI 08/08/2026",WI,08/08/2026,,not-on-source,,no goandrace listing in any crawl
+Paavo Marathon,"Hurley, WI 08/08/2026",WI,08/08/2026,paavo-nurmi-marathon,in-db,,Paavo Nurmi Marathon
 Haulin Aspen Trail Marathon,"Bend, OR 08/08/2026",OR,08/08/2026,,not-on-source,,no goandrace listing in any crawl
 Skyline Mountain Marathon,"Eden, UT 08/08/2026",UT,08/08/2026,,not-on-source,,no goandrace listing in any crawl
 Crater Lake Marathon,"Crater Lake, OR 08/09/2025",OR,08/09/2025,,past-event,,listed 08/09/2025
@@ -468,7 +468,7 @@ Odyssey Trail Running Rampage Marathon,"Millboro, VA 09/12/2026",VA,09/12/2026,,
 Run Woodstock Marathon,"Gregory, MI 09/12/2026",MI,09/12/2026,,not-on-source,,no goandrace listing in any crawl
 REVEL Big Cottonwood Marathon,"Murray, UT 09/12/2026",UT,09/12/2026,,not-on-source,,no goandrace listing in any crawl
 Wabash Trace Nature Trail Marathon,"Shenandoah, IA 09/12/2026",IA,09/12/2026,,not-on-source,,no goandrace listing in any crawl
-Elroy Apple Dumpling Day Marathon,"Elroy, WI 09/12/2026",WI,09/12/2026,apple-dumpling-day-races,no-course-map,https://www.goandrace.com/en/running-events/apple-dumpling-day-races-2025-elroy.php,event page links no course map
+Elroy Apple Dumpling Day Marathon,"Elroy, WI 09/12/2026",WI,09/12/2026,apple-dumpling-day-races,parser-rejected,https://www.goandrace.com/en/running-events/apple-dumpling-day-races-2025-elroy.php,fetch: event page links no course map
 Beat the Blerch (Carnation Saturday),"Carnation, WA 09/12/2026",WA,09/12/2026,,not-on-source,,no goandrace listing in any crawl
 DoLittle Marathon,"Waukesha, WI 09/12/2026",WI,09/12/2026,,not-on-source,,no goandrace listing in any crawl
 Cascade Express Marathon,"North Bend, WA 09/12/2026",WA,09/12/2026,,not-on-source,,no goandrace listing in any crawl
@@ -580,7 +580,7 @@ Rogue Marathon,"Medford, OR 10/10/2026",OR,10/10/2026,,not-on-source,,no goandra
 Breckenridge Road Marathon,"Breckenridge, CO 10/10/2026",CO,10/10/2026,,not-on-source,,no goandrace listing in any crawl
 Long View Marathon,"Loveland, CO 10/10/2026",CO,10/10/2026,,not-on-source,,no goandrace listing in any crawl
 Pocono Mountains Marathon,"Greentown, PA 10/10/2026",PA,10/10/2026,,not-on-source,,no goandrace listing in any crawl
-Holloman Ace of Races Marathon,"Alamogordo, NM 10/10/2026",NM,10/10/2026,holloman-ace-of-races-alamogordo,no-course-map,https://www.goandrace.com/en/running-events/holloman-ace-of-races-alamogordo-2025.php,event page links no course map
+Holloman Ace of Races Marathon,"Alamogordo, NM 10/10/2026",NM,10/10/2026,holloman-ace-of-races-alamogordo,parser-rejected,https://www.goandrace.com/en/running-events/holloman-ace-of-races-alamogordo-2025.php,fetch: event page links no course map
 Steamtown Marathon,"Scranton, PA 10/11/2026",PA,10/11/2026,,not-on-source,,no goandrace listing in any crawl
 Chicago Marathon,"Chicago, IL 10/11/2026",IL,10/11/2026,chicago,in-db,,Chicago Marathon
 Long Beach Marathon,"Long Beach, CA 10/11/2026",CA,10/11/2026,long-beach-marathon,in-db,,Long Beach Marathon
@@ -589,7 +589,7 @@ Prairie Fire Marathon,"Wichita, KS 10/11/2026",KS,10/11/2026,,not-on-source,,no 
 Cape Cod Marathon,"Falmouth, MA 10/11/2026",MA,10/11/2026,,not-on-source,,no goandrace listing in any crawl
 Valley Harvest Marathon,"Wolfville, NS 10/11/2026",NS,10/11/2026,,not-on-source,,no goandrace listing in any crawl
 ,"Spokane, WA 10/11/2026",WA,10/11/2026,,not-on-source,,no goandrace listing in any crawl
-Victoria Marathon,"Victoria, BC 10/11/2026",BC,10/11/2026,,not-on-source,,no goandrace listing in any crawl
+Victoria Marathon,"Victoria, BC 10/11/2026",BC,10/11/2026,victoria-falls-marathon,in-db,,Victoria Falls Marathon
 Ottawa Fall Colours Marathon,"Ottawa, ON 10/11/2026",ON,10/11/2026,ottawa-marathon,in-db,,Ottawa Marathon
 Bizz Johnson Marathon,"Susanville, CA 10/11/2026",CA,10/11/2026,,not-on-source,,no goandrace listing in any crawl
 Humboldt Redwoods Marathon,"Weott, CA 10/11/2026",CA,10/11/2026,,not-on-source,,no goandrace listing in any crawl
@@ -625,7 +625,7 @@ Toronto Waterfront Marathon,"Toronto, ON 10/18/2026",ON,10/18/2026,toronto-water
 Blue Sky Marathon,"Fort Collins, CO 10/18/2026",CO,10/18/2026,,not-on-source,,no goandrace listing in any crawl
 Prince Edward Island Marathon,"Charlottetown, PE 10/18/2026",PE,10/18/2026,,not-on-source,,no goandrace listing in any crawl
 Grand Rapids Marathon,"Grand Rapids, MI 10/18/2026",MI,10/18/2026,,not-on-source,,no goandrace listing in any crawl
-Duke City Marathon,"Albuquerque, NM 10/18/2026",NM,10/18/2026,,not-on-source,,no goandrace listing in any crawl
+Duke City Marathon,"Albuquerque, NM 10/18/2026",NM,10/18/2026,big-5-duke-city-marathon,parser-rejected,https://www.goandrace.com/en/running-events/big-5-duke-city-marathon-2022-albuquerque.php,fetch: event page links no course map
 Cape Breton Fiddlers Run Marathon,"Sydney, NS 10/18/2026",NS,10/18/2026,,not-on-source,,no goandrace listing in any crawl
 Columbia Gorge Marathon,"Hood River, OR 10/18/2026",OR,10/18/2026,,not-on-source,,no goandrace listing in any crawl
 Great New York State Marathon,"Syracuse, NY 10/18/2026",NY,10/18/2026,new-york-city-marathon,in-db,,New York City Marathon
@@ -648,7 +648,7 @@ Dublin Marathon,"Dublin, IE 10/25/2026",IE,10/25/2026,dublin-marathon,in-db,,Dub
 Ocean State Rhode Races Marathon,"Narragansett, RI 10/25/2026",RI,10/25/2026,,not-on-source,,no goandrace listing in any crawl
 Eryri Marathon,"Llanberis, UK 10/24/2026",UK,10/24/2026,,not-on-source,,no goandrace listing in any crawl
 RDC Marathon,"Durham, NC 10/25/2026",NC,10/25/2026,,not-on-source,,no goandrace listing in any crawl
-Amsterdam Marathon,"Amsterdam, NR 10/25/2026",NR,10/25/2026,amsterdam,parser-rejected,https://www.goandrace.com/en/running-events/2026/10/amsterdam-2026.php,fetch: event page links no course map
+Amsterdam Marathon,"Amsterdam, NR 10/25/2026",NR,10/25/2026,amsterdam-marathon,in-db,,Amsterdam Marathon
 Lubbock Marathon,"Lubbock, TX 10/25/2026",TX,10/25/2026,,not-on-source,,no goandrace listing in any crawl
 Haunted Forest Marathon,"Canal Fulton, OH 10/25/2026",OH,10/25/2026,,not-on-source,,no goandrace listing in any crawl
 Frankfurt Marathon,"Frankfurt, GR 10/25/2026",GR,10/25/2026,frankfurt-marathon,in-db,,Frankfurt Marathon
@@ -729,10 +729,10 @@ Rehoboth Beach Marathon,"Rehoboth Beach, DE 12/05/2026",DE,12/05/2026,,not-on-so
 Panama City Beach Marathon,"Panama City, FL 12/05/2026",FL,12/05/2026,,not-on-source,,no goandrace listing in any crawl
 Millinocket Marathon,"Millinocket, ME 12/05/2026",ME,12/05/2026,,not-on-source,,no goandrace listing in any crawl
 Wildwood Trail Marathon,"Wildwood, MO 12/05/2026",MO,12/05/2026,,not-on-source,,no goandrace listing in any crawl
-Brazos Bend 100 Marathon,"Needville, TX 12/05/2026",TX,12/05/2026,,not-on-source,,no goandrace listing in any crawl
+Brazos Bend 100 Marathon,"Needville, TX 12/05/2026",TX,12/05/2026,bend-marathon,in-db,,Bend Marathon
 California International Marathon,"Sacramento, CA 12/06/2026",CA,12/06/2026,california-international-marathon,in-db,,California International Marathon
 Hoover Dam Marathon,"Boulder City, NV 12/06/2025",NV,12/06/2025,,past-event,,listed 12/06/2025
-Cayman Islands Marathon,"Grand Cayman, CI 12/06/2026",CI,12/06/2026,,not-on-source,,no goandrace listing in any crawl
+Cayman Islands Marathon,"Grand Cayman, CI 12/06/2026",CI,12/06/2026,cayman-islands-marathon,in-db,,Cayman Islands Marathon
 Topo Trail Marathon,"Bethel, OH 12/06/2026",OH,12/06/2026,,not-on-source,,no goandrace listing in any crawl
 Tallahassee Ultra Distance Classic Marathon,"Tallahassee, FL 12/06/2026",FL,12/06/2026,,not-on-source,,no goandrace listing in any crawl
 EOD Warrior Holiday Dash Marathon,"Washington, DC 12/06/2026",DC,12/06/2026,,not-on-source,,no goandrace listing in any crawl
@@ -742,7 +742,7 @@ Queens Marathon (Fall),"Queens, NY 12/06/2026",NY,12/06/2026,,not-on-source,,no 
 San Antonio Marathon,"San Antonio, TX 12/06/2026",TX,12/06/2026,,not-on-source,,no goandrace listing in any crawl
 End of the World Marathon,"Placencia, BZ 12/06/2026",BZ,12/06/2026,,not-on-source,,no goandrace listing in any crawl
 Valencia Marathon,"Valencia, ES 12/06/2026",ES,12/06/2026,valencia-marathon,in-db,,Valencia Marathon
-South Texas International Marathon,"Harlingen, TX 12/07/2025",TX,12/07/2025,,past-event,,listed 12/07/2025
+South Texas International Marathon,"Harlingen, TX 12/07/2025",TX,12/07/2025,texas-marathon,no-course-map,https://www.goandrace.com/en/running-events/texas-marathon-2022-kingwood.php,event page links no course map
 Jacksonville Marathon,"Jacksonville, FL 12/12/2026",FL,12/12/2026,jacksonville-marathon,in-db,,Jacksonville Marathon
 Kiawah Island Marathon,"Kiawah Island, SC 12/12/2026",SC,12/12/2026,,not-on-source,,no goandrace listing in any crawl
 Phoenix Marathon,"Phoenix, AZ 12/12/2026",AZ,12/12/2026,,not-on-source,,no goandrace listing in any crawl
@@ -751,12 +751,12 @@ Honolulu Marathon,"Honolulu, HI 12/13/2026",HI,12/13/2026,honolulu-marathon,in-d
 Rocket City Marathon,"Huntsville, AL 12/13/2026",AL,12/13/2026,,not-on-source,,no goandrace listing in any crawl
 Palm Beaches Marathon,"West Palm Beach, FL 12/13/2026",FL,12/13/2026,,not-on-source,,no goandrace listing in any crawl
 Tucson Marathon,"Tucson, AZ 12/13/2026",AZ,12/13/2026,,not-on-source,,no goandrace listing in any crawl
-Dallas Marathon,"Dallas, TX 12/13/2026",TX,12/13/2026,bmw-dallas-marathon,parser-rejected,https://www.goandrace.com/en/running-events/bmw-dallas-marathon-2024.php,"parser failed: total route length 49.853 km is outside [41.5, 43.0] km"
+Dallas Marathon,"Dallas, TX 12/13/2026",TX,12/13/2026,bmw-dallas-marathon-festival,parser-rejected,https://www.goandrace.com/en/running-events/bmw-dallas-marathon-festival-2023.php,fetch: event page links no course map
 Bryan-College Station Marathon,"College Station, TX 12/13/2026",TX,12/13/2026,,not-on-source,,no goandrace listing in any crawl
 Mississippi Gulf Coast Marathon,"Biloxi, MS 12/13/2026",MS,12/13/2026,,not-on-source,,no goandrace listing in any crawl
 Marathon Project (Pro),"Chandler, AZ 12/13/2026",AZ,12/13/2026,,not-on-source,,no goandrace listing in any crawl
 Brownsville Chief of Police Marathon,"Brownsville, TX 12/13/2026",TX,12/13/2026,,not-on-source,,no goandrace listing in any crawl
-Star of Texas Marathon,"Spicewood, TX 12/13/2026",TX,12/13/2026,,not-on-source,,no goandrace listing in any crawl
+Star of Texas Marathon,"Spicewood, TX 12/13/2026",TX,12/13/2026,texas-marathon,no-course-map,https://www.goandrace.com/en/running-events/texas-marathon-2022-kingwood.php,event page links no course map
 Irving Frost Marathon,"Irving, TX 12/19/2026",TX,12/19/2026,irving-marathon,in-db,,Irving Marathon
 St. Pete Marathon,"St, Petersburg, FL 12/19/2027",FL,12/19/2027,,not-on-source,,no goandrace listing in any crawl
 Hawaii Bird Conservation Marathon,"Hilo, HI 12/20/2026",HI,12/20/2026,,not-on-source,,no goandrace listing in any crawl
