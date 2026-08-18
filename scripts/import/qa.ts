@@ -23,6 +23,7 @@ import {
   COUNTRY_NAMES,
   COURSE_DIR,
   DECISIONS_PATH,
+  DEFAULT_SOURCE_SITE,
   IMPORT_DIR,
   RAW_DIR,
   REPORT_DIR,
@@ -114,7 +115,14 @@ function assess(
     courseSlug: slug,
     verdict: "rejected",
     reasons,
-    source: { eventUrl: event.eventUrl, gpxUrl: event.gpxUrl, gpxSha256: null },
+    source: {
+      eventUrl: event.eventUrl,
+      gpxUrl: event.gpxUrl,
+      gpxSha256: null,
+      site: event.sourceSite ?? DEFAULT_SOURCE_SITE,
+      elevation: event.elevationSource ?? "gpx",
+      ...(event.routeNote ? { note: event.routeNote } : {}),
+    },
     stats: { totalKm: null, gainM: null },
     city: null,
     citySlug: "",
@@ -177,6 +185,17 @@ function assess(
   const [lat, lon] = coords[0];
 
   // --- soft flags: usable, but a human should look ------------------------
+  // Anything the adopt stage noticed (a merged multi-track file, a DEM profile
+  // that steps off a bridge) travels here rather than being printed once and
+  // lost, so it reaches the same person who clears the rest of the review.
+  for (const warning of event.warnings ?? []) reasons.push(warning);
+  if ((event.elevationSource ?? "gpx") !== "gpx") {
+    reasons.push(
+      `elevation is modelled (${event.elevationSource}), not surveyed — confirm the ` +
+        `profile looks like the real course before spending the slug`,
+    );
+  }
+
   const km = parsed.total_km ?? 0;
   if (km < 42.0 || km > 42.4) {
     reasons.push(`measured ${km.toFixed(3)} km, outside the [42.0, 42.4] band`);

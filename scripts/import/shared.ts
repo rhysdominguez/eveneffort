@@ -547,6 +547,20 @@ export function haversineKm(
 // Staging file shapes
 // ---------------------------------------------------------------------------
 
+/**
+ * Where a course's geometry came from. goandrace.com was the only answer until
+ * adopt.ts, so it is the default everywhere and the 600-odd decisions.json
+ * entries written before that stay valid without a migration.
+ */
+export const DEFAULT_SOURCE_SITE = "goandrace.com";
+
+/**
+ * How a course's elevation was obtained — surveyed from the source file, or
+ * sampled off a terrain model. Materially different in accuracy, so it is
+ * recorded rather than inferred. See elevate.ts for what the difference costs.
+ */
+export type ElevationSource = "gpx" | `dem:${string}`;
+
 /** One event as scraped, before any geometry exists. Written by fetch.ts. */
 export interface RawEvent {
   courseSlug: string;
@@ -562,6 +576,14 @@ export interface RawEvent {
   countryCode: string | null;
   organizer: string | null;
   websiteUrl: string | null;
+  /** Host the geometry came from. Absent means goandrace.com — see above. */
+  sourceSite?: string;
+  /** Absent means "gpx": nothing but adopt.ts has ever produced anything else. */
+  elevationSource?: ElevationSource;
+  /** Why a human vouched for this route file. Set by adopt.ts only. */
+  routeNote?: string;
+  /** Non-fatal notes from normalisation/elevation, surfaced by qa.ts. */
+  warnings?: string[];
   /** Populated when the event could not be turned into a GPX on disk. */
   error?: string;
 }
@@ -580,7 +602,15 @@ export interface StagedCourse {
   courseSlug: string;
   verdict: Verdict;
   reasons: string[];
-  source: { eventUrl: string; gpxUrl: string | null; gpxSha256: string | null };
+  source: {
+    eventUrl: string;
+    gpxUrl: string | null;
+    gpxSha256: string | null;
+    /** Absent on entries written before a second source existed. */
+    site?: string;
+    elevation?: ElevationSource;
+    note?: string;
+  };
   stats: { totalKm: number | null; gainM: number | null };
   /** Null when the city is already in CITY_SEED — never repoint an existing pin. */
   city: {

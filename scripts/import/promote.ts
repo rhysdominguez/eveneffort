@@ -29,6 +29,7 @@ import {
   COURSE_DIR,
   GPX_DIR,
   DECISIONS_PATH,
+  DEFAULT_SOURCE_SITE,
   QUARANTINE_DIR,
   type DecisionFile,
   type StagedCourse,
@@ -67,6 +68,33 @@ function appendToDeclaration(
   return source.slice(0, at) + block + source.slice(at);
 }
 
+/**
+ * Name the hosts a batch's geometry actually came from.
+ *
+ * The seed files are the durable record of where a course originated, so this
+ * is not cosmetic: with adopt.ts a batch can carry courses from several
+ * organisers' own sites, and stamping every one of them "goandrace.com" would
+ * make that record wrong. Entries written before a second source existed have
+ * no `site` and correctly fall back.
+ */
+function sourceLabel(courses: StagedCourse[]): string {
+  const sites = [...new Set(courses.map((c) => c.source.site ?? DEFAULT_SOURCE_SITE))].sort();
+  if (sites.length === 1) return sites[0];
+  if (sites.length <= 3) return sites.join(", ");
+  return `${sites.length} sources (see data/import/decisions.json)`;
+}
+
+/** Flag a batch whose elevation is modelled rather than surveyed. */
+function elevationNote(courses: StagedCourse[]): string {
+  const modelled = courses.filter((c) => (c.source.elevation ?? "gpx") !== "gpx");
+  if (modelled.length === 0) return "";
+  const models = [...new Set(modelled.map((c) => c.source.elevation!))].sort();
+  return (
+    `\n  // Elevation for ${modelled.length} of these is sampled from a terrain\n` +
+    `  // model (${models.join(", ")}), not surveyed from the source file.`
+  );
+}
+
 function cityBlock(courses: StagedCourse[], batch: string): string {
   const cities = courses.map((c) => c.city).filter((c) => c !== null);
   if (cities.length === 0) return "";
@@ -86,7 +114,7 @@ function cityBlock(courses: StagedCourse[], batch: string): string {
 `,
     )
     .join("");
-  return `  // Imported from goandrace.com — batch ${batch}.\n${entries}`;
+  return `  // Imported from ${sourceLabel(courses)} — batch ${batch}.\n${entries}`;
 }
 
 function seriesBlock(courses: StagedCourse[], batch: string): string {
@@ -107,7 +135,8 @@ function seriesBlock(courses: StagedCourse[], batch: string): string {
 `,
     )
     .join("");
-  return `  // Imported from goandrace.com — batch ${batch}.\n${entries}`;
+  return `  // Imported from ${sourceLabel(courses)} — batch ${batch}.` +
+    `${elevationNote(courses)}\n${entries}`;
 }
 
 function recurrenceBlock(courses: StagedCourse[], batch: string): string {
@@ -124,7 +153,7 @@ function recurrenceBlock(courses: StagedCourse[], batch: string): string {
 `,
     )
     .join("");
-  return `  // Imported from goandrace.com — batch ${batch}. Each rule is derived\n` +
+  return `  // Imported from ${sourceLabel(courses)} — batch ${batch}. Each rule is derived\n` +
     `  // from one observed date, not from the organizer's own statement.\n${entries}`;
 }
 
@@ -139,7 +168,7 @@ function editionBlock(courses: StagedCourse[], batch: string): string {
       return `  { seriesSlug: ${lit(e.seriesSlug)}, year: ${e.year}, raceDate: ${lit(e.raceDate)}${time} },\n`;
     })
     .join("");
-  return `  // Imported from goandrace.com — batch ${batch}. Dates as published by\n` +
+  return `  // Imported from ${sourceLabel(courses)} — batch ${batch}. Dates as published by\n` +
     `  // the event listing, or verified against the organizer during review.\n` +
     `  // startTimeLocal appears only where a real one was read off the\n` +
     `  // organizer's page — never guessed, since a wrong hour silently keys\n` +
@@ -150,7 +179,7 @@ function ledgerBlock(courses: StagedCourse[], batch: string): string {
   if (courses.length === 0) return "";
   const entries = courses.map((c) => `  ${lit(c.courseSlug)},\n`).join("");
   const today = new Date().toISOString().slice(0, 10);
-  return `  // Batch ${batch}, imported from goandrace.com on ${today}.\n${entries}`;
+  return `  // Batch ${batch}, imported from ${sourceLabel(courses)} on ${today}.\n${entries}`;
 }
 
 function quarantine(slug: string, dryRun: boolean): string[] {

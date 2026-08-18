@@ -36,7 +36,7 @@ src/
   types/            Shared TypeScript types
 scripts/
   gpx_parser/       Python build pipeline for adding new marathon courses
-  import/           Bulk course importer (goandrace.com -> seed files)
+  import/           Bulk course importer (goandrace.com / adopted files -> seed files)
   seed.ts           Upserts the seed definitions + course JSON into Postgres
 drizzle/            Generated SQL migrations (committed)
 data/
@@ -84,7 +84,7 @@ No `CourseId` union to update and no registry to edit — courses are rows, and 
 
 ## Adding marathons in bulk
 
-`scripts/import/` automates the eight steps above for many courses at once, sourcing from goandrace.com — where every GPX in this repo already came from. **Prefer the `/import-races` skill**, which drives the whole pipeline including the enrichment and verification steps; `scripts/import/README.md` explains the design.
+`scripts/import/` automates the eight steps above for many courses at once, sourcing from goandrace.com — where all but one of this repo's GPX files came from. **Prefer the `/import-races` skill**, which drives the whole pipeline including the enrichment and verification steps; `scripts/import/README.md` explains the design.
 
 Discovery pages `/it/api_calendario.php`, the JSON endpoint behind the calendar's "load more" button — the calendar page itself only renders its first 28 results, so scraping the HTML silently caps a batch. The `--year-start`/`--year-end` default of 2026-27 (129 marathons) **is exhausted**, as is 2025-2029 (378); the full catalogue runs to ~1,086 events back to 2015, and a course's geometry does not expire, so reaching further back is how you find anything new. An archived race must be confirmed to still run before it is seeded — see the skill. Targeted modes: `--city "<name>"` and `--url "<event-page>"`.
 
@@ -98,6 +98,10 @@ npm run import:promote
 npm run test && npm run build && npm run db:seed
 rm -rf .next   # REQUIRED after seeding — see below
 ```
+
+**When goandrace does not list the race at all**, use `npm run import:adopt` instead of `import:fetch`; steps 2-4 are identical. It reads `data/import/adoptions.json` (committed — it is the sign-off record for the slug and for where the geometry came from) and ingests a course file a human found, preferring the race organizer's own site. `scripts/import/route.ts` normalizes `<rte>` exports, KML/KMZ and GeoJSON into the single-track GPX the parser demands, and `scripts/import/elevate.ts` fills elevation from a terrain model when the file carries none — recorded as `dem:<dataset>`, never confused with surveyed elevation, and flagged for review. This matters because 558 of the 766 rows in the findmymarathon tracker have no goandrace listing in any crawl.
+
+**findmymarathon.com is not a geometry source** — its elevation charts are rendered JPEGs and it publishes no route data. Don't re-investigate it; `scripts/import/README.md` records the evidence.
 
 `import:parse` is `scripts/gpx_parser/parse_gpx.py` unchanged — the importer feeds it, never modifies it.
 

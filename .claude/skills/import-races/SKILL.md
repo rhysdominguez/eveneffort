@@ -1,6 +1,6 @@
 ---
 name: import-races
-description: Import marathon courses from goandrace.com into the Neon database — GPX, geometry, city, series, edition and slug ledger — matching the original seven majors exactly. Covers the archive sweep (goandrace lists ~1,086 events back to 2015; the default 2026-27 window is exhausted) and confirming an archived race still runs before seeding it. Use when the user asks to "import races", "add N marathons", "get more marathons we don't have", "add the marathon for <city>", or gives goandrace.com event or course-map URLs.
+description: Import marathon courses from goandrace.com into the Neon database — GPX, geometry, city, series, edition and slug ledger — matching the original seven majors exactly. Covers the archive sweep (goandrace lists ~1,086 events back to 2015; the default 2026-27 window is exhausted) and confirming an archived race still runs before seeding it. Use when the user asks to "import races", "add N marathons", "add the marathon for <city>", or gives goandrace.com event or course-map URLs. For a race already known to be off goandrace's calendar, or once this skill's archive is exhausted, use the sibling skill `adopt-races` instead.
 ---
 
 # import-races — bulk-import marathons into the database
@@ -222,6 +222,25 @@ Two structural limits no amount of crawling fixes:
 
 - **Some races have no route data anywhere on goandrace.** 41 in the forward window publish no course map; 9 of those have an older page worth trying (Muscat and Luxor among them — see the table above), which leaves ~32 with nothing to reach for at any year. Medellín and New Delhi are in that remainder: goandrace lists the race and has never published a route for it.
 - **goandrace's coverage is strong in the US and Italy and thin elsewhere.** Repeated wishlist rounds against Asia, Africa, the Middle East and South America landed in the single digits each time. If a request needs meaningfully more of those regions, say plainly that a second geometry source is the lever, rather than running another sweep that will not deliver.
+
+That lever now exists — see below. It is one race at a time, not a sweep, so quote it as such.
+
+## Adopting a race goandrace does not list
+
+That second geometry source now exists as its own skill: **`adopt-races`**.
+Use it — not this one — for a named race already known to be off goandrace's
+calendar, or when the ask is "find more marathons" after this skill's archive
+sweep is exhausted. It drives `npm run import:adopt`, sourcing candidates from
+`data/import/findmymarathon-tracker.csv` (546 `not-on-source` rows as of
+2026-08-17) and a course file found on the race's own site — steps 2 onward
+(parse/qa/promote/verify/commit) are identical to this skill's.
+
+**Do not reach for findmymarathon.com as a geometry source, here or there.**
+It lists many races we lack and shows an elevation chart for them, which is
+exactly why it keeps getting re-investigated. The chart is a rendered JPEG
+with no coordinates and no per-point data, and `/gpx/` is a soft-404
+catch-all — a 30-race sample found 17 elevation images and zero GPX files. It
+is a worklist of names and dates, nothing more.
 
 ## Background
 

@@ -3,11 +3,19 @@
 //   node scripts/import/reconcile-csv.ts            # rewrite the tracker
 //   node scripts/import/reconcile-csv.ts --summary  # print counts, write nothing
 //   node scripts/import/reconcile-csv.ts --emit-batch csv-batch-01   # + a raw batch
+//   node scripts/import/reconcile-csv.ts --adoptable   # list the not-on-source races
 //
-// The CSV is a 766-row list of US-centric marathon events. Our only geometry
-// source is goandrace.com, whose forward calendar is ~377 events, so most of
-// this list is unreachable by the importer. The point of this script is to say
-// which rows those are, and why, in a form that survives a session.
+// The CSV is a 766-row list of US-centric marathon events, taken from
+// findmymarathon.com — which is a useful roster of what exists and NOT a
+// geometry source: its elevation charts are rendered JPEGs and it publishes no
+// route data (see README.md). Most of this list is therefore out of reach of
+// the bulk importer, whose only calendar is goandrace's ~377 forward events.
+// The point of this script is to say which rows those are, and why, in a form
+// that survives a session.
+//
+// 558 of them are `not-on-source`. Those are not dead — they are the worklist
+// for adopt.ts, which takes a course file from the organiser's own site one
+// race at a time.
 //
 // Every status is recomputed from the repo on each run — seeded slugs come out
 // of slug-ledger.ts and series.ts, and source availability out of the raw
@@ -45,11 +53,20 @@ export type Status =
   | "queued" // on goandrace with a GPX, waiting for a batch
   | "no-course-map" // listed on goandrace, no geometry published
   | "parser-rejected" // GPX fetched but failed parse_gpx.py's gates
-  | "not-on-source" // no goandrace listing in any crawl
+  | "not-on-source" // no goandrace listing in any crawl — adoptable, see below
   | "past-event" // date already gone; not worth a slug
   | "no-date" // TBD date, or no name to identify the race by
   ;
 
+/**
+ * `queued` is the only status this pipeline can act on unattended.
+ *
+ * `not-on-source` is no longer terminal — those races are adoptable one at a
+ * time via adopt.ts, from a course file a human finds on the organiser's own
+ * site. It is deliberately not counted as "open" here, because that number
+ * answers "how much can the importer still do by itself", and adoption cannot
+ * be done by itself. See `--adoptable`.
+ */
 const OPEN: ReadonlySet<Status> = new Set<Status>(["queued"]);
 
 interface CsvRow {
@@ -360,6 +377,27 @@ function main(argv: string[]): void {
   }
   console.log("");
   console.log(open === 0 ? "No rows left to import." : `${open} rows still importable.`);
+
+  // not-on-source used to be the end of the conversation. It is now the adopt.ts
+  // worklist, so print it as work rather than leaving it filed under "answers".
+  const adoptable = rows.filter((r) => r.status === "not-on-source");
+  if (adoptable.length > 0) {
+    console.log(
+      `${adoptable.length} more are adoptable one at a time — no goandrace listing, but the\n` +
+        `organiser often publishes a course file. See --adoptable and adoptions.json.`,
+    );
+  }
+  if (argv.includes("--adoptable")) {
+    const byRegion = new Map<string, TrackerRow[]>();
+    for (const r of adoptable) {
+      byRegion.set(r.state, [...(byRegion.get(r.state) ?? []), r]);
+    }
+    console.log("\nadoptable, by state/country:\n");
+    for (const [region, list] of [...byRegion].sort((a, b) => b[1].length - a[1].length)) {
+      console.log(`  ${region.padEnd(5)} ${String(list.length).padStart(3)}`);
+      for (const r of list) console.log(`        ${r.date}  ${r.name}`);
+    }
+  }
 
   // The queued rows are spread across every crawl we have ever run, but qa.ts
   // assesses exactly one raw batch file. Gathering them into a synthetic batch

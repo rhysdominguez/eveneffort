@@ -11,7 +11,13 @@ export default defineConfig({
     // Repairs window.localStorage, which jsdom leaves unreachable here. See the
     // file for why.
     setupFiles: ["src/test/setup.ts"],
-    include: ["src/**/*.{test,spec}.{ts,tsx}"],
+    // scripts/ is build-time tooling, but the route normaliser is pure parsing
+    // logic guarding a permanent identifier, so it is tested with everything
+    // else. Nothing included here may touch the network — see Rule 9.
+    include: [
+      "src/**/*.{test,spec}.{ts,tsx}",
+      "scripts/**/*.{test,spec}.ts",
+    ],
   },
   resolve: {
     // Mirror the "@/*" -> "src/*" alias from tsconfig.json.
