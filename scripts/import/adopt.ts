@@ -117,9 +117,15 @@ async function adopt(
     countryCode: race.countryCode,
     organizer: race.organizer,
     websiteUrl: race.websiteUrl,
-    sourceSite: new URL(
-      /^https?:/i.test(race.routeUrl) ? race.routeUrl : "https://local.invalid",
-    ).hostname,
+    // For a manual entry the bytes come from a local file, but the seed-file
+    // comment this feeds should still name a real host — the race's own site
+    // is the truthful answer, not an internal placeholder. "manual" is the
+    // fallback only when even that is missing.
+    sourceSite: /^https?:/i.test(race.routeUrl)
+      ? new URL(race.routeUrl).hostname
+      : race.websiteUrl
+        ? new URL(race.websiteUrl).hostname
+        : "manual",
     routeNote: `${race.routeSource}: ${race.routeNote}`,
     warnings: [],
   };
