@@ -2030,6 +2030,26 @@ export const RECURRENCE: Record<string, RecurrenceRule> = {
     nth: 1,
     note: "Derived from the 2026-09-05 edition; not verified against the organizer",
   },
+  // Imported from 406raceseries.com, gnarrunners.com, trisignup.com — batch 2026-08-18. Each rule is derived
+  // from one observed date, not from the organizer's own statement.
+  "montana-marathon": {
+    month: 9,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2026-09-20 edition; not verified against the organizer",
+  },
+  "old-forge-marathon": {
+    month: 9,
+    weekday: 6,
+    nth: 2,
+    note: "Derived from the 2026-09-12 edition; not verified against the organizer",
+  },
+  "staunton-rocks-marathon": {
+    month: 8,
+    weekday: 6,
+    nth: 4,
+    note: "Derived from the 2026-08-22 edition; not verified against the organizer",
+  },
 };
 
 export interface ConfirmedEdition {
@@ -2470,6 +2490,14 @@ export const CONFIRMED_EDITIONS: ConfirmedEdition[] = [
   // the weather forecast to it.
   { seriesSlug: "heart-of-america-marathon", year: 2026, raceDate: "2026-09-07" },
   { seriesSlug: "marquette-marathon", year: 2026, raceDate: "2026-09-05" },
+  // Imported from 406raceseries.com, gnarrunners.com, trisignup.com — batch 2026-08-18. Dates as published by
+  // the event listing, or verified against the organizer during review.
+  // startTimeLocal appears only where a real one was read off the
+  // organizer's page — never guessed, since a wrong hour silently keys
+  // the weather forecast to it.
+  { seriesSlug: "montana-marathon", year: 2026, raceDate: "2026-09-20" },
+  { seriesSlug: "old-forge-marathon", year: 2026, raceDate: "2026-09-12" },
+  { seriesSlug: "staunton-rocks-marathon", year: 2026, raceDate: "2026-08-22" },
 ];
 
 /**

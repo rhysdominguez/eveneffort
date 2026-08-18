@@ -14,7 +14,7 @@
     "parse -> qa -> promote run afterwards exactly as they do for a goandrace",
     "import, review step included."
   ],
-  "updatedAt": "2026-08-18",
+  "updatedAt": "2026-08-19",
   "races": [
     {
       "courseSlug": "bend-marathon",
@@ -54,6 +54,45 @@
       "countryCode": "US",
       "websiteUrl": "https://marquettemarathon.com",
       "organizer": null
+    },
+    {
+      "courseSlug": "staunton-rocks-marathon",
+      "name": "Staunton Rocks! Marathon",
+      "routeUrl": "https://gnarrunners.com/wp-content/uploads/2022/05/Staunton-Rocks-Marathon-v2.gpx",
+      "routeSource": "organizer",
+      "routeNote": "Direct GPX linked from the organizer's own course page (gnarrunners.com), StravaGPX export, single track, real surveyed elevation throughout — no DEM needed. Measured 42.993 km before parsing. Verified live 2026-08-18 (200 OK, application/gpx+xml). organizer robots.txt has no relevant restriction. Confirmed running 2026-08-22 per gnarrunners.com/staunton-rocks.",
+      "startDate": "2026-08-22",
+      "locality": "Pine",
+      "region": "CO",
+      "countryCode": "US",
+      "websiteUrl": "https://gnarrunners.com/staunton-rocks/",
+      "organizer": "Gnar Runners LLC"
+    },
+    {
+      "courseSlug": "old-forge-marathon",
+      "name": "Old Forge Marathon",
+      "routeUrl": "data/import/raw/old-forge-marathon.gpx",
+      "routeSource": "manual",
+      "routeNote": "Organizer's course-maps page (trisignup.com/Race/OldForgeHalfMarathon5K/Page/coursemaps, run by Willow Running / Willow Health & Wellness Center) links a MapMyRun route (mapmyrun.com/routes/view/806208063) for the full marathon. MapMyRun's own robots.txt does not disallow the base /routes/view/ path or any file extension — genuinely permissive, unlike RideWithGPS/RunningAhead/plotaroute, all of which explicitly block automated access. The route's track (lat/lng/elevation, 1147 points) is embedded directly in the plain server-rendered HTML with no login required — verified by fetching the page directly. Hand-extracted the embedded points array into a clean single-track GPX (saved at routeUrl, gitignored raw input, not committed). Measured 43.046 km before parsing, real elevation present throughout. Retrieved 2026-08-18. Confirmed running 2026-09-12.",
+      "startDate": "2026-09-12",
+      "locality": "Old Forge",
+      "region": "NY",
+      "countryCode": "US",
+      "websiteUrl": "https://trisignup.com/Race/OldForgeHalfMarathon5K/Page/coursemaps",
+      "organizer": "Willow Running"
+    },
+    {
+      "courseSlug": "montana-marathon",
+      "name": "Montana Marathon",
+      "routeUrl": "data/import/raw/montana-marathon.gpx",
+      "routeSource": "manual",
+      "routeNote": "Organizer's page (406raceseries.com/montanamarathon) links a MapMyRun route (mapmyrun.com/routes/view/6661112548) for the full marathon. Same permissive-robots.txt basis as Old Forge Marathon (see that entry) — track embedded in plain HTML, no login required. Hand-extracted the embedded points array (364 points) into a clean single-track GPX. Measured 42.123 km before parsing. Elevation is present throughout but was drawn by MapMyRun's own routing tool from a turn-by-turn route (street-name notes in the source data), not a recorded GPS track — treat with the same caution as a modelled/DEM source even though it is technically embedded 'gpx' elevation; worth a second look if this course's hills feel off. Retrieved 2026-08-18. Confirmed running 2026-09-20.",
+      "startDate": "2026-09-20",
+      "locality": "Billings",
+      "region": "MT",
+      "countryCode": "US",
+      "websiteUrl": "https://406raceseries.com/montanamarathon",
+      "organizer": "406 Race Series"
     }
   ]
 }

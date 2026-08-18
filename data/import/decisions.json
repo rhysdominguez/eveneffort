@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-18T14:39:56.736Z",
+  "updatedAt": "2026-08-18T15:40:32.438Z",
   "courses": [
     {
       "courseSlug": "1-100-km-nel-gargano",
@@ -17907,6 +17907,57 @@
       "edition": null
     },
     {
+      "courseSlug": "montana-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "data/import/raw/montana-marathon.gpx",
+        "gpxUrl": null,
+        "gpxSha256": "06aebf123a06867f7f1a1a5179416252eed75adae66a4f938e5e10df58728a3e",
+        "site": "406raceseries.com",
+        "elevation": "gpx",
+        "note": "manual: Organizer's page (406raceseries.com/montanamarathon) links a MapMyRun route (mapmyrun.com/routes/view/6661112548) for the full marathon. Same permissive-robots.txt basis as Old Forge Marathon (see that entry) — track embedded in plain HTML, no login required. Hand-extracted the embedded points array (364 points) into a clean single-track GPX. Measured 42.123 km before parsing. Elevation is present throughout but was drawn by MapMyRun's own routing tool from a turn-by-turn route (street-name notes in the source data), not a recorded GPS track — treat with the same caution as a modelled/DEM source even though it is technically embedded 'gpx' elevation; worth a second look if this course's hills feel off. Retrieved 2026-08-18. Confirmed running 2026-09-20."
+      },
+      "stats": {
+        "totalKm": 42.12261118075894,
+        "gainM": 116.2000000000005
+      },
+      "city": {
+        "slug": "billings-mt-us",
+        "name": "Billings",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-MT",
+        "regionName": "Montana",
+        "latitude": 45.86109,
+        "longitude": -108.92771,
+        "timezone": "America/Denver"
+      },
+      "citySlug": "billings-mt-us",
+      "series": {
+        "slug": "montana-marathon",
+        "name": "Montana Marathon",
+        "citySlug": "billings-mt-us",
+        "courseSlug": "montana-marathon",
+        "isMajor": false,
+        "typicalMonth": 9,
+        "websiteUrl": "https://406raceseries.com/montanamarathon",
+        "organizer": "406 Race Series"
+      },
+      "recurrence": {
+        "seriesSlug": "montana-marathon",
+        "month": 9,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2026-09-20 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "montana-marathon",
+        "year": 2026,
+        "raceDate": "2026-09-20"
+      }
+    },
+    {
       "courseSlug": "montpellier-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -18967,6 +19018,57 @@
         "seriesSlug": "oklahoma-city-memorial-marathon",
         "year": 2026,
         "raceDate": "2026-04-26"
+      }
+    },
+    {
+      "courseSlug": "old-forge-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "data/import/raw/old-forge-marathon.gpx",
+        "gpxUrl": null,
+        "gpxSha256": "623a8696f8ec6020f3c85b1dfacab4c426f95fc4374fd93617f64149b9916b71",
+        "site": "trisignup.com",
+        "elevation": "gpx",
+        "note": "manual: Organizer's course-maps page (trisignup.com/Race/OldForgeHalfMarathon5K/Page/coursemaps, run by Willow Running / Willow Health & Wellness Center) links a MapMyRun route (mapmyrun.com/routes/view/806208063) for the full marathon. MapMyRun's own robots.txt does not disallow the base /routes/view/ path or any file extension — genuinely permissive, unlike RideWithGPS/RunningAhead/plotaroute, all of which explicitly block automated access. The route's track (lat/lng/elevation, 1147 points) is embedded directly in the plain server-rendered HTML with no login required — verified by fetching the page directly. Hand-extracted the embedded points array into a clean single-track GPX (saved at routeUrl, gitignored raw input, not committed). Measured 43.046 km before parsing, real elevation present throughout. Retrieved 2026-08-18. Confirmed running 2026-09-12."
+      },
+      "stats": {
+        "totalKm": 43.04619945748799,
+        "gainM": 170
+      },
+      "city": {
+        "slug": "old-forge-ny-us",
+        "name": "Old Forge",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-NY",
+        "regionName": "New York",
+        "latitude": 43.720181,
+        "longitude": -74.973117,
+        "timezone": "America/New_York"
+      },
+      "citySlug": "old-forge-ny-us",
+      "series": {
+        "slug": "old-forge-marathon",
+        "name": "Old Forge Marathon",
+        "citySlug": "old-forge-ny-us",
+        "courseSlug": "old-forge-marathon",
+        "isMajor": false,
+        "typicalMonth": 9,
+        "websiteUrl": "https://trisignup.com/Race/OldForgeHalfMarathon5K/Page/coursemaps",
+        "organizer": "Willow Running"
+      },
+      "recurrence": {
+        "seriesSlug": "old-forge-marathon",
+        "month": 9,
+        "weekday": 6,
+        "nth": 2,
+        "note": "Derived from the 2026-09-12 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "old-forge-marathon",
+        "year": 2026,
+        "raceDate": "2026-09-12"
       }
     },
     {
@@ -22197,6 +22299,57 @@
         "seriesSlug": "stanley-marathon",
         "year": 2025,
         "raceDate": "2025-03-09"
+      }
+    },
+    {
+      "courseSlug": "staunton-rocks-marathon",
+      "verdict": "ready",
+      "reasons": [],
+      "source": {
+        "eventUrl": "https://gnarrunners.com/wp-content/uploads/2022/05/Staunton-Rocks-Marathon-v2.gpx",
+        "gpxUrl": "https://gnarrunners.com/wp-content/uploads/2022/05/Staunton-Rocks-Marathon-v2.gpx",
+        "gpxSha256": "dc1d5f8b6160b2e2d9d3dfa179eeea00bf6487869d7a4077fa582f0eed087bb1",
+        "site": "gnarrunners.com",
+        "elevation": "gpx",
+        "note": "organizer: Direct GPX linked from the organizer's own course page (gnarrunners.com), StravaGPX export, single track, real surveyed elevation throughout — no DEM needed. Measured 42.993 km before parsing. Verified live 2026-08-18 (200 OK, application/gpx+xml). organizer robots.txt has no relevant restriction. Confirmed running 2026-08-22 per gnarrunners.com/staunton-rocks."
+      },
+      "stats": {
+        "totalKm": 42.993088337138175,
+        "gainM": 982.9000000000001
+      },
+      "city": {
+        "slug": "pine-co-us",
+        "name": "Pine",
+        "countryCode": "US",
+        "countryName": "United States",
+        "regionCode": "US-CO",
+        "regionName": "Colorado",
+        "latitude": 39.49988,
+        "longitude": -105.37961,
+        "timezone": "America/Denver"
+      },
+      "citySlug": "pine-co-us",
+      "series": {
+        "slug": "staunton-rocks-marathon",
+        "name": "Staunton Rocks! Marathon",
+        "citySlug": "pine-co-us",
+        "courseSlug": "staunton-rocks-marathon",
+        "isMajor": false,
+        "typicalMonth": 8,
+        "websiteUrl": "https://gnarrunners.com/staunton-rocks/",
+        "organizer": "Gnar Runners LLC"
+      },
+      "recurrence": {
+        "seriesSlug": "staunton-rocks-marathon",
+        "month": 8,
+        "weekday": 6,
+        "nth": 4,
+        "note": "Derived from the 2026-08-22 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "staunton-rocks-marathon",
+        "year": 2026,
+        "raceDate": "2026-08-22"
       }
     },
     {
