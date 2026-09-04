@@ -12,6 +12,44 @@ export type Unit = "km" | "miles";
  */
 export type CourseId = string;
 
+/**
+ * A course's FLAT-EQUIVALENT DISTANCE in each display unit: the sum of every
+ * segment's length scaled by its own grade cost, Σ(lengthKm ×
+ * adjustmentFactor). A course at 41.7 costs what 41.7 km of flat road costs.
+ *
+ * Unit-dependent because the segmentation is — 43 km segments vs 27 mile ones
+ * average the same hills over different distances and so produce different
+ * gradients. The gap is small on a road course but reaches 0.43% on the
+ * steepest one seeded (Pikes Peak), which is minutes over a marathon, so both
+ * are carried rather than one standing in for the other. Computed by
+ * src/lib/pacing/effort.ts, which is also where the derivation lives.
+ */
+export interface CourseEffort {
+  /** Flat-equivalent kilometres, from the km segmentation. */
+  km: number;
+  /** Flat-equivalent miles, from the mile segmentation. */
+  miles: number;
+}
+
+/**
+ * How much a course climbs and drops, from its 44-point elevation array.
+ *
+ * `gainM`/`lossM` are per-kilometre figures — a consistent floor on the true
+ * gain rather than a surveyed one — while `netM` is exact. See the header of
+ * src/lib/pacing/terrain.ts before presenting any of them as gospel.
+ */
+export interface CourseTerrain {
+  /** Total metres climbed. */
+  gainM: number;
+  /** Total metres descended, as a positive number. */
+  lossM: number;
+  /** Finish minus start; negative on a net-downhill course. */
+  netM: number;
+}
+
+/** The four terrain bands, by total climbing. */
+export type TerrainLabel = "flat" | "rolling" | "hilly" | "mountainous";
+
 export interface PacingInput {
   goalTimeSeconds: number;
   courseId: CourseId;
@@ -28,7 +66,39 @@ export interface PacingInput {
    * means fueling cues are on; absent means the runner turned them off.
    */
   fueling?: FuelingStrategy;
+  /**
+   * Phase 3 (optional): how the effort is distributed across the race, and how
+   * cautiously it starts. Two independent controls that compose. Absent means
+   * the defaults below, which reproduce the original even-effort chart exactly
+   * — every link shared before these existed still resolves identically.
+   */
+  split?: SplitStrategy;
+  start?: StartStrategy;
 }
+
+/**
+ * How effort is distributed front-to-back.
+ *
+ * `even-effort` is the app's original and only behaviour: constant metabolic
+ * cost, so pace follows the terrain. `even-pace` is its opposite — constant
+ * pace, terrain ignored — and is the one option here that changes how the
+ * course is read rather than how the race is shaped. The other four ramp the
+ * effort, mildly or aggressively, in each direction.
+ */
+export type SplitStrategy =
+  | "even-effort"
+  | "even-pace"
+  | "negative"
+  | "negative-aggressive"
+  | "positive"
+  | "positive-aggressive";
+
+/** How much the first few kilometres are held back. */
+export type StartStrategy = "even" | "conservative" | "very-conservative";
+
+/** Defaults, and the definition of "unchanged from before strategies existed". */
+export const DEFAULT_SPLIT: SplitStrategy = "even-effort";
+export const DEFAULT_START: StartStrategy = "even";
 
 /** Phase 2: race-day weather conditions feeding heat + wind adjustments. */
 export interface WeatherConditions {
@@ -80,6 +150,28 @@ export interface GoalTimeInput {
   seconds: number;
 }
 
+/** UI-layer shape only — a pace, per whichever distance unit is displayed. */
+export interface PaceInput {
+  minutes: number;
+  seconds: number;
+}
+
+/**
+ * How the runner states their goal. All three collapse to `goalTimeSeconds`
+ * at the form boundary — the pacing engine only ever sees a finish time, and
+ * the URL only ever carries one, so every existing shared link and printed
+ * paceband keeps resolving.
+ *
+ * - "time" — the finish time itself. The original and still the default.
+ * - "pace"  — average pace; a multiply by the race distance.
+ * - "gap"   — grade-adjusted pace; a multiply by the course's own
+ *             CourseSummary.effort. Holding a GAP across a course switch is
+ *             the point of it: 5:00/km grade-adjusted is a different finish
+ *             time at Boston than at Pikes Peak, and that difference is the
+ *             answer the runner came for.
+ */
+export type GoalMode = "time" | "pace" | "gap";
+
 /**
  * Light course metadata — everything the picker, the map and the calendar
  * need, and nothing the pacing engine needs. Small enough (~200 bytes) that
@@ -115,8 +207,65 @@ export interface CourseSummary {
    */
   start: { lat: number; lon: number };
   timezone: string;
+  /**
+   * This course's FLAT-EQUIVALENT DISTANCE: the sum of each segment's length
+   * scaled by its own grade cost, Σ(lengthKm × adjustmentFactor). A course at
+   * 41.7 costs what 41.7 km of flat road costs; against 42.195 it reads
+   * directly as "this course is 1.2% easier than flat".
+   *
+   * Derived from the 44-point elevation array, which is exactly why it is
+   * here: it lets a grade-adjusted goal pace be inverted into a finish time
+   * WITHOUT shipping any geometry to the client. Two scalars, computed once
+   * server-side — see src/lib/pacing/effort.ts for the derivation.
+   *
+   * Unit-dependent because the segmentation is (43 km segments vs 27 mile
+   * ones); the two agree to well within a tenth of a percent, but the pace
+   * inversion is exact per unit and worth keeping that way.
+   */
+  effort: CourseEffort;
+  /**
+   * How hilly the course is: gain, loss and net change over the same 44-point
+   * array `effort` is reduced from. Three more scalars, well inside this
+   * type's "a few numbers" budget, and the geometry itself still never ships.
+   *
+   * Separate from `effort` on purpose — they answer different questions. A
+   * course's effort multiplier says how FAST it is, and climbing and descending
+   * nearly cancel inside it; this says how HILLY it is. Boston reads 0.2%
+   * faster than flat and still climbs 96 m.
+   */
+  terrain: CourseTerrain;
   /** Next scheduled edition, for prefilling the race-date picker. */
   nextRaceDateISO: string | null;
+  /**
+   * Every seeded edition of this course's series, oldest first — what the year
+   * picker offers. Past editions are included on purpose: they are selectable,
+   * and they are where historical weather comes from.
+   */
+  editions: EditionOption[];
+}
+
+/**
+ * One selectable year in the race-year picker.
+ *
+ * A trimmed EditionSummary: the picker already knows which course it is on, so
+ * everything identifying the series/city is dropped. Kept deliberately small —
+ * this rides on every CourseSummary, so it ships to the client multiplied by
+ * the whole catalog.
+ */
+export interface EditionOption {
+  year: number;
+  /** "2026-04-20" — a wall-clock calendar date, not an instant. */
+  raceDateISO: string;
+  /** Local start as zero-padded "HH:MM", or null when unannounced. */
+  startTimeLocal: string | null;
+  /**
+   * Whether the date is a record or a guess from the series' recurrence rule.
+   * Load-bearing for weather: an `estimated` past date cannot be used to claim
+   * "these are the conditions recorded on race day" — it may be the wrong day.
+   */
+  dateConfidence: "confirmed" | "estimated" | "tbd";
+  /** Set only where a series runs twice in one year (London 2027 elite/mass). */
+  variant: string | null;
 }
 
 /**
@@ -184,6 +333,26 @@ export interface Course {
    * absolute instant the forecast is indexed by. DST-correct by construction.
    */
   timezone: string;
+  /**
+   * True when this came from a runner's upload rather than the seeded catalog
+   * (ROADMAP #10). Uploaded courses carry no city, region or country — nobody
+   * told us where they are — so anything rendering a location must check this
+   * rather than printing three empty strings.
+   */
+  isUserUpload?: boolean;
+  /**
+   * "gpx" when the file carried surveyed elevation, "dem:<dataset>" when it was
+   * modelled from a terrain model. Present only on uploads, and shown to the
+   * runner: a modelled profile is a materially different number, and the same
+   * distinction the import pipeline's QA step draws.
+   */
+  elevationSource?: string;
+  /**
+   * When an uploaded course's link stops resolving, ISO 8601, or null once a
+   * paceband order has made it permanent. Absent on seeded courses, which
+   * never expire.
+   */
+  expiresAtISO?: string | null;
 }
 
 export interface Segment {

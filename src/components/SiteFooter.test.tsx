@@ -4,7 +4,7 @@ import { SiteFooter } from "./SiteFooter";
 import { SUPPORT_EMAIL } from "@/lib/orders";
 
 describe("SiteFooter", () => {
-  it("links to the content pages that previously had no nav route in", () => {
+  it("links to the support and content pages the top nav does not carry", () => {
     const { container } = render(<SiteFooter />);
     expect(container.querySelector('a[href="/methodology"]')).not.toBeNull();
     expect(container.querySelector('a[href="/policies"]')).not.toBeNull();

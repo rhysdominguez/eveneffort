@@ -1,12 +1,15 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { readState, writeState } from "@/lib/clientState";
 import {
+  BQ_PROFILE,
   DISPLAY_UNITS,
+  GOAL_MODE,
   HOME_CALENDAR,
   HOME_FORM,
   HOME_MAP_CAMERA,
   WEATHER_MODE,
   reviveGoalTime,
+  revivePace,
   reviveLocationFilter,
   reviveMapCamera,
   reviveYearMonth,
@@ -161,6 +164,27 @@ describe("stateKeys", () => {
     });
   });
 
+  describe("revivePace", () => {
+    it("accepts a pace, including a half-typed one", () => {
+      expect(revivePace({ minutes: 5, seconds: 0 })).toEqual({
+        minutes: 5,
+        seconds: 0,
+      });
+      // Same "store what was TYPED" looseness as reviveGoalTime.
+      expect(revivePace({ minutes: 0, seconds: 90 })).toEqual({
+        minutes: 0,
+        seconds: 90,
+      });
+    });
+
+    it("rejects nonsense", () => {
+      expect(revivePace({ minutes: 5 })).toBeNull();
+      expect(revivePace({ minutes: -1, seconds: 0 })).toBeNull();
+      expect(revivePace({ minutes: "5", seconds: 0 })).toBeNull();
+      expect(revivePace(null)).toBeNull();
+    });
+  });
+
   describe("reviveGoalTime", () => {
     it("accepts a normal goal time", () => {
       expect(reviveGoalTime({ hours: 3, minutes: 45, seconds: 0 })).toEqual({
@@ -245,6 +269,7 @@ describe("stateKeys", () => {
         speedUnit: "mph" as const,
         weightUnit: "lb" as const,
         heightUnit: "ftin" as const,
+        humidityUnit: "dew" as const,
       };
       writeState(DISPLAY_UNITS, value);
       expect(readState(DISPLAY_UNITS)).toEqual(value);
@@ -258,6 +283,82 @@ describe("stateKeys", () => {
       expect(readState(DISPLAY_UNITS)).toBeNull();
     });
 
+    // `humidityUnit` was added to this key after it shipped. A stored
+    // preference written before that is a valid older shape, not corruption —
+    // rejecting it would throw away the °F/lb/ft choice of everyone who had
+    // already made one, which is the precise annoyance this key exists to
+    // prevent. A present-but-wrong value is still rejected.
+    it("DISPLAY_UNITS defaults humidityUnit for a preference stored before it existed", () => {
+      window.localStorage.setItem(
+        DISPLAY_UNITS.key,
+        JSON.stringify({
+          tempUnit: "F",
+          speedUnit: "mph",
+          weightUnit: "lb",
+          heightUnit: "ftin",
+        }),
+      );
+      expect(readState(DISPLAY_UNITS)).toEqual({
+        tempUnit: "F",
+        speedUnit: "mph",
+        weightUnit: "lb",
+        heightUnit: "ftin",
+        humidityUnit: "rh",
+      });
+    });
+
+    it("DISPLAY_UNITS rejects an unknown humidityUnit", () => {
+      window.localStorage.setItem(
+        DISPLAY_UNITS.key,
+        JSON.stringify({
+          tempUnit: "C",
+          speedUnit: "kph",
+          weightUnit: "kg",
+          heightUnit: "cm",
+          humidityUnit: "absolute",
+        }),
+      );
+      expect(readState(DISPLAY_UNITS)).toBeNull();
+    });
+
+    it("GOAL_MODE accepts the three modes and nothing else", () => {
+      for (const mode of ["time", "pace", "gap"] as const) {
+        writeState(GOAL_MODE, mode);
+        expect(readState(GOAL_MODE)).toBe(mode);
+      }
+      window.localStorage.setItem(GOAL_MODE.key, JSON.stringify("normalized"));
+      expect(readState(GOAL_MODE)).toBeNull();
+    });
+
+    // Same reasoning as humidityUnit, but sharper: this key is SESSION-scoped,
+    // so the snapshot at risk belongs to someone with the tab still open mid-
+    // edit across a deploy.
+    it("HOME_FORM keeps a snapshot written before the goal modes existed", () => {
+      const legacy = {
+        courseId: "boston",
+        goalTime: { hours: 3, minutes: 30, seconds: 0 },
+        unit: "km",
+        raceDate: "2026-04-20",
+        raceStartTime: "09:00",
+      };
+      window.sessionStorage.setItem(HOME_FORM.key, JSON.stringify(legacy));
+      expect(readState(HOME_FORM)).toEqual(legacy);
+    });
+
+    it("HOME_FORM carries the goal mode and pace when they are present", () => {
+      const value = {
+        courseId: "boston",
+        goalTime: { hours: 3, minutes: 30, seconds: 0 },
+        goalPace: { minutes: 5, seconds: 0 },
+        goalMode: "gap" as const,
+        unit: "km" as const,
+        raceDate: "2026-04-20",
+        raceStartTime: "09:00",
+      };
+      writeState(HOME_FORM, value);
+      expect(readState(HOME_FORM)).toEqual(value);
+    });
+
     it("WEATHER_MODE accepts the three modes and nothing else", () => {
       for (const mode of ["forecast", "manual", "off"] as const) {
         writeState(WEATHER_MODE, mode);
@@ -265,6 +366,39 @@ describe("stateKeys", () => {
       }
       window.sessionStorage.setItem(WEATHER_MODE.key, JSON.stringify("auto"));
       expect(readState(WEATHER_MODE)).toBeNull();
+    });
+
+    it("BQ_PROFILE roundtrips every division", () => {
+      for (const division of ["men", "women", "nonbinary"] as const) {
+        const value = { age: 41, division };
+        writeState(BQ_PROFILE, value);
+        expect(readState(BQ_PROFILE)).toEqual(value);
+      }
+    });
+
+    it("BQ_PROFILE rejects an age the standards table has no band for", () => {
+      // Under 18 there is no B.A.A. standard at all, so a stored 12 is either
+      // corruption or a value from a version that allowed it. Either way the
+      // form should start empty rather than render a verdict against nothing.
+      window.localStorage.setItem(
+        BQ_PROFILE.key,
+        JSON.stringify({ age: 12, division: "men" }),
+      );
+      expect(readState(BQ_PROFILE)).toBeNull();
+    });
+
+    it("BQ_PROFILE rejects a non-integer age and an unknown division", () => {
+      const bad = [
+        { age: 41.5, division: "men" },
+        { age: "41", division: "men" },
+        { age: 41, division: "male" },
+        { age: 41 },
+        { division: "men" },
+      ];
+      for (const value of bad) {
+        window.localStorage.setItem(BQ_PROFILE.key, JSON.stringify(value));
+        expect(readState(BQ_PROFILE), JSON.stringify(value)).toBeNull();
+      }
     });
   });
 });

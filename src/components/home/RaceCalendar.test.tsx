@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { fireEvent, render } from "@testing-library/react";
 import { RaceCalendar } from "@/components/home/RaceCalendar";
 import { FIXTURE_EDITIONS, FIXTURE_TODAY } from "@/data/editions.fixture";
@@ -6,12 +6,11 @@ import { HOME_CALENDAR } from "@/lib/stateKeys";
 import { writeState } from "@/lib/clientState";
 import { clearStoredState } from "@/test/storage";
 
-// Every assertion is anchored to FIXTURE_TODAY (2026-08-04), never the real
-// clock. The component corrects to the visitor's own date in an effect, but in
-// jsdom that effect sees a real date far from the fixture's — so these tests
-// deliberately assert only on facts the correction cannot change (which races
-// exist, where the grid starts, whether the arrows clamp), and cover the
-// past/future split through the month it opens on.
+// Every assertion is anchored to FIXTURE_TODAY (2026-08-04). The component
+// corrects to the visitor's own date in an effect, so the system clock is
+// pinned to FIXTURE_TODAY for this whole file — otherwise that correction
+// races the real calendar date against the fixture's and the month these
+// tests open on drifts as the real date moves through 2026.
 const renderCalendar = (editions = FIXTURE_EDITIONS) =>
   render(<RaceCalendar editions={editions} todayISO={FIXTURE_TODAY} />);
 
@@ -28,7 +27,14 @@ describe("RaceCalendar", () => {
   // The calendar now persists its filter and month to sessionStorage, and jsdom
   // shares one store across every test in a file — so without this, changing a
   // filter in one test silently sets up the next one.
-  beforeEach(clearStoredState);
+  beforeEach(() => {
+    clearStoredState();
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(`${FIXTURE_TODAY}T12:00:00`));
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+  });
 
   it("opens on the month holding the next upcoming race", () => {
     const { container } = renderCalendar();
@@ -60,13 +66,20 @@ describe("RaceCalendar", () => {
     expect(link!.getAttribute("href")).toContain("date=2026-08-30");
   });
 
-  it("shows a race that has already been run, but not as a link", () => {
+  it("links a race that has already been run, dimmed but reachable", () => {
+    // These used to be inert text, on the reasoning that a race already run is
+    // information rather than a choice. That held while the dashboard could
+    // only forecast; a past edition now pairs the course with the conditions
+    // actually recorded that morning, which is worth navigating to.
     const { container } = renderCalendar();
     // Back to April 2026, where Boston sits four months before FIXTURE_TODAY.
     for (let i = 0; i < 4; i++) fireEvent.click(prevButton(container));
     expect(container.querySelector("h3")?.textContent).toBe("April 2026");
-    expect(container.textContent).toContain("Boston Marathon");
-    expect(container.querySelector('a[href*="courseId=boston"]')).toBeNull();
+    const link = container.querySelector('a[href*="courseId=boston"]');
+    expect(link).not.toBeNull();
+    expect(link!.getAttribute("href")).toContain("date=2026-04-20");
+    // Still visually dimmed, so the calendar reads the same at a glance.
+    expect(link!.className).toContain("--color-text-tertiary");
   });
 
   it("puts two races sharing a date in the same cell", () => {

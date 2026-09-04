@@ -6,9 +6,11 @@ import type {
   Segment,
   WeatherAdjustments,
 } from "@/types";
+import { DEFAULT_SPLIT, DEFAULT_START } from "@/types";
 import { adjustmentFactor } from "./adjustment";
 import { buildSegments, MARATHON_KM, MILE_IN_KM } from "./segments";
 import { normalizePaces } from "./normalize";
+import { splitBias, startBias } from "./strategy";
 import { formatPace } from "@/lib/units/pace";
 import { formatHMS } from "@/lib/units/time";
 
@@ -17,6 +19,11 @@ import { formatHMS } from "@/lib/units/time";
  * durations (seconds). Exposed so callers (the weather layer) can derive each
  * segment's elevation-adjusted ground speed before computing wind multipliers.
  * Pure Minetti math — unchanged.
+ *
+ * The strategy biases (Phase 3) re-weight those durations BEFORE normalization,
+ * which is what keeps the finish exactly on the goal however the race is
+ * shaped. `adjustmentFactor` itself is untouched; `even-pace` simply declines
+ * to consult it. With the defaults, byte-identical to Phase 1.
  */
 export function computeElevationDurations(
   input: PacingInput,
@@ -24,9 +31,22 @@ export function computeElevationDurations(
 ): { segments: Segment[]; durations: number[] } {
   const segments = buildSegments(course.elevations, input.unit);
   const flatPacePerKm = input.goalTimeSeconds / MARATHON_KM;
-  const rawDurations = segments.map(
-    (seg) => seg.lengthKm * flatPacePerKm * adjustmentFactor(seg.gradient),
-  );
+  const split = input.split ?? DEFAULT_SPLIT;
+  const start = input.start ?? DEFAULT_START;
+  const rawDurations = segments.map((seg) => {
+    // Midpoint, so both curves are read at the same place in the race
+    // regardless of whether segments are kilometres or miles.
+    const midpointKm = (seg.startDistanceKm + seg.endDistanceKm) / 2;
+    const grade =
+      split === "even-pace" ? 1 : adjustmentFactor(seg.gradient);
+    return (
+      seg.lengthKm *
+      flatPacePerKm *
+      grade *
+      splitBias(split, midpointKm) *
+      startBias(start, midpointKm)
+    );
+  });
   const durations = normalizePaces(rawDurations, input.goalTimeSeconds);
   return { segments, durations };
 }

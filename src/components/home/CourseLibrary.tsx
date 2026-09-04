@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import type { CourseSummary } from "@/types";
 import { CourseMap } from "@/components/home/CourseMap";
 import { useHomeSelection } from "@/components/home/HomeSelectionProvider";
@@ -34,6 +35,14 @@ export function CourseLibrary({ catalog }: { catalog: CourseSummary[] }) {
             we&rsquo;ll load it into the calculator with its next race date
             already filled in.
           </p>
+          {/* The same catalogue, read as a table: which of these actually run
+              fast. A map answers "where", not "how hard". */}
+          <Link
+            href="/courses"
+            className="inline-block text-sm font-medium text-[var(--color-text-primary)] underline underline-offset-4 transition-colors hover:text-[var(--color-red-primary)]"
+          >
+            Or rank every course by speed and climbing →
+          </Link>
         </div>
 
         {catalog.length === 0 ? (
@@ -62,7 +71,7 @@ export function CourseLibrary({ catalog }: { catalog: CourseSummary[] }) {
             <div className="sr-only">
               <p>
                 Races on the map, all also selectable from the course dropdown
-                in the pacing calculator:
+                in the pace band calculator:
               </p>
               <ul>
                 {catalog.map((course) => (

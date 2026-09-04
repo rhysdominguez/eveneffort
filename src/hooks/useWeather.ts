@@ -24,6 +24,20 @@ const FALLBACK_CONDITIONS: WeatherConditions = {
   windDirection: 0,
 };
 
+/**
+ * Where the auto-filled numbers came from. The mode is what the runner chose;
+ * the source is what the server could actually answer with, and the two are
+ * independent — "forecast" mode yields a historical source for a race that has
+ * already been run.
+ */
+export type WeatherSource = "forecast" | "historical" | "typical";
+
+/** What the panel needs to explain the numbers it is showing. */
+export interface WeatherMeta {
+  raceDateISO?: string;
+  years?: number;
+}
+
 export interface UseWeather {
   mode: WeatherMode;
   setMode: (mode: WeatherMode) => void;
@@ -38,6 +52,9 @@ export interface UseWeather {
   hourly: WeatherConditions[] | null;
   loading: boolean;
   error: string | null;
+  /** Which of the three sources answered, or null before any fetch resolves. */
+  source: WeatherSource | null;
+  meta: WeatherMeta | null;
   /** Patch one or more fields. Only meaningful in "manual" mode. */
   updateManual: (patch: Partial<WeatherConditions>) => void;
   /** Re-attempt the live forecast for the current course + timing. */
@@ -60,6 +77,13 @@ export function useWeather(
   dateISO?: string,
   startTime?: string,
   initial?: WeatherConditions,
+  /**
+   * Force the climatology path. Set for a PAST date whose edition is only
+   * `estimated` — derived from the series' recurrence rule rather than recorded
+   * — where the true race day may be a week off the one we hold, and claiming
+   * "these are the conditions on the day" would be a confident fiction.
+   */
+  preferTypical = false,
   /**
    * Remember the chosen mode across a reload. Opt-in so the hook stays pure for
    * any caller that doesn't want a shared session store — and so a single test
@@ -93,6 +117,8 @@ export function useWeather(
   const [hourly, setHourly] = useState<WeatherConditions[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [source, setSource] = useState<WeatherSource | null>(null);
+  const [meta, setMeta] = useState<WeatherMeta | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
@@ -105,7 +131,9 @@ export function useWeather(
     // course's UTC offset.
     const iso = zonedWallClockToUTC(dateISO, startTime, start.timezone);
     if (!iso) return;
-    const url = `/api/weather?lat=${start.lat}&lon=${start.lon}&time=${encodeURIComponent(iso)}`;
+    const url =
+      `/api/weather?lat=${start.lat}&lon=${start.lon}&time=${encodeURIComponent(iso)}` +
+      (preferTypical ? "&typical=1" : "");
     let cancelled = false;
 
     // Wrapped in an async function so the loading/error state updates happen in
@@ -123,9 +151,13 @@ export function useWeather(
         const hours = data.hours as WeatherConditions[];
         setHourly(hours);
         setConditions(hours[0]);
+        setSource((data.source as WeatherSource) ?? "forecast");
+        setMeta((data.meta as WeatherMeta) ?? null);
       } catch (e: unknown) {
         if (!cancelled) {
           setError(e instanceof Error ? e.message : "Forecast unavailable.");
+          setSource(null);
+          setMeta(null);
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -137,12 +169,24 @@ export function useWeather(
     return () => {
       cancelled = true;
     };
-  }, [mode, start.lat, start.lon, start.timezone, dateISO, startTime, reloadKey]);
+  }, [
+    mode,
+    start.lat,
+    start.lon,
+    start.timezone,
+    dateISO,
+    startTime,
+    preferTypical,
+    reloadKey,
+  ]);
 
   const setMode = useCallback((next: WeatherMode) => {
     setChosenMode(next);
     if (persistMode) storeMode(next);
     setError(null);
+    // Manual and Off have no source to speak of; forecast rebuilds its own.
+    setSource(null);
+    setMeta(null);
     if (next === "off") return;
     // Switching modes always starts from a clean forecast series — "manual"
     // has none, and "forecast" rebuilds its own via the effect above.
@@ -168,6 +212,8 @@ export function useWeather(
     hourly,
     loading,
     error,
+    source,
+    meta,
     updateManual,
     refreshForecast,
   };

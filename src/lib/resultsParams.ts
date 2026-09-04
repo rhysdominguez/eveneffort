@@ -10,12 +10,21 @@ import type {
   CourseId,
   FuelingStrategy,
   PacingInput,
+  SplitStrategy,
+  StartStrategy,
   Unit,
   WeatherConditions,
 } from "@/types";
+import { DEFAULT_SPLIT, DEFAULT_START } from "@/types";
 import { CARBS_PER_HOUR_MAX, CARBS_PER_HOUR_MIN } from "@/lib/weather/fueling";
+import { SPLIT_BIAS, START_SURCHARGE } from "@/lib/pacing/strategy";
 
 const UNITS: readonly Unit[] = ["km", "miles"];
+
+// Derived from the bias tables rather than re-listed, so a strategy can never
+// exist in the engine but be unspellable in a URL (or vice versa).
+const SPLITS = Object.keys(SPLIT_BIAS) as SplitStrategy[];
+const STARTS = Object.keys(START_SURCHARGE) as StartStrategy[];
 
 /**
  * Course slugs are rows now, not a closed union, so this module can only
@@ -23,8 +32,12 @@ const UNITS: readonly Unit[] = ["km", "miles"];
  * table lives behind an async server-only query. Existence is proven
  * downstream by `getCourseBySlug` returning null, which every caller must
  * handle. Bounded length and a strict charset keep junk out of the query.
+ *
+ * Exported for src/lib/compareParams.ts, which validates the same slugs under
+ * the same constraint — one regex, so the two routes can never disagree about
+ * what a course id is allowed to look like.
  */
-const COURSE_SLUG_RE = /^[a-z0-9][a-z0-9-]{0,63}$/;
+export const COURSE_SLUG_RE = /^[a-z0-9][a-z0-9-]{0,63}$/;
 
 export function buildResultsHref(input: PacingInput): string {
   return `/results?${buildResultsQuery(input)}`;
@@ -61,6 +74,15 @@ export function buildResultsQuery(input: PacingInput): string {
   if (input.fueling) {
     params.set("carbs", String(input.fueling.carbsPerHour));
   }
+
+  // Emitted only when off-default, so a plain even-effort chart serializes to
+  // exactly the string it did before strategies existed — every link already
+  // shared, and every paceband already printed, keeps its current query.
+  // `hold`, not `start` — `start` is already the race's start time above.
+  const split = input.split ?? DEFAULT_SPLIT;
+  if (split !== DEFAULT_SPLIT) params.set("split", split);
+  const start = input.start ?? DEFAULT_START;
+  if (start !== DEFAULT_START) params.set("hold", start);
 
   return params.toString();
 }
@@ -111,6 +133,18 @@ export function parseResultsParams(
 
   const fueling = parseFueling(params);
   if (fueling) input.fueling = fueling;
+
+  // Unknown or absent falls back to the default rather than rejecting the URL:
+  // a typo in a strategy name should still draw the runner their chart, and a
+  // legacy link carries neither param at all.
+  const split = first(params.split);
+  if (split && SPLITS.includes(split as SplitStrategy) && split !== DEFAULT_SPLIT) {
+    input.split = split as SplitStrategy;
+  }
+  const hold = first(params.hold);
+  if (hold && STARTS.includes(hold as StartStrategy) && hold !== DEFAULT_START) {
+    input.start = hold as StartStrategy;
+  }
 
   return { ok: true, input };
 }

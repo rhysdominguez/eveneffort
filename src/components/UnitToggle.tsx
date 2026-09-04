@@ -20,6 +20,13 @@ interface Props<T extends string> {
   options: readonly (readonly [T, string])[];
   onChange: (value: T) => void;
   disabled?: boolean;
+  /**
+   * Individual options to disable while the rest stay live. Used where an
+   * option needs data that isn't always there — the GAP goal mode can't be
+   * evaluated without the course's effort figure — so the choice is shown as
+   * unavailable rather than silently missing.
+   */
+  disabledValues?: readonly T[];
   variant?: "compact" | "prominent";
 }
 
@@ -29,6 +36,7 @@ export function UnitToggle<T extends string>({
   options,
   onChange,
   disabled = false,
+  disabledValues,
   variant = "compact",
 }: Props<T>) {
   const prominent = variant === "prominent";
@@ -42,11 +50,13 @@ export function UnitToggle<T extends string>({
     >
       {options.map(([optionValue, optionLabel]) => {
         const active = optionValue === value;
+        const optionDisabled =
+          disabled || (disabledValues?.includes(optionValue) ?? false);
         return (
           <button
             key={optionValue}
             type="button"
-            disabled={disabled}
+            disabled={optionDisabled}
             aria-pressed={active}
             onClick={() => onChange(optionValue)}
             className={
@@ -56,7 +66,7 @@ export function UnitToggle<T extends string>({
                       ? "bg-[var(--color-red-primary)] text-white"
                       : "bg-[var(--color-bg-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-elevated)]"
                   }`
-                : `px-2 py-0.5 text-xs font-medium transition-colors ${
+                : `px-2 py-0.5 text-xs font-medium transition-colors disabled:opacity-40 ${
                     active
                       ? "bg-[var(--color-bg-elevated)] text-[var(--color-text-primary)]"
                       : "text-[var(--color-text-tertiary)] hover:text-[var(--color-text-secondary)]"

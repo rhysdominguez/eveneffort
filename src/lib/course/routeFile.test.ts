@@ -8,7 +8,7 @@
 
 import { describe, expect, it } from "vitest";
 
-import { RouteError, assertSingleTrack, dedupe, parseRouteFile, toGpx } from "./route.ts";
+import { RouteError, assertSingleTrack, dedupe, parseRouteFile, toGpx } from "./routeFile.ts";
 
 const buf = (s: string) => Buffer.from(s, "utf8");
 

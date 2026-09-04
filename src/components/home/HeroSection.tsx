@@ -59,8 +59,8 @@ export function HeroSection({ catalog }: { catalog: CourseSummary[] }) {
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <div />
           <InputForm
-            title="Pacing Calculator"
-            subtitle="Elevation-adjusted splits for your goal time, course, and conditions."
+            title="The World's Most Sophisticated Pacing Calculator"
+            subtitle="Elevation-adjusted mile-by-mile or km-by-km splits for your goal time, course, and conditions."
             catalog={catalog}
             requestedCourseId={selection?.courseId ?? null}
             // Hero only: what someone typed here survives clicking through to a

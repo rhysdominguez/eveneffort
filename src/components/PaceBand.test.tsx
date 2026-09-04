@@ -3,6 +3,7 @@ import { render } from "@testing-library/react";
 import { PaceBand } from "./PaceBand";
 import type { PacingResult } from "@/hooks/usePacingChart";
 import type { PaceChartRow, PacingInput } from "@/types";
+import { COURSE_NAME_MAX } from "@/lib/course/uploadRules";
 
 const input: PacingInput = {
   courseId: "berlin",
@@ -99,5 +100,22 @@ describe("PaceBand", () => {
     expect(container.querySelector(".paceband-head")?.textContent).toContain(
       "mi",
     );
+  });
+
+  // ROADMAP #10: the course name is now runner-supplied for uploaded courses,
+  // and this strip is 1.3in wide at 7pt (see the @media print block). The name
+  // is capped at COURSE_NAME_MAX so a long one wraps rather than overflowing —
+  // the element must stay a plain block that can take a second line.
+  it("renders a runner-supplied course name at full length", () => {
+    const name = "A".repeat(COURSE_NAME_MAX);
+    const { container } = render(
+      <PaceBand result={resultWith([rowWith(0)])} courseName={name} />,
+    );
+    const course = container.querySelector(".paceband-course");
+    expect(course?.textContent).toBe(name);
+    // No nowrap/truncation: a clipped name on a printed band is worse than a
+    // second line, because the runner cannot tell it was clipped.
+    expect(course?.className ?? "").not.toContain("truncate");
+    expect(course?.className ?? "").not.toContain("whitespace-nowrap");
   });
 });

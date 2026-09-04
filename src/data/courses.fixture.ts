@@ -13,9 +13,12 @@
 // remembered to import is a file CI never validates.
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import type { Course, CourseSummary } from "@/types";
+import type { Course, CourseSummary, EditionOption } from "@/types";
 import { SERIES_SEED } from "@/db/seed/series";
 import { CITY_SEED } from "@/db/seed/cities";
+import { buildEditionSeed } from "@/db/seed/editions";
+import { courseEffort } from "@/lib/pacing/effort";
+import { courseTerrain } from "@/lib/pacing/terrain";
 
 type Pairs = [number, number][];
 
@@ -109,10 +112,28 @@ export const FIXTURE_COURSES: Course[] = CORE_SERIES.map((s) => {
   };
 });
 
+/**
+ * The editions the year picker would offer for one series, built from the same
+ * recurrence rules the seed uses.
+ *
+ * Derived rather than hardcoded so the fixture can't drift from SEED_YEARS —
+ * widening the seed's horizon should widen what the tests exercise too.
+ */
+function fixtureEditions(seriesSlug: string): EditionOption[] {
+  return buildEditionSeed([seriesSlug]).map((e) => ({
+    year: e.year,
+    raceDateISO: e.raceDate,
+    startTimeLocal: e.startTimeLocal,
+    dateConfidence: e.dateConfidence,
+    variant: null,
+  }));
+}
+
 /** The catalog shape the app ships to the client, built from the same seed. */
 export const FIXTURE_CATALOG: CourseSummary[] = CORE_SERIES.map((s) => {
   const city = CITY_BY_SLUG.get(s.citySlug)!;
-  const coords = loadGeometry(s.courseSlug).coords;
+  const geo = loadGeometry(s.courseSlug);
+  const coords = geo.coords;
   return {
     id: s.courseSlug,
     seriesSlug: s.slug,
@@ -126,7 +147,12 @@ export const FIXTURE_CATALOG: CourseSummary[] = CORE_SERIES.map((s) => {
     cityLon: city.longitude,
     start: { lat: coords[0][0], lon: coords[0][1] },
     timezone: city.timezone,
+    // Computed exactly as loadCourseCatalog does, from the same elevation
+    // array the seed loads — courses.fixture.test.ts holds the two in step.
+    effort: courseEffort(geo.elevations),
+    terrain: courseTerrain(geo.elevations),
     nextRaceDateISO: null,
+    editions: fixtureEditions(s.slug),
   };
 });
 

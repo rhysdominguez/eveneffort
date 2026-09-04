@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
+  FIXTURE_CATALOG,
   FIXTURE_COURSES,
   fixtureCourse,
   allCourseSlugsOnDisk,
@@ -12,6 +13,8 @@ import {
   PUBLISHED_COURSE_SLUGS,
   COURSE_SLUG_PATTERN,
 } from "@/db/seed/slug-ledger";
+import { USER_COURSE_PREFIX } from "@/db/userCourses";
+import { courseEffort, effortMultiplier } from "@/lib/pacing/effort";
 
 // Guards the seed definitions themselves — the files a human edits when adding
 // a marathon. Deliberately asserts no fixed course COUNT: adding course #8
@@ -130,6 +133,28 @@ describe("course seed definitions", () => {
         expect(slug, `slug "${slug}"`).toMatch(COURSE_SLUG_PATTERN);
       }
     });
+
+    // ROADMAP #10 put uploaded courses in their own table, addressed by a
+    // token that shares the /results?courseId= namespace with these slugs.
+    // The `u-` prefix is what separates the two, so it has to be reserved on
+    // this side as well: a seeded course called "u-something" would be
+    // shadowed by the upload branch in getCourseBySlug, and Rule 8 says a
+    // published slug resolves forever. Nothing seeded starts with it today
+    // (they are race names), and this keeps it that way.
+    it("never uses the reserved uploaded-course prefix", () => {
+      const reserved = PUBLISHED_COURSE_SLUGS.filter((slug) =>
+        slug.startsWith(USER_COURSE_PREFIX),
+      );
+      expect(
+        reserved,
+        `"${USER_COURSE_PREFIX}" is reserved for uploaded courses`,
+      ).toEqual([]);
+
+      const seeded = SERIES_SEED.map((s) => s.courseSlug).filter((slug) =>
+        slug.startsWith(USER_COURSE_PREFIX),
+      );
+      expect(seeded).toEqual([]);
+    });
   });
 
   it("fixtureCourse throws on an unknown slug", () => {
@@ -190,5 +215,30 @@ describe("edition recurrence", () => {
     expect(() => buildEditionSeed(["nonexistent-marathon"])).toThrow(
       /No recurrence rule/,
     );
+  });
+});
+
+// `CourseSummary.effort` is built in two places — loadCourseCatalog() for the
+// real app and FIXTURE_CATALOG for the tests — and the tests are only worth
+// anything if the two agree. This is what holds them together.
+describe("catalog effort", () => {
+  it("matches courseEffort over the same course's elevations", () => {
+    for (const summary of FIXTURE_CATALOG) {
+      const expected = courseEffort(fixtureCourse(summary.id).elevations);
+      expect(summary.effort.km, summary.id).toBeCloseTo(expected.km, 12);
+      expect(summary.effort.miles, summary.id).toBeCloseTo(expected.miles, 12);
+    }
+  });
+
+  it("stays in a physically sane band for every course on disk", () => {
+    // The widest real spread today is REVEL Mt Charleston at 0.936 (a ~1,500 m
+    // net drop) and Pikes Peak at 1.071. These bounds are loose guardrails
+    // around that: a course outside them means a corrupt elevation array, not
+    // an unusually hilly race.
+    for (const slug of allCourseSlugsOnDisk()) {
+      const m = effortMultiplier(courseEffort(loadGeometry(slug).elevations));
+      expect(m, slug).toBeGreaterThan(0.85);
+      expect(m, slug).toBeLessThan(1.25);
+    }
   });
 });

@@ -1,11 +1,12 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { render, fireEvent, within } from "@testing-library/react";
 import { InputForm } from "./InputForm";
+import { CUSTOM_DATE } from "@/components/RaceYearPicker";
 import type { PacingInput } from "@/types";
 import { FIXTURE_CATALOG } from "@/data/courses.fixture";
 import { clearStoredState } from "@/test/storage";
 import { writeState } from "@/lib/clientState";
-import { DISPLAY_UNITS, HOME_FORM } from "@/lib/stateKeys";
+import { DISPLAY_UNITS, GOAL_MODE, HOME_FORM } from "@/lib/stateKeys";
 
 // Weather/Wind and Fueling are dashboard-only (live mode) — the homepage
 // form is core race setup + Calculate. Both are permanently expanded, and
@@ -76,8 +77,12 @@ describe("InputForm — Weather & Wind", () => {
 // panel only mounts while open, so each case has to click the trigger.
 describe("InputForm — date/time popover placement", () => {
   // There is no auto-cleanup in this project, so a second render would leave
-  // two forms mounted and getByText would match both — hence the unmount.
-  const panelClassFor = (live: boolean, label: RegExp): string => {
+  // two forms mounted and a text query would match both — hence the unmount.
+  //
+  // Triggers are found by id rather than by placeholder text now: the start
+  // time carries an assumed 7:30 default so its placeholder never renders, and
+  // the date picker only exists once "Custom date…" is chosen.
+  const panelClassFor = (live: boolean, triggerId: string): string => {
     const utils = render(
       live ? (
         <InputForm catalog={FIXTURE_CATALOG} onChange={() => {}} />
@@ -85,7 +90,13 @@ describe("InputForm — date/time popover placement", () => {
         <InputForm catalog={FIXTURE_CATALOG} onCalculate={() => {}} />
       ),
     );
-    fireEvent.click(utils.getByText(label));
+    if (triggerId === "race-date") {
+      const year = utils.container.querySelector(
+        "#race-year",
+      ) as HTMLSelectElement;
+      fireEvent.change(year, { target: { value: CUSTOM_DATE } });
+    }
+    fireEvent.click(utils.container.querySelector(`#${triggerId}`)!);
     const panel = utils.container.querySelector('[role="dialog"]');
     const className = panel?.className ?? "";
     utils.unmount();
@@ -93,20 +104,20 @@ describe("InputForm — date/time popover placement", () => {
   };
 
   it("opens the calendar upward on the homepage", () => {
-    const className = panelClassFor(false, /Select a date/);
+    const className = panelClassFor(false, "race-date");
     expect(className).toContain("bottom-full");
     expect(className).not.toContain("top-full");
   });
 
   it("opens the time panel upward on the homepage", () => {
-    const className = panelClassFor(false, /Select a time/);
+    const className = panelClassFor(false, "race-start");
     expect(className).toContain("bottom-full");
     expect(className).not.toContain("top-full");
   });
 
   it("leaves both opening downward on the dashboard", () => {
-    for (const label of [/Select a date/, /Select a time/]) {
-      const className = panelClassFor(true, label);
+    for (const id of ["race-date", "race-start"]) {
+      const className = panelClassFor(true, id);
       expect(className).toContain("top-full");
       expect(className).not.toContain("bottom-full");
     }
@@ -160,8 +171,11 @@ describe("InputForm — Weather forecast mode is read-only", () => {
   it("shows mode-specific helper text that updates as the selection changes", () => {
     const { getByText, container } = openSection();
     fireEvent.click(getByText("Forecast"));
-    expect(container.textContent).toContain(
-      "Add a race date and start time for a live forecast.",
+    // The date and start time are both filled in by default now — a year from
+    // the edition list and an assumed 7:30 local start — so the panel goes
+    // straight to fetching instead of asking for timing it already has.
+    expect(container.textContent).not.toContain(
+      "Add a race date and start time",
     );
 
     fireEvent.click(getByText("Manual"));
@@ -343,15 +357,27 @@ describe("InputForm — race date prefill from the next edition", () => {
     fireEvent.keyDown(input, { key: "Enter" });
   };
 
+  // The form reads the EDITION LIST now, not a single `nextRaceDateISO`.
+  // Each course gets one future edition on a distinct date so the assertions
+  // can tell them apart.
   const withDates = FIXTURE_CATALOG.map((c, i) => ({
     ...c,
-    nextRaceDateISO: `2026-0${i + 1}-11`,
+    nextRaceDateISO: `2027-0${i + 1}-11`,
+    editions: [
+      {
+        year: 2027,
+        raceDateISO: `2027-0${i + 1}-11`,
+        startTimeLocal: null,
+        dateConfidence: "confirmed" as const,
+        variant: null,
+      },
+    ],
   }));
 
   it("seeds the date from the initially selected course", () => {
     const seen: PacingInput[] = [];
     render(<InputForm catalog={withDates} onChange={(i) => seen.push(i)} />);
-    expect(seen.at(-1)?.raceDateISO).toBe(withDates[0].nextRaceDateISO);
+    expect(seen.at(-1)?.raceDateISO).toBe(withDates[0].editions[0].raceDateISO);
   });
 
   it("moves the date when the course changes", () => {
@@ -361,7 +387,68 @@ describe("InputForm — race date prefill from the next edition", () => {
     );
     pickCourse(container, withDates[2].displayName);
     expect(seen.at(-1)?.courseId).toBe(withDates[2].id);
-    expect(seen.at(-1)?.raceDateISO).toBe(withDates[2].nextRaceDateISO);
+    expect(seen.at(-1)?.raceDateISO).toBe(withDates[2].editions[0].raceDateISO);
+  });
+
+  it("carries the chosen YEAR across a course change", () => {
+    // What makes it feel like a year picker: comparing Boston 2026 against
+    // Chicago 2026 shouldn't bounce you to 2027 because of the switch.
+    const twoYears = FIXTURE_CATALOG.map((c, i) => ({
+      ...c,
+      editions: [
+        {
+          year: 2027,
+          raceDateISO: `2027-0${i + 1}-11`,
+          startTimeLocal: null,
+          dateConfidence: "confirmed" as const,
+          variant: null,
+        },
+        {
+          year: 2028,
+          raceDateISO: `2028-0${i + 1}-11`,
+          startTimeLocal: null,
+          dateConfidence: "confirmed" as const,
+          variant: null,
+        },
+      ],
+    }));
+    const seen: PacingInput[] = [];
+    const { container } = render(
+      <InputForm catalog={twoYears} onChange={(i) => seen.push(i)} />,
+    );
+    const year = container.querySelector("#race-year") as HTMLSelectElement;
+    fireEvent.change(year, { target: { value: "2028-01-11" } });
+    expect(seen.at(-1)?.raceDateISO).toBe("2028-01-11");
+
+    pickCourse(container, twoYears[2].displayName);
+    expect(seen.at(-1)?.raceDateISO).toBe("2028-03-11");
+  });
+
+  it("rolls a PAST date forward rather than pacing a race already run", () => {
+    // The bug the year picker exists to fix. A course whose only past edition
+    // has been run opens on the next one, not the old one.
+    const withPast = FIXTURE_CATALOG.map((c) => ({
+      ...c,
+      editions: [
+        {
+          year: 2020,
+          raceDateISO: "2020-04-20",
+          startTimeLocal: null,
+          dateConfidence: "confirmed" as const,
+          variant: null,
+        },
+        {
+          year: 2099,
+          raceDateISO: "2099-04-20",
+          startTimeLocal: null,
+          dateConfidence: "confirmed" as const,
+          variant: null,
+        },
+      ],
+    }));
+    const seen: PacingInput[] = [];
+    render(<InputForm catalog={withPast} onChange={(i) => seen.push(i)} />);
+    expect(seen.at(-1)?.raceDateISO).toBe("2099-04-20");
   });
 
   it("never overwrites a date carried in from a shared URL", () => {
@@ -386,18 +473,33 @@ describe("InputForm — race date prefill from the next edition", () => {
     expect(seen.at(-1)?.raceDateISO).toBe("2026-12-25");
   });
 
-  it("leaves the date blank when a course has no scheduled edition", () => {
+  it("keeps a PAST date that came from a shared URL", () => {
+    // Pacing a race already run is a supported destination now, so a link
+    // someone was sent must reproduce it rather than being advanced.
     const seen: PacingInput[] = [];
     render(
-      <InputForm catalog={FIXTURE_CATALOG} onChange={(i) => seen.push(i)} />,
+      <InputForm
+        catalog={withDates}
+        initial={{
+          courseId: withDates[0].id,
+          unit: "km",
+          goalTimeSeconds: 14400,
+          raceDateISO: "2020-04-20",
+        }}
+        onChange={(i) => seen.push(i)}
+      />,
     );
+    expect(seen.at(-1)?.raceDateISO).toBe("2020-04-20");
+  });
+
+  it("leaves the date blank when a course has no scheduled edition", () => {
+    const noEditions = FIXTURE_CATALOG.map((c) => ({ ...c, editions: [] }));
+    const seen: PacingInput[] = [];
+    render(<InputForm catalog={noEditions} onChange={(i) => seen.push(i)} />);
     expect(seen.at(-1)?.raceDateISO).toBeUndefined();
   });
 });
 
-// The hero form remembers what was typed into it across a navigation away and
-// back. The dashboard's copy never does — there, `initial` comes from the query
-// string, and a shared link has to mean the same thing to everyone who opens it.
 describe("InputForm — remembering the hero form", () => {
   const pickCourse = (container: HTMLElement, displayName: string) => {
     const input = container.querySelector("#course") as HTMLInputElement;
@@ -565,6 +667,7 @@ describe("InputForm — remembering display units", () => {
       speedUnit: "kph",
       weightUnit: "kg",
       heightUnit: "cm",
+      humidityUnit: "rh",
     });
     const initial: PacingInput = {
       courseId: FIXTURE_CATALOG[0].id,
@@ -651,5 +754,338 @@ describe("InputForm — remembering weather mode", () => {
       <InputForm catalog={FIXTURE_CATALOG} persist onCalculate={() => {}} />,
     );
     expect(heroForm.queryByText("Forecast")).toBeNull();
+  });
+});
+
+describe("InputForm — Race Strategy", () => {
+  const latestInput = () => {
+    const seen: PacingInput[] = [];
+    const view = render(
+      <InputForm
+        catalog={FIXTURE_CATALOG}
+        onChange={(i) => {
+          seen.push(i);
+        }}
+      />,
+    );
+    return { view, last: () => seen[seen.length - 1] };
+  };
+
+  it("is dashboard-only, like Weather and Fueling", () => {
+    const hero = render(
+      <InputForm catalog={FIXTURE_CATALOG} onCalculate={() => {}} />,
+    );
+    expect(hero.container.textContent).not.toContain("Race Strategy");
+    const live = render(
+      <InputForm catalog={FIXTURE_CATALOG} onChange={() => {}} />,
+    );
+    expect(live.container.textContent).toContain("Race Strategy");
+  });
+
+  it("emits nothing until the runner moves off the defaults", () => {
+    const { last } = latestInput();
+    expect(last().split).toBeUndefined();
+    expect(last().start).toBeUndefined();
+  });
+
+  it("puts the chosen split and start on the built input", () => {
+    const { view, last } = latestInput();
+    fireEvent.change(view.getByLabelText("Split strategy"), {
+      target: { value: "negative" },
+    });
+    expect(last().split).toBe("negative");
+    fireEvent.change(view.getByLabelText("Start"), {
+      target: { value: "very-conservative" },
+    });
+    expect(last().start).toBe("very-conservative");
+    expect(last().split).toBe("negative");
+  });
+
+  it("seeds both selects from a shared link", () => {
+    const initial: PacingInput = {
+      courseId: FIXTURE_CATALOG[0].id,
+      unit: "km",
+      goalTimeSeconds: 14400,
+      split: "positive-aggressive",
+      start: "conservative",
+    };
+    const { getByLabelText } = render(
+      <InputForm
+        catalog={FIXTURE_CATALOG}
+        initial={initial}
+        onChange={() => {}}
+      />,
+    );
+    expect((getByLabelText("Split strategy") as HTMLSelectElement).value).toBe(
+      "positive-aggressive",
+    );
+    expect((getByLabelText("Start") as HTMLSelectElement).value).toBe(
+      "conservative",
+    );
+  });
+});
+
+// The goal can be stated three ways, and all three collapse to the one
+// `goalTimeSeconds` the engine and the URL have always carried. These tests
+// are mostly about that collapse being right, and about which value is held
+// when something else moves.
+describe("InputForm — goal as time, pace or GAP", () => {
+  // The form opens on catalog[0] — Berlin, which is as near flat as a road
+  // marathon gets. Boston is the contrast: a ~140 m net drop.
+  const [defaultCourse] = FIXTURE_CATALOG;
+  const boston = FIXTURE_CATALOG.find((c) => c.id === "boston")!;
+
+  const mounted = (props: Partial<Parameters<typeof InputForm>[0]> = {}) => {
+    const seen: PacingInput[] = [];
+    const view = render(
+      <InputForm
+        catalog={FIXTURE_CATALOG}
+        onChange={(i) => {
+          seen.push(i);
+        }}
+        {...props}
+      />,
+    );
+    return { view, last: () => seen[seen.length - 1] };
+  };
+
+  const setPace = (view: ReturnType<typeof render>, min: number, sec: number) => {
+    fireEvent.change(view.getByLabelText("pace minutes"), {
+      target: { value: String(min) },
+    });
+    fireEvent.change(view.getByLabelText("pace seconds"), {
+      target: { value: String(sec) },
+    });
+  };
+
+  it("defaults to a finish time, exactly as before", () => {
+    const { view, last } = mounted();
+    expect(view.getByText("Goal finish time")).toBeTruthy();
+    expect(last().goalTimeSeconds).toBe(4 * 3600);
+  });
+
+  it("turns an average pace into the finish time it implies", () => {
+    const { view, last } = mounted();
+    fireEvent.click(view.getByText("Pace"));
+    setPace(view, 5, 0);
+    // 5:00/km over 42.195 km.
+    expect(last().goalTimeSeconds).toBeCloseTo(300 * 42.195, 6);
+  });
+
+  it("turns a GAP into a finish time using the course's own effort", () => {
+    const { view, last } = mounted();
+    fireEvent.click(view.getByText("GAP"));
+    setPace(view, 5, 0);
+    expect(last().goalTimeSeconds).toBeCloseTo(
+      300 * defaultCourse.effort.km,
+      6,
+    );
+  });
+
+  it("carries the goal across a mode switch instead of resetting it", () => {
+    const { view, last } = mounted();
+    const before = last().goalTimeSeconds;
+    fireEvent.click(view.getByText("Pace"));
+    // 4:00:00 over 42.195 km is 5:41/km, which rounds back to within a second
+    // per km of where it started.
+    expect(last().goalTimeSeconds).toBeCloseTo(before, -1.5);
+    expect(view.getByText("Goal average pace")).toBeTruthy();
+  });
+
+  it("HOLDS the GAP when the course changes — the point of the mode", () => {
+    const { view, last } = mounted();
+    fireEvent.click(view.getByText("GAP"));
+    setPace(view, 5, 0);
+    const berlinGoal = last().goalTimeSeconds;
+
+    // Same combobox interaction the date-prefill tests use.
+    const courseInput = view.container.querySelector("#course") as HTMLInputElement;
+    fireEvent.focus(courseInput);
+    fireEvent.change(courseInput, { target: { value: boston.displayName } });
+    fireEvent.keyDown(courseInput, { key: "Enter" });
+
+    // Same pace held, different course, therefore a different finish — and
+    // faster, because Boston's net drop costs less effort than flat Berlin.
+    expect((view.getByLabelText("pace minutes") as HTMLInputElement).value).toBe("5");
+    expect(last().courseId).toBe("boston");
+    expect(last().goalTimeSeconds).toBeCloseTo(300 * boston.effort.km, 6);
+    expect(last().goalTimeSeconds).toBeLessThan(berlinGoal);
+  });
+
+  it("holds the physical pace when the distance unit changes", () => {
+    const { view, last } = mounted();
+    fireEvent.click(view.getByText("Pace"));
+    setPace(view, 5, 0);
+    const beforeGoal = last().goalTimeSeconds;
+
+    fireEvent.click(view.getByText("mi"));
+
+    // 5:00/km is 8:03.2/mi — the number on screen changes, the race does not.
+    // Not exact: the field holds whole seconds, and 0.2 s/mi of rounding is
+    // ~5 s over the race. That is the cost of showing a pace people can read.
+    expect((view.getByLabelText("pace minutes") as HTMLInputElement).value).toBe("8");
+    expect((view.getByLabelText("pace seconds") as HTMLInputElement).value).toBe("3");
+    expect(Math.abs(last().goalTimeSeconds - beforeGoal)).toBeLessThan(15);
+  });
+
+  it("shows what the entered pace works out to", () => {
+    const { view } = mounted();
+    fireEvent.click(view.getByText("Pace"));
+    setPace(view, 5, 0);
+    expect(view.container.textContent).toContain("3:30:59 finish");
+  });
+
+  it("rejects a pace that implies an absurd race", () => {
+    const { view } = mounted();
+    fireEvent.click(view.getByText("Pace"));
+    setPace(view, 0, 0);
+    expect(view.container.textContent).toContain("Pace must be greater than 0");
+  });
+
+  // The query string is authoritative for everything it can express. A stored
+  // mode preference decides how the goal is DISPLAYED; it must never decide
+  // what the goal IS.
+  it("shows a shared link's own goal, not a default, in a stored pace mode", () => {
+    writeState(GOAL_MODE, "gap");
+    const initial: PacingInput = {
+      courseId: "boston",
+      unit: "km",
+      goalTimeSeconds: 3 * 3600, // a 3:00 marathon
+    };
+    const { view, last } = mounted({ initial });
+
+    // Seeded from the link: 3:00:00 at Boston is 4:17/km grade-adjusted, not
+    // the 5:00 the field would otherwise default to.
+    expect((view.getByLabelText("pace minutes") as HTMLInputElement).value).toBe("4");
+    // And the goal that goes back out is still the one the link carried.
+    // Exactly, not approximately: the displayed 4:17 would multiply back to
+    // 2:59:42, and a link has to reproduce the chart it was sent for.
+    expect(last().goalTimeSeconds).toBe(3 * 3600);
+  });
+
+  it("hands the pace back the canonical role as soon as the course changes", () => {
+    writeState(GOAL_MODE, "gap");
+    const { view, last } = mounted({
+      initial: { courseId: "boston", unit: "km", goalTimeSeconds: 3 * 3600 },
+    });
+    expect(last().goalTimeSeconds).toBe(3 * 3600);
+
+    const courseInput = view.container.querySelector("#course") as HTMLInputElement;
+    fireEvent.focus(courseInput);
+    fireEvent.change(courseInput, { target: { value: "Berlin Marathon" } });
+    fireEvent.keyDown(courseInput, { key: "Enter" });
+
+    // Now the 4:17/km GAP is what is held, and flat Berlin costs more of it
+    // than Boston's net drop did.
+    expect(last().courseId).toBe("berlin");
+    expect(last().goalTimeSeconds).toBeGreaterThan(3 * 3600);
+  });
+
+  it("offers GAP on the hero too, not just the dashboard", () => {
+    // It is the catalog's `effort` field that makes this possible with no
+    // geometry loaded — the whole reason that field exists.
+    const hero = render(
+      <InputForm catalog={FIXTURE_CATALOG} onCalculate={() => {}} />,
+    );
+    expect(hero.getByText("GAP").hasAttribute("disabled")).toBe(false);
+  });
+
+  it("disables GAP rather than guessing when no course effort is known", () => {
+    // The no-database degradation: an empty catalog still has to render a
+    // usable form (Rule 9).
+    const { view } = mounted({ catalog: [] });
+    expect((view.getByText("GAP") as HTMLButtonElement).disabled).toBe(true);
+    expect((view.getByText("Pace") as HTMLButtonElement).disabled).toBe(false);
+  });
+});
+
+describe("InputForm — dew point as the humidity input", () => {
+  const manual = () => {
+    const view = render(
+      <InputForm catalog={FIXTURE_CATALOG} onChange={() => {}} />,
+    );
+    fireEvent.click(view.getByText("Manual"));
+    return view;
+  };
+
+  const setField = (view: ReturnType<typeof render>, label: string, v: number) =>
+    fireEvent.change(view.getByLabelText(label), { target: { value: String(v) } });
+
+  it("shows relative humidity by default", () => {
+    const view = manual();
+    expect(view.getByLabelText("Humidity (%)")).toBeTruthy();
+  });
+
+  it("relabels the field and shows the dew point when toggled", () => {
+    const view = manual();
+    setField(view, "Temp", 20);
+    setField(view, "Humidity (%)", 60);
+    fireEvent.click(view.getByText("dew"));
+
+    // dewPointC(20, 60) ≈ 12.0 °C.
+    const field = view.getByLabelText("Dew point (°C)") as HTMLInputElement;
+    expect(Number(field.value)).toBe(12);
+  });
+
+  it("writes back the relative humidity a typed dew point implies", () => {
+    const view = manual();
+    setField(view, "Temp", 20);
+    fireEvent.click(view.getByText("dew"));
+    setField(view, "Dew point (°C)", 12);
+
+    fireEvent.click(view.getByText("%"));
+    expect(
+      Number((view.getByLabelText("Humidity (%)") as HTMLInputElement).value),
+    ).toBe(60);
+  });
+
+  it("HOLDS the dew point when the temperature moves", () => {
+    const view = manual();
+    setField(view, "Temp", 20);
+    setField(view, "Humidity (%)", 60);
+    fireEvent.click(view.getByText("dew"));
+    setField(view, "Temp", 25);
+
+    // The moisture in the air didn't change; the relative humidity did.
+    expect(
+      Number((view.getByLabelText("Dew point (°C)") as HTMLInputElement).value),
+    ).toBe(12);
+    fireEvent.click(view.getByText("%"));
+    expect(
+      Number((view.getByLabelText("Humidity (%)") as HTMLInputElement).value),
+    ).toBe(44);
+  });
+
+  it("leaves RH mode's behaviour alone — there, RH is what holds", () => {
+    const view = manual();
+    setField(view, "Temp", 20);
+    setField(view, "Humidity (%)", 60);
+    setField(view, "Temp", 25);
+    expect(
+      Number((view.getByLabelText("Humidity (%)") as HTMLInputElement).value),
+    ).toBe(60);
+  });
+
+  it("follows the °C/°F toggle, because a dew point is a temperature", () => {
+    const view = manual();
+    setField(view, "Temp", 20);
+    setField(view, "Humidity (%)", 60);
+    fireEvent.click(view.getByText("dew"));
+    fireEvent.click(view.getByText("°F"));
+    // 12 °C is 53.6 °F.
+    expect(
+      Number((view.getByLabelText("Dew point (°F)") as HTMLInputElement).value),
+    ).toBe(54);
+  });
+
+  it("allows a dew point below freezing to be typed", () => {
+    // NumericField strips the minus key whenever `min` is 0 or higher, so the
+    // RH bounds would make a cold race morning unenterable.
+    const view = manual();
+    setField(view, "Temp", 2);
+    fireEvent.click(view.getByText("dew"));
+    const field = view.getByLabelText("Dew point (°C)") as HTMLInputElement;
+    fireEvent.change(field, { target: { value: "-5" } });
+    expect(field.value).toBe("-5");
   });
 });

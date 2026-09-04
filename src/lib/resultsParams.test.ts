@@ -139,4 +139,55 @@ describe("resultsParams", () => {
     const parsed = parseResultsParams(paramsFromHref(buildResultsHref(input)));
     expect(parsed).toEqual({ ok: true, input });
   });
+
+  // Phase 3: pacing strategy. The default chart's query string must be exactly
+  // what it was before strategies existed — every /results link already shared
+  // and every paceband already printed depends on it.
+  it("emits no strategy params for a default (even-effort) input", () => {
+    const href = buildResultsHref(input);
+    expect(href).toBe("/results?courseId=berlin&unit=km&goalTimeSeconds=14400");
+    const explicit = buildResultsHref({
+      ...input,
+      split: "even-effort",
+      start: "even",
+    });
+    expect(explicit).toBe(href);
+  });
+
+  it("roundtrips a non-default strategy", () => {
+    const full: PacingInput = {
+      ...input,
+      split: "negative-aggressive",
+      start: "very-conservative",
+    };
+    const href = buildResultsHref(full);
+    expect(href).toContain("split=negative-aggressive");
+    // `hold`, because `start` is already taken by the race start time.
+    expect(href).toContain("hold=very-conservative");
+    expect(parseResultsParams(paramsFromHref(href))).toEqual({
+      ok: true,
+      input: full,
+    });
+  });
+
+  it("keeps the strategy params clear of the race start time", () => {
+    const timed: PacingInput = {
+      ...input,
+      raceStartTime: "08:00",
+      start: "conservative",
+    };
+    const parsed = parseResultsParams(paramsFromHref(buildResultsHref(timed)));
+    expect(parsed).toEqual({ ok: true, input: timed });
+  });
+
+  it("falls back to the defaults for an unknown strategy rather than failing", () => {
+    const r = parseResultsParams({
+      courseId: "berlin",
+      unit: "km",
+      goalTimeSeconds: "14400",
+      split: "sprint-the-whole-way",
+      hold: "nope",
+    });
+    expect(r).toEqual({ ok: true, input });
+  });
 });

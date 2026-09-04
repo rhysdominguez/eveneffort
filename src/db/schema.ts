@@ -260,7 +260,149 @@ export const eventCalendar = pgView("event_calendar", {
   startLon: numeric("start_lon", { precision: 9, scale: 6 }),
 }).existing();
 
+/**
+ * Cached race-day weather, keyed by start line and start instant.
+ *
+ * The point is that most of what this app asks a weather API for NEVER
+ * CHANGES. A race that has been run has one set of conditions, permanently;
+ * a ten-year climate average only moves when a new year joins the window.
+ * Re-fetching those on every page load buys nothing and is what would make a
+ * historical weather subscription a recurring cost rather than a one-off
+ * backfill.
+ *
+ * `expiresAt` is what separates the three sources, and it is the only thing
+ * that does — the row shape is identical:
+ *
+ *   historical  null      settled; a record of a morning that has passed
+ *   typical     ~1 year   a 10-year average, restated when a year rolls in
+ *   forecast    ~15 min   a prediction, and a stale one is worse than none
+ *
+ * Written from the /api/weather route rather than the seed, which makes this
+ * the one table the app writes to at runtime. That is deliberate and stays
+ * safe under Rule 6: the rows are derived public weather, carry nothing about
+ * who asked, and a failed write is swallowed — a cache that cannot be written
+ * degrades to the API call it was avoiding, never to an error.
+ */
+export const weatherWindows = pgTable(
+  "weather_window",
+  {
+    id: serial("id").primaryKey(),
+    /**
+     * The course start line, rounded to 4dp (~11 m) so that two requests for
+     * the same start agree on a cache key. Full float precision would make
+     * every request a miss the moment a coordinate was re-derived.
+     */
+    lat: numeric("lat", { precision: 9, scale: 4 }).notNull(),
+    lon: numeric("lon", { precision: 9, scale: 4 }).notNull(),
+    /** The gun, as an absolute instant — already resolved through the city's zone. */
+    startUtc: timestamp("start_utc", { withTimezone: true }).notNull(),
+    /** 'forecast' | 'historical' | 'typical' */
+    source: text("source").notNull(),
+    /** WeatherConditions[], index i = i hours after the gun. */
+    hours: jsonb("hours").notNull(),
+    /** Whatever the UI needs to explain the numbers (race date, years averaged). */
+    meta: jsonb("meta"),
+    fetchedAt: timestamp("fetched_at", { withTimezone: true }).notNull().defaultNow(),
+    /** Null means permanent — see the table comment. */
+    expiresAt: timestamp("expires_at", { withTimezone: true }),
+  },
+  (t) => [
+    // One row per start line per instant per source. A forecast and a later
+    // historical reading of the SAME race are two different facts and both
+    // worth keeping, which is why source is part of the key.
+    unique("weather_window_key").on(t.lat, t.lon, t.startUtc, t.source),
+    index("weather_window_expires_idx").on(t.expiresAt),
+  ],
+);
+
+/**
+ * A course a runner uploaded, addressed by an unguessable token.
+ *
+ * THIS IS THE ONE PLACE THE APP HOLDS USER-SUBMITTED CONTENT, and it is a
+ * deliberate, bounded exception to CLAUDE.md Rule 6 rather than a drift away
+ * from it. See docs/UPLOADED-COURSES.md for the full argument. In short:
+ *
+ *   - There are still no accounts, no login and no session. A row here is not
+ *     OWNED by anybody; it is reachable by whoever holds the link, the same
+ *     way an unlisted document is. That is what lets uploads exist without
+ *     inventing the auth Rule 6 refuses.
+ *   - It is separate from `course` on purpose. `course` is the seeded, curated
+ *     catalog whose slugs are permanent public identifiers signed off in the
+ *     slug ledger (Rule 8). Nothing uploaded is ever allowed into that ledger,
+ *     and the `u-` token prefix is reserved so the two namespaces cannot
+ *     collide — courses.test.ts asserts no seeded slug starts with it.
+ *   - The geometry columns mirror `course` exactly, so one Course object can
+ *     be built from either table and everything downstream — the chart, the
+ *     splits, the paceband, checkout — is reused untouched.
+ *
+ * `expiresAt` carries the retention promise, following the weather_window
+ * precedent: enforced at read time, no sweeper. A free upload lapses after
+ * ~90 days; ordering a physical paceband sets it to null, because a printed
+ * band has a URL on it and Rule 8 exists precisely so a printed link cannot
+ * die. Paying is what makes a course permanent.
+ */
+export const userCourses = pgTable(
+  "user_course",
+  {
+    id: serial("id").primaryKey(),
+    /**
+     * The public course id, shaped `u-<22 lowercase alphanumerics>`.
+     *
+     * Deliberately matched to COURSE_SLUG_RE in src/lib/resultsParams.ts, so an
+     * uploaded course travels through /results?courseId=... and the checkout
+     * validation ladder with no change to either. ~113 bits of entropy: the
+     * link is the only credential, so it has to be unguessable.
+     */
+    token: text("token").notNull().unique(),
+    /** What the runner called it. Sanitised and length-capped at the route. */
+    name: text("name").notNull(),
+    /** 44 elevations (m), the pacing engine's only geometry input. */
+    elevations: jsonb("elevations").$type<number[]>().notNull(),
+    /** 44 [lat, lon] at the same marks — per-segment wind bearings. */
+    coords: jsonb("coords").$type<[number, number][]>().notNull(),
+    /** Dense [distanceKm, elevationM] for the chart. Presentational only. */
+    profile: jsonb("profile").$type<[number, number][]>().notNull(),
+    /** == coords[0]. Denormalised so the weather lookup needs no jsonb parse. */
+    startLat: numeric("start_lat", { precision: 9, scale: 6 }).notNull(),
+    startLon: numeric("start_lon", { precision: 9, scale: 6 }).notNull(),
+    /**
+     * IANA zone. There is no coordinate-to-timezone data in this repo, so the
+     * browser's own zone is what gets sent and validated. Right for the common
+     * case (you upload a race near you) and wrong only for the start time.
+     */
+    timezone: text("timezone").notNull(),
+    /**
+     * 'gpx' when the file carried surveyed elevation, 'dem:<dataset>' when it
+     * was modelled from a terrain model. Never conflated — the UI discloses
+     * the difference, exactly as the import pipeline's QA step does.
+     */
+    elevationSource: text("elevation_source").notNull(),
+    /** Measured route length in metres, as parsed. */
+    distanceM: integer("distance_m").notNull(),
+    /**
+     * Salted SHA-256 of the client IP, kept ONLY as the rate-limit key.
+     *
+     * Note this is a real departure from weather_window's "carries nothing
+     * about who asked": an unauthenticated route that writes rows and calls a
+     * metered elevation API needs some bound, and this is the least
+     * identifying one that works. It is unsalted-irreversible, never displayed,
+     * never joined to anything, and disclosed in the terms page.
+     */
+    creatorHash: text("creator_hash"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    /** Null means permanent — set by a completed paceband order. */
+    expiresAt: timestamp("expires_at", { withTimezone: true }),
+  },
+  (t) => [
+    // The rate-limit query: "how many rows from this hash since <time>".
+    index("user_course_creator_idx").on(t.creatorHash, t.createdAt),
+    index("user_course_expires_idx").on(t.expiresAt),
+  ],
+);
+
 export type CityRow = typeof cities.$inferSelect;
 export type EventSeriesRow = typeof eventSeries.$inferSelect;
 export type CourseRow = typeof courses.$inferSelect;
 export type EventEditionRow = typeof eventEditions.$inferSelect;
+export type WeatherWindowRow = typeof weatherWindows.$inferSelect;
+export type UserCourseRow = typeof userCourses.$inferSelect;

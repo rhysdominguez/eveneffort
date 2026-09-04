@@ -39,7 +39,10 @@ const course = (over: Partial<CourseSummary>): CourseSummary => ({
   cityLon: 0,
   start: { lat: 0, lon: 0 },
   timezone: "UTC",
+  effort: { km: 42.195, miles: 26.2188 },
+  terrain: { gainM: 0, lossM: 0, netM: 0 },
   nextRaceDateISO: null,
+  editions: [],
   ...over,
 });
 

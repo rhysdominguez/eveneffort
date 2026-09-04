@@ -16,9 +16,9 @@ Defined in the `@theme` block of `src/app/globals.css`. Reference in components 
 
 | Token | Value | Usage |
 |---|---|---|
-| `--color-red-primary` | `#B91C1C` | Primary action backgrounds, active toggle, uphill elevation delta |
+| `--color-red-primary` | `#B91C1C` | Primary action backgrounds, active toggle, uphill elevation delta, the hilly/mountainous difficulty bands |
 | `--color-red-deep` | `#7F1D1D` | Primary action hover state |
-| `--color-green-primary` | `#15803D` | Faster-than-goal weather delta ONLY — as reserved as red; never decoration |
+| `--color-green-primary` | `#15803D` | Faster-than-goal weather delta and a net-downhill course — as reserved as red; never decoration |
 | `--color-bg-page` | `#FFFFFF` | Page background (set on `html`) |
 | `--color-bg-surface` | `#FFFFFF` | Card / surface background |
 | `--color-bg-elevated` | `#FAFAFA` | Table header, hover fill, chart area fill, alternating marketing band |
@@ -114,7 +114,9 @@ US Letter) — theirs is the wrist-band size runners actually wear:
 
 ## What NOT to do
 
-- Do not introduce new colors. Red, white, black (plus grayscale neutrals), and the single reserved semantic green for faster-than-goal deltas.
+- Do not introduce new colors. Red, white, black (plus grayscale neutrals), and the single reserved semantic green.
+- **Course difficulty has no ramp of its own, on purpose.** A flat/rolling/hilly/mountainous scale is the obvious place to reach for four new colors; `DifficultyBadge` instead extends the two meanings already in the system — red is the uphill direction (as in the splits table), green is faster (as in the weather delta) — and leaves the two ordinary bands in neutral text. Adding a difficulty ramp would make red common, which is the one thing this palette is built to prevent.
+- **The Boston verdict (`BqBadge`) adds no color either, and needed no argument to justify one.** `SummaryHeader`'s "vs goal" note already paints slower-than-target red and faster-than-target green; "2:14 under your standard" is that same meaning in that same component, so the two reserved semantics carry over unchanged. The **net-downhill index pill stays neutral** — an index is a fact about the course, true whoever runs it, not a verdict on the runner, and coloring it would imply the race did something wrong. Two pills rather than one, for the same reason `DifficultyBadge` has two: a single chip would have to pick one of two independent facts and misrepresent the other.
 - Do not use shadows beyond the system default.
 - Do not use red for decoration (backgrounds, hover states on non-interactive elements, etc.).
 - Do not introduce new font sizes outside the typography scale.

@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   // Bare title — layout.tsx's template appends the "— eveneffort" suffix.
   title: "Terms and conditions",
   description:
-    "The terms for using eveneffort's pacing calculator and ordering a printed paceband, including what the pacing model is and isn't.",
+    "The terms for using eveneffort's pace band calculator and ordering a printed paceband, including what the pacing model is and isn't.",
   alternates: { canonical: "/terms" },
 };
 
@@ -132,7 +132,35 @@ export default function TermsPage() {
             disrupt it, scrape it at volume, or hammer the forecast endpoint —
             it sits on a rate-limited third-party API and abusing it degrades
             the site for other runners. Don&rsquo;t resell the pacing output as
-            your own product.
+            your own product. Uploading is rate limited for the same reason.
+          </p>
+        </div>
+
+        <div className="space-y-4">
+          <h2 className="font-display text-xl text-[var(--color-text-primary)]">
+            Courses you upload
+          </h2>
+          <p className="text-base leading-relaxed text-[var(--color-text-secondary)]">
+            You can upload a route file to build a chart for a course we
+            don&rsquo;t hold. Only the route matters to us: we keep the
+            geometry, the name you give it, and nothing else. Upload only routes
+            you have the right to share.
+          </p>
+          <p className="text-base leading-relaxed text-[var(--color-text-secondary)]">
+            Your course lives at an unguessable link, and that link is the only
+            way back to it &mdash; there are no accounts here, so we cannot
+            recover it for you. It is unlisted: it never appears in the course
+            list, the map or the rankings. It is not secret, though, so anyone
+            you send the link to can see it.
+          </p>
+          <p className="text-base leading-relaxed text-[var(--color-text-secondary)]">
+            Uploaded courses are kept for 90 days and then deleted. Ordering a
+            printed paceband keeps yours permanently, because the band has the
+            link on it. To limit abuse of an open upload endpoint we store a
+            one-way, salted hash of your IP address alongside the course; it is
+            used only to count recent uploads, cannot be turned back into an
+            address, and is never shared. We may remove an uploaded course that
+            is unlawful or is being used to abuse the service.
           </p>
         </div>
 

@@ -15,8 +15,25 @@
 // simply means the weather panel stays off until the runner enters one; a
 // guessed start time would silently key the forecast to the wrong hour.
 
-/** Years to generate editions for. */
-export const SEED_YEARS = [2026, 2027] as const;
+/**
+ * Years to generate editions for.
+ *
+ * Reaches BACKWARDS as well as forwards, because a past edition is now a
+ * destination: the year picker offers it and the weather panel fills in the
+ * conditions actually recorded on the day. Before that feature these years
+ * would have been dead rows.
+ *
+ * Historical years lean on CONFIRMED_EDITIONS where it has them (many entries
+ * for 2021-2024 arrived with the import batches and were previously skipped,
+ * since buildEditionSeed only ever iterates the years listed here). Everything
+ * else derives from RECURRENCE and is `estimated` — and an estimated PAST date
+ * must never be presented as "the actual weather on race day", because the rule
+ * can miss the real date by a week. `weatherSourceFor` in src/lib/editions.ts
+ * is what enforces that.
+ */
+export const SEED_YEARS = [
+  2022, 2023, 2024, 2025, 2026, 2027, 2028,
+] as const;
 
 type Weekday = 0 | 1 | 2 | 3 | 4 | 5 | 6; // 0 = Sunday
 
@@ -2099,6 +2116,168 @@ export const CONFIRMED_EDITIONS: ConfirmedEdition[] = [
     year: 2026,
     raceDate: "2026-11-01",
   },
+
+  // ==========================================================================
+  // PAST editions of the majors, verified against each race's own record.
+  // ==========================================================================
+  // These exist because a past date is now a destination: the year picker
+  // offers it and the weather panel fills in what was actually recorded that
+  // morning. That lookup keys off the DATE, so a date derived from the
+  // recurrence rule is not good enough — `weatherSourceFor` in
+  // src/lib/editions.ts routes any `estimated` past date to a climate average
+  // instead, precisely so a guessed day is never passed off as fact.
+  //
+  // London is why that guard exists. Its rule (third Sunday of April) gets
+  // FOUR of these five years wrong — the 2020-22 editions were moved to autumn
+  // around COVID, and the spring dates have drifted since:
+  //
+  //     rule says    actually ran
+  //     2022-04-17   2022-10-02   (nearly six months out)
+  //     2023-04-16   2023-04-23
+  //     2024-04-21   2024-04-21   ✓
+  //     2025-04-20   2025-04-27
+  //     2026-04-19   2026-04-26
+  //
+  // Boston, by contrast, is Patriots' Day and its rule is exact for every year
+  // below — they are listed anyway, because `confirmed` is what unlocks the
+  // recorded-conditions path, and "the rule happens to agree" is not a record.
+  { seriesSlug: "boston-marathon", year: 2022, raceDate: "2022-04-18" },
+  { seriesSlug: "boston-marathon", year: 2023, raceDate: "2023-04-17" },
+  { seriesSlug: "boston-marathon", year: 2024, raceDate: "2024-04-15" },
+  { seriesSlug: "boston-marathon", year: 2025, raceDate: "2025-04-21" },
+  { seriesSlug: "boston-marathon", year: 2026, raceDate: "2026-04-20" },
+
+  { seriesSlug: "london-marathon", year: 2022, raceDate: "2022-10-02" },
+  { seriesSlug: "london-marathon", year: 2023, raceDate: "2023-04-23" },
+  { seriesSlug: "london-marathon", year: 2024, raceDate: "2024-04-21" },
+  { seriesSlug: "london-marathon", year: 2025, raceDate: "2025-04-27" },
+  { seriesSlug: "london-marathon", year: 2026, raceDate: "2026-04-26" },
+
+  { seriesSlug: "berlin-marathon", year: 2022, raceDate: "2022-09-25" },
+  { seriesSlug: "berlin-marathon", year: 2023, raceDate: "2023-09-24" },
+  { seriesSlug: "berlin-marathon", year: 2024, raceDate: "2024-09-29" },
+  { seriesSlug: "berlin-marathon", year: 2025, raceDate: "2025-09-21" },
+
+  { seriesSlug: "chicago-marathon", year: 2022, raceDate: "2022-10-09" },
+  { seriesSlug: "chicago-marathon", year: 2023, raceDate: "2023-10-08" },
+  { seriesSlug: "chicago-marathon", year: 2024, raceDate: "2024-10-13" },
+  { seriesSlug: "chicago-marathon", year: 2025, raceDate: "2025-10-12" },
+
+  { seriesSlug: "new-york-city-marathon", year: 2022, raceDate: "2022-11-06" },
+  { seriesSlug: "new-york-city-marathon", year: 2023, raceDate: "2023-11-05" },
+  { seriesSlug: "new-york-city-marathon", year: 2024, raceDate: "2024-11-03" },
+  { seriesSlug: "new-york-city-marathon", year: 2025, raceDate: "2025-11-02" },
+
+  // Tokyo 2022 is deliberately absent: it is the one year here I could not
+  // confirm, and an unconfirmed entry in this list would be worse than none.
+  { seriesSlug: "tokyo-marathon", year: 2023, raceDate: "2023-03-05" },
+  { seriesSlug: "tokyo-marathon", year: 2024, raceDate: "2024-03-03" },
+  { seriesSlug: "tokyo-marathon", year: 2025, raceDate: "2025-03-02" },
+  { seriesSlug: "tokyo-marathon", year: 2026, raceDate: "2026-03-01" },
+
+
+  // ==========================================================================
+  // PAST editions recovered from the goandrace archive crawls already cached
+  // in data/import/raw/. Same source and same standing as the import batches
+  // above — dates as published by the event listing — but harvested for years
+  // we had already imported a DIFFERENT edition of, so they were never
+  // promoted at the time.
+  //
+  // Worth having because a `confirmed` past date is what unlocks the recorded
+  // race-morning weather; an `estimated` one is routed to a climate average
+  // instead. The recurrence rules cannot stand in for these: measured across
+  // every series where we know two or more real years, a rule derived from one
+  // year predicts another EXACTLY only 55% of the time, is off by more than a
+  // week 13% of the time, and by more than a month 3% of the time (London 2022
+  // by 161 days, Cape Town 2025 by 147).
+  // ==========================================================================
+  { seriesSlug: "athens-marathon", year: 2024, raceDate: "2024-11-10" },
+  { seriesSlug: "athens-marathon", year: 2025, raceDate: "2025-11-09" },
+  { seriesSlug: "barletta-marathon", year: 2025, raceDate: "2025-02-09" },
+  { seriesSlug: "bayshore-marathon", year: 2025, raceDate: "2025-05-25" },
+  { seriesSlug: "boulderthon", year: 2025, raceDate: "2025-09-28" },
+  { seriesSlug: "bratislava-marathon", year: 2025, raceDate: "2025-04-06" },
+  { seriesSlug: "brescia-art-marathon", year: 2025, raceDate: "2025-03-09" },
+  { seriesSlug: "brighton-marathon", year: 2024, raceDate: "2024-04-07" },
+  { seriesSlug: "brighton-marathon", year: 2025, raceDate: "2025-04-06" },
+  { seriesSlug: "california-international-marathon", year: 2023, raceDate: "2023-12-03" },
+  { seriesSlug: "california-international-marathon", year: 2025, raceDate: "2025-12-07" },
+  { seriesSlug: "cape-town-marathon", year: 2026, raceDate: "2026-05-24" },
+  { seriesSlug: "carmel-marathon", year: 2025, raceDate: "2025-04-19" },
+  { seriesSlug: "cayman-islands-marathon", year: 2022, raceDate: "2022-12-04" },
+  { seriesSlug: "cincinnati-flying-pig-marathon", year: 2024, raceDate: "2024-05-05" },
+  { seriesSlug: "cork-city-marathon", year: 2025, raceDate: "2025-06-01" },
+  { seriesSlug: "cowtown-marathon", year: 2025, raceDate: "2025-02-23" },
+  { seriesSlug: "delaware-marathon", year: 2025, raceDate: "2025-04-06" },
+  { seriesSlug: "denver-colfax-marathon", year: 2023, raceDate: "2023-05-20" },
+  { seriesSlug: "denver-colfax-marathon", year: 2024, raceDate: "2024-05-19" },
+  { seriesSlug: "deseret-news-marathon", year: 2025, raceDate: "2025-07-24" },
+  { seriesSlug: "detroit-free-press-marathon", year: 2024, raceDate: "2024-10-20" },
+  { seriesSlug: "detroit-free-press-marathon", year: 2025, raceDate: "2025-10-19" },
+  { seriesSlug: "dubai-marathon", year: 2025, raceDate: "2025-01-12" },
+  { seriesSlug: "dublin-marathon", year: 2024, raceDate: "2024-10-27" },
+  { seriesSlug: "eisenhower-marathon", year: 2024, raceDate: "2024-04-27" },
+  { seriesSlug: "enschede-marathon", year: 2024, raceDate: "2024-04-21" },
+  { seriesSlug: "galveston-marathon", year: 2025, raceDate: "2025-02-09" },
+  { seriesSlug: "glendalough-lap-of-the-gap-marathon", year: 2024, raceDate: "2024-05-18" },
+  { seriesSlug: "gold-coast-marathon", year: 2025, raceDate: "2025-07-05" },
+  { seriesSlug: "helsinki-marathon", year: 2023, raceDate: "2023-08-19" },
+  { seriesSlug: "hogeye-marathon", year: 2023, raceDate: "2023-04-15" },
+  { seriesSlug: "hogeye-marathon", year: 2024, raceDate: "2024-04-20" },
+  { seriesSlug: "honolulu-marathon", year: 2023, raceDate: "2023-12-10" },
+  { seriesSlug: "honolulu-marathon", year: 2025, raceDate: "2025-12-14" },
+  { seriesSlug: "ing-night-marathon-luxembourg", year: 2024, raceDate: "2024-05-11" },
+  { seriesSlug: "irving-marathon", year: 2026, raceDate: "2026-03-29" },
+  { seriesSlug: "istanbul-marathon", year: 2024, raceDate: "2024-11-03" },
+  { seriesSlug: "jerusalem-marathon", year: 2024, raceDate: "2024-03-08" },
+  { seriesSlug: "jerusalem-marathon", year: 2025, raceDate: "2025-04-04" },
+  { seriesSlug: "kilimanjaro-international-marathon", year: 2025, raceDate: "2025-02-23" },
+  { seriesSlug: "knysna-forest-marathon", year: 2024, raceDate: "2024-06-22" },
+  { seriesSlug: "la-valette-marathon", year: 2024, raceDate: "2024-03-24" },
+  { seriesSlug: "lisbon-eco-marathon", year: 2023, raceDate: "2023-05-07" },
+  { seriesSlug: "lisbon-eco-marathon", year: 2024, raceDate: "2024-04-21" },
+  { seriesSlug: "loch-ness-marathon", year: 2023, raceDate: "2023-10-01" },
+  { seriesSlug: "logicom-cyprus-marathon", year: 2024, raceDate: "2024-03-03" },
+  { seriesSlug: "long-beach-marathon", year: 2024, raceDate: "2024-10-06" },
+  { seriesSlug: "long-beach-marathon", year: 2025, raceDate: "2025-10-05" },
+  { seriesSlug: "los-angeles-marathon", year: 2024, raceDate: "2024-03-17" },
+  { seriesSlug: "los-angeles-marathon", year: 2025, raceDate: "2025-03-16" },
+  { seriesSlug: "malta-marathon", year: 2024, raceDate: "2024-02-25" },
+  { seriesSlug: "manitoba-marathon", year: 2025, raceDate: "2025-06-15" },
+  { seriesSlug: "marathon-de-la-liberte", year: 2024, raceDate: "2024-06-02" },
+  { seriesSlug: "marathon-du-golfe-de-saint-tropez", year: 2024, raceDate: "2024-03-24" },
+  { seriesSlug: "marathon-du-golfe-de-saint-tropez", year: 2025, raceDate: "2025-03-30" },
+  { seriesSlug: "maratona-di-san-valentino", year: 2025, raceDate: "2025-02-16" },
+  { seriesSlug: "midnight-sun-marathon", year: 2024, raceDate: "2024-06-22" },
+  { seriesSlug: "milwaukee-marathon", year: 2024, raceDate: "2024-04-13" },
+  { seriesSlug: "milwaukee-marathon", year: 2025, raceDate: "2025-04-12" },
+  { seriesSlug: "mississippi-blues-marathon", year: 2026, raceDate: "2026-02-21" },
+  { seriesSlug: "missoula-marathon", year: 2023, raceDate: "2023-06-25" },
+  { seriesSlug: "missoula-marathon", year: 2024, raceDate: "2024-06-30" },
+  { seriesSlug: "missoula-marathon", year: 2025, raceDate: "2025-06-29" },
+  { seriesSlug: "myrtle-beach-marathon", year: 2025, raceDate: "2025-03-01" },
+  { seriesSlug: "myrtle-beach-marathon", year: 2026, raceDate: "2026-03-07" },
+  { seriesSlug: "neapolis-marathon", year: 2025, raceDate: "2025-10-19" },
+  { seriesSlug: "north-olympic-discovery-marathon", year: 2025, raceDate: "2025-06-08" },
+  { seriesSlug: "ogden-marathon", year: 2025, raceDate: "2025-05-17" },
+  { seriesSlug: "oklahoma-city-memorial-marathon", year: 2024, raceDate: "2024-04-28" },
+  { seriesSlug: "osaka-marathon", year: 2024, raceDate: "2024-02-25" },
+  { seriesSlug: "philadelphia-marathon", year: 2025, raceDate: "2025-11-23" },
+  { seriesSlug: "san-francisco-marathon", year: 2025, raceDate: "2025-07-27" },
+  { seriesSlug: "seattle-marathon", year: 2025, raceDate: "2025-11-30" },
+  { seriesSlug: "split-marathon", year: 2022, raceDate: "2022-02-27" },
+  { seriesSlug: "split-marathon", year: 2024, raceDate: "2024-02-25" },
+  { seriesSlug: "split-marathon", year: 2025, raceDate: "2025-02-16" },
+  { seriesSlug: "taipei-marathon", year: 2024, raceDate: "2024-12-14" },
+  { seriesSlug: "tallinn-marathon", year: 2023, raceDate: "2023-09-10" },
+  { seriesSlug: "utah-valley-marathon", year: 2025, raceDate: "2025-06-07" },
+  { seriesSlug: "venice-marathon", year: 2024, raceDate: "2024-10-27" },
+  { seriesSlug: "verdi-marathon", year: 2026, raceDate: "2026-02-22" },
+  { seriesSlug: "vienna-city-marathon", year: 2025, raceDate: "2025-04-06" },
+  { seriesSlug: "white-marble-marathon", year: 2026, raceDate: "2026-02-15" },
+  { seriesSlug: "windermere-marathon", year: 2026, raceDate: "2026-06-14" },
+  { seriesSlug: "zurich-marathon", year: 2026, raceDate: "2026-04-12" },
+
   // Imported from goandrace.com — batch 2026-08-08. Dates as published by
   // the event listing; startTimeLocal is deliberately left unset.
   { seriesSlug: "asheville-marathon", year: 2026, raceDate: "2026-03-21" },
@@ -2498,6 +2677,101 @@ export const CONFIRMED_EDITIONS: ConfirmedEdition[] = [
   { seriesSlug: "montana-marathon", year: 2026, raceDate: "2026-09-20" },
   { seriesSlug: "old-forge-marathon", year: 2026, raceDate: "2026-09-12" },
   { seriesSlug: "staunton-rocks-marathon", year: 2026, raceDate: "2026-08-22" },
+  // Backfilled from the goandrace calendar archive by
+  // scripts/import/backfill-dates.ts on 2026-08-19 (2022-2025),
+  // each entry approved by hand in data/import/backfill-review.json.
+  // Dates as published by the event listing — same source and standing as
+  // the import batches above. These exist so a past edition can show the
+  // weather actually recorded on the day rather than a climate average;
+  // see the script header for how far a recurrence rule misses when it has
+  // to guess.
+  { seriesSlug: "alexander-the-great-marathon", year: 2024, raceDate: "2024-04-21" },
+  { seriesSlug: "amsterdam-marathon", year: 2023, raceDate: "2023-10-15" },
+  { seriesSlug: "big-sur-marathon", year: 2024, raceDate: "2024-04-28" },
+  { seriesSlug: "bologna-marathon", year: 2022, raceDate: "2022-03-06" },
+  { seriesSlug: "bologna-marathon", year: 2023, raceDate: "2023-03-05" },
+  { seriesSlug: "bologna-marathon", year: 2024, raceDate: "2024-03-03" },
+  { seriesSlug: "borneo-international-marathon", year: 2023, raceDate: "2023-05-21" },
+  { seriesSlug: "bremen-marathon", year: 2023, raceDate: "2023-10-01" },
+  { seriesSlug: "brescia-art-marathon", year: 2022, raceDate: "2022-03-13" },
+  { seriesSlug: "brescia-art-marathon", year: 2023, raceDate: "2023-03-12" },
+  { seriesSlug: "brescia-art-marathon", year: 2024, raceDate: "2024-03-10" },
+  { seriesSlug: "buenos-aires-marathon", year: 2023, raceDate: "2023-09-24" },
+  { seriesSlug: "calgary-marathon", year: 2023, raceDate: "2023-05-28" },
+  { seriesSlug: "california-international-marathon", year: 2022, raceDate: "2022-12-04" },
+  { seriesSlug: "cape-town-marathon", year: 2023, raceDate: "2023-10-15" },
+  { seriesSlug: "cleveland-marathon", year: 2024, raceDate: "2024-05-19" },
+  { seriesSlug: "cologne-marathon", year: 2023, raceDate: "2023-10-01" },
+  { seriesSlug: "danang-international-marathon", year: 2022, raceDate: "2022-03-20" },
+  { seriesSlug: "danang-international-marathon", year: 2023, raceDate: "2023-08-06" },
+  { seriesSlug: "edinburgh-marathon", year: 2023, raceDate: "2023-05-28" },
+  { seriesSlug: "florence-marathon", year: 2022, raceDate: "2022-11-27" },
+  { seriesSlug: "florence-marathon", year: 2023, raceDate: "2023-11-26" },
+  { seriesSlug: "fort-lauderdale-a1a-marathon", year: 2024, raceDate: "2024-02-18" },
+  { seriesSlug: "hamburg-marathon", year: 2024, raceDate: "2024-04-28" },
+  { seriesSlug: "ho-chi-minh-city-marathon", year: 2022, raceDate: "2022-12-11" },
+  { seriesSlug: "honolulu-marathon", year: 2022, raceDate: "2022-12-11" },
+  { seriesSlug: "illinois-marathon", year: 2023, raceDate: "2023-04-27" },
+  { seriesSlug: "illinois-marathon", year: 2024, raceDate: "2024-04-27" },
+  { seriesSlug: "istanbul-marathon", year: 2022, raceDate: "2022-11-06" },
+  { seriesSlug: "la-paz-marathon", year: 2024, raceDate: "2024-03-10" },
+  { seriesSlug: "lagos-city-marathon", year: 2022, raceDate: "2022-02-12" },
+  { seriesSlug: "limassol-marathon", year: 2022, raceDate: "2022-03-20" },
+  { seriesSlug: "lisbon-marathon", year: 2023, raceDate: "2023-10-08" },
+  { seriesSlug: "malaga-marathon", year: 2022, raceDate: "2022-12-11" },
+  { seriesSlug: "malta-marathon", year: 2022, raceDate: "2022-03-06" },
+  { seriesSlug: "maratona-di-san-valentino", year: 2022, raceDate: "2022-02-06" },
+  { seriesSlug: "maratona-di-san-valentino", year: 2023, raceDate: "2023-02-19" },
+  { seriesSlug: "maratona-di-san-valentino", year: 2024, raceDate: "2024-02-18" },
+  { seriesSlug: "marrakech-marathon", year: 2022, raceDate: "2022-01-30" },
+  { seriesSlug: "maui-oceanfront-marathon", year: 2022, raceDate: "2022-01-16" },
+  { seriesSlug: "medoc-marathon", year: 2023, raceDate: "2023-09-02" },
+  { seriesSlug: "mendoza-marathon", year: 2023, raceDate: "2023-04-30" },
+  { seriesSlug: "midnight-sun-marathon", year: 2023, raceDate: "2023-06-17" },
+  { seriesSlug: "milan-marathon", year: 2022, raceDate: "2022-04-03" },
+  { seriesSlug: "milan-marathon", year: 2023, raceDate: "2023-04-02" },
+  { seriesSlug: "milan-marathon", year: 2024, raceDate: "2024-04-07" },
+  { seriesSlug: "montpellier-marathon", year: 2022, raceDate: "2022-02-20" },
+  { seriesSlug: "munich-marathon", year: 2023, raceDate: "2023-10-08" },
+  { seriesSlug: "newport-marathon", year: 2023, raceDate: "2023-10-08" },
+  { seriesSlug: "oslo-marathon", year: 2023, raceDate: "2023-09-16" },
+  { seriesSlug: "parma-marathon", year: 2022, raceDate: "2022-10-16" },
+  { seriesSlug: "philadelphia-marathon", year: 2023, raceDate: "2023-11-19" },
+  { seriesSlug: "pikes-peak-marathon", year: 2023, raceDate: "2023-09-16" },
+  { seriesSlug: "pittsburgh-marathon", year: 2024, raceDate: "2024-05-05" },
+  { seriesSlug: "prague-marathon", year: 2023, raceDate: "2023-05-07" },
+  { seriesSlug: "prague-marathon", year: 2024, raceDate: "2024-05-05" },
+  { seriesSlug: "prince-of-wales-island-marathon", year: 2023, raceDate: "2023-05-27" },
+  { seriesSlug: "prosecco-marathon", year: 2023, raceDate: "2023-12-03" },
+  { seriesSlug: "reggio-emilia-marathon", year: 2022, raceDate: "2022-12-11" },
+  { seriesSlug: "rimini-marathon", year: 2022, raceDate: "2022-03-20" },
+  { seriesSlug: "rimini-marathon", year: 2024, raceDate: "2024-04-21" },
+  { seriesSlug: "rock-n-roll-san-diego-marathon", year: 2023, raceDate: "2023-06-04" },
+  { seriesSlug: "rome-marathon", year: 2022, raceDate: "2022-03-27" },
+  { seriesSlug: "rome-marathon", year: 2023, raceDate: "2023-03-19" },
+  { seriesSlug: "rome-marathon", year: 2024, raceDate: "2024-03-17" },
+  { seriesSlug: "salt-lake-city-marathon", year: 2024, raceDate: "2024-04-20" },
+  { seriesSlug: "salzburg-marathon", year: 2022, raceDate: "2022-05-15" },
+  { seriesSlug: "salzburg-marathon", year: 2023, raceDate: "2023-05-21" },
+  { seriesSlug: "salzburg-marathon", year: 2024, raceDate: "2024-05-12" },
+  { seriesSlug: "samoa-international-marathon", year: 2023, raceDate: "2023-07-14" },
+  { seriesSlug: "santa-rosa-marathon", year: 2023, raceDate: "2023-08-26" },
+  { seriesSlug: "stockholm-marathon", year: 2023, raceDate: "2023-06-03" },
+  { seriesSlug: "sydney-marathon", year: 2023, raceDate: "2023-09-17" },
+  { seriesSlug: "the-woodlands-marathon", year: 2024, raceDate: "2024-03-02" },
+  { seriesSlug: "toronto-marathon", year: 2023, raceDate: "2023-10-15" },
+  { seriesSlug: "turin-marathon", year: 2022, raceDate: "2022-11-06" },
+  { seriesSlug: "vancouver-marathon", year: 2023, raceDate: "2023-05-07" },
+  { seriesSlug: "verdi-marathon", year: 2022, raceDate: "2022-02-27" },
+  { seriesSlug: "verdi-marathon", year: 2023, raceDate: "2023-02-26" },
+  { seriesSlug: "verdi-marathon", year: 2024, raceDate: "2024-02-25" },
+  { seriesSlug: "vienna-city-marathon", year: 2024, raceDate: "2024-04-21" },
+  { seriesSlug: "white-marble-marathon", year: 2022, raceDate: "2022-02-20" },
+  { seriesSlug: "white-marble-marathon", year: 2023, raceDate: "2023-02-19" },
+  { seriesSlug: "white-marble-marathon", year: 2024, raceDate: "2024-02-18" },
+  { seriesSlug: "wisconsin-marathon", year: 2024, raceDate: "2024-05-04" },
+  { seriesSlug: "zurich-marathon", year: 2024, raceDate: "2024-04-21" },
+
 ];
 
 /**

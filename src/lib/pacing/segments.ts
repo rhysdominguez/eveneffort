@@ -4,6 +4,8 @@ import type { Segment, Unit } from "@/types";
 
 export const MARATHON_KM = 42.195;
 export const MILE_IN_KM = 1.609344;
+/** The same distance in miles (≈26.2188) — the denominator of every mile pace. */
+export const MARATHON_MILES = MARATHON_KM / MILE_IN_KM;
 
 /**
  * Linearly interpolate an absolute elevation (m) at an arbitrary distance (km)

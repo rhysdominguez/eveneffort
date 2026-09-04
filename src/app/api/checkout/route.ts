@@ -9,6 +9,7 @@ import Stripe from "stripe";
 import { parseResultsParams } from "@/lib/resultsParams";
 import { buildCheckoutSessionParams } from "@/lib/orders";
 import { getCourseBySlug } from "@/db/queries";
+import { isUserCourseId, makeUserCoursePermanent } from "@/db/userCourses";
 
 export async function POST(request: Request): Promise<Response> {
   const secretKey = process.env.STRIPE_SECRET_KEY;
@@ -47,6 +48,29 @@ export async function POST(request: Request): Promise<Response> {
   const course = await getCourseBySlug(parsed.input.courseId);
   if (!course) {
     return Response.json({ error: "Unknown course." }, { status: 400 });
+  }
+
+  // An uploaded course lapses after 90 days unless something makes it
+  // permanent, and this is that something. It has to happen BEFORE the Stripe
+  // session exists: a paceband is printed paper with this URL on it, and Rule 8
+  // is the rule that a printed link never dies. Paying is what buys permanence.
+  //
+  // makeUserCoursePermanent throws rather than swallowing, unlike every other
+  // runtime write in this app — if we cannot promise the link will resolve, the
+  // honest outcome is to fail the order instead of taking the money and hoping.
+  //
+  // The cost of this ordering is that an abandoned checkout leaves a course
+  // permanent for free. That is the right side to be wrong on, and it is
+  // bounded by the upload rate limit.
+  if (isUserCourseId(parsed.input.courseId)) {
+    try {
+      await makeUserCoursePermanent(parsed.input.courseId);
+    } catch {
+      return Response.json(
+        { error: "Could not prepare your uploaded course for printing." },
+        { status: 502 },
+      );
+    }
   }
 
   // NEXT_PUBLIC_SITE_URL pins the canonical origin (Stripe redirects back to

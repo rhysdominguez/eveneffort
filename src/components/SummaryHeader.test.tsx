@@ -1,6 +1,10 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, fireEvent } from "@testing-library/react";
-import { SummaryHeader } from "./SummaryHeader";
+import { effortSummary, SummaryHeader } from "./SummaryHeader";
+import { courseTerrain } from "@/lib/pacing/terrain";
+import { courseEffort, effortMultiplier } from "@/lib/pacing/effort";
+import { loadGeometry } from "@/data/courses.fixture";
+import { bqStatus } from "@/lib/bq/qualify";
 import type { PacingResult } from "@/hooks/usePacingChart";
 import type { PacingInput } from "@/types";
 import { startCheckout } from "@/lib/checkout";
@@ -147,5 +151,74 @@ describe("SummaryHeader", () => {
     const text = container.textContent ?? "";
     expect(text).toContain("26.22 mi");
     expect(text).toContain("/mi");
+  });
+});
+
+describe("SummaryHeader — course difficulty", () => {
+  const boston = courseTerrain(loadGeometry("boston").elevations);
+
+  it("shows the terrain badge and what the course costs", () => {
+    const { container } = render(
+      <SummaryHeader
+        result={resultWith()}
+        courseName="Boston Marathon"
+        terrain={boston}
+        effortMultiplier={effortMultiplier(
+          courseEffort(loadGeometry("boston").elevations),
+        )}
+      />,
+    );
+    const text = container.textContent ?? "";
+    expect(text).toContain("Rolling");
+    expect(text).toContain("315 ft up");
+    expect(text).toContain("−436 ft net");
+    // The point of showing both: Boston climbs enough to be "rolling" and
+    // still runs FASTER than flat, because the net drop more than pays for
+    // the Newton hills. One number could not say that.
+    expect(text).toContain("Costs 0.6% less than a flat course");
+  });
+
+  it("omits the whole block when no terrain is passed", () => {
+    const { container } = render(
+      <SummaryHeader result={resultWith()} courseName="Boston Marathon" />,
+    );
+    const text = container.textContent ?? "";
+    expect(text).not.toContain("Rolling");
+    expect(text).not.toContain("flat course");
+  });
+
+  // The BQ verdict rides the same optional-prop path as terrain: Dashboard
+  // computes it only when a profile is stored, and the paceband's own render
+  // path passes neither.
+  it("stays silent about Boston when no profile has been set", () => {
+    const { container } = render(
+      <SummaryHeader result={resultWith()} courseName="Boston Marathon" />,
+    );
+    expect(container.textContent ?? "").not.toContain("Boston qualifier");
+  });
+
+  it("shows the verdict when a BQ status is supplied", () => {
+    const { container } = render(
+      <SummaryHeader
+        result={resultWith()}
+        courseName="Boston Marathon"
+        bq={bqStatus({ finishSeconds: 10800, age: 41, division: "men" })}
+      />,
+    );
+    // 3:00:00 against a 3:05:00 standard.
+    expect(container.textContent ?? "").toContain("Boston qualifier");
+    expect(container.textContent ?? "").toContain("5:00 under");
+  });
+});
+
+describe("effortSummary", () => {
+  it("names the direction and the size of the cost", () => {
+    expect(effortSummary(1.071)).toBe("Costs 7.1% more than a flat course");
+    expect(effortSummary(0.938)).toBe("Costs 6.2% less than a flat course");
+  });
+
+  it("refuses to quote a difference inside the digitization noise", () => {
+    expect(effortSummary(1.004)).toBe("Costs about the same as a flat course");
+    expect(effortSummary(0.997)).toBe("Costs about the same as a flat course");
   });
 });

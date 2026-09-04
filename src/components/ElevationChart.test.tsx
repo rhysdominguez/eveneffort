@@ -3,6 +3,7 @@ import { render, fireEvent } from "@testing-library/react";
 import { ElevationChart } from "./ElevationChart";
 import type { PaceChartRow } from "@/types";
 import { nearestPointIndex } from "@/lib/chart/geometry";
+import { M_TO_FT } from "@/lib/units/elevation";
 
 // jsdom reports a zero-sized rect for everything, which would make the
 // pointer→viewBox mapping bail out. Pin the SVG to its natural 880-wide
@@ -22,7 +23,7 @@ afterAll(() => {
 });
 
 const MARATHON_KM = 42.195;
-const M_TO_FT = 3.28084;
+
 
 // 400 evenly spaced trackpoints: a climb to a peak at halfway, then a descent
 // back below the start. Elevations are metres, as the real course data is.

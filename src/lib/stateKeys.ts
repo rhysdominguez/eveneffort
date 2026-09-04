@@ -29,9 +29,15 @@ import {
   type LocationFilter,
 } from "@/components/home/calendarFilters";
 import { CONTINENT_CODES } from "@/lib/continents";
-import type { GoalTimeInput, Unit } from "@/types";
+import {
+  BQ_DIVISIONS,
+  BQ_MIN_AGE,
+  type BqDivision,
+} from "@/lib/bq/standards";
+import type { GoalMode, GoalTimeInput, PaceInput, Unit } from "@/types";
 import type {
   HeightUnit,
+  HumidityUnit,
   SpeedUnit,
   TempUnit,
   WeightUnit,
@@ -121,11 +127,22 @@ export const HOME_MAP_CAMERA: StateKey<MapCamera> = defineKey<MapCamera>(
   reviveMapCamera,
 );
 
+// Closed sets, declared once and shared by the revivers below.
+const HUMIDITY_UNITS = ["rh", "dew"] as const;
+const GOAL_MODES = ["time", "pace", "gap"] as const;
+
 // --- Hero pacing form ----------------------------------------------------
 
 export interface HomeFormSnapshot {
   courseId: string;
   goalTime: GoalTimeInput;
+  /**
+   * The pace buffer, canonical while the form is in Pace or GAP mode. Stored
+   * alongside `goalTime` rather than instead of it so switching modes back and
+   * forth across a navigation doesn't lose what was typed in either.
+   */
+  goalPace?: PaceInput;
+  goalMode?: GoalMode;
   unit: Unit;
   raceDate: string;
   raceStartTime: string;
@@ -146,6 +163,14 @@ export function reviveGoalTime(raw: unknown): GoalTimeInput | null {
   return { hours: raw.hours, minutes: raw.minutes, seconds: raw.seconds };
 }
 
+/** Same "store what was TYPED" looseness as reviveGoalTime — see above. */
+export function revivePace(raw: unknown): PaceInput | null {
+  if (!isRecord(raw)) return null;
+  if (!isIntegerInRange(raw.minutes, 0, 99)) return null;
+  if (!isIntegerInRange(raw.seconds, 0, 99)) return null;
+  return { minutes: raw.minutes, seconds: raw.seconds };
+}
+
 export const HOME_FORM: StateKey<HomeFormSnapshot> =
   defineKey<HomeFormSnapshot>("home.form", "session", (raw) => {
     if (!isRecord(raw)) return null;
@@ -155,13 +180,20 @@ export const HOME_FORM: StateKey<HomeFormSnapshot> =
     if (!isOneOf(raw.unit, ["km", "miles"] as const)) return null;
     if (!isString(raw.raceDate)) return null;
     if (!isString(raw.raceStartTime)) return null;
-    return {
+    // Both goal-mode fields are optional for the same reason humidityUnit is:
+    // a snapshot written by the tab the runner still has open predates them,
+    // and discarding it whole would lose the form they were mid-way through.
+    const snapshot: HomeFormSnapshot = {
       courseId: raw.courseId,
       goalTime,
       unit: raw.unit,
       raceDate: raw.raceDate,
       raceStartTime: raw.raceStartTime,
     };
+    const goalPace = revivePace(raw.goalPace);
+    if (goalPace) snapshot.goalPace = goalPace;
+    if (isOneOf(raw.goalMode, GOAL_MODES)) snapshot.goalMode = raw.goalMode;
+    return snapshot;
   });
 
 // --- Display units (the one preference that outlives the tab) ------------
@@ -171,6 +203,7 @@ export interface DisplayUnits {
   speedUnit: SpeedUnit;
   weightUnit: WeightUnit;
   heightUnit: HeightUnit;
+  humidityUnit: HumidityUnit;
 }
 
 export const DISPLAY_UNITS: StateKey<DisplayUnits> = defineKey<DisplayUnits>(
@@ -182,14 +215,76 @@ export const DISPLAY_UNITS: StateKey<DisplayUnits> = defineKey<DisplayUnits>(
     if (!isOneOf(raw.speedUnit, ["kph", "mph"] as const)) return null;
     if (!isOneOf(raw.weightUnit, ["kg", "lb"] as const)) return null;
     if (!isOneOf(raw.heightUnit, ["cm", "ftin"] as const)) return null;
+    // `humidityUnit` arrived after this key shipped, so ABSENT has to mean
+    // "the default", not "reject". Rejecting would throw away the °F/lb/ft
+    // preference of everyone who set one before dew point existed — the exact
+    // annoyance this key was created to prevent. A present-but-invalid value
+    // is still rejected: that is corruption, not an older shape.
+    if (raw.humidityUnit !== undefined && !isOneOf(raw.humidityUnit, HUMIDITY_UNITS))
+      return null;
     return {
       tempUnit: raw.tempUnit,
       speedUnit: raw.speedUnit,
       weightUnit: raw.weightUnit,
       heightUnit: raw.heightUnit,
+      humidityUnit: raw.humidityUnit ?? "rh",
     };
   },
 );
+
+
+// --- Goal input mode (Time / Pace / GAP) ---------------------------------
+
+/**
+ * How the runner states their goal. `local`, not `session`: whether someone
+ * thinks in finish times or in pace is a fact about the runner, the same
+ * reasoning that puts °F here rather than in the tab.
+ *
+ * Kept out of DisplayUnits because it is not a unit — it changes which number
+ * the form treats as canonical, not how one number is rendered.
+ */
+export const GOAL_MODE: StateKey<GoalMode> = defineKey<GoalMode>(
+  "prefs.goalMode",
+  "local",
+  (raw) => (isOneOf(raw, GOAL_MODES) ? raw : null),
+);
+
+
+// --- Boston qualifier profile --------------------------------------------
+
+export interface BqProfile {
+  /** Age on Boston race day — see the header of src/lib/bq/standards.ts. */
+  age: number;
+  division: BqDivision;
+}
+
+/**
+ * Who the runner is, for the BQ standard. `local` for the same reason as
+ * `prefs.goalMode` and °F: age and division are facts about the runner, not
+ * about this visit, and re-entering them every time is the annoyance this
+ * scope exists to prevent.
+ *
+ * Deliberately NOT a URL param. Roadmap #3 set that precedent — a shared link
+ * stays a finish time, so every existing link and printed paceband keeps
+ * resolving — and age and division in a query string someone pastes into a
+ * group chat is a privacy smell besides. `src/lib/resultsParams.ts` is
+ * untouched by the BQ feature.
+ *
+ * The upper age bound is a sanity check on storage, not a claim about runners:
+ * it only has to reject a corrupt entry, and the top standards band is open at
+ * 80+ so anything past it resolves identically.
+ */
+export const BQ_PROFILE: StateKey<BqProfile> = defineKey<BqProfile>(
+  "prefs.bqProfile",
+  "local",
+  (raw) => {
+    if (!isRecord(raw)) return null;
+    if (!isIntegerInRange(raw.age, BQ_MIN_AGE, 120)) return null;
+    if (!isOneOf(raw.division, BQ_DIVISIONS)) return null;
+    return { age: raw.age, division: raw.division };
+  },
+);
+
 
 // --- Weather mode --------------------------------------------------------
 

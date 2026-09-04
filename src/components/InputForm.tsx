@@ -3,15 +3,33 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type {
   CourseId,
   CourseSummary,
+  GoalMode,
   GoalTimeInput,
+  PaceInput,
   PacingInput,
+  SplitStrategy,
+  StartStrategy,
   Unit,
   WeatherConditions,
 } from "@/types";
-import { DEFAULT_BODY, DEFAULT_FUELING } from "@/types";
-import { toSeconds } from "@/lib/units/time";
+import {
+  DEFAULT_BODY,
+  DEFAULT_FUELING,
+  DEFAULT_SPLIT,
+  DEFAULT_START,
+} from "@/types";
+import { SPLIT_OPTIONS, START_OPTIONS } from "@/lib/pacing/strategy";
+import { formatHMS, toSeconds } from "@/lib/units/time";
+import { formatPace } from "@/lib/units/pace";
+import {
+  avgPaceFromGoalTime,
+  gapPaceFromGoalTime,
+  goalTimeFromAvgPace,
+  goalTimeFromGapPace,
+} from "@/lib/pacing/effort";
 import { CourseSearch } from "@/components/CourseSearch";
 import { DatePicker } from "@/components/DatePicker";
+import { RaceYearPicker } from "@/components/RaceYearPicker";
 import { TimePicker } from "@/components/TimePicker";
 import { WeatherFields } from "@/components/WeatherFields";
 import { NumericField } from "@/components/NumericField";
@@ -27,6 +45,7 @@ import { useWeather } from "@/hooks/useWeather";
 import { HeightField } from "@/components/HeightField";
 import type {
   HeightUnit,
+  HumidityUnit,
   SpeedUnit,
   TempUnit,
   WeightUnit,
@@ -37,7 +56,17 @@ import {
   roundForDisplay,
 } from "@/lib/units/weather";
 import { useStoredState } from "@/hooks/useStoredState";
-import { DISPLAY_UNITS, HOME_FORM } from "@/lib/stateKeys";
+import { DISPLAY_UNITS, GOAL_MODE, HOME_FORM } from "@/lib/stateKeys";
+import {
+  defaultStartTime,
+  editionForDate,
+  editionForYear,
+  nextEdition,
+  resolveRaceDate,
+  startTimeIsAssumed,
+  weatherSourceFor,
+} from "@/lib/editions";
+import { todayISO } from "@/lib/units/date";
 
 // Two modes:
 // - Button mode (homepage): pass `onCalculate`. Owns its own state and
@@ -88,7 +117,32 @@ const eyebrowBase = "block text-xs uppercase tracking-wider font-medium";
 const numClass =
   "w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] px-3 py-3 text-center text-xl font-tabular font-medium focus:border-[var(--color-border-focus)] focus:outline-none transition-colors";
 
+// Matches RaceYearPicker's select, the only other one in the form.
+const selectClass =
+  "w-full appearance-none rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-surface)] px-4 py-3 pr-10 text-left text-base text-[var(--color-text-primary)] focus:border-[var(--color-border-focus)] focus:outline-none transition-colors";
+
 const DEFAULT_GOAL_TIME: GoalTimeInput = { hours: 4, minutes: 0, seconds: 0 };
+
+/**
+ * "GAP" rather than a spelled-out label: it is the term Strava and Garmin have
+ * already taught runners, and the methodology page names the same model.
+ */
+const GOAL_MODE_OPTIONS: readonly (readonly [GoalMode, string])[] = [
+  ["time", "Time"],
+  ["pace", "Pace"],
+  ["gap", "GAP"],
+];
+
+const DEFAULT_GOAL_PACE: PaceInput = { minutes: 5, seconds: 0 };
+
+function paceToSeconds(pace: PaceInput): number {
+  return pace.minutes * 60 + pace.seconds;
+}
+
+function secondsToPace(total: number): PaceInput {
+  const t = Math.max(0, Math.round(total));
+  return { minutes: Math.floor(t / 60), seconds: t % 60 };
+}
 
 function secondsToGoalTime(total: number): GoalTimeInput {
   const t = Math.max(0, Math.floor(total));
@@ -147,6 +201,19 @@ export function InputForm({
   );
   const goalTime = goalTimeEdit ?? restored?.goalTime ?? propGoalTime;
 
+  // How the goal is being STATED. All three modes collapse to the same
+  // `goalTimeSeconds` at `buildInput`, so the engine, the URL and every shared
+  // link are unaffected by which one is on screen.
+  //
+  // The mode's own value is what the form holds canonically, and that is the
+  // point rather than an implementation detail: in GAP mode the runner has
+  // said "I want to run this at 5:00/km grade-adjusted", so switching to a
+  // hillier course has to move the FINISH TIME and leave the pace alone. Were
+  // the finish time canonical, the answer would run the wrong way round.
+  const [goalModeEdit, setGoalModeEdit] = useState<GoalMode | null>(null);
+  const [storedGoalMode, storeGoalMode] = useStoredState(GOAL_MODE);
+  const [goalPaceEdit, setGoalPaceEdit] = useState<PaceInput | null>(null);
+
   const initialCourseId = initial?.courseId ?? catalog[0]?.id ?? "";
   const [courseIdEdit, setCourseIdEdit] = useState<CourseId | null>(null);
   // A restored slug is only honoured while the course is still selectable —
@@ -160,21 +227,127 @@ export function InputForm({
   const [unitEdit, setUnitEdit] = useState<Unit | null>(null);
   const unit = unitEdit ?? restored?.unit ?? initial?.unit ?? "km";
 
+  // The chosen course's flat-equivalent distance, which is what turns a
+  // grade-adjusted pace into a finish time. It rides on the catalog precisely
+  // so this works on the homepage too, where no geometry is loaded.
+  //
+  // Absent only when the catalog itself is empty — the no-database degradation
+  // Rule 9 requires — and in that case GAP is disabled rather than answered
+  // with a wrong number.
+  const courseEffort = catalog.find((c) => c.id === courseId)?.effort ?? null;
+  const gapAvailable = courseEffort !== null;
+
+  const goalMode: GoalMode = ((): GoalMode => {
+    const chosen = goalModeEdit ?? restored?.goalMode ?? storedGoalMode ?? "time";
+    // A stored preference for GAP must not strand the runner on a form whose
+    // goal field cannot be evaluated.
+    return chosen === "gap" && !gapAvailable ? "time" : chosen;
+  })();
+
+  // Seeded FROM the incoming goal time, not from a constant. A runner whose
+  // stored preference is Pace or GAP still has to see the goal the link they
+  // opened actually carries — the query string is authoritative for everything
+  // it can express, and a default pace here would silently overwrite it the
+  // moment the form emitted.
+  const propGoalPace = ((): PaceInput => {
+    if (!initial) return DEFAULT_GOAL_PACE;
+    if (goalMode === "pace")
+      return secondsToPace(avgPaceFromGoalTime(initial.goalTimeSeconds, unit));
+    if (goalMode === "gap" && courseEffort)
+      return secondsToPace(
+        gapPaceFromGoalTime(initial.goalTimeSeconds, courseEffort, unit),
+      );
+    return DEFAULT_GOAL_PACE;
+  })();
+
+  const goalPace = goalPaceEdit ?? restored?.goalPace ?? propGoalPace;
+  const goalPaceSeconds = paceToSeconds(goalPace);
+
+  /**
+   * A pace field seeded from a shared link that nothing has touched yet.
+   *
+   * It matters because the field holds WHOLE SECONDS: a 3:00:00 goal is
+   * 4:17.4/km grade-adjusted at Boston, which displays as 4:17 and multiplies
+   * back to 2:59:42. Eighteen seconds is small, but a shared link has to
+   * reproduce the chart it was sent for, exactly — so until the runner edits
+   * the pace, switches course or changes unit, the link's own number is what
+   * leaves here and the rounded pace is only what's displayed.
+   *
+   * The moment any of those three moves, the pace becomes canonical, which is
+   * what makes a course switch in GAP mode hold the pace and move the finish.
+   */
+  const paceIsPristine =
+    initial !== undefined &&
+    goalPaceEdit === null &&
+    restored?.goalPace === undefined &&
+    courseIdEdit === null &&
+    unitEdit === null;
+
+  // The one number that leaves this component. Every mode is a multiply.
+  const goalTimeSeconds = ((): number => {
+    if (goalMode === "time") return toSeconds(goalTime);
+    if (paceIsPristine) return initial.goalTimeSeconds;
+    if (goalMode === "pace") return goalTimeFromAvgPace(goalPaceSeconds, unit);
+    return courseEffort
+      ? goalTimeFromGapPace(goalPaceSeconds, courseEffort, unit)
+      : 0;
+  })();
+
+  // The form renders on the server too, and the server runs in UTC — reading
+  // the clock during render would make the first client paint disagree with the
+  // server's HTML. Start from UTC and correct to the visitor's own date after
+  // hydration, the same way RaceCalendar does. This matters here because
+  // "today" is what decides whether a stale date gets rolled forward.
+  const [today, setToday] = useState(() => new Date().toISOString().slice(0, 10));
+  // Same shape as RaceCalendar's correction, and setState-in-effect is the
+  // point rather than an oversight: the whole job is to re-render once the
+  // visitor's real date is known, and reading the clock during render is the
+  // thing that would cause the mismatch. Runs once — a session spanning
+  // midnight is not worth watching for.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    const local = todayISO();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (local !== today) setToday(local);
+  }, []);
+
   // Seeded from the chosen course's next scheduled edition — the first thing
-  // the edition table buys the user. A date carried in from a shared URL
-  // always wins.
+  // the edition table buys the user.
+  //
+  // `resolveRaceDate` owns the precedence, and the rule that matters is that a
+  // date from a shared URL always wins while a date left in session storage
+  // only wins until it is past. That is the "the date updates itself" case: a
+  // snapshot from an earlier visit rolls forward to the next edition rather
+  // than pacing a race that has since been run.
   const [raceDateEdit, setRaceDateEdit] = useState<string | null>(null);
+  const [customDate, setCustomDate] = useState(false);
+  const selectedEditions =
+    catalog.find((c) => c.id === courseId)?.editions ?? [];
   const raceDate =
     raceDateEdit ??
-    restored?.raceDate ??
-    initial?.raceDateISO ??
-    catalog.find((c) => c.id === initialCourseId)?.nextRaceDateISO ??
-    "";
+    resolveRaceDate({
+      editions: selectedEditions,
+      urlDate: initial?.raceDateISO,
+      restoredDate: restored?.raceDate,
+      todayISO: today,
+    });
+
+  // The edition behind the currently-shown date, if any. Null for a custom
+  // date the runner picked themselves.
+  const currentEdition = editionForDate(selectedEditions, raceDate);
+
   const [raceStartTimeEdit, setRaceStartTimeEdit] = useState<string | null>(
     null,
   );
+  // Falls back to an assumed 7:30 local start rather than staying empty. The
+  // seed still refuses to guess an hour (a wrong one keys the weather to the
+  // wrong conditions), but an empty field left the weather panel dark for most
+  // races — so the guess is made here, where the UI can label it as one.
   const raceStartTime =
-    raceStartTimeEdit ?? restored?.raceStartTime ?? initial?.raceStartTime ?? "";
+    raceStartTimeEdit ??
+    restored?.raceStartTime ??
+    initial?.raceStartTime ??
+    defaultStartTime(currentEdition);
   // Weather + body metrics are one section, not two — the body feeds the wind
   // drag model, so they're a single setting. It's always open: on the
   // dashboard these are the controls people came to adjust, and hiding them
@@ -197,6 +370,15 @@ export function InputForm({
   );
   const [carbsPerHour, setCarbsPerHour] = useState<number>(
     initial?.fueling?.carbsPerHour ?? DEFAULT_FUELING.carbsPerHour,
+  );
+
+  // Strategy is dashboard-only, so the hero always builds the defaults — which
+  // is why it is not part of the persisted HOME_FORM snapshot either.
+  const [split, setSplit] = useState<SplitStrategy>(
+    initial?.split ?? DEFAULT_SPLIT,
+  );
+  const [startStrategy, setStartStrategy] = useState<StartStrategy>(
+    initial?.start ?? DEFAULT_START,
   );
 
   // Per-field display units. Seeded once from the distance unit so an imperial
@@ -226,6 +408,12 @@ export function InputForm({
     heightUnitEdit ??
     storedUnits?.heightUnit ??
     (initial?.unit === "miles" ? "ftin" : "cm");
+  // Unlike the four above, this has no imperial/metric tell to guess from —
+  // dew point is a preference about how you think about humidity, not about
+  // where you live — so it starts at RH for everyone.
+  const [humidityUnitEdit, setHumidityUnitEdit] =
+    useState<HumidityUnit | null>(null);
+  const humidityUnit = humidityUnitEdit ?? storedUnits?.humidityUnit ?? "rh";
 
   // Write-through. An effect rather than a write inside each setter, because
   // several fields move together — picking a course also moves the race date —
@@ -239,19 +427,31 @@ export function InputForm({
   // an unchanged string, so nothing re-renders.
   const formTouched =
     goalTimeEdit !== null ||
+    goalPaceEdit !== null ||
+    goalModeEdit !== null ||
     courseIdEdit !== null ||
     unitEdit !== null ||
     raceDateEdit !== null ||
     raceStartTimeEdit !== null;
   useEffect(() => {
     if (!persist || !formTouched) return;
-    storeForm({ courseId, goalTime, unit, raceDate, raceStartTime });
+    storeForm({
+      courseId,
+      goalTime,
+      goalPace,
+      goalMode,
+      unit,
+      raceDate,
+      raceStartTime,
+    });
   }, [
     persist,
     formTouched,
     storeForm,
     courseId,
     goalTime,
+    goalPace,
+    goalMode,
     unit,
     raceDate,
     raceStartTime,
@@ -261,11 +461,20 @@ export function InputForm({
     tempUnitEdit !== null ||
     speedUnitEdit !== null ||
     weightUnitEdit !== null ||
-    heightUnitEdit !== null;
+    heightUnitEdit !== null ||
+    humidityUnitEdit !== null;
   useEffect(() => {
     if (!unitsTouched) return;
-    storeUnits({ tempUnit, speedUnit, weightUnit, heightUnit });
-  }, [unitsTouched, storeUnits, tempUnit, speedUnit, weightUnit, heightUnit]);
+    storeUnits({ tempUnit, speedUnit, weightUnit, heightUnit, humidityUnit });
+  }, [
+    unitsTouched,
+    storeUnits,
+    tempUnit,
+    speedUnit,
+    weightUnit,
+    heightUnit,
+    humidityUnit,
+  ]);
 
   const selected = catalog.find((c) => c.id === courseId) ?? catalog[0];
 
@@ -284,6 +493,11 @@ export function InputForm({
     raceDate || undefined,
     raceStartTime || undefined,
     initial?.weather,
+    // A past date we only ESTIMATED (derived from the series' recurrence rule
+    // rather than recorded) may be the wrong day by a week, so it is answered
+    // with a climate average and described as typical — not passed off as the
+    // conditions on a day we aren't sure of.
+    weatherSourceFor(currentEdition, raceDate, today) === "typical",
     // Live mode only. The hero hides the whole weather section, so there is no
     // mode to remember there — and restoring "forecast" would fire a forecast
     // request on the home page for a race nobody has committed to yet.
@@ -294,15 +508,34 @@ export function InputForm({
     onHourlyChange?.(weather.hourly);
   }, [onHourlyChange, weather.hourly]);
 
-  // Switching course moves the date to that race's next edition. Done in the
-  // handler rather than an effect so there is no cascading render, and only
-  // when the field is empty or still holds the previous course's suggestion —
-  // a date the runner typed themselves is never overwritten.
+  // Switching course carries the YEAR across where the new race has one, and
+  // otherwise moves to its next edition. Carrying the year is what makes the
+  // picker feel like a year picker: someone comparing Boston 2026 against
+  // Chicago 2026 shouldn't be bounced to 2027 by the switch.
+  //
+  // Done in the handler rather than an effect so there is no cascading render.
+  // A custom date the runner picked themselves is never overwritten.
   function selectCourse(nextId: CourseId) {
-    const prev = catalog.find((c) => c.id === courseId)?.nextRaceDateISO;
-    const next = catalog.find((c) => c.id === nextId)?.nextRaceDateISO;
     setCourseIdEdit(nextId);
-    if (next && (raceDate === "" || raceDate === prev)) setRaceDateEdit(next);
+    if (customDate) return;
+    // A date that matches none of this course's editions is one the runner
+    // chose themselves — from a shared link or the custom picker — and is
+    // never overwritten by a course switch.
+    if (raceDate !== "" && !currentEdition) return;
+
+    const nextEditions = catalog.find((c) => c.id === nextId)?.editions ?? [];
+    const keepYear = currentEdition
+      ? editionForYear(nextEditions, currentEdition.year)
+      : null;
+    const target = keepYear ?? nextEdition(nextEditions, today);
+    if (!target) return;
+
+    setRaceDateEdit(target.raceDateISO);
+    // Follow the new edition's published start time. Left alone, the previous
+    // race's 9:00 would silently key this one's weather to the wrong hour.
+    if (raceStartTimeEdit === null || raceStartTimeEdit === defaultStartTime(currentEdition)) {
+      setRaceStartTimeEdit(defaultStartTime(target));
+    }
   }
 
   // A pin on the home map routes through the same handler as the dropdown, so
@@ -320,21 +553,78 @@ export function InputForm({
 
   const { hours, minutes, seconds } = goalTime;
 
+  /**
+   * Switch how the goal is stated, carrying the CURRENT goal across so the
+   * number on screen never jumps: 4:00:00 at Boston becomes 5:41/km, which
+   * becomes 5:43/km grade-adjusted. The runner is changing their units, not
+   * their goal.
+   */
+  function selectGoalMode(next: GoalMode) {
+    if (next === goalMode) return;
+    if (!isValid) {
+      // Mid-edit and unparseable — switch the view without inventing a
+      // conversion from a half-typed number.
+      setGoalModeEdit(next);
+      storeGoalMode(next);
+      return;
+    }
+    if (next === "time") {
+      setGoalTimeEdit(secondsToGoalTime(goalTimeSeconds));
+    } else if (next === "pace") {
+      setGoalPaceEdit(secondsToPace(avgPaceFromGoalTime(goalTimeSeconds, unit)));
+    } else if (courseEffort) {
+      setGoalPaceEdit(
+        secondsToPace(gapPaceFromGoalTime(goalTimeSeconds, courseEffort, unit)),
+      );
+    }
+    setGoalModeEdit(next);
+    storeGoalMode(next);
+  }
+
+  // Keep the PHYSICAL pace when the distance unit changes: 5:00/km is 8:03/mi,
+  // not 5:00/mi. In time mode there is nothing to convert.
+  function selectUnit(next: Unit) {
+    if (next !== unit && goalMode !== "time" && isValid) {
+      setGoalPaceEdit(
+        secondsToPace(
+          goalMode === "pace"
+            ? avgPaceFromGoalTime(goalTimeSeconds, next)
+            : courseEffort
+              ? gapPaceFromGoalTime(goalTimeSeconds, courseEffort, next)
+              : goalPaceSeconds,
+        ),
+      );
+    }
+    setUnitEdit(next);
+  }
+
   const validationMessage = ((): string | null => {
-    if (!Number.isInteger(hours) || hours < 0 || hours > 9)
-      return "Hours must be 0–9";
-    if (!Number.isInteger(minutes) || minutes < 0 || minutes > 59)
-      return "Minutes must be 0–59";
-    if (!Number.isInteger(seconds) || seconds < 0 || seconds > 59)
-      return "Seconds must be 0–59";
-    if (toSeconds(goalTime) <= 0) return "Goal time must be greater than 0";
+    if (goalMode === "time") {
+      if (!Number.isInteger(hours) || hours < 0 || hours > 9)
+        return "Hours must be 0–9";
+      if (!Number.isInteger(minutes) || minutes < 0 || minutes > 59)
+        return "Minutes must be 0–59";
+      if (!Number.isInteger(seconds) || seconds < 0 || seconds > 59)
+        return "Seconds must be 0–59";
+      if (toSeconds(goalTime) <= 0) return "Goal time must be greater than 0";
+      return null;
+    }
+    if (!Number.isInteger(goalPace.minutes) || goalPace.minutes < 0 || goalPace.minutes > 59)
+      return "Pace minutes must be 0–59";
+    if (!Number.isInteger(goalPace.seconds) || goalPace.seconds < 0 || goalPace.seconds > 59)
+      return "Pace seconds must be 0–59";
+    if (goalPaceSeconds <= 0) return "Pace must be greater than 0";
+    // The engine takes a finish time, and every downstream consumer assumes a
+    // real one. A 0:01/km pace is arithmetically fine and physically absurd.
+    if (goalTimeSeconds <= 0 || goalTimeSeconds > 10 * 3600)
+      return "That pace is outside the range this calculator covers";
     return null;
   })();
   const isValid = validationMessage === null;
 
   const buildInput = (): PacingInput => {
     const input: PacingInput = {
-      goalTimeSeconds: toSeconds(goalTime),
+      goalTimeSeconds,
       courseId,
       unit,
     };
@@ -356,6 +646,9 @@ export function InputForm({
     }
     // Presence is the on/off signal — see PacingInput.fueling.
     if (fuelingEnabled) input.fueling = { carbsPerHour };
+    // Set only when off-default, so a default chart's URL is unchanged.
+    if (split !== DEFAULT_SPLIT) input.split = split;
+    if (startStrategy !== DEFAULT_START) input.start = startStrategy;
     return input;
   };
 
@@ -368,9 +661,9 @@ export function InputForm({
   }, [
     live,
     isValid,
-    hours,
-    minutes,
-    seconds,
+    // The derived seconds cover every mode's inputs at once — including a
+    // course switch in GAP mode, where the pace holds and the finish moves.
+    goalTimeSeconds,
     courseId,
     unit,
     raceDate,
@@ -381,6 +674,8 @@ export function InputForm({
     weather.conditions,
     fuelingEnabled,
     carbsPerHour,
+    split,
+    startStrategy,
   ]);
 
   const update = (key: keyof GoalTimeInput) => (value: string) => {
@@ -389,6 +684,27 @@ export function InputForm({
     const n = digits === "" ? NaN : Number(digits);
     setGoalTimeEdit({ ...goalTime, [key]: n });
   };
+
+  const updatePace = (key: keyof PaceInput) => (value: string) => {
+    const digits = value.replace(/\D/g, "");
+    const n = digits === "" ? NaN : Number(digits);
+    setGoalPaceEdit({ ...goalPace, [key]: n });
+  };
+
+  const goalFieldLabel =
+    goalMode === "time"
+      ? "Goal finish time"
+      : goalMode === "pace"
+        ? "Goal average pace"
+        : "Goal grade-adjusted pace";
+
+  // Both the finish time and the average pace, because in GAP mode they are
+  // two different answers and the runner wants each: the finish is what they
+  // will be told at the line, the average is what their watch will show.
+  const goalSummary = `${formatHMS(goalTimeSeconds)} finish · ${formatPace(
+    avgPaceFromGoalTime(goalTimeSeconds, unit),
+    unit,
+  )} average`;
 
   const handleSubmit = () => {
     if (!isValid) return;
@@ -416,32 +732,87 @@ export function InputForm({
           )}
         </div>
       )}
+      {/* Three ways to say the same thing. The engine only ever receives a
+          finish time, so the mode is a view over one value — which is why a
+          shared link never has to carry it. */}
       <div>
-        <label className={`mb-2 ${eyebrowClass}`}>Goal finish time</label>
-        <div className="grid grid-cols-3 gap-3">
-          {(
-            [
-              ["hours", "HH", hours, 9],
-              ["minutes", "MM", minutes, 59],
-              ["seconds", "SS", seconds, 59],
-            ] as const
-          ).map(([key, ph, val, max]) => (
-            <div key={key}>
-              <input
-                type="number"
-                inputMode="numeric"
-                min={0}
-                max={max}
-                placeholder={ph}
-                aria-label={key}
-                value={Number.isNaN(val) ? "" : val}
-                onChange={(e) => update(key)(e.target.value)}
-                className={numClass}
-              />
-              <span className={`mt-2 text-center ${eyebrowClass}`}>{key}</span>
-            </div>
-          ))}
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <label className={eyebrowClass}>{goalFieldLabel}</label>
+          <UnitToggle
+            label="Goal input mode"
+            value={goalMode}
+            options={GOAL_MODE_OPTIONS}
+            onChange={selectGoalMode}
+            disabledValues={gapAvailable ? undefined : ["gap"]}
+          />
         </div>
+        {goalMode === "time" ? (
+          <div className="grid grid-cols-3 gap-3">
+            {(
+              [
+                ["hours", "HH", hours, 9],
+                ["minutes", "MM", minutes, 59],
+                ["seconds", "SS", seconds, 59],
+              ] as const
+            ).map(([key, ph, val, max]) => (
+              <div key={key}>
+                <input
+                  type="number"
+                  inputMode="numeric"
+                  min={0}
+                  max={max}
+                  placeholder={ph}
+                  aria-label={key}
+                  value={Number.isNaN(val) ? "" : val}
+                  onChange={(e) => update(key)(e.target.value)}
+                  className={numClass}
+                />
+                <span className={`mt-2 text-center ${eyebrowClass}`}>{key}</span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-[1fr_1fr_auto] items-start gap-3">
+            {(
+              [
+                ["minutes", "MM", goalPace.minutes],
+                ["seconds", "SS", goalPace.seconds],
+              ] as const
+            ).map(([key, ph, val]) => (
+              <div key={key}>
+                <input
+                  type="number"
+                  inputMode="numeric"
+                  min={0}
+                  max={59}
+                  placeholder={ph}
+                  aria-label={`pace ${key}`}
+                  value={Number.isNaN(val) ? "" : val}
+                  onChange={(e) => updatePace(key)(e.target.value)}
+                  className={numClass}
+                />
+                <span className={`mt-2 text-center ${eyebrowClass}`}>{key}</span>
+              </div>
+            ))}
+            <span
+              className={`py-3 text-xl font-tabular ${
+                live
+                  ? "text-[var(--color-text-tertiary)]"
+                  : "text-[var(--color-text-secondary)]"
+              }`}
+            >
+              {unit === "km" ? "/km" : "/mi"}
+            </span>
+          </div>
+        )}
+        {/* What the entered pace actually works out to. In GAP mode this is
+            where the course's own difficulty first becomes visible — the same
+            grade-adjusted pace is a different finish time at every race. */}
+        {goalMode !== "time" && isValid && (
+          <p className="mt-3 text-sm text-[var(--color-text-secondary)]">
+            {goalSummary}
+          </p>
+        )}
       </div>
 
       <div>
@@ -460,19 +831,46 @@ export function InputForm({
           full date in a half-width field. */}
       <div className="space-y-6">
         <div>
-          <label htmlFor="race-date" className={`mb-2 ${eyebrowClass}`}>
-            Race date
+          <label htmlFor="race-year" className={`mb-2 ${eyebrowClass}`}>
+            Race year
           </label>
-          {/* Homepage only: these two sit low in the hero band, so opening
-              downward ran the panels off the bottom of the photo. The
-              dashboard sidebar has room below and keeps the default. */}
-          <DatePicker
-            id="race-date"
+          {/* The year is the control; the date comes with it. Picking a day the
+              race isn't run on was never useful, and a stale date was the whole
+              bug this replaces. */}
+          <RaceYearPicker
+            id="race-year"
+            editions={selectedEditions}
             value={raceDate}
-            onChange={setRaceDateEdit}
-            placeholder="Select a date"
-            placement={live ? "bottom" : "top"}
+            custom={customDate}
+            todayISO={today}
+            onSelectEdition={(e) => {
+              setCustomDate(false);
+              setRaceDateEdit(e.raceDateISO);
+              // A published start time for the chosen year replaces whatever
+              // the previous year assumed.
+              if (
+                raceStartTimeEdit === null ||
+                raceStartTimeEdit === defaultStartTime(currentEdition)
+              ) {
+                setRaceStartTimeEdit(defaultStartTime(e));
+              }
+            }}
+            onSelectCustom={() => setCustomDate(true)}
           />
+          {customDate && (
+            <div className="mt-3">
+              {/* Homepage only: these sit low in the hero band, so opening
+                  downward ran the panels off the bottom of the photo. The
+                  dashboard sidebar has room below and keeps the default. */}
+              <DatePicker
+                id="race-date"
+                value={raceDate}
+                onChange={setRaceDateEdit}
+                placeholder="Select a date"
+                placement={live ? "bottom" : "top"}
+              />
+            </div>
+          )}
         </div>
         <div>
           <label htmlFor="race-start" className={`mb-2 ${eyebrowClass}`}>
@@ -498,7 +896,7 @@ export function InputForm({
             ["km", "km"],
             ["miles", "mi"],
           ]}
-          onChange={(value) => setUnitEdit(value as Unit)}
+          onChange={(value) => selectUnit(value as Unit)}
           variant="prominent"
         />
       </div>
@@ -519,7 +917,10 @@ export function InputForm({
               onTempUnitChange={setTempUnitEdit}
               speedUnit={speedUnit}
               onSpeedUnitChange={setSpeedUnitEdit}
+              humidityUnit={humidityUnit}
+              onHumidityUnitChange={setHumidityUnitEdit}
               hasTiming={Boolean(raceDate && raceStartTime)}
+              startTimeAssumed={startTimeIsAssumed(currentEdition, raceStartTime)}
             />
             {/* Body metrics feed the wind drag model, so they live in this
                 section rather than a separate "Advanced" disclosure — and they
@@ -575,6 +976,74 @@ export function InputForm({
                 wind affects your pace.
               </p>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Dashboard-only, like Weather and Fueling: the hero is core race setup
+          plus Calculate, and both controls default to the behaviour the app
+          has always had — so hiding them here changes nothing about what the
+          homepage produces. */}
+      {live && (
+        <div className="border-t border-[var(--color-border)] pt-6">
+          <h3 className={eyebrowClass}>Race Strategy</h3>
+          <div className="mt-3 space-y-4">
+            <div>
+              <label htmlFor="split-strategy" className={`mb-2 ${eyebrowClass}`}>
+                Split strategy
+              </label>
+              <div className="relative">
+                <select
+                  id="split-strategy"
+                  value={split}
+                  onChange={(e) => setSplit(e.target.value as SplitStrategy)}
+                  className={selectClass}
+                >
+                  {SPLIT_OPTIONS.map(([value, label]) => (
+                    <option key={value} value={value}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[var(--color-text-secondary)]"
+                >
+                  ▾
+                </span>
+              </div>
+            </div>
+            <div>
+              <label htmlFor="start-strategy" className={`mb-2 ${eyebrowClass}`}>
+                Start
+              </label>
+              <div className="relative">
+                <select
+                  id="start-strategy"
+                  value={startStrategy}
+                  onChange={(e) =>
+                    setStartStrategy(e.target.value as StartStrategy)
+                  }
+                  className={selectClass}
+                >
+                  {START_OPTIONS.map(([value, label]) => (
+                    <option key={value} value={value}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[var(--color-text-secondary)]"
+                >
+                  ▾
+                </span>
+              </div>
+            </div>
+            <p className="text-xs text-[var(--color-text-tertiary)]">
+              Whatever you choose here, the splits still add up to your goal
+              finish time — holding back early is paid back later in the race.
+            </p>
           </div>
         </div>
       )}

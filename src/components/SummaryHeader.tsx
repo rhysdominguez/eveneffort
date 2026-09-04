@@ -3,9 +3,13 @@ import { usePopover } from "@/hooks/usePopover";
 import { PrintModal } from "@/components/PrintModal";
 import { OrderModal } from "@/components/OrderModal";
 import type { PacingResult } from "@/hooks/usePacingChart";
+import type { CourseTerrain } from "@/types";
+import type { BqStatus } from "@/lib/bq/qualify";
+import { DifficultyBadge } from "@/components/DifficultyBadge";
+import { BqBadge } from "@/components/BqBadge";
 import { formatHMS } from "@/lib/units/time";
 import { formatPace } from "@/lib/units/pace";
-import { MARATHON_KM, MILE_IN_KM } from "@/lib/pacing/segments";
+import { MARATHON_KM, MARATHON_MILES } from "@/lib/pacing/segments";
 import { buildResultsQuery } from "@/lib/resultsParams";
 import { track } from "@/lib/analytics";
 
@@ -13,9 +17,23 @@ interface Props {
   result: PacingResult;
   courseName: string;
   location?: string;
+  /** The course's climbing, for the difficulty badge under the name. */
+  terrain?: CourseTerrain;
+  /**
+   * Flat-equivalent cost of the course: 1.02 means it costs 2% more than a
+   * flat marathon. Optional because both this and `terrain` are derived from
+   * the geometry, which the printed paceband's own render path doesn't hold.
+   */
+  effortMultiplier?: number;
+  /**
+   * Whether the goal time clears this runner's Boston standard on this course.
+   *
+   * Present only once someone has told /boston-qualifier their age and
+   * division — no stored profile, no pill. The results page does not ask, and
+   * does not nag someone who has never expressed an interest in Boston.
+   */
+  bq?: BqStatus | null;
 }
-
-const MARATHON_MILES = MARATHON_KM / MILE_IN_KM;
 
 const eyebrowClass =
   "block text-xs uppercase tracking-wider text-[var(--color-text-tertiary)] font-medium";
@@ -40,7 +58,28 @@ function Stat({
   );
 }
 
-export function SummaryHeader({ result, courseName, location }: Props) {
+/**
+ * The effort multiplier as plain English. Under half a percent either way is
+ * reported as flat-equivalent rather than as a number: at that size it is
+ * inside the noise of how the course was digitized, and "0.1% faster" invites
+ * a precision this does not have.
+ */
+export function effortSummary(multiplier: number): string {
+  const percent = (multiplier - 1) * 100;
+  if (Math.abs(percent) < 0.5) return "Costs about the same as a flat course";
+  return percent > 0
+    ? `Costs ${percent.toFixed(1)}% more than a flat course`
+    : `Costs ${Math.abs(percent).toFixed(1)}% less than a flat course`;
+}
+
+export function SummaryHeader({
+  result,
+  courseName,
+  location,
+  terrain,
+  effortMultiplier,
+  bq,
+}: Props) {
   const printPopover = usePopover();
   const orderPopover = usePopover();
   const { goalTimeSeconds, unit } = result.input;
@@ -66,6 +105,27 @@ export function SummaryHeader({ result, courseName, location }: Props) {
             <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
               {location}
             </p>
+          )}
+          {/* What the ground does, and what it costs — the two halves of a
+              course's character. print:hidden with the rest of the chrome:
+              the paceband carries splits, not commentary. */}
+          {terrain && (
+            <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 print:hidden">
+              <DifficultyBadge terrain={terrain} />
+              {effortMultiplier !== undefined && (
+                <span className="text-xs text-[var(--color-text-tertiary)]">
+                  {effortSummary(effortMultiplier)}
+                </span>
+              )}
+            </div>
+          )}
+          {/* The Boston verdict is its own row rather than a fourth chip on
+              the one above: that row says what the COURSE is, this one says
+              what this goal time on it would mean for this runner. */}
+          {bq && (
+            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2 print:hidden">
+              <BqBadge status={bq} />
+            </div>
           )}
         </div>
         {/* Two peer entry points to the paceband, each opening its own small

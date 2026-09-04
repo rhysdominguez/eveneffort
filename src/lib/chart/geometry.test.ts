@@ -3,11 +3,12 @@ import {
   distanceAtViewBoxX,
   nearestPointIndex,
   rowIndexForDistance,
+  truncateProfileToMarathon,
   formatFeet,
   formatSignedFeet,
   formatChartDistance,
 } from "./geometry";
-import { MILE_IN_KM } from "@/lib/pacing/segments";
+import { MARATHON_KM, MILE_IN_KM } from "@/lib/pacing/segments";
 
 // The chart's real plot geometry (M.left / PLOT_W in ElevationChart).
 const LEFT = 56;
@@ -100,6 +101,78 @@ describe("rowIndexForDistance", () => {
 
   it("returns -1 when there are no rows", () => {
     expect(rowIndexForDistance(10, "km", 0)).toBe(-1);
+  });
+});
+
+describe("truncateProfileToMarathon", () => {
+  it("cuts a long track at the finish line and interpolates the endpoint", () => {
+    // Bend's shape: overshoots to 42.7. The last kept raw point is 42.0.
+    const profile: [number, number][] = [
+      [0, 1100],
+      [21, 1150],
+      [42, 1200],
+      [42.6, 1260],
+      [42.7114, 1101],
+    ];
+    const out = truncateProfileToMarathon(profile);
+
+    expect(out[out.length - 1][0]).toBe(MARATHON_KM);
+    expect(out.every(([d]) => d <= MARATHON_KM)).toBe(true);
+    // 42.195 sits 0.195/0.6 = 32.5% of the way from 42.0 to 42.6.
+    expect(out[out.length - 1][1]).toBeCloseTo(1200 + 0.325 * 60, 6);
+    // Everything up to the finish survives untouched.
+    expect(out.slice(0, 3)).toEqual([
+      [0, 1100],
+      [21, 1150],
+      [42, 1200],
+    ]);
+  });
+
+  it("leaves a track that ends short of the finish untouched", () => {
+    // Busselton ends at 41.5158 — no synthetic tail is invented.
+    const profile: [number, number][] = [
+      [0, 3],
+      [20, 8],
+      [41.5158, 4],
+    ];
+    expect(truncateProfileToMarathon(profile)).toEqual(profile);
+  });
+
+  it("leaves a track that lands exactly on the finish untouched", () => {
+    const profile: [number, number][] = [
+      [0, 3],
+      [MARATHON_KM, 9],
+    ];
+    expect(truncateProfileToMarathon(profile)).toEqual(profile);
+  });
+
+  it("does not duplicate a point already sitting on the finish line", () => {
+    const profile: [number, number][] = [
+      [0, 3],
+      [MARATHON_KM, 9],
+      [42.9, 11],
+    ];
+    const out = truncateProfileToMarathon(profile);
+    expect(out).toEqual([
+      [0, 3],
+      [MARATHON_KM, 9],
+    ]);
+  });
+
+  it("keeps distances strictly ascending", () => {
+    const profile: [number, number][] = [
+      [0, 0],
+      [42.19, 5],
+      [42.8, 9],
+    ];
+    const out = truncateProfileToMarathon(profile);
+    for (let i = 1; i < out.length; i++) {
+      expect(out[i][0]).toBeGreaterThan(out[i - 1][0]);
+    }
+  });
+
+  it("handles an empty profile", () => {
+    expect(truncateProfileToMarathon([])).toEqual([]);
   });
 });
 

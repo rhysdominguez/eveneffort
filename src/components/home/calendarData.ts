@@ -11,6 +11,7 @@
 import type { EditionSummary } from "@/types";
 import { DEFAULT_FUELING } from "@/types";
 import { buildResultsHref } from "@/lib/resultsParams";
+import { isPastISO } from "@/lib/editions";
 import { MONTH_NAMES, addMonths, formatDateDisplay } from "@/lib/units/date";
 
 /** A 1-based year/month pair — the calendar's view state. */
@@ -60,10 +61,14 @@ export function editionsInMonth(
     .sort((a, b) => a.raceDateISO.localeCompare(b.raceDateISO));
 }
 
-/** Is this date strictly before today? Today itself is not past. */
-export function isPastDate(iso: string, todayISO: string): boolean {
-  return iso < todayISO;
-}
+/**
+ * Is this date strictly before today? Today itself is not past.
+ *
+ * Re-exported under its original name: the rule is now shared with the race
+ * year picker (src/lib/editions.ts), which needs the same notion of "past" to
+ * decide whether to roll a stale date forward.
+ */
+export { isPastISO as isPastDate } from "@/lib/editions";
 
 /**
  * How far the arrows may travel: the span of the seeded editions, always
@@ -102,7 +107,7 @@ export function initialMonth(
   todayISO: string,
 ): YearMonth {
   const upcoming = editions
-    .filter((e) => !isPastDate(e.raceDateISO, todayISO))
+    .filter((e) => !isPastISO(e.raceDateISO, todayISO))
     .sort((a, b) => a.raceDateISO.localeCompare(b.raceDateISO));
   const target = upcoming[0]?.raceDateISO ?? todayISO;
   return parseMonthKey(monthKeyOf(target));

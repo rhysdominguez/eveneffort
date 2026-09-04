@@ -1,11 +1,13 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { PaceChartRow, Unit } from "@/types";
-import { MILE_IN_KM } from "@/lib/pacing/segments";
+import { MARATHON_KM, MILE_IN_KM } from "@/lib/pacing/segments";
+import { M_TO_FT } from "@/lib/units/elevation";
 import {
   distanceAtViewBoxX,
   nearestPointIndex,
   rowIndexForDistance,
+  truncateProfileToMarathon,
   formatFeet,
   formatSignedFeet,
   formatChartDistance,
@@ -32,8 +34,6 @@ const PLOT_W = VB_W - M.left - M.right;
 // Reference plot height — defines the pixel spacing between gridlines.
 // Kept constant so adding top headroom never squeezes the existing chart.
 const BASE_PLOT_H = BASE_VB_H - M.top - M.bottom;
-
-const M_TO_FT = 3.28084;
 
 // The vertical axis never spans less than this, even for pancake-flat
 // courses — keeps small rolls from being visually exaggerated.
@@ -83,11 +83,14 @@ export function ElevationChart({ profile, unit, rows }: Props) {
   } = useMemo(() => {
     // Elevation is always shown in feet, regardless of pace unit. Plot
     // every raw trackpoint — this is what gives the chart its ruggedness.
-    const samples = profile.map(([distKm, elevM]) => ({
+    const samples = truncateProfileToMarathon(profile).map(([distKm, elevM]) => ({
       distKm,
       elev: elevM * M_TO_FT,
     }));
-    const maxDist = samples[samples.length - 1].distKm;
+    // The axis is the race, not the track: always 0 → 42.195 km, so the chart
+    // agrees with the "42.20 km" stat and reads the same on every course.
+    // A track that ends short simply stops before the right edge.
+    const maxDist = MARATHON_KM;
 
     const elevVals = samples.map((s) => s.elev);
     let dMin = Math.min(...elevVals);

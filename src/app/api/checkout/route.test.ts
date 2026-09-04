@@ -15,6 +15,15 @@ vi.mock("@/db/queries", () => ({
   getCourseBySlug: (slug: string) => getCourseBySlug(slug),
 }));
 
+const makeUserCoursePermanent = vi.fn();
+vi.mock("@/db/userCourses", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/db/userCourses")>();
+  return {
+    ...actual,
+    makeUserCoursePermanent: (token: string) => makeUserCoursePermanent(token),
+  };
+});
+
 import { POST } from "./route";
 
 const VALID_PARAMS = "courseId=boston&unit=km&goalTimeSeconds=10800";
@@ -34,6 +43,7 @@ describe("POST /api/checkout", () => {
     process.env.STRIPE_PRICE_ID = "price_test_123";
     process.env.NEXT_PUBLIC_SITE_URL = "https://eveneffort.com";
     getCourseBySlug.mockResolvedValue({ displayName: "Boston Marathon" });
+    makeUserCoursePermanent.mockResolvedValue(undefined);
     create.mockResolvedValue({ url: "https://checkout.stripe.com/c/pay/abc" });
   });
 
@@ -99,6 +109,52 @@ describe("POST /api/checkout", () => {
     expect(payload.metadata.courseName).toBe("Boston Marathon");
     // Same record on the payment, which is what fulfillment actually reads.
     expect(payload.payment_intent_data.metadata).toEqual(payload.metadata);
+  });
+
+  // ROADMAP #10: an uploaded course lapses after 90 days, and a printed
+  // paceband has its URL on it. Paying is what makes it permanent, so the
+  // promotion has to happen before the Stripe session exists and has to be
+  // allowed to fail the order.
+  describe("uploaded courses", () => {
+    const UPLOAD_PARAMS =
+      "courseId=u-abcdefghijklmnopqrstuv&unit=km&goalTimeSeconds=10800";
+
+    it("makes the course permanent before creating the session", async () => {
+      getCourseBySlug.mockResolvedValue({ displayName: "My Backyard Marathon" });
+      const res = await POST(post({ params: UPLOAD_PARAMS }));
+
+      expect(res.status).toBe(200);
+      expect(makeUserCoursePermanent).toHaveBeenCalledWith(
+        "u-abcdefghijklmnopqrstuv",
+      );
+      expect(makeUserCoursePermanent.mock.invocationCallOrder[0]).toBeLessThan(
+        create.mock.invocationCallOrder[0],
+      );
+    });
+
+    it("puts the uploaded name on the order record", async () => {
+      getCourseBySlug.mockResolvedValue({ displayName: "My Backyard Marathon" });
+      await POST(post({ params: UPLOAD_PARAMS }));
+      expect(create.mock.calls[0][0].metadata.courseName).toBe(
+        "My Backyard Marathon",
+      );
+    });
+
+    it("refuses the charge when the course cannot be made permanent", async () => {
+      getCourseBySlug.mockResolvedValue({ displayName: "My Backyard Marathon" });
+      makeUserCoursePermanent.mockRejectedValue(new Error("gone"));
+
+      const res = await POST(post({ params: UPLOAD_PARAMS }));
+      expect(res.status).toBe(502);
+      // The whole point: no Stripe session for a link we cannot promise.
+      expect(create).not.toHaveBeenCalled();
+    });
+
+    it("leaves seeded courses alone", async () => {
+      await POST(post({ params: VALID_PARAMS }));
+      expect(makeUserCoursePermanent).not.toHaveBeenCalled();
+      expect(create).toHaveBeenCalled();
+    });
   });
 
   it("reports 502 when Stripe throws or returns no URL", async () => {

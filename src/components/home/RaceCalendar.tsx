@@ -418,23 +418,20 @@ function EditionChip({
     </>
   );
 
-  if (past) {
-    // Not a control and not focusable: a race that has been run is information,
-    // not a choice, and an unusable tab stop is worse than no tab stop.
-    return (
-      <span
-        className={`${chipClass} border-transparent bg-[var(--color-bg-elevated)] text-[var(--color-text-tertiary)]`}
-      >
-        {body}
-      </span>
-    );
-  }
-
+  // Past races are links again. They were inert text on the reasoning that a
+  // race already run is information rather than a choice — true when the
+  // dashboard could only forecast. Now a past edition pairs the course with the
+  // conditions actually recorded that morning, which is a destination worth
+  // having. Still dimmed, so the calendar reads the same at a glance.
   return (
     <Link
       href={editionHref(edition)}
       aria-label={editionLinkLabel(edition)}
-      className={`${chipClass} border-[var(--color-border)] bg-[var(--color-bg-elevated)] text-[var(--color-text-primary)] hover:border-[var(--color-border-focus)] focus:border-[var(--color-border-focus)] focus:outline-none`}
+      className={`${chipClass} bg-[var(--color-bg-elevated)] focus:outline-none ${
+        past
+          ? "border-transparent text-[var(--color-text-tertiary)] hover:border-[var(--color-border)] hover:text-[var(--color-text-secondary)] focus:border-[var(--color-border-focus)]"
+          : "border-[var(--color-border)] text-[var(--color-text-primary)] hover:border-[var(--color-border-focus)] focus:border-[var(--color-border-focus)]"
+      }`}
     >
       {body}
     </Link>
@@ -473,19 +470,16 @@ function EditionRow({
     </>
   );
 
-  if (past) {
-    return (
-      <span className="flex items-center gap-3 px-4 py-3 text-[var(--color-text-tertiary)]">
-        {body}
-      </span>
-    );
-  }
-
+  // Linked whether past or not — see EditionChip for why.
   return (
     <Link
       href={editionHref(edition)}
       aria-label={editionLinkLabel(edition)}
-      className="flex items-center gap-3 px-4 py-3 text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-bg-elevated)]"
+      className={`flex items-center gap-3 px-4 py-3 transition-colors hover:bg-[var(--color-bg-elevated)] ${
+        past
+          ? "text-[var(--color-text-tertiary)]"
+          : "text-[var(--color-text-primary)]"
+      }`}
     >
       {body}
     </Link>

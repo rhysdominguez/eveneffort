@@ -1,7 +1,15 @@
 import { describe, it, expect } from "vitest";
 import { computePaceChart } from "./index";
 import { buildSegments, MARATHON_KM, MILE_IN_KM } from "./segments";
-import type { Course, PacingInput, WeatherAdjustments } from "@/types";
+import type {
+  Course,
+  PaceChartRow,
+  PacingInput,
+  Segment,
+  SplitStrategy,
+  StartStrategy,
+  WeatherAdjustments,
+} from "@/types";
 
 const courseFrom = (elevations: number[]): Course => ({
   id: "berlin",
@@ -226,5 +234,189 @@ describe("computePaceChart — hilly course", () => {
       input.goalTimeSeconds,
       6,
     );
+  });
+});
+
+describe("computePaceChart — Phase 3 strategy layer", () => {
+  const base: PacingInput = {
+    goalTimeSeconds: 3 * 3600 + 30 * 60,
+    courseId: "berlin",
+    unit: "km",
+  };
+  const hilly = courseFrom(hilly44());
+  const flat = courseFrom(flat44());
+
+  const SPLITS: SplitStrategy[] = [
+    "even-effort",
+    "even-pace",
+    "negative",
+    "negative-aggressive",
+    "positive",
+    "positive-aggressive",
+  ];
+  const STARTS: StartStrategy[] = ["even", "conservative", "very-conservative"];
+
+  const finish = (rows: PaceChartRow[]) =>
+    rows[rows.length - 1].cumulativeSplitSeconds;
+
+  /** Elapsed time at the halfway point of the race, by distance. */
+  const halfwaySeconds = (rows: PaceChartRow[], segs: Segment[]) => {
+    let elapsed = 0;
+    for (let i = 0; i < segs.length; i++) {
+      const duration =
+        rows[i].cumulativeSplitSeconds - (i === 0 ? 0 : rows[i - 1].cumulativeSplitSeconds);
+      const half = MARATHON_KM / 2;
+      if (segs[i].endDistanceKm >= half) {
+        const frac =
+          (half - segs[i].startDistanceKm) / segs[i].lengthKm;
+        return elapsed + duration * frac;
+      }
+      elapsed += duration;
+    }
+    return elapsed;
+  };
+
+  it("the defaults are byte-identical to omitting the fields entirely", () => {
+    // The guarantee behind every link already shared and every paceband
+    // already printed: strategies existing must not move an existing chart.
+    for (const course of [flat, hilly]) {
+      for (const unit of ["km", "miles"] as const) {
+        const legacy = computePaceChart({ ...base, unit }, course);
+        expect(
+          computePaceChart(
+            { ...base, unit, split: "even-effort", start: "even" },
+            course,
+          ),
+        ).toEqual(legacy);
+      }
+    }
+  });
+
+  it("every split × start combination still finishes exactly on the goal", () => {
+    for (const unit of ["km", "miles"] as const) {
+      for (const split of SPLITS) {
+        for (const start of STARTS) {
+          const rows = computePaceChart(
+            { ...base, unit, split, start },
+            hilly,
+          );
+          expect(
+            finish(rows),
+            `${unit}/${split}/${start}`,
+          ).toBeCloseTo(base.goalTimeSeconds, 6);
+        }
+      }
+    }
+  });
+
+  it("negative splits run the second half faster, positive slower, even equal", () => {
+    const segs = buildSegments(flat44(), "km");
+    const half = base.goalTimeSeconds / 2;
+    const firstHalf = (split: SplitStrategy) =>
+      halfwaySeconds(computePaceChart({ ...base, split }, flat), segs);
+
+    expect(firstHalf("even-effort")).toBeCloseTo(half, 6);
+    expect(firstHalf("negative")).toBeGreaterThan(half);
+    expect(firstHalf("positive")).toBeLessThan(half);
+  });
+
+  it("a standard split differential is ≈ its bias, and aggressive is bigger", () => {
+    const segs = buildSegments(flat44(), "km");
+    const half = base.goalTimeSeconds / 2;
+    const differential = (split: SplitStrategy) =>
+      halfwaySeconds(computePaceChart({ ...base, split }, flat), segs) - half;
+
+    // b = 1.5% of a half (6300 s) ≈ 94 s of half-to-half spread, i.e. ~47 s
+    // either side of the midpoint.
+    expect(differential("negative")).toBeGreaterThan(40);
+    expect(differential("negative")).toBeLessThan(55);
+    expect(differential("negative-aggressive")).toBeGreaterThan(
+      differential("negative"),
+    );
+    expect(differential("positive-aggressive")).toBeLessThan(
+      differential("positive"),
+    );
+  });
+
+  it("a conservative start slows the opening km and quickens everything after", () => {
+    const rows = computePaceChart({ ...base, start: "conservative" }, flat);
+    const plain = computePaceChart(base, flat);
+    expect(rows[0].adjustedPaceSecPerUnit).toBeGreaterThan(
+      plain[0].adjustedPaceSecPerUnit,
+    );
+    // Paid back: by the closing kilometres the runner is ahead of even pace.
+    expect(rows[rows.length - 1].adjustedPaceSecPerUnit).toBeLessThan(
+      plain[rows.length - 1].adjustedPaceSecPerUnit,
+    );
+    // And the penalty itself decays — km 2 is held back less than km 1.
+    const heldBack = (i: number) =>
+      rows[i].adjustedPaceSecPerUnit / plain[i].adjustedPaceSecPerUnit;
+    expect(heldBack(1)).toBeLessThan(heldBack(0));
+    expect(finish(rows)).toBeCloseTo(base.goalTimeSeconds, 6);
+  });
+
+  it("very conservative holds back harder than conservative", () => {
+    const mild = computePaceChart({ ...base, start: "conservative" }, flat);
+    const hard = computePaceChart({ ...base, start: "very-conservative" }, flat);
+    expect(hard[0].adjustedPaceSecPerUnit).toBeGreaterThan(
+      mild[0].adjustedPaceSecPerUnit,
+    );
+  });
+
+  it("even-pace ignores the terrain that even-effort responds to", () => {
+    // hilly44 is a uniform ramp, so even effort is nearly flat-paced on it
+    // too — the contrast needs a course whose grade actually varies.
+    const rolling = courseFrom(
+      Array.from({ length: 44 }, (_, i) => 50 + 40 * Math.sin(i / 3)),
+    );
+    const evenPace = computePaceChart({ ...base, split: "even-pace" }, rolling);
+    const evenEffort = computePaceChart(base, rolling);
+    const full = evenPace.slice(0, -1); // the 195 m tail is a partial segment
+    for (const row of full) {
+      expect(row.adjustedPaceSecPerUnit).toBeCloseTo(
+        full[0].adjustedPaceSecPerUnit,
+        6,
+      );
+    }
+    // The same course under even effort is not flat-paced — the climb costs.
+    const effortPaces = evenEffort.slice(0, -1).map((r) => r.adjustedPaceSecPerUnit);
+    expect(Math.max(...effortPaces) - Math.min(...effortPaces)).toBeGreaterThan(1);
+  });
+
+  it("the two controls compose rather than override each other", () => {
+    const both = computePaceChart(
+      { ...base, split: "negative", start: "conservative" },
+      hilly,
+    );
+    const splitOnly = computePaceChart({ ...base, split: "negative" }, hilly);
+    const startOnly = computePaceChart({ ...base, start: "conservative" }, hilly);
+    expect(both).not.toEqual(splitOnly);
+    expect(both).not.toEqual(startOnly);
+    // The start penalty is still visible on top of the split ramp.
+    expect(both[0].adjustedPaceSecPerUnit).toBeGreaterThan(
+      splitOnly[0].adjustedPaceSecPerUnit,
+    );
+    expect(finish(both)).toBeCloseTo(base.goalTimeSeconds, 6);
+  });
+
+  it("the weather layer still composes on top of a biased band", () => {
+    const input: PacingInput = {
+      ...base,
+      split: "negative-aggressive",
+      start: "conservative",
+    };
+    const segCount = buildSegments(hilly44(), "km").length;
+    const biased = computePaceChart(input, hilly);
+    const identity: WeatherAdjustments = {
+      heatMultipliers: new Array(segCount).fill(1),
+      windMultipliers: new Array(segCount).fill(1),
+    };
+    expect(computePaceChart(input, hilly, identity)).toEqual(biased);
+
+    const hot = computePaceChart(input, hilly, {
+      heatMultipliers: new Array(segCount).fill(1.05),
+      windMultipliers: new Array(segCount).fill(1),
+    });
+    expect(finish(hot)).toBeCloseTo(base.goalTimeSeconds * 1.05, 6);
   });
 });

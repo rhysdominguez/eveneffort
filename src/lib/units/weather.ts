@@ -18,6 +18,16 @@ import type { Unit } from "@/types";
 export type TempUnit = "C" | "F";
 export type SpeedUnit = "kph" | "mph";
 export type WeightUnit = "kg" | "lb";
+/**
+ * How the moisture in the air is entered. RH is what the app stores, the URL
+ * carries and every downstream model reads; "dew" is a display transform over
+ * the same value — see the conversion pair in src/lib/weather/progression.ts.
+ *
+ * Offered because dew point is the number running science and coaching
+ * actually quote, and it is the honest one: 60% RH means something completely
+ * different at 5 °C than at 25 °C, while a 12 °C dew point does not.
+ */
+export type HumidityUnit = "rh" | "dew";
 /** Imperial height is entered as feet + inches, not absolute inches. */
 export type HeightUnit = "cm" | "ftin";
 
@@ -99,6 +109,18 @@ export function windUnitLabel(unit: SpeedUnit): string {
 
 export function heightUnitLabel(unit: HeightUnit): string {
   return unit === "cm" ? "cm" : "ft";
+}
+
+/**
+ * Field label for the moisture input. Dew point is a temperature, so it is
+ * shown in whatever temperature unit is selected rather than getting a second
+ * °C/°F toggle of its own.
+ */
+export function humidityFieldLabel(
+  unit: HumidityUnit,
+  tempUnit: TempUnit,
+): string {
+  return unit === "rh" ? "Humidity (%)" : `Dew point (${tempUnitLabel(tempUnit)})`;
 }
 
 /** Round to the nearest whole number — every display field is integer-only. */

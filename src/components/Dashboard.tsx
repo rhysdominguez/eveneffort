@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { Course, CourseSummary, PacingInput, WeatherConditions } from "@/types";
@@ -10,7 +10,13 @@ import { SummaryHeader } from "@/components/SummaryHeader";
 import { ElevationChart } from "@/components/ElevationChart";
 import { PaceChartTable } from "@/components/PaceChartTable";
 import { PaceBand } from "@/components/PaceBand";
+import { UploadedCourseNotice } from "@/components/UploadedCourseNotice";
 import { formatLocation } from "@/lib/location";
+import { courseEffort, effortMultiplier } from "@/lib/pacing/effort";
+import { courseTerrain } from "@/lib/pacing/terrain";
+import { bqStatus } from "@/lib/bq/qualify";
+import { useStoredState } from "@/hooks/useStoredState";
+import { BQ_PROFILE } from "@/lib/stateKeys";
 
 // Paceband-style split dashboard: config on the left, live outputs on the
 // right. Reuses the locked pacing engine via usePacingChart so the math
@@ -39,6 +45,33 @@ export function Dashboard({
   // Berlin's elevations under Boston's name for those few hundred ms would be
   // silently wrong, so hold off until the two agree.
   const courseIsCurrent = course.id === current.courseId;
+
+  // Both are reductions over the same 44 points, and `effortMultiplier` runs
+  // Minetti across every segment in both segmentations — cheap once, wasteful
+  // on every keystroke in a form that recomputes live.
+  const terrain = useMemo(() => courseTerrain(course.elevations), [course]);
+  const effort = useMemo(
+    () => effortMultiplier(courseEffort(course.elevations)),
+    [course],
+  );
+
+  // Judged on the GOAL time, not the weather-adjusted finish: the standard is
+  // a fact about the plan the runner is building here, and pairing it with a
+  // conditions-dependent number would make the verdict move with the forecast.
+  // Null until someone has set a profile on /boston-qualifier.
+  const [bqProfile] = useStoredState(BQ_PROFILE);
+  const bq = useMemo(
+    () =>
+      bqProfile
+        ? bqStatus({
+            finishSeconds: current.goalTimeSeconds,
+            age: bqProfile.age,
+            division: bqProfile.division,
+            terrain,
+          })
+        : null,
+    [bqProfile, current.goalTimeSeconds, terrain],
+  );
 
   // `current` already carries `weather` when InputForm's toggle is on (built
   // the same way `body` is) — no separate merge needed here.
@@ -90,16 +123,34 @@ export function Dashboard({
           {error && (
             <p className="text-sm text-[var(--color-red-primary)]">{error}</p>
           )}
+          {course.isUserUpload && (
+            <UploadedCourseNotice
+              elevationSource={course.elevationSource}
+              expiresAtISO={course.expiresAtISO ?? null}
+            />
+          )}
           {result && (
             <>
               <SummaryHeader
                 result={result}
                 courseName={course.displayName}
-                location={formatLocation(
-                  course.city,
-                  course.regionCode,
-                  course.countryName,
-                )}
+                // An uploaded course has no city or country to format —
+                // nobody told us where it is — so it names what it is rather
+                // than rendering an empty ", ".
+                location={
+                  course.isUserUpload
+                    ? "Uploaded course"
+                    : formatLocation(
+                        course.city,
+                        course.regionCode,
+                        course.countryName,
+                      )
+                }
+                // Both derived from the 44 points already in the browser for
+                // this one course — no catalog lookup, nothing new fetched.
+                terrain={terrain}
+                effortMultiplier={effort}
+                bq={bq}
               />
               <ElevationChart
                 profile={course.profile}

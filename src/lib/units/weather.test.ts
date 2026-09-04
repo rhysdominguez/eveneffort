@@ -3,6 +3,7 @@ import {
   cmToFeetInches,
   feetInchesToCm,
   heightUnitLabel,
+  humidityFieldLabel,
   massFromDisplay,
   massToDisplay,
   roundForDisplay,
@@ -14,6 +15,7 @@ import {
   windToDisplay,
   windUnitLabel,
 } from "./weather";
+import { dewPointC, humidityAtTemp } from "@/lib/weather/progression";
 
 describe("inherited units", () => {
   it("derives wind speed unit from the distance unit", () => {
@@ -204,5 +206,56 @@ describe("no drift when toggling units without editing", () => {
       heightCm = feetInchesToCm(feet, inches);
     }
     expect(Math.abs(heightCm - 175)).toBeLessThan(1.28); // < half an inch
+  });
+});
+
+// Dew point is a display transform over the SAME stored relative humidity —
+// see WeatherFields. These pin the conversion pair that transform rides on,
+// and that a dew point is rendered in whatever temperature unit is selected.
+describe("humidity as dew point", () => {
+  it("labels the field for the mode, in the active temperature unit", () => {
+    expect(humidityFieldLabel("rh", "C")).toBe("Humidity (%)");
+    expect(humidityFieldLabel("dew", "C")).toBe("Dew point (°C)");
+    expect(humidityFieldLabel("dew", "F")).toBe("Dew point (°F)");
+    // RH is a percentage either way — the temperature unit is irrelevant.
+    expect(humidityFieldLabel("rh", "F")).toBe("Humidity (%)");
+  });
+
+  it.each([
+    [20, 60],
+    [5, 90],
+    [30, 40],
+    [2, 55],
+    [25, 100],
+  ])("round-trips RH through dew point at %i °C / %i%%", (tempC, rh) => {
+    const dew = dewPointC(tempC, rh);
+    expect(humidityAtTemp(tempC, dew)).toBeCloseTo(rh, 6);
+  });
+
+  it("puts the dew point at the air temperature when saturated", () => {
+    expect(dewPointC(18, 100)).toBeCloseTo(18, 6);
+  });
+
+  it("never reports a dew point above the air temperature", () => {
+    for (const tempC of [-5, 0, 10, 20, 35]) {
+      for (const rh of [1, 25, 50, 75, 100]) {
+        expect(dewPointC(tempC, rh)).toBeLessThanOrEqual(tempC + 1e-9);
+      }
+    }
+  });
+
+  it("survives the °F display round-trip a runner sees", () => {
+    // 20 °C / 60% is a ~12.0 °C dew point, shown as 54 °F.
+    const dewC = dewPointC(20, 60);
+    const shownF = roundForDisplay(tempToDisplay(dewC, "F"));
+    expect(shownF).toBe(54);
+
+    // Typing that 54 back gives 60.9%, not 60%: a whole °F is a coarser step
+    // than a whole percent, so a degree of display rounding is worth about a
+    // point of RH. It only bites when the field is actually edited (the
+    // canonical value is untouched by toggling units — see this module's
+    // header), and a point of RH is far below anything the heat model resolves.
+    const back = humidityAtTemp(20, tempFromDisplay(shownF, "F"));
+    expect(Math.abs(back - 60)).toBeLessThan(1);
   });
 });
