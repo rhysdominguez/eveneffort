@@ -23,6 +23,16 @@ const nextConfig: NextConfig = {
     // takes the larger of that header and this value. Left at the default the
     // hero revalidated on essentially every visit.
     minimumCacheTTL: 2678400, // 31 days
+
+    // Next 15+ defaults this to "attachment", which sends
+    // Content-Disposition: attachment on every /_next/image response and
+    // makes the browser download the file instead of painting it — the hero
+    // photo showed as broken/alt-text with no code change at fault. That
+    // default exists to stop a remote/user-suppliable image URL from being
+    // used to trick a browser into downloading arbitrary content inline;
+    // every image this app serves through the optimizer is a local,
+    // statically-imported asset we bundled ourselves, so it doesn't apply.
+    contentDispositionType: "inline",
   },
 };
 
