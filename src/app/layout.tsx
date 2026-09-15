@@ -82,10 +82,11 @@ export default function RootLayout({
           id="roomvoAssistant"
           async
           strategy="afterInteractive"
+          fetchPriority="high"
           type="text/javascript"
-          data-locale="en-ca"
+          data-locale="en-us"
           data-position="bottom-right"
-          src="https://www.roomvo.com/static/scripts/b2b/common/assistant.js"
+          src="https://www.roomvo.com/static/scripts/b2b/common/assistant-chatbot-fallback.js"
         />
       </body>
     </html>
