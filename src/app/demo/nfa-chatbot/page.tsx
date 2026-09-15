@@ -10,10 +10,15 @@ export const metadata: Metadata = {
 
 export default function NfaChatbotDemoPage() {
   return (
-    <main className="flex min-h-screen flex-1 items-center justify-center bg-[var(--color-bg-footer-deep)]">
-      <h1 className="text-3xl font-light uppercase tracking-[0.35em] text-[var(--color-text-on-dark)] sm:text-4xl">
-        NFA Chatbot Demo
-      </h1>
-    </main>
+    <>
+      {/* Mount point for the Roomvo chatbot launcher; the launcher script
+          finds it by id and renders into it, so it stays empty here. */}
+      <div id="roomvoChatbotLauncherContainer" />
+      <main className="flex min-h-screen flex-1 items-center justify-center bg-[var(--color-bg-footer-deep)]">
+        <h1 className="text-3xl font-light uppercase tracking-[0.35em] text-[var(--color-text-on-dark)] sm:text-4xl">
+          NFA Chatbot Demo
+        </h1>
+      </main>
+    </>
   );
 }
