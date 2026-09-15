@@ -79,6 +79,17 @@ export default function RootLayout({
           crossOrigin="anonymous"
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
         />
+        {/* Roomvo assistant widget. The script reads its config from the
+            data-* attributes on its own tag, so the id must stay. */}
+        <Script
+          id="roomvoAssistant"
+          async
+          strategy="afterInteractive"
+          type="text/javascript"
+          data-locale="en-ca"
+          data-position="bottom-right"
+          src="https://www.roomvo.com/static/scripts/b2b/common/assistant.js"
+        />
       </body>
     </html>
   );
