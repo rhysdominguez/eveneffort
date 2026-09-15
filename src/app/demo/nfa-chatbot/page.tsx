@@ -27,7 +27,14 @@ export default function NfaChatbotDemoPage() {
       {/* Mount point for the Roomvo chatbot launcher; the launcher script
           finds it by id and renders into it, so it stays empty here. */}
       <div id="roomvoChatbotLauncherContainer" />
-      <main className="flex min-h-screen flex-1 items-center justify-center bg-[var(--color-bg-footer-deep)]">
+      {/* Fixed rather than a normal centered flow box: the Roomvo bar
+          reserves real space at the top of the document (it's not just an
+          overlay), which pushed this heading's flow-centered box down and
+          off true middle. Pinning to the viewport centers it on the actual
+          screen regardless of how much space the widget reserves above or
+          below. pointer-events-none lets clicks reach the widget's own
+          bar/bubble wherever they happen to overlap. */}
+      <main className="pointer-events-none fixed inset-0 flex items-center justify-center">
         <h1 className="text-3xl font-light uppercase tracking-[0.35em] text-[var(--color-text-on-dark)] sm:text-4xl">
           NFA Chatbot Demo
         </h1>
