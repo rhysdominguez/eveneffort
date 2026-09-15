@@ -1,19 +1,19 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { render, fireEvent, screen } from "@testing-library/react";
-import { DemoPasswordGate } from "./DemoPasswordGate";
+import { SitePasswordGate } from "./SitePasswordGate";
 
-const STORAGE_KEY = "nfaChatbotDemoUnlocked";
+const STORAGE_KEY = "siteUnlocked";
 
 beforeEach(() => {
   sessionStorage.removeItem(STORAGE_KEY);
 });
 
-describe("DemoPasswordGate", () => {
+describe("SitePasswordGate", () => {
   it("hides the children behind a password form", () => {
     render(
-      <DemoPasswordGate>
+      <SitePasswordGate>
         <p>secret content</p>
-      </DemoPasswordGate>,
+      </SitePasswordGate>,
     );
     expect(screen.queryByText("secret content")).toBeNull();
     expect(screen.getByLabelText("Password")).not.toBeNull();
@@ -21,9 +21,9 @@ describe("DemoPasswordGate", () => {
 
   it("rejects the wrong password", () => {
     render(
-      <DemoPasswordGate>
+      <SitePasswordGate>
         <p>secret content</p>
-      </DemoPasswordGate>,
+      </SitePasswordGate>,
     );
     fireEvent.change(screen.getByLabelText("Password"), {
       target: { value: "wrong" },
@@ -35,9 +35,9 @@ describe("DemoPasswordGate", () => {
 
   it("reveals the children once the right password is entered, case-insensitively", () => {
     render(
-      <DemoPasswordGate>
+      <SitePasswordGate>
         <p>secret content</p>
-      </DemoPasswordGate>,
+      </SitePasswordGate>,
     );
     fireEvent.change(screen.getByLabelText("Password"), {
       target: { value: "GroutExpectations" },
@@ -48,9 +48,9 @@ describe("DemoPasswordGate", () => {
 
   it("stays unlocked across a remount in the same session", () => {
     const { unmount } = render(
-      <DemoPasswordGate>
+      <SitePasswordGate>
         <p>secret content</p>
-      </DemoPasswordGate>,
+      </SitePasswordGate>,
     );
     fireEvent.change(screen.getByLabelText("Password"), {
       target: { value: "groutexpectations" },
@@ -59,9 +59,9 @@ describe("DemoPasswordGate", () => {
     unmount();
 
     render(
-      <DemoPasswordGate>
+      <SitePasswordGate>
         <p>secret content</p>
-      </DemoPasswordGate>,
+      </SitePasswordGate>,
     );
     expect(screen.getByText("secret content")).not.toBeNull();
   });

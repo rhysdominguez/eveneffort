@@ -4,6 +4,7 @@ import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { SiteChrome } from "@/components/SiteChrome";
+import { SitePasswordGate } from "@/components/SitePasswordGate";
 import { ADSENSE_CLIENT } from "@/lib/ads";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
@@ -65,7 +66,9 @@ export default function RootLayout({
       className={`${montserrat.variable} ${fraunces.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <SiteChrome>{children}</SiteChrome>
+        <SitePasswordGate>
+          <SiteChrome>{children}</SiteChrome>
+        </SitePasswordGate>
         {/* Page views only — the paceband funnel's in-app steps go through
             /api/event (see lib/analytics.ts) and payment through Stripe. */}
         <Analytics />

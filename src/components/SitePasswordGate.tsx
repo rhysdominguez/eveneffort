@@ -1,17 +1,22 @@
 "use client";
 import { useEffect, useState, type FormEvent } from "react";
 
-// Deliberately not real auth — a client-side string check anyone can read out
-// of the bundle. That is fine here: this gates one unlisted demo page from
-// casual scrolling-by, not anything the app actually needs to protect. See
-// the password's own joke for the intended audience.
-const DEMO_PASSWORD = "groutexpectations";
-const STORAGE_KEY = "nfaChatbotDemoUnlocked";
+// Gates the whole site behind one shared password, wrapping SiteChrome in
+// the root layout so nothing renders past it, nav and footer included.
+//
+// Deliberately not real auth — a client-side string check anyone can read
+// out of the bundle. That is intentional: nothing behind this needs to
+// actually be secured, it just needs to stop a casual visitor from landing
+// on the site while it's not meant to be public yet. See the password's own
+// joke for the intended audience.
+const SITE_PASSWORD = "groutexpectations";
+const STORAGE_KEY = "siteUnlocked";
 
-export function DemoPasswordGate({ children }: { children: React.ReactNode }) {
+export function SitePasswordGate({ children }: { children: React.ReactNode }) {
   // Starts locked and flips open only after the sessionStorage check below,
   // so a returning visitor in the same tab session doesn't retype it on
-  // every reload. Nothing here is rendered server-side to leak past it.
+  // every reload. This also means the very first server-rendered pass (and
+  // anything reading raw HTML, like curl) sees the gate, not the site.
   const [unlocked, setUnlocked] = useState(false);
   const [ready, setReady] = useState(false);
   const [entry, setEntry] = useState("");
@@ -28,7 +33,7 @@ export function DemoPasswordGate({ children }: { children: React.ReactNode }) {
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    if (entry.trim().toLowerCase() === DEMO_PASSWORD) {
+    if (entry.trim().toLowerCase() === SITE_PASSWORD) {
       setUnlocked(true);
       setWrong(false);
       try {
