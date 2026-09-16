@@ -269,4 +269,77 @@ describe("RaceCalendar", () => {
       expect(container.querySelector("h3")?.textContent).toBe("August 2026");
     });
   });
+
+  describe("busy days", () => {
+    // Four races on one day, so the grid cell overflows its two-chip cap.
+    const crowdedDay = "2026-08-16";
+    const CROWDED = [0, 1, 2, 3].map((i) => ({
+      editionSlug: `synthetic-${i}-2026`,
+      seriesSlug: `synthetic-${i}`,
+      displayName: `Synthetic Marathon ${i}`,
+      courseId: `synthetic-${i}`,
+      city: "Nowhere",
+      countryCode: "US",
+      countryName: "United States",
+      regionCode: "US-CA",
+      regionName: "California",
+      raceDateISO: crowdedDay,
+      startTimeLocal: "08:00",
+      dateConfidence: "confirmed" as const,
+    }));
+
+    it("caps a day at two chips and collapses the rest behind a button", () => {
+      const { container } = renderCalendar(CROWDED);
+      const cell = Array.from(container.querySelectorAll("tbody td")).find((td) =>
+        td.textContent?.includes("Synthetic Marathon"),
+      )!;
+      const chipLinks = cell.querySelectorAll('a[href*="courseId"]');
+      expect(chipLinks).toHaveLength(2);
+      const more = Array.from(cell.querySelectorAll("button")).find((b) =>
+        b.textContent?.includes("more"),
+      )!;
+      expect(more.textContent).toBe("See 2 more");
+    });
+
+    it("reveals every race for the day when the button is clicked", () => {
+      const { container } = renderCalendar(CROWDED);
+      const cell = Array.from(container.querySelectorAll("tbody td")).find((td) =>
+        td.textContent?.includes("Synthetic Marathon"),
+      )!;
+      const more = Array.from(cell.querySelectorAll("button")).find((b) =>
+        b.textContent?.includes("more"),
+      )!;
+      fireEvent.click(more);
+      expect(more.getAttribute("aria-expanded")).toBe("true");
+      expect(cell.querySelectorAll('a[href*="courseId"]')).toHaveLength(4 + 2);
+    });
+
+    it("caps the popover height and lets it scroll rather than overflow", () => {
+      const { container } = renderCalendar(CROWDED);
+      const cell = Array.from(container.querySelectorAll("tbody td")).find((td) =>
+        td.textContent?.includes("Synthetic Marathon"),
+      )!;
+      fireEvent.click(
+        Array.from(cell.querySelectorAll("button")).find((b) =>
+          b.textContent?.includes("more"),
+        )!,
+      );
+      // Aug 16 2026 falls in the fourth grid row, so the popover anchors to the
+      // cell's bottom and grows upward — away from the calendar's clipped edge.
+      const popover = cell.querySelector<HTMLElement>("div.absolute")!;
+      expect(popover.className).toContain("bottom-1");
+      expect(popover.className).toContain("overflow-y-auto");
+      expect(popover.className).toMatch(/\bmax-h-\d+\b/);
+    });
+
+    it("keeps every week row the same fixed height", () => {
+      const { container } = renderCalendar(CROWDED);
+      const heights = new Set(
+        Array.from(container.querySelectorAll("tbody td")).map(
+          (td) => td.className.match(/\bh-\d+\b/)?.[0],
+        ),
+      );
+      expect(heights).toEqual(new Set(["h-36"]));
+    });
+  });
 });

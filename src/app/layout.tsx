@@ -32,8 +32,8 @@ export const metadata: Metadata = {
   title: {
     // Pages set a bare title ("Our methodology") and get the suffix for free;
     // `default` is what the home page and anything untitled uses.
-    default: "eveneffort — Elevation-adjusted marathon pacing",
-    template: "%s — eveneffort",
+    default: "eveneffort: Elevation-adjusted marathon pacing",
+    template: "%s | eveneffort",
   },
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,
@@ -43,14 +43,14 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     locale: "en_US",
     url: "/",
-    title: "eveneffort — Elevation-adjusted marathon pacing",
+    title: "eveneffort: Elevation-adjusted marathon pacing",
     description: SITE_DESCRIPTION,
   },
   twitter: {
     // No twitter-image file: X falls back to og:image, and one generated card
     // is easier to keep honest than two.
     card: "summary_large_image",
-    title: "eveneffort — Elevation-adjusted marathon pacing",
+    title: "eveneffort: Elevation-adjusted marathon pacing",
     description: SITE_DESCRIPTION,
   },
 };

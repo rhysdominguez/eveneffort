@@ -5,9 +5,9 @@ import { parseCompareParams } from "@/lib/compareParams";
 import { RaceComparison } from "@/components/RaceComparison";
 
 export const metadata: Metadata = {
-  title: "Race time converter — what your marathon time is worth on another course",
+  title: "Race time converter: what your marathon time is worth on another course",
   description:
-    "Convert a marathon finish time between any two courses at equal effort. Your 3:20 at Boston is a different number at Berlin, and this works out which — across every course we hold an elevation profile for.",
+    "Convert a marathon finish time between any two courses at equal effort. Your 3:20 at Boston is a different number at Berlin, and this works out which, across every course we hold an elevation profile for.",
   // Unlike /results this page IS indexable: its params are all optional, so
   // the bare URL is a complete page in its own right. The canonical is what
   // keeps every ?from=…&to=… permutation folding back into this one entry
@@ -49,7 +49,7 @@ export default async function ComparePage({
           </h1>
           <p className="text-lg text-[var(--color-text-secondary)]">
             A 3:20 at Boston is not a 3:20 at Berlin. Enter a finish time at one
-            course and see what the same effort buys you at another — measured
+            course and see what the same effort buys you at another, measured
             from each course&rsquo;s own elevation profile rather than a
             hand-assigned difficulty tier.
           </p>

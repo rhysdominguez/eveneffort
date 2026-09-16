@@ -199,7 +199,7 @@ describe("editionHref", () => {
 describe("editionLinkLabel", () => {
   it("spells out the date the visible chip only implies by position", () => {
     expect(editionLinkLabel(sydney)).toBe(
-      "Sydney Marathon, Sydney — August 30th, 2026. Build a pacing plan.",
+      "Sydney Marathon, Sydney, August 30th, 2026. Build a pacing plan.",
     );
   });
 

@@ -8,19 +8,11 @@ import type {
   PaceInput,
   PacingInput,
   SplitStrategy,
-  StartStrategy,
   Unit,
   WeatherConditions,
 } from "@/types";
-import {
-  DEFAULT_BODY,
-  DEFAULT_FUELING,
-  DEFAULT_SPLIT,
-  DEFAULT_START,
-} from "@/types";
-import { SPLIT_OPTIONS, START_OPTIONS } from "@/lib/pacing/strategy";
-import { formatHMS, toSeconds } from "@/lib/units/time";
-import { formatPace } from "@/lib/units/pace";
+import { DEFAULT_BODY, DEFAULT_FUELING, DEFAULT_SPLIT } from "@/types";
+import { toSeconds } from "@/lib/units/time";
 import {
   avgPaceFromGoalTime,
   gapPaceFromGoalTime,
@@ -115,11 +107,7 @@ interface Props {
 const eyebrowBase = "block text-xs uppercase tracking-wider font-medium";
 
 const numClass =
-  "w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] px-3 py-3 text-center text-xl font-tabular font-medium focus:border-[var(--color-border-focus)] focus:outline-none transition-colors";
-
-// Matches RaceYearPicker's select, the only other one in the form.
-const selectClass =
-  "w-full appearance-none rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-surface)] px-4 py-3 pr-10 text-left text-base text-[var(--color-text-primary)] focus:border-[var(--color-border-focus)] focus:outline-none transition-colors";
+  "w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] px-3 py-2.5 text-center text-lg font-tabular font-medium focus:border-[var(--color-border-focus)] focus:outline-none transition-colors";
 
 const DEFAULT_GOAL_TIME: GoalTimeInput = { hours: 4, minutes: 0, seconds: 0 };
 
@@ -151,6 +139,58 @@ function secondsToGoalTime(total: number): GoalTimeInput {
     minutes: Math.floor((t % 3600) / 60),
     seconds: t % 60,
   };
+}
+
+/**
+ * The split control is a five-stop slider along one axis: a strong negative
+ * split at the left, an even effort in the middle (the default), a strong
+ * positive split at the right. A position on this slider IS an index into this
+ * array.
+ *
+ * "Even pace (ignore hills)" is deliberately not here — it is a different idea
+ * (ignore grade, rather than reshape the halves) and was dropped from the form
+ * on 2026-09-08. It still parses from older shared links and printed pacebands;
+ * a link carrying it just lands the slider on the middle "Even effort" stop.
+ */
+const SPLIT_SCALE: readonly {
+  value: SplitStrategy;
+  label: string;
+  hint: string;
+}[] = [
+  {
+    value: "negative-aggressive",
+    label: "Strong negative split",
+    hint: "Run the second half about 3% faster than the first.",
+  },
+  {
+    value: "negative",
+    label: "Negative split",
+    hint: "Run the second half about 1.5% faster than the first.",
+  },
+  {
+    value: "even-effort",
+    label: "Even effort",
+    hint: "The recommended default. The same effort up every hill and down the far side.",
+  },
+  {
+    value: "positive",
+    label: "Positive split",
+    hint: "Run the first half about 1.5% faster than the second.",
+  },
+  {
+    value: "positive-aggressive",
+    label: "Strong positive split",
+    hint: "Run the first half about 3% faster than the second.",
+  },
+];
+
+const DEFAULT_SPLIT_INDEX = SPLIT_SCALE.findIndex(
+  (s) => s.value === DEFAULT_SPLIT,
+);
+
+function splitIndexOf(split: SplitStrategy): number {
+  const i = SPLIT_SCALE.findIndex((s) => s.value === split);
+  return i === -1 ? DEFAULT_SPLIT_INDEX : i;
 }
 
 export function InputForm({
@@ -237,11 +277,21 @@ export function InputForm({
   const courseEffort = catalog.find((c) => c.id === courseId)?.effort ?? null;
   const gapAvailable = courseEffort !== null;
 
+  // GAP is a dashboard-only goal mode. The hero form is deliberately minimal —
+  // core race setup plus Calculate — and grade-adjusted pace is a concept that
+  // only earns its place once the runner is looking at a chart. Live mode (the
+  // dashboard) still offers it; button mode (the hero) does not.
+  const gapOffered = live;
+
+  const goalModeOptions = gapOffered
+    ? GOAL_MODE_OPTIONS
+    : GOAL_MODE_OPTIONS.filter(([mode]) => mode !== "gap");
+
   const goalMode: GoalMode = ((): GoalMode => {
     const chosen = goalModeEdit ?? restored?.goalMode ?? storedGoalMode ?? "time";
     // A stored preference for GAP must not strand the runner on a form whose
-    // goal field cannot be evaluated.
-    return chosen === "gap" && !gapAvailable ? "time" : chosen;
+    // goal field cannot be evaluated — or one that doesn't offer the mode.
+    return chosen === "gap" && (!gapAvailable || !gapOffered) ? "time" : chosen;
   })();
 
   // Seeded FROM the incoming goal time, not from a constant. A runner whose
@@ -376,9 +426,6 @@ export function InputForm({
   // is why it is not part of the persisted HOME_FORM snapshot either.
   const [split, setSplit] = useState<SplitStrategy>(
     initial?.split ?? DEFAULT_SPLIT,
-  );
-  const [startStrategy, setStartStrategy] = useState<StartStrategy>(
-    initial?.start ?? DEFAULT_START,
   );
 
   // Per-field display units. Seeded once from the distance unit so an imperial
@@ -648,7 +695,6 @@ export function InputForm({
     if (fuelingEnabled) input.fueling = { carbsPerHour };
     // Set only when off-default, so a default chart's URL is unchanged.
     if (split !== DEFAULT_SPLIT) input.split = split;
-    if (startStrategy !== DEFAULT_START) input.start = startStrategy;
     return input;
   };
 
@@ -675,7 +721,6 @@ export function InputForm({
     fuelingEnabled,
     carbsPerHour,
     split,
-    startStrategy,
   ]);
 
   const update = (key: keyof GoalTimeInput) => (value: string) => {
@@ -696,15 +741,7 @@ export function InputForm({
       ? "Goal finish time"
       : goalMode === "pace"
         ? "Goal average pace"
-        : "Goal grade-adjusted pace";
-
-  // Both the finish time and the average pace, because in GAP mode they are
-  // two different answers and the runner wants each: the finish is what they
-  // will be told at the line, the average is what their watch will show.
-  const goalSummary = `${formatHMS(goalTimeSeconds)} finish · ${formatPace(
-    avgPaceFromGoalTime(goalTimeSeconds, unit),
-    unit,
-  )} average`;
+        : "Grade-adjusted pace";
 
   const handleSubmit = () => {
     if (!isValid) return;
@@ -736,15 +773,20 @@ export function InputForm({
           finish time, so the mode is a view over one value — which is why a
           shared link never has to carry it. */}
       <div>
-        <div className="mb-2 flex items-center justify-between gap-2">
-          <label className={eyebrowClass}>{goalFieldLabel}</label>
-          <UnitToggle
-            label="Goal input mode"
-            value={goalMode}
-            options={GOAL_MODE_OPTIONS}
-            onChange={selectGoalMode}
-            disabledValues={gapAvailable ? undefined : ["gap"]}
-          />
+        <div className="mb-2 flex flex-wrap items-center gap-x-2 gap-y-1.5">
+          <label className={`min-w-0 flex-1 ${eyebrowClass}`}>
+            {goalFieldLabel}
+          </label>
+          <div className="shrink-0">
+            <UnitToggle
+              label="Goal input mode"
+              value={goalMode}
+              options={goalModeOptions}
+              onChange={selectGoalMode}
+              disabledValues={gapAvailable ? undefined : ["gap"]}
+              variant="prominent"
+            />
+          </div>
         </div>
         {goalMode === "time" ? (
           <div className="grid grid-cols-3 gap-3">
@@ -772,15 +814,16 @@ export function InputForm({
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-[1fr_1fr_auto] items-start gap-3">
-            {(
-              [
-                ["minutes", "MM", goalPace.minutes],
-                ["seconds", "SS", goalPace.seconds],
-              ] as const
-            ).map(([key, ph, val]) => (
-              <div key={key}>
+          <div>
+            <div className="grid grid-cols-[1fr_1fr_auto] items-center gap-3">
+              {(
+                [
+                  ["minutes", "MM", goalPace.minutes],
+                  ["seconds", "SS", goalPace.seconds],
+                ] as const
+              ).map(([key, ph, val]) => (
                 <input
+                  key={key}
                   type="number"
                   inputMode="numeric"
                   min={0}
@@ -791,27 +834,33 @@ export function InputForm({
                   onChange={(e) => updatePace(key)(e.target.value)}
                   className={numClass}
                 />
-                <span className={`mt-2 text-center ${eyebrowClass}`}>{key}</span>
-              </div>
-            ))}
-            <span
-              className={`py-3 text-xl font-tabular ${
-                live
-                  ? "text-[var(--color-text-tertiary)]"
-                  : "text-[var(--color-text-secondary)]"
-              }`}
-            >
-              {unit === "km" ? "/km" : "/mi"}
-            </span>
+              ))}
+              <span
+                className={`text-sm font-tabular ${
+                  live
+                    ? "text-[var(--color-text-tertiary)]"
+                    : "text-[var(--color-text-secondary)]"
+                }`}
+              >
+                {unit === "km" ? "/km" : "/mi"}
+              </span>
+            </div>
+            <div className="mt-2 grid grid-cols-[1fr_1fr_auto] gap-3">
+              <span className={`text-center ${eyebrowClass}`}>minutes</span>
+              <span className={`text-center ${eyebrowClass}`}>seconds</span>
+              <span aria-hidden className="invisible text-sm font-tabular">
+                {unit === "km" ? "/km" : "/mi"}
+              </span>
+            </div>
+            {/* One line on what the entered pace means — the two modes differ
+                only here, and the distinction (effort vs. clock) is the whole
+                reason GAP exists. */}
+            <p className="mt-3 text-sm text-[var(--color-text-secondary)]">
+              {goalMode === "gap"
+                ? "Your goal pace on flat ground. Each split follows the course's hills, so your real average comes out slower."
+                : "Your goal average pace for the whole race. The splits shift with the hills but average out to this."}
+            </p>
           </div>
-        )}
-        {/* What the entered pace actually works out to. In GAP mode this is
-            where the course's own difficulty first becomes visible — the same
-            grade-adjusted pace is a different finish time at every race. */}
-        {goalMode !== "time" && isValid && (
-          <p className="mt-3 text-sm text-[var(--color-text-secondary)]">
-            {goalSummary}
-          </p>
         )}
       </div>
 
@@ -924,9 +973,7 @@ export function InputForm({
             />
             {/* Body metrics feed the wind drag model, so they live in this
                 section rather than a separate "Advanced" disclosure — and they
-                dim with it, since they have no effect when weather is off.
-                The note says why they're asked for: absent it, a pacing tool
-                asking your weight reads as calorie tracking. */}
+                dim with it, since they have no effect when weather is off. */}
             <div
               className={`space-y-3 border-t border-[var(--color-border)] pt-4 ${
                 weather.enabled ? "" : "opacity-50"
@@ -970,80 +1017,31 @@ export function InputForm({
                   disabled={!weather.enabled}
                 />
               </div>
-              <p className="text-xs text-[var(--color-text-tertiary)]">
-                Your weight and height determine how much the wind slows you
-                down or speeds you up. The lower your body weight, the less the
-                wind affects your pace.
-              </p>
             </div>
           </div>
         </div>
       )}
 
       {/* Dashboard-only, like Weather and Fueling: the hero is core race setup
-          plus Calculate, and both controls default to the behaviour the app
-          has always had — so hiding them here changes nothing about what the
+          plus Calculate, and this control defaults to the behaviour the app
+          has always had — so hiding it here changes nothing about what the
           homepage produces. */}
       {live && (
         <div className="border-t border-[var(--color-border)] pt-6">
-          <h3 className={eyebrowClass}>Race Strategy</h3>
+          <h3 className={eyebrowClass}>Split Strategy</h3>
           <div className="mt-3 space-y-4">
-            <div>
-              <label htmlFor="split-strategy" className={`mb-2 ${eyebrowClass}`}>
-                Split strategy
-              </label>
-              <div className="relative">
-                <select
-                  id="split-strategy"
-                  value={split}
-                  onChange={(e) => setSplit(e.target.value as SplitStrategy)}
-                  className={selectClass}
-                >
-                  {SPLIT_OPTIONS.map(([value, label]) => (
-                    <option key={value} value={value}>
-                      {label}
-                    </option>
-                  ))}
-                </select>
-                <span
-                  aria-hidden
-                  className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[var(--color-text-secondary)]"
-                >
-                  ▾
-                </span>
-              </div>
-            </div>
-            <div>
-              <label htmlFor="start-strategy" className={`mb-2 ${eyebrowClass}`}>
-                Start
-              </label>
-              <div className="relative">
-                <select
-                  id="start-strategy"
-                  value={startStrategy}
-                  onChange={(e) =>
-                    setStartStrategy(e.target.value as StartStrategy)
-                  }
-                  className={selectClass}
-                >
-                  {START_OPTIONS.map(([value, label]) => (
-                    <option key={value} value={value}>
-                      {label}
-                    </option>
-                  ))}
-                </select>
-                <span
-                  aria-hidden
-                  className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[var(--color-text-secondary)]"
-                >
-                  ▾
-                </span>
-              </div>
-            </div>
-            <p className="text-xs text-[var(--color-text-tertiary)]">
-              Whatever you choose here, the splits still add up to your goal
-              finish time — holding back early is paid back later in the race.
-            </p>
+            <RangeField
+              id="split-strategy"
+              label="Split strategy"
+              hideLabel
+              value={splitIndexOf(split)}
+              min={0}
+              max={SPLIT_SCALE.length - 1}
+              step={1}
+              onChange={(n) => setSplit(SPLIT_SCALE[n].value)}
+              valueLabel={SPLIT_SCALE[splitIndexOf(split)].label}
+              hint={SPLIT_SCALE[splitIndexOf(split)].hint}
+            />
           </div>
         </div>
       )}

@@ -100,7 +100,9 @@ describe("CourseRankingTable", () => {
   it("renders a terrain badge on every row", () => {
     const { container } = table();
     for (const row of Array.from(container.querySelectorAll("tbody tr"))) {
-      expect(row.textContent).toMatch(/Flat|Rolling|Hilly|Mountainous/);
+      expect(row.textContent).toMatch(
+        /Very Flat|Mostly Flat|Rolling Hills|Downhill|Hilly|Very Hilly/,
+      );
     }
   });
 });

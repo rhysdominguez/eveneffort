@@ -304,7 +304,7 @@ function Result({
             {formatPace(sharedGapPace(goalTimeSeconds, from.effort, unit), unit)}
           </p>
           <p className="text-sm text-[var(--color-text-secondary)]">
-            The same on both — that is what makes the two times equal effort.
+            The same on both, which is what makes the two times equal effort.
           </p>
         </div>
       </div>

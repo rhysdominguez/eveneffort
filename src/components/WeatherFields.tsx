@@ -133,7 +133,7 @@ export function WeatherFields({
         const when = meta?.raceDateISO
           ? ` for ${formatDateDisplay(meta.raceDateISO)}`
           : "";
-        return `Race day is too far out to forecast — showing typical conditions${when}, averaged over the last ${meta?.years ?? 10} years.`;
+        return `Race day is too far out to forecast, so these are typical conditions${when}, averaged over the last ${meta?.years ?? 10} years.`;
       }
       return "Showing the live forecast for your race start.";
     }
@@ -144,7 +144,7 @@ export function WeatherFields({
   // matters because it is what keys the hour the numbers were read at.
   const startTimeNote =
     mode === "forecast" && startTimeAssumed && source && !loading && !error
-      ? "Assumed a 7:30 AM local start — adjust the start time if you know the real one."
+      ? "Assumed a 7:30 AM local start. Adjust the start time if you know the real one."
       : null;
 
   return (

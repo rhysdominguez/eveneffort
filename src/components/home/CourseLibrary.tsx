@@ -76,7 +76,7 @@ export function CourseLibrary({ catalog }: { catalog: CourseSummary[] }) {
               <ul>
                 {catalog.map((course) => (
                   <li key={course.id}>
-                    {course.displayName} — {pinLocationLabel(course)}
+                    {course.displayName} in {pinLocationLabel(course)}
                   </li>
                 ))}
               </ul>

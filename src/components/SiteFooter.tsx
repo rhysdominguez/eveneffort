@@ -20,10 +20,10 @@ const LINK_COLUMNS = [
     links: [
       // The same destinations SiteNav names; keep the wording in step with
       // NAV_LINKS there rather than letting the site call one page two things.
-      { label: "Pacing calculator", href: "/" },
-      { label: "Race comparison", href: "/compare" },
-      { label: "Course rankings", href: "/courses" },
-      { label: "Boston qualifier", href: "/boston-qualifier" },
+      { label: "Pacing Calculator", href: "/" },
+      { label: "Race Comparison", href: "/compare" },
+      { label: "Course Rankings", href: "/courses" },
+      { label: "Boston Qualifier", href: "/boston-qualifier" },
       { label: "Methodology", href: "/methodology" },
     ],
   },

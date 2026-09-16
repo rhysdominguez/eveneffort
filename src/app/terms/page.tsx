@@ -47,8 +47,8 @@ export default function TermsPage() {
             time across a marathon course according to its elevation profile
             and, where a forecast is available, the expected race-day weather.
             There is no account to create and nothing to subscribe to. We may
-            change, add or remove features — including courses — at any time,
-            and we may take the site down without notice.
+            change, add or remove features, courses included, at any time, and
+            we may take the site down without notice.
           </p>
         </div>
 
@@ -72,9 +72,9 @@ export default function TermsPage() {
             on the day, and for deciding to slow down or stop regardless of what
             any band on your wrist says. Consult a doctor before starting
             endurance training, and follow the instructions of race officials
-            and medical staff over ours. Conditions on the day — heat, wind, a
-            course change, how you slept — will always outrank a plan made in
-            advance.
+            and medical staff over ours. Conditions on the day such as heat,
+            wind, a course change or how you slept will always outrank a plan
+            made in advance.
           </p>
         </div>
 
@@ -95,8 +95,8 @@ export default function TermsPage() {
               methodology
             </Link>
             ) and is a well-supported approximation of how gradient affects
-            running economy — not a law of nature, and not tuned to you
-            personally. We do not warrant that any split, adjusted finish time
+            running economy. It is not a law of nature, and it is not tuned to
+            you personally. We do not warrant that any split, adjusted finish time
             or forecast is accurate, and you should treat all of it as a
             starting point for your own judgement.
           </p>
@@ -118,8 +118,8 @@ export default function TermsPage() {
               shipping &amp; refunds terms
             </Link>
             , which set out delivery times and how refunds work. Please check
-            your goal time and course before ordering — each band is printed for
-            one specific plan.
+            your goal time and course before ordering, because each band is
+            printed for one specific plan.
           </p>
         </div>
 
@@ -129,8 +129,8 @@ export default function TermsPage() {
           </h2>
           <p className="text-base leading-relaxed text-[var(--color-text-secondary)]">
             Use the site for planning your own races. Don&rsquo;t attempt to
-            disrupt it, scrape it at volume, or hammer the forecast endpoint —
-            it sits on a rate-limited third-party API and abusing it degrades
+            disrupt it, scrape it at volume, or hammer the forecast endpoint.
+            It sits on a rate-limited third-party API, and abusing it degrades
             the site for other runners. Don&rsquo;t resell the pacing output as
             your own product. Uploading is rate limited for the same reason.
           </p>
@@ -148,8 +148,8 @@ export default function TermsPage() {
           </p>
           <p className="text-base leading-relaxed text-[var(--color-text-secondary)]">
             Your course lives at an unguessable link, and that link is the only
-            way back to it &mdash; there are no accounts here, so we cannot
-            recover it for you. It is unlisted: it never appears in the course
+            way back to it. There are no accounts here, so we cannot recover it
+            for you. It is unlisted: it never appears in the course
             list, the map or the rankings. It is not secret, though, so anyone
             you send the link to can see it.
           </p>
@@ -170,7 +170,7 @@ export default function TermsPage() {
           </h2>
           <p className="text-base leading-relaxed text-[var(--color-text-secondary)]">
             The site, its design, its written content and our course data
-            compilation belong to us. The pace chart you generate is yours —
+            compilation belong to us. The pace chart you generate is yours:
             print it, share it, wear it, no permission needed. The underlying
             research we build on belongs to its authors and is cited on the
             methodology page. Race names and trademarks belong to their
@@ -189,7 +189,7 @@ export default function TermsPage() {
             for injury, a missed goal time, a bad race, or any indirect or
             consequential loss arising from using the site or a band. Where
             liability cannot be excluded, it is limited to what you actually
-            paid us — which for most people is nothing. Some jurisdictions
+            paid us, which for most people is nothing. Some jurisdictions
             don&rsquo;t allow these exclusions, in which case they apply only as
             far as they legally can, and nothing here removes your statutory
             consumer rights.

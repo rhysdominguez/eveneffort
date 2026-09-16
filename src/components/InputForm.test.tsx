@@ -131,13 +131,6 @@ describe("InputForm — body metrics gated on weather", () => {
     expect((getByLabelText("Height") as HTMLInputElement).disabled).toBe(true);
   });
 
-  it("explains why weight and height are asked for, alongside those fields", () => {
-    const { container } = openSection();
-    expect(container.textContent).toContain(
-      "Your weight and height determine how much the wind slows you down",
-    );
-  });
-
   it("enables them once weather is switched on", () => {
     const { getByLabelText, getByText } = openSection();
     fireEvent.click(getByText("Manual"));
@@ -757,7 +750,7 @@ describe("InputForm — remembering weather mode", () => {
   });
 });
 
-describe("InputForm — Race Strategy", () => {
+describe("InputForm — Split Strategy", () => {
   const latestInput = () => {
     const seen: PacingInput[] = [];
     const view = render(
@@ -775,39 +768,70 @@ describe("InputForm — Race Strategy", () => {
     const hero = render(
       <InputForm catalog={FIXTURE_CATALOG} onCalculate={() => {}} />,
     );
-    expect(hero.container.textContent).not.toContain("Race Strategy");
+    expect(hero.container.textContent).not.toContain("Split Strategy");
     const live = render(
       <InputForm catalog={FIXTURE_CATALOG} onChange={() => {}} />,
     );
-    expect(live.container.textContent).toContain("Race Strategy");
+    expect(live.container.textContent).toContain("Split Strategy");
   });
 
-  it("emits nothing until the runner moves off the defaults", () => {
+  it("emits nothing until the runner moves off the default", () => {
     const { last } = latestInput();
     expect(last().split).toBeUndefined();
-    expect(last().start).toBeUndefined();
   });
 
-  it("puts the chosen split and start on the built input", () => {
+  it("is a five-stop slider centred on even effort", () => {
+    const { view } = latestInput();
+    const slider = view.getByLabelText("Split strategy") as HTMLInputElement;
+    expect(slider.type).toBe("range");
+    expect(slider.min).toBe("0");
+    expect(slider.max).toBe("4");
+    expect(slider.value).toBe("2");
+    expect(view.container.textContent).toContain("Even effort");
+  });
+
+  it("maps each slider stop to the matching split strategy", () => {
     const { view, last } = latestInput();
-    fireEvent.change(view.getByLabelText("Split strategy"), {
-      target: { value: "negative" },
-    });
-    expect(last().split).toBe("negative");
-    fireEvent.change(view.getByLabelText("Start"), {
-      target: { value: "very-conservative" },
-    });
-    expect(last().start).toBe("very-conservative");
-    expect(last().split).toBe("negative");
+    const slider = view.getByLabelText("Split strategy");
+    const stops: [string, string | undefined][] = [
+      ["0", "negative-aggressive"],
+      ["1", "negative"],
+      ["2", undefined], // even-effort is the default — not emitted
+      ["3", "positive"],
+      ["4", "positive-aggressive"],
+    ];
+    for (const [pos, expected] of stops) {
+      fireEvent.change(slider, { target: { value: pos } });
+      expect(last().split).toBe(expected);
+    }
   });
 
-  it("seeds both selects from a shared link", () => {
+  it("seeds the slider position from a shared link", () => {
     const initial: PacingInput = {
       courseId: FIXTURE_CATALOG[0].id,
       unit: "km",
       goalTimeSeconds: 14400,
       split: "positive-aggressive",
-      start: "conservative",
+    };
+    const { getByLabelText, container } = render(
+      <InputForm
+        catalog={FIXTURE_CATALOG}
+        initial={initial}
+        onChange={() => {}}
+      />,
+    );
+    expect((getByLabelText("Split strategy") as HTMLInputElement).value).toBe(
+      "4",
+    );
+    expect(container.textContent).toContain("Strong positive split");
+  });
+
+  it("lands a link's dropped 'even pace' on the middle stop", () => {
+    const initial: PacingInput = {
+      courseId: FIXTURE_CATALOG[0].id,
+      unit: "km",
+      goalTimeSeconds: 14400,
+      split: "even-pace",
     };
     const { getByLabelText } = render(
       <InputForm
@@ -816,11 +840,8 @@ describe("InputForm — Race Strategy", () => {
         onChange={() => {}}
       />,
     );
-    expect((getByLabelText("Split strategy") as HTMLSelectElement).value).toBe(
-      "positive-aggressive",
-    );
-    expect((getByLabelText("Start") as HTMLSelectElement).value).toBe(
-      "conservative",
+    expect((getByLabelText("Split strategy") as HTMLInputElement).value).toBe(
+      "2",
     );
   });
 });
@@ -928,13 +949,6 @@ describe("InputForm — goal as time, pace or GAP", () => {
     expect(Math.abs(last().goalTimeSeconds - beforeGoal)).toBeLessThan(15);
   });
 
-  it("shows what the entered pace works out to", () => {
-    const { view } = mounted();
-    fireEvent.click(view.getByText("Pace"));
-    setPace(view, 5, 0);
-    expect(view.container.textContent).toContain("3:30:59 finish");
-  });
-
   it("rejects a pace that implies an absurd race", () => {
     const { view } = mounted();
     fireEvent.click(view.getByText("Pace"));
@@ -981,13 +995,29 @@ describe("InputForm — goal as time, pace or GAP", () => {
     expect(last().goalTimeSeconds).toBeGreaterThan(3 * 3600);
   });
 
-  it("offers GAP on the hero too, not just the dashboard", () => {
-    // It is the catalog's `effort` field that makes this possible with no
-    // geometry loaded — the whole reason that field exists.
+  it("offers GAP on the dashboard but not on the hero", () => {
+    // The hero form is deliberately minimal — core race setup plus Calculate —
+    // so grade-adjusted pace is a dashboard-only mode.
     const hero = render(
       <InputForm catalog={FIXTURE_CATALOG} onCalculate={() => {}} />,
     );
-    expect(hero.getByText("GAP").hasAttribute("disabled")).toBe(false);
+    expect(hero.queryByText("GAP")).toBeNull();
+
+    const dashboard = render(
+      <InputForm catalog={FIXTURE_CATALOG} onChange={() => {}} />,
+    );
+    expect(
+      dashboard.getByText("GAP").hasAttribute("disabled"),
+    ).toBe(false);
+  });
+
+  it("falls back to time on the hero when the stored preference is GAP", () => {
+    writeState(GOAL_MODE, "gap");
+    const hero = render(
+      <InputForm catalog={FIXTURE_CATALOG} onCalculate={() => {}} />,
+    );
+    expect(hero.getByText("Goal finish time")).toBeTruthy();
+    expect(hero.queryByText("GAP")).toBeNull();
   });
 
   it("disables GAP rather than guessing when no course effort is known", () => {

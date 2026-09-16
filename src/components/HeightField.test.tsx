@@ -26,6 +26,36 @@ describe("HeightField — stepper", () => {
     expect(seen[1]).toBeGreaterThan(175);
   });
 
+  it("steps the blank cm field from the default height, not from zero", () => {
+    const seen: (number | null)[] = [];
+    const { getByLabelText } = render(
+      <HeightField value={null} onChange={(n) => seen.push(n)} unit="cm" onUnitChange={() => {}} />,
+    );
+    fireEvent.click(getByLabelText("Increase Height"));
+    expect(seen).toEqual([176]);
+  });
+
+  it("shows the default height (5'9\") as ft/in placeholders while unset", () => {
+    const { getByLabelText } = render(
+      <HeightField value={null} onChange={() => {}} unit="ftin" onUnitChange={() => {}} />,
+    );
+    expect((getByLabelText("ft") as HTMLInputElement).value).toBe("");
+    expect((getByLabelText("ft") as HTMLInputElement).placeholder).toBe("5");
+    expect((getByLabelText("in") as HTMLInputElement).value).toBe("");
+    expect((getByLabelText("in") as HTMLInputElement).placeholder).toBe("9");
+  });
+
+  it("steps the blank ft/in field from the default height, filling in the whole default", () => {
+    const seen: (number | null)[] = [];
+    const { getByLabelText } = render(
+      <HeightField value={null} onChange={(n) => seen.push(n)} unit="ftin" onUnitChange={() => {}} />,
+    );
+    // Default 175cm ≈ 5'9". Bumping inches to 10 should land near 178cm, not
+    // near 3cm (0'1").
+    fireEvent.click(getByLabelText("Increase in"));
+    expect(seen[0]).toBeGreaterThan(170);
+  });
+
   it("never steps a part below zero", () => {
     const seen: (number | null)[] = [];
     const { getByLabelText } = render(

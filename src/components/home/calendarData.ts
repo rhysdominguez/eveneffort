@@ -178,7 +178,7 @@ export function editionLinkLabel(edition: EditionSummary): string {
   const date = formatDateDisplay(edition.raceDateISO);
   const confidence =
     edition.dateConfidence === "confirmed" ? "" : " (estimated date)";
-  return `${edition.displayName}, ${edition.city} — ${date}${confidence}. Build a pacing plan.`;
+  return `${edition.displayName}, ${edition.city}, ${date}${confidence}. Build a pacing plan.`;
 }
 
 function parseMonthKey(key: string): YearMonth {

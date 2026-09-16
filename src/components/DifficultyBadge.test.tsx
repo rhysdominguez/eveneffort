@@ -14,43 +14,112 @@ const terrain = (gainM: number, netM = 0): CourseTerrain => ({
 const text = (t: CourseTerrain) =>
   render(<DifficultyBadge terrain={t} />).container.textContent ?? "";
 
+const html = (t: CourseTerrain) =>
+  render(<DifficultyBadge terrain={t} />).container.innerHTML;
+
 describe("DifficultyBadge", () => {
-  it("names the band for each level of climbing", () => {
-    expect(text(terrain(20))).toContain("Flat");
-    expect(text(terrain(96))).toContain("Rolling");
+  it("names the profile for each level of climbing", () => {
+    expect(text(terrain(10))).toContain("Very Flat");
+    expect(text(terrain(50))).toContain("Mostly Flat");
+    expect(text(terrain(96))).toContain("Rolling Hills");
     expect(text(terrain(270))).toContain("Hilly");
-    expect(text(terrain(2350))).toContain("Mountainous");
+    expect(text(terrain(2350))).toContain("Very Hilly");
   });
 
-  it("shows the climbing in feet, and hides it when compact", () => {
-    // 96 m ≈ 315 ft.
-    expect(text(terrain(96))).toContain("315 ft up");
+  it("shows the net change in feet, and hides the figure when compact", () => {
+    // −40 m ≈ −131 ft.
+    expect(text(terrain(96, -40))).toContain("−131 ft net");
+    // A net climb reads as a plus.
+    expect(text(terrain(96, 30))).toContain("+98 ft net");
     const compact = render(
-      <DifficultyBadge terrain={terrain(96)} compact />,
+      <DifficultyBadge terrain={terrain(96, -40)} compact />,
     ).container.textContent;
-    expect(compact).toContain("Rolling");
-    expect(compact).not.toContain("ft up");
+    expect(compact).toContain("Rolling Hills");
+    expect(compact).not.toContain("net");
   });
 
-  it("adds the net-drop pill only for a course that finishes materially lower", () => {
-    expect(text(terrain(50, -5))).not.toContain("net");
-    expect(text(terrain(50, -99))).not.toContain("net");
-    // 133 m ≈ 436 ft.
-    expect(text(terrain(96, -133))).toContain("−436 ft net");
-    // A net CLIMB is never dressed up as a drop.
-    expect(text(terrain(400, 300))).not.toContain("net");
+  it("reports a near-zero net for a loop course that returns to its start", () => {
+    expect(text(terrain(258, 1))).toContain("Hilly");
+    expect(text(terrain(258, 1))).toContain("+3 ft net");
   });
 
-  it("shows both pills for a course that is hilly AND net downhill", () => {
+  it("calls a flat course with a big drop Downhill, and still shows the drop", () => {
+    const revel = text(terrain(8, -1541));
+    expect(revel).toContain("Downhill");
+    expect(revel).toContain("−5056 ft net");
+  });
+
+  it("keeps the hill label on a course that is hilly AND net downhill", () => {
     const both = text(terrain(600, -1000));
-    expect(both).toContain("Mountainous");
-    expect(both).toContain("net");
+    expect(both).toContain("Very Hilly");
+    expect(both).not.toContain("Downhill");
+    expect(both).toContain("−3281 ft net");
   });
 
-  it("renders the real Boston profile as rolling with its net drop", () => {
+  // The six-stop ramp adopted with findmymarathon's taxonomy. It is a ramp,
+  // which DESIGN.md forbade until 2026-09-08 — see the file header and the
+  // "What NOT to do" section, which now argues the current position.
+  //
+  // ONE STOP PER PROFILE IS THE POINT. It shipped as three tiers that morning,
+  // which gave Mostly Flat and Rolling Hills the same pill — 238 of 326 courses
+  // coloured identically. A test that only checked "hilly is red" would not
+  // have caught that, so this one asserts all six are DISTINCT.
+  const RAMP: readonly [CourseTerrain, string][] = [
+    [terrain(8, -1541), "--color-green-primary"], // Downhill
+    [terrain(10), "--color-lime-primary"], //         Very Flat
+    [terrain(50), "--color-gold-primary"], //         Mostly Flat
+    [terrain(96), "--color-orange-primary"], //       Rolling Hills
+    [terrain(270, -50), "--color-red-primary"], //    Hilly
+    [terrain(2350, -50), "--color-red-deep"], //      Very Hilly
+  ];
+
+  it("gives every profile its own ramp stop, and leaves the net pill neutral", () => {
+    expect(new Set(RAMP.map(([, token]) => token)).size).toBe(6);
+
+    for (const [t, token] of RAMP) {
+      const rendered = html(t);
+      expect(rendered).toContain(token);
+      // Exactly one colour per badge: the net pill never adds a second, and no
+      // stop may leak a neighbour's token.
+      // Match each token with its closing bracket — `--color-red-deep` and
+      // `--color-red-primary` share a prefix, so a bare substring test would
+      // report a false second colour.
+      const used = RAMP.map(([, other]) => other).filter((other) =>
+        rendered.includes(`${other})`),
+      );
+      expect(used).toEqual([token]);
+    }
+  });
+
+  it("gives every profile its own icon, inheriting the pill colour", () => {
+    // One per profile, and all six different — an icon shared by two profiles
+    // is a copy-paste slip, not a design decision.
+    const oneOfEach = [
+      terrain(10),
+      terrain(50),
+      terrain(96),
+      terrain(8, -1541),
+      terrain(270),
+      terrain(2350),
+    ];
+    const paths = new Set<string>();
+    for (const t of oneOfEach) {
+      const { container } = render(<DifficultyBadge terrain={t} />);
+      const svg = container.querySelector("svg");
+      expect(svg).not.toBeNull();
+      // aria-hidden: the label beside it already carries the meaning.
+      expect(svg!.getAttribute("aria-hidden")).toBe("true");
+      expect(svg!.getAttribute("stroke")).toBe("currentColor");
+      const d = container.querySelector("svg path")?.getAttribute("d");
+      expect(d).toBeTruthy();
+      paths.add(d!);
+    }
+    expect(paths.size).toBe(oneOfEach.length);
+  });
+
+  it("renders the real Boston profile as Downhill with its net drop", () => {
     const boston = text(courseTerrain(loadGeometry("boston").elevations));
-    expect(boston).toContain("Rolling");
-    expect(boston).toContain("315 ft up");
+    expect(boston).toContain("Downhill");
     expect(boston).toContain("−436 ft net");
   });
 
@@ -60,7 +129,9 @@ describe("DifficultyBadge", () => {
     const { container } = render(<DifficultyBadge terrain={terrain(600, -1000)} />);
     const html = container.innerHTML;
     expect(html).not.toMatch(/#[0-9a-fA-F]{3,6}/);
-    expect(html).not.toMatch(/\b(?:bg|text|border)-(?:zinc|gray|red|green)-\d/);
+    expect(html).not.toMatch(
+      /\b(?:bg|text|border)-(?:zinc|gray|slate|neutral|red|green|orange|lime|yellow|amber)-\d/,
+    );
     expect(html).not.toContain("dark:");
   });
 });

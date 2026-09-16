@@ -22,7 +22,7 @@ export default function OrderSuccessPage() {
             Your band is on the way
           </h1>
           <p className="text-lg text-[var(--color-text-secondary)]">
-            Thank you — genuinely. Every band is printed, trimmed and posted by
+            Thank you, genuinely. Every band is printed, trimmed and posted by
             hand, and yours will be in the mail within {FULFILLMENT_WINDOW}.
           </p>
         </header>
@@ -41,9 +41,9 @@ export default function OrderSuccessPage() {
               tear-resistant stock.
             </li>
             <li>
-              Shipping is free and included. If anything is wrong — wrong
+              Shipping is free and included. If anything is wrong (wrong
               splits, damaged in the post, or you simply changed your mind
-              before it ships — reply to that receipt or write to{" "}
+              before it ships), reply to that receipt or write to{" "}
               <a
                 href={`mailto:${SUPPORT_EMAIL}`}
                 className="text-[var(--color-red-primary)] underline transition-colors hover:text-[var(--color-red-deep)]"

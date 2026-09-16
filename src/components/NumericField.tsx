@@ -120,9 +120,16 @@ export function NumericField({
   };
   const allowNegative = min === undefined || min < 0;
 
-  // A blank field steps from 0 — the same baseline the placeholder implies.
+  // A blank field steps from the value it would take if left untouched — which
+  // is exactly what the placeholder shows (e.g. the default body weight) — so
+  // the first click lands next to that default rather than jumping to 1.
+  // Falls back to 0 when the placeholder isn't a number ("—") or is absent.
+  const blankBase = (() => {
+    const fromPlaceholder = placeholder === undefined ? NaN : Number(placeholder);
+    return Number.isFinite(fromPlaceholder) ? fromPlaceholder : 0;
+  })();
   const adjust = (delta: 1 | -1) => {
-    const next = clamp((value ?? 0) + delta * step);
+    const next = clamp((value ?? blankBase) + delta * step);
     setText(String(next));
     onCommit(next);
   };

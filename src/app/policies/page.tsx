@@ -42,7 +42,7 @@ export default function PoliciesPage() {
             splits you generated, printed on waterproof, tear-resistant stock
             and cut to wrap your wrist. If you supplied a name at checkout, it
             is printed on the band. This is the same plan you can print at home
-            for free — you are paying for the durable version and for not having
+            for free. You are paying for the durable version and for not having
             to make it yourself.
           </p>
         </div>
@@ -56,7 +56,7 @@ export default function PoliciesPage() {
             posted within {FULFILLMENT_WINDOW} of your order and travel as
             standard mail, which typically arrives within a week of that.
             There is no tracking number. If your race is imminent, print the
-            free version too — do not let the post be the thing between you and
+            free version too. Do not let the post be the thing between you and
             your splits.
           </p>
         </div>
@@ -68,8 +68,8 @@ export default function PoliciesPage() {
           <p className="text-base leading-relaxed text-[var(--color-text-secondary)]">
             Full refund, no questions, any time before your band ships. After it
             ships: if it arrives damaged, illegible, or with the wrong splits,
-            we will send a replacement or refund you in full — your choice, and
-            you do not need to send anything back. Refunds go to the original
+            we will send a replacement or refund you in full, whichever you
+            prefer, and you do not need to send anything back. Refunds go to the original
             card via Stripe and usually land within five to ten business days.
           </p>
         </div>

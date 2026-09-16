@@ -3,7 +3,7 @@ import { ImageResponse } from "next/og";
 // The social card for every page that doesn't override it. Generated at build
 // time (no request-time APIs, no fetches) and served as a static PNG.
 export const alt =
-  "eveneffort — elevation-adjusted marathon pacing charts, over a course elevation profile";
+  "eveneffort: elevation-adjusted marathon pacing charts, over a course elevation profile";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

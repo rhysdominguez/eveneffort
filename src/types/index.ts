@@ -47,8 +47,20 @@ export interface CourseTerrain {
   netM: number;
 }
 
-/** The four terrain bands, by total climbing. */
-export type TerrainLabel = "flat" | "rolling" | "hilly" | "mountainous";
+/**
+ * Course profile, matching the six labels findmymarathon.com publishes so a
+ * runner reads the same vocabulary in both places. Five are bands of total
+ * climbing; `downhill` is an override on a big net drop. See
+ * src/lib/pacing/terrain.ts for the criteria and how they were calibrated.
+ */
+export type TerrainLabel =
+  | "veryFlat"
+  | "mostlyFlat"
+  | "rolling"
+  | "downhill"
+  | "hilly"
+  | "veryHilly";
+
 
 export interface PacingInput {
   goalTimeSeconds: number;

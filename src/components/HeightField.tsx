@@ -4,6 +4,7 @@ import { NumericField, Stepper, fieldEyebrowClass, numericInputClass } from "@/c
 import { UnitToggle } from "@/components/UnitToggle";
 import type { HeightUnit } from "@/lib/units/weather";
 import { cmToFeetInches, feetInchesToCm } from "@/lib/units/weather";
+import { DEFAULT_BODY } from "@/types";
 
 // Height input with its own unit toggle. Metric is a single absolute
 // centimetre value; imperial is a feet + inches PAIR, because that's how
@@ -46,27 +47,36 @@ function PartInput({
   id,
   caption,
   value,
+  placeholder,
+  blankBase,
   onCommit,
   disabled,
 }: {
   id: string;
   caption: string;
-  value: number;
+  /** This part's whole number, or null while the height as a whole is unset. */
+  value: number | null;
+  /** Shown (greyed) while `value` is null — the matching part of the default
+   *  height, so an untouched field reads "5 / 9" rather than "0 / 0". */
+  placeholder?: string;
+  /** Baseline the stepper works from while `value` is null, so the first
+   *  click lands next to the default height rather than at 1. */
+  blankBase?: number;
   onCommit: (n: number) => void;
   disabled: boolean;
 }) {
-  const [text, setText] = useState(String(value));
+  const [text, setText] = useState(value === null ? "" : String(value));
   const [focused, setFocused] = useState(false);
   const [lastValue, setLastValue] = useState(value);
   if (value !== lastValue) {
     setLastValue(value);
-    if (!focused) setText(String(value));
+    if (!focused) setText(value === null ? "" : String(value));
   }
 
   // Mirrors the guard in onChange/onBlur below: this part of a height never
   // goes negative.
   const adjust = (delta: 1 | -1) => {
-    const next = Math.max(0, value + delta);
+    const next = Math.max(0, (value ?? blankBase ?? 0) + delta);
     setText(String(next));
     onCommit(next);
   };
@@ -80,6 +90,7 @@ function PartInput({
           inputMode="numeric"
           aria-label={caption}
           disabled={disabled}
+          placeholder={placeholder}
           value={text}
           onFocus={() => setFocused(true)}
           onChange={(e) => {
@@ -96,7 +107,7 @@ function PartInput({
               setText(String(n));
               onCommit(n);
             } else {
-              setText(String(value));
+              setText(value === null ? "" : String(value));
             }
           }}
           className={`${numericInputClass} text-center`}
@@ -124,13 +135,19 @@ export function HeightField({
         value={value}
         onCommit={(n) => onChange(n)}
         disabled={disabled}
-        placeholder="175"
+        placeholder={String(DEFAULT_BODY.heightCm)}
         min={0}
       />
     );
   }
 
-  const { feet, inches } = cmToFeetInches(value ?? 0);
+  // An unset height shows the default (5 ft 9 in — the ft/in reading of the
+  // same 175 cm the metric field placeholders) as greyed placeholders, and the
+  // steppers work from it so the first click lands next to it rather than at
+  // 1. A click on either part fills in the whole default, not just its half.
+  const unset = value === null;
+  const fallback = cmToFeetInches(DEFAULT_BODY.heightCm);
+  const parts = unset ? null : cmToFeetInches(value);
 
   return (
     <div>
@@ -142,15 +159,23 @@ export function HeightField({
         <PartInput
           id="height-ft"
           caption="ft"
-          value={feet}
-          onCommit={(n) => onChange(feetInchesToCm(n, inches))}
+          value={parts ? parts.feet : null}
+          placeholder={String(fallback.feet)}
+          blankBase={fallback.feet}
+          onCommit={(n) =>
+            onChange(feetInchesToCm(n, parts ? parts.inches : fallback.inches))
+          }
           disabled={disabled}
         />
         <PartInput
           id="height-in"
           caption="in"
-          value={inches}
-          onCommit={(n) => onChange(feetInchesToCm(feet, n))}
+          value={parts ? parts.inches : null}
+          placeholder={String(fallback.inches)}
+          blankBase={fallback.inches}
+          onCommit={(n) =>
+            onChange(feetInchesToCm(parts ? parts.feet : fallback.feet, n))
+          }
           disabled={disabled}
         />
       </div>

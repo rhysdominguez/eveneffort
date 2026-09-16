@@ -4,7 +4,7 @@ import { getCourseCatalog } from "@/db/queries";
 import { CourseRankingTable } from "@/components/CourseRankingTable";
 
 export const metadata: Metadata = {
-  title: "Marathon course rankings — fastest, flattest, hilliest",
+  title: "Marathon course rankings: fastest, flattest, hilliest",
   description:
     "Every marathon course we hold an elevation profile for, ranked by how fast it runs: total climbing, net elevation change, and what each course costs against a flat marathon.",
   alternates: { canonical: "/courses" },
@@ -39,8 +39,8 @@ export default async function CoursesPage() {
           <p className="text-sm text-[var(--color-text-tertiary)]">
             Climbing is measured per kilometre from each course&rsquo;s
             elevation profile, so it is a consistent floor rather than a
-            surveyed figure — comparable across races because every race is
-            measured identically. Net change is exact.{" "}
+            surveyed figure, and it is comparable across races because every
+            race is measured identically. Net change is exact.{" "}
             <Link
               href="/methodology"
               className="underline transition-colors hover:text-[var(--color-text-secondary)]"

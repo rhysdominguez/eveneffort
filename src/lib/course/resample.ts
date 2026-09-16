@@ -249,7 +249,7 @@ export function sampleAtDistances(
     (target, total) =>
       warnings.push(
         `target ${target.toFixed(0)} m exceeds route length ${total.toFixed(1)} m ` +
-          `— clamping to the last point (the route is short)`,
+          `(clamping to the last point, because the route is short)`,
       ),
   ).map((v) => roundHalfEven(v, 1));
 }
@@ -328,7 +328,7 @@ export function resampleCourse(points: readonly RoutePoint[]): CourseGeometry {
   if (worstGap > MAX_STEP_M) {
     throw new CourseParseError(
       `${worstGap.toFixed(0)} m jump between track points ${worstIdx - 1} and ` +
-        `${worstIdx} (max ${MAX_STEP_M}) — the track looks stitched or discontinuous`,
+        `${worstIdx} (max ${MAX_STEP_M}); the track looks stitched or discontinuous`,
     );
   }
 
@@ -337,7 +337,7 @@ export function resampleCourse(points: readonly RoutePoint[]): CourseGeometry {
   if (totalKm < DISTANCE_MIN_KM || totalKm > DISTANCE_MAX_KM) {
     throw new CourseParseError(
       `total route length ${totalKm.toFixed(3)} km is outside ` +
-        `[${DISTANCE_MIN_KM}, ${DISTANCE_MAX_KM}] km — this tool builds marathon ` +
+        `[${DISTANCE_MIN_KM}, ${DISTANCE_MAX_KM}] km. This tool builds marathon ` +
         `pacing charts, so the route has to be a marathon`,
     );
   }

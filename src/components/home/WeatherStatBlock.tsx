@@ -48,7 +48,7 @@ export function WeatherStatBlock() {
 
       <p className="mt-6 text-sm leading-relaxed text-[var(--color-text-secondary)]">
         Same runner, same fitness, same course. The difference is the morning
-        they got — and knowing it in advance is what stops it ambushing you at
+        they got, and knowing it in advance is what stops it ambushing you at
         mile 18.
       </p>
     </div>

@@ -2,6 +2,7 @@
 import type { EditionOption } from "@/types";
 import { isPastISO } from "@/lib/editions";
 import { formatDateDisplay } from "@/lib/units/date";
+import { SelectChevron } from "@/components/SelectChevron";
 
 // Picking a race year, not a race day.
 //
@@ -30,7 +31,7 @@ interface Props {
 }
 
 const selectClass =
-  "w-full appearance-none rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-surface)] px-4 py-3 text-left text-base font-tabular text-[var(--color-text-primary)] focus:border-[var(--color-border-focus)] focus:outline-none transition-colors";
+  "w-full appearance-none rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-surface)] py-3 pl-4 pr-10 text-left text-base font-tabular text-[var(--color-text-primary)] focus:border-[var(--color-border-focus)] focus:outline-none transition-colors";
 
 /**
  * "2027 · Apr 19th, 2027" is redundant, so the year leads and the date follows
@@ -51,7 +52,7 @@ export function editionLabel(
   if (edition.dateConfidence !== "confirmed") tags.push("estimated");
 
   const label = parts.join(" · ");
-  return tags.length > 0 ? `${label} — ${tags.join(", ")}` : label;
+  return tags.length > 0 ? `${label} (${tags.join(", ")})` : label;
 }
 
 export function RaceYearPicker({
@@ -104,12 +105,7 @@ export function RaceYearPicker({
         ))}
         <option value={CUSTOM_DATE}>Custom date…</option>
       </select>
-      <span
-        aria-hidden
-        className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[var(--color-text-secondary)]"
-      >
-        ▾
-      </span>
+      <SelectChevron className="right-4" />
     </div>
   );
 }

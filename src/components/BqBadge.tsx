@@ -55,7 +55,7 @@ export function BqBadge({ status, compact = false }: Props) {
       )}
       {!compact && status.nearThreshold && (
         <span className="text-xs text-[var(--color-text-tertiary)]">
-          Near the B.A.A.&rsquo;s threshold — confirm the index with them
+          Near the B.A.A.&rsquo;s threshold, so confirm the index with them
         </span>
       )}
     </span>

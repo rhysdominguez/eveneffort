@@ -74,7 +74,7 @@ export async function ensureElevation(
   }
   if (biggestJump >= NEEDS_REVIEW_M) {
     warnings.push(
-      `DEM elevation jumps ${biggestJump.toFixed(0)} m between adjacent points — ` +
+      `DEM elevation jumps ${biggestJump.toFixed(0)} m between adjacent points, ` +
         `likely a bridge, tunnel or urban canyon the terrain model reads through. ` +
         `Check the profile before promoting.`,
     );

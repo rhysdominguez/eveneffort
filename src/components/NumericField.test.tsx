@@ -32,12 +32,44 @@ describe("NumericField — stepper", () => {
     expect(seen).toEqual([15]);
   });
 
-  it("steps from zero when the field is blank", () => {
+  it("steps from zero when the field is blank and has no numeric placeholder", () => {
     const seen: number[] = [];
     const { getByLabelText } = render(
       <NumericField id="x" label="Humidity (%)" value={null} onCommit={(n) => seen.push(n)} />,
     );
     fireEvent.click(getByLabelText("Increase Humidity (%)"));
+    expect(seen).toEqual([1]);
+  });
+
+  it("steps from the placeholder default when the field is blank", () => {
+    const seen: number[] = [];
+    const { getByLabelText } = render(
+      <NumericField
+        id="x"
+        label="Weight"
+        value={null}
+        placeholder="154"
+        min={0}
+        onCommit={(n) => seen.push(n)}
+      />,
+    );
+    fireEvent.click(getByLabelText("Increase Weight"));
+    fireEvent.click(getByLabelText("Decrease Weight"));
+    expect(seen).toEqual([155, 153]);
+  });
+
+  it("ignores a non-numeric placeholder when stepping from blank", () => {
+    const seen: number[] = [];
+    const { getByLabelText } = render(
+      <NumericField
+        id="x"
+        label="Age"
+        value={null}
+        placeholder="—"
+        onCommit={(n) => seen.push(n)}
+      />,
+    );
+    fireEvent.click(getByLabelText("Increase Age"));
     expect(seen).toEqual([1]);
   });
 

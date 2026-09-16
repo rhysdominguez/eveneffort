@@ -169,12 +169,12 @@ describe("SummaryHeader — course difficulty", () => {
       />,
     );
     const text = container.textContent ?? "";
-    expect(text).toContain("Rolling");
-    expect(text).toContain("315 ft up");
+    expect(text).toContain("Downhill");
     expect(text).toContain("−436 ft net");
-    // The point of showing both: Boston climbs enough to be "rolling" and
-    // still runs FASTER than flat, because the net drop more than pays for
-    // the Newton hills. One number could not say that.
+    // The point of pairing the two: Boston's 96 m of climbing would read as
+    // "Rolling Hills" on gain alone, but the net drop outranks it AND is what
+    // makes the course run faster than flat. The profile word and the cost
+    // line say different things.
     expect(text).toContain("Costs 0.6% less than a flat course");
   });
 
@@ -183,7 +183,7 @@ describe("SummaryHeader — course difficulty", () => {
       <SummaryHeader result={resultWith()} courseName="Boston Marathon" />,
     );
     const text = container.textContent ?? "";
-    expect(text).not.toContain("Rolling");
+    expect(text).not.toContain("Downhill");
     expect(text).not.toContain("flat course");
   });
 

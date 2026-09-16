@@ -16,7 +16,7 @@ export const SITE_NAME = "eveneffort";
 // the OG card, the Twitter card. Kept under ~155 chars so Google doesn't
 // truncate it in the SERP.
 export const SITE_DESCRIPTION =
-  "Free elevation- and weather-adjusted marathon pacing charts. Even effort, not even splits — built on the Minetti (2002) energy cost model.";
+  "Free elevation- and weather-adjusted marathon pacing charts. Even effort, not even splits, built on the Minetti (2002) energy cost model.";
 
 // Shown on /privacy and /terms. One constant so the two pages can never claim
 // different revision dates. Bump it whenever either page's substance changes —

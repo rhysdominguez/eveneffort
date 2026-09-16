@@ -10,8 +10,26 @@
   --color-red-primary: #B91C1C;
   --color-red-deep: #7F1D1D;
 
-  /* Semantic green — faster-than-goal deltas only; keep it as rare as red */
+  /* Semantic green — faster-than-goal deltas, and the Downhill course profile.
+     Keep it as rare as red. */
   --color-green-primary: #15803D;
+
+  /* COURSE-PROFILE RAMP — six stops, one per profile, sweeping green → maroon:
+     Downhill (green above) → Very Flat (lime) → Mostly Flat (gold) → Rolling
+     Hills (orange) → Hilly (red-primary) → Very Hilly (red-deep). Only the two
+     middle stops are new tokens; the ends reuse the accents the palette already
+     had. Monotone in CIELAB hue (147 → 124 → 70 → 47 → 35 → 32), so the ramp
+     reads as one scale rather than six unrelated colours.
+
+     Every stop clears WCAG AA as pill text on both #FFFFFF (≥4.9:1) and
+     --color-bg-elevated #FAFAFA (≥4.7:1). findmymarathon's own hexes do not:
+     their orange #ff7800 is 2.65:1 and both their greens are under 4:1. We
+     match their hue relationships, not their values. See DESIGN.md.
+
+     This ramp belongs to the profile pill alone — nothing else may use it. */
+  --color-lime-primary: #4D7C0F;
+  --color-gold-primary: #A16207;
+  --color-orange-primary: #C2410C;
 
   /* Neutrals — white-dominant */
   --color-bg-page: #FFFFFF;

@@ -6,7 +6,7 @@ import { DISTANCE_MAX_KM, DISTANCE_MIN_KM } from "@/lib/course/resample";
 import { UPLOAD_TTL_DAYS } from "@/db/userCourses";
 
 export const metadata: Metadata = {
-  title: "Upload your own marathon course — GPX, KML or GeoJSON",
+  title: "Upload your own marathon course: GPX, KML or GeoJSON",
   description:
     "Build an elevation-adjusted pacing chart for any marathon course, not just the ones we hold. Upload a GPX, KML, KMZ or GeoJSON route and get the same even-effort splits, weather model and printable paceband.",
   alternates: { canonical: "/upload" },
@@ -27,9 +27,9 @@ export default function UploadPage() {
           </h1>
           <p className="text-lg text-[var(--color-text-secondary)]">
             Running a race we don&rsquo;t hold, or your own route? Upload the
-            course file and you get the same chart as any race in the catalogue
-            — even-effort splits off the real gradients, the weather model, and
-            a paceband you can print or order.
+            course file and you get the same chart as any race in the
+            catalogue: even-effort splits off the real gradients, the weather
+            model, and a paceband you can print or order.
           </p>
         </header>
 
@@ -64,8 +64,8 @@ export default function UploadPage() {
             <strong className="font-medium text-[var(--color-text-primary)]">
               Anyone with the link can see it.
             </strong>{" "}
-            It is unlisted — it never appears in the course list, the map or the
-            rankings — but it is not secret. Don&rsquo;t upload a route you
+            It is unlisted, so it never appears in the course list, the map or
+            the rankings, but it is not secret. Don&rsquo;t upload a route you
             wouldn&rsquo;t share.
           </p>
           <p>

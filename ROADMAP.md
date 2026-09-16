@@ -15,7 +15,7 @@ need new human research, and does it touch the locked pacing algorithm.
 | # | Project | Phase | Ease | Status |
 |---|---------|-------|------|--------|
 | 1 | Split strategy (negative / positive, aggressive variants) | 1 | ●○○○○ | **Done** 2026-08-30 |
-| 2 | Conservative start options | 1 | ●○○○○ | **Done** 2026-08-30 |
+| 2 | Conservative start options | 1 | ●○○○○ | **Reverted** 2026-09-08 — UI removed, see §2 |
 | 3 | Goal as pace or GAP pace | 1 | ●●○○○ | **Done** 2026-08-30 |
 | 4 | Dew point as the humidity input | 1 | ●●○○○ | **4a done** 2026-08-30 · 4b deferred |
 | 5 | Course difficulty rating + fastest-course ranking | 2 | ●○○○○ | **Done** 2026-08-30 |
@@ -75,10 +75,28 @@ on a flat course; aggressive is strictly more biased than standard.
   quantized to whichever unit is on screen.
 - The controls are dashboard-only, alongside Weather and Fueling. The hero form
   stays core setup + Calculate, and always builds the defaults.
+- **2026-09-08:** the split control became a **five-stop slider** (`RangeField`,
+  the same component fueling uses) — strong negative · negative · even effort
+  (default, centre) · positive · strong positive. Each stop still maps to one of
+  the existing `SplitStrategy` presets, so the engine, `SPLIT_BIAS`, the URL
+  format and printed pacebands are untouched. **`even-pace` ("ignore hills") was
+  dropped from the form** at the same time — it is a different axis and did not
+  belong on the slider; it still parses from older links and just lands the
+  slider on the middle stop.
 
 ## 2. Conservative start options
 
-**Status:** Done 2026-08-30 · **Ease:** ●○○○○
+**Status:** Reverted 2026-09-08 (shipped 2026-08-30) · **Ease:** ●○○○○
+
+**The "Start" control was removed from the dashboard form on 2026-09-08** — a
+product call that the split-strategy selector is enough race-strategy surface for
+now, and a second dropdown next to it was more choice than clarity. The section
+heading is now just "Split Strategy". Only the `InputForm` UI went; the
+`strategy.ts` math (`startBias`, `START_SURCHARGE`, `START_TAU_KM`) and the
+`hold=` URL param parsing in `resultsParams.ts` are left in place so pacebands
+people have already paid for keep resolving, and re-adding the control later is a
+UI-only change. `input.start` is simply never set by the form now, so it defaults
+to `"even"` (a no-op surcharge).
 
 Evenly paced / conservative / very conservative first miles. FindMyMarathon has
 exactly this, and it is the most-given piece of real-world marathon advice.
@@ -140,6 +158,11 @@ elapsed time, average pace, or normalized pace.
 The mode is **not in the URL**: a shared link stays a finish time, so every
 existing link and printed paceband is untouched. The preference persists in
 localStorage (`prefs.goalMode`) instead.
+
+**Update 2026-09-08:** GAP was pulled from the hero form and is now dashboard-only
+after all — the hero is core race setup plus Calculate, and grade-adjusted pace
+only earns its place next to a chart. The `CourseSummary.effort` field (plan
+point 1) still ships; it feeds #5's rankings and the comparison page regardless.
 
 Still deliberately **not** in scope: race-time prediction from a recent result
 (Riegel/VDOT). Separate project, different claim.
@@ -230,27 +253,87 @@ the one the plan assumed:
   [src/lib/pacing/terrain.ts](src/lib/pacing/terrain.ts), read off the raw
   (unsmoothed) 44-point array. Gain and loss are per-kilometre figures — an
   honest floor, not surveyed gain, and the module header says so; net change is
-  exact. This drives the flat / rolling / hilly / mountainous label.
+  exact. This drives the six-way course-profile label.
 - **Speed** — `effortMultiplier`, unchanged from #3. This drives the ranking and
   is what #8 will convert times with.
 
 Boston is the case that proves both are needed: it climbs enough to be
 **rolling** and still runs **0.6% faster than flat**, because the net drop more
-than pays for the Newton hills. One number cannot say that.
+than pays for the Newton hills. One number cannot say that. (Since 2026-09-08 it
+*labels* as **Downhill** for that same reason — see the taxonomy note below —
+but the two-axis point stands: the label and the cost line say different things.)
 
-**The bands are 75 / 150 / 400 m of gain**, splitting the catalog 133 / 120 / 56
-/ 17. They were calibrated against races whose character is not in dispute, not
-against round numbers: at a 100 m floor Boston came out "flat" (96 m), which no
-one who has run the Newton hills would accept. Berlin 28 m and London 63 m are
-flat, Boston 96 and Tokyo 129 rolling, Sydney 190 and Big Sur 270 hilly, Blue
-Ridge 727 and Pikes Peak 2,350 mountainous. A separate net-downhill pill (≤ −100
-m, 27 courses) carries what the gain band cannot: REVEL Mt Charleston climbs 8 m
-and drops 1,549.
+**The taxonomy now matches findmymarathon.com** (updated 2026-09-08). It was
+flat / rolling / hilly / mountainous on bands of 75 / 150 / 400 m, calibrated
+against races whose character is not in dispute; it is now the six labels
+runners already read on the biggest race-comparison site — **Very Flat / Mostly
+Flat / Rolling Hills / Downhill / Hilly / Very Hilly** — on gain bands of **25 /
+85 / 215 / 355 m**, splitting the catalog 20 / 118 / 120 / 28 / 22 / 18.
+`terrain.test.ts` pins that split, so no band edge can move quietly.
 
-**No palette was added.** `DifficultyBadge` extends the two reserved semantics
-already in the system — red for the uphill direction, green for faster — and
-leaves flat/rolling in neutral text. DESIGN.md records the extension and why a
-difficulty ramp was refused.
+Those cuts were **fitted, not chosen**. findmymarathon publishes no formula —
+their FAQ calls the profile "subjective… based on the course profiles, course
+elevations, runner opinions, and race organizer descriptions", i.e. a
+hand-assigned field. But their race feed exposes a label plus gain/loss per
+race, and **103 of those races join to our seeded courses by GPX start
+coordinate**, giving a ground-truth set to grid-search against: the shipped cuts
+score **77% exact agreement, 98% within one band**, where the old bands mapped
+naively scored 59%. Every surviving disagreement is an adjacent call, which is
+the irreducible part of reproducing a subjective field with a threshold.
+
+Two findings from that exercise are worth not rediscovering:
+
+- **The 44-point `gainM` is the best predictor we have** (r = 0.902 vs their
+  gain). Gain re-derived from the dense `profile` array is *worse* — r = 0.819
+  with 3 m hysteresis, r = 0.700 raw — because raw trace noise scales with the
+  recording device, not the terrain. Tokyo's 2,922-point profile yields 2,179 ft
+  of "gain" for a course everyone calls mostly flat. The coarse array's uniform
+  sampling is the whole point, and the taxonomy therefore needed **no schema,
+  query, seed or `CourseSummary` change**.
+- **`netM` is comparable across sites even though `gainM` is not.** Recording
+  noise inflates gain and loss together and cancels in the difference: Boston
+  nets −436 ft here against their −460, Marquette −806 against −810.
+
+**Downhill is an override, not a rung**, which is also how findmymarathon does
+it — Boston is listed there as Downhill despite 96 m of climbing, and is here
+now too. But **hills win when a course is both**: Big Sur drops 91 m and stays
+Hilly. That tie-break is theirs, not an invention — in their data every
+big-drop race that keeps a hill label instead (Big Sur, Loch Ness, Deadwood,
+Breckenridge) is one with large gain. `NET_DOWNHILL_M` moved −100 → **−75 m**
+(≈ −246 ft) in the same pass, which is where their labelling turns over and,
+more to the point, is what finally catches **CIM at −91 m** — the canonical
+net-downhill BQ course, which −100 m missed.
+
+**The second pill shows net change, not total gain** (updated 2026-09-08).
+"847 ft up" next to the terrain word read as a contradiction on a loop course
+that climbs hundreds of feet and returns to its start — the number never matched
+the elevation profile beside it. The second pill now always shows net change
+(finish minus start, exact at any resolution) — "Downhill" + "−436 ft net" for
+Boston — and the earlier green-when-downhill pill (which only appeared for the 27
+big descents) is retired. Total gain is still the input to the band label and
+still a sortable column in the ranking table; it just no longer sits on the
+badge.
+
+**The profile pill now carries a six-stop colour ramp** (updated 2026-09-08).
+This paragraph previously read "no palette was added… deliberately no four-step
+difficulty ramp", and that position lasted until the six findmymarathon labels
+landed: adopting their vocabulary brought their colour convention with it.
+It shipped first as three tiers — green / orange / red over the six labels —
+which was wrong for a reason worth recording: pairing the labels gave **Mostly
+Flat and Rolling Hills the same pill**, and those are the two biggest bands in
+the catalog (118 and 120 of 326 courses), so on 73% of races the colour told the
+runner nothing while still spending a colour. It is now one stop per profile,
+fastest → hardest: green, lime, gold, orange, red, red-deep. **Four of the six
+were tokens the palette already had** — only `--color-lime-primary` and
+`--color-gold-primary` are new. Hue falls monotonically at every step and every
+stop clears WCAG AA on white and on the elevated surface, which
+[src/app/globals.tokens.test.ts](src/app/globals.tokens.test.ts) enforces;
+findmymarathon's own hexes would fail it (their `#ff7800` is 2.65:1 on white,
+and they too give two labels one colour). `TERRAIN_TIER` is gone, replaced by
+`TERRAIN_ORDER`. The net-change pill is **still always neutral grey**: a net
+drop makes a course faster, but that is a fact about the course, not a verdict,
+and a second coloured pill competed with the profile pill for the eye.
+DESIGN.md carries the full argument and both positions it replaced.
 
 **Also shipped:** `/courses`, the sortable ranking (speed, climbing, net change,
 name), linked from the nav, the footer and the Course Library band, and in the
@@ -621,3 +704,12 @@ they are not rediscovered from scratch:
   runner that control directly. Do not reopen without new evidence.
 - **Already computed but never shown:** the hourly weather series across the race —
   the math consumes it, the UI never charts it. Cheap and differentiating.
+- **findmymarathon's other two course axes**, deliberately not adopted alongside
+  its profile taxonomy on 2026-09-08. **Course Type** (Loop / Mostly Loop /
+  Multi-Loop / Out & Back / Mostly Out & Back / Multi Out & Back / Point to
+  Point) is derivable in principle from the stored `coords` array — start/finish
+  proximity plus self-intersection — but nothing in the app reads it today.
+  **Surface** (Road / Mostly Road / Trail / Mostly Trail) is **not derivable at
+  all**: it is nowhere in GPX and would need a per-course human field, i.e. the
+  same sign-off burden as `organizer` and for the same reason it is still null.
+  Neither blocks anything; note them here rather than half-building them.

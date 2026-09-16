@@ -362,7 +362,7 @@ export function CourseMap({ catalog, onSelectCourse }: Props) {
         setLocationNote(
           nearest
             ? `Closest race: ${nearest.course.displayName}, about ${Math.round(nearest.distanceKm).toLocaleString()} km away.`
-            : "Found you — no races plotted yet.",
+            : "Found you, but no races are plotted yet.",
         );
         setLocating(false);
       },

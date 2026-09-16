@@ -181,7 +181,7 @@ export function BostonQualifier({ catalog }: { catalog: CourseSummary[] }) {
               placeholder="Search races…"
             />
             <p className="mt-2 text-xs text-[var(--color-text-tertiary)]">
-              Only needed if you are running a steeply downhill course — see the
+              Only needed if you are running a steeply downhill course. See the
               net-downhill rule below.
             </p>
           </div>
@@ -250,7 +250,7 @@ export function BostonQualifier({ catalog }: { catalog: CourseSummary[] }) {
               {!status.clears && status.eligible && (
                 <p className="text-sm text-[var(--color-text-secondary)]">
                   You would need {formatHMS(status.standardSeconds - status.indexSeconds)}{" "}
-                  on this course to meet the standard — and faster still to be
+                  on this course to meet the standard, and faster still to be
                   accepted, given recent cut-offs.
                 </p>
               )}
@@ -278,7 +278,7 @@ export function BostonQualifier({ catalog }: { catalog: CourseSummary[] }) {
         </h2>
         <p className="max-w-2xl text-sm text-[var(--color-text-secondary)]">
           Your age group is the one you fall into on race day,{" "}
-          {BQ_RACE_DATE_LABEL}. A time equal to the standard qualifies — it does
+          {BQ_RACE_DATE_LABEL}. A time equal to the standard qualifies; it does
           not have to be faster.
         </p>
         <div className="overflow-x-auto">
@@ -329,7 +329,7 @@ export function BostonQualifier({ catalog }: { catalog: CourseSummary[] }) {
         <p className="max-w-2xl text-sm text-[var(--color-text-secondary)]">
           More runners qualify than Boston has places, so the B.A.A. fills its
           field with whoever ran furthest under their standard. This is the
-          buffer that was really required, by year — a zero means every
+          buffer that was really required, by year. A zero means every
           qualifier who applied got in.
         </p>
         <div className="overflow-x-auto">
@@ -366,7 +366,7 @@ export function BostonQualifier({ catalog }: { catalog: CourseSummary[] }) {
         <p className="max-w-2xl text-sm text-[var(--color-text-secondary)]">
           New for {BQ_YEAR}: a qualifying time run on a course that finishes far
           below where it started has time <strong>added to it</strong> before it
-          is compared against the standard — +5:00 from 1,500 ft of net drop,
+          is compared against the standard: +5:00 from 1,500 ft of net drop,
           +10:00 from 3,000 ft, and no qualifying at all from 6,000 ft.
         </p>
         {indexedCourses.length > 0 && (

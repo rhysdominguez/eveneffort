@@ -215,7 +215,7 @@ export function parseRouteFile(buf: Buffer, hint = ""): Route {
   if (/\.(json|geojson)$/i.test(hint)) return parseGeoJson(text);
 
   throw new RouteError(
-    `unrecognised route format${hint ? ` for ${hint}` : ""} — expected GPX, KML/KMZ or GeoJSON`,
+    `unrecognised route format${hint ? ` for ${hint}` : ""}: expected GPX, KML/KMZ or GeoJSON`,
   );
 }
 
@@ -263,7 +263,7 @@ export function toGpx(
   const missing = points.findIndex((p) => p.ele === null);
   if (missing >= 0) {
     throw new RouteError(
-      `point ${missing} has no elevation — run the DEM stage before serialising`,
+      `point ${missing} has no elevation; run the DEM stage before serialising`,
     );
   }
   const comment = (meta.provenance ?? []).map((l) => `  ${escapeXml(l)}`).join("\n");

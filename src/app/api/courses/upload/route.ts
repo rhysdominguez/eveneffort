@@ -69,7 +69,7 @@ export async function POST(request: Request): Promise<Response> {
   if (file.size > MAX_UPLOAD_BYTES) {
     return bad(
       `That file is ${(file.size / 1024 / 1024).toFixed(1)} MB. The limit is ` +
-        `${MAX_UPLOAD_BYTES / 1024 / 1024} MB — a marathon course file is normally well under 1 MB.`,
+        `${MAX_UPLOAD_BYTES / 1024 / 1024} MB, and a marathon course file is normally well under 1 MB.`,
       413,
     );
   }

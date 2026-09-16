@@ -5,7 +5,7 @@ import { BostonQualifier } from "@/components/BostonQualifier";
 import { BQ_YEAR } from "@/lib/bq/standards";
 
 export const metadata: Metadata = {
-  title: `Boston Marathon qualifying times ${BQ_YEAR} — BQ standards by age`,
+  title: `Boston Marathon qualifying times ${BQ_YEAR}: BQ standards by age`,
   description: `Every ${BQ_YEAR} Boston Marathon qualifying standard by age and division, what the cut-off has really cost in recent years, and which marathon courses the B.A.A.'s new net-downhill rule adds time to.`,
   alternates: { canonical: "/boston-qualifier" },
 };
@@ -29,14 +29,14 @@ export default async function BostonQualifierPage() {
           </h1>
           <p className="text-lg text-[var(--color-text-secondary)]">
             Your {BQ_YEAR} qualifying standard by age and division, whether a
-            goal time clears it, and — the part most calculators leave out —
+            goal time clears it, and, the part most calculators leave out,
             whether it would have been enough to actually get in.
           </p>
           <p className="text-sm text-[var(--color-text-tertiary)]">
             Standards are published by the B.A.A.; the cut-offs are what
             acceptance historically required on top of them. If the race you are
             qualifying at drops steeply, the new net-downhill rule adds time to
-            your result — pick the course to see it.{" "}
+            your result, so pick the course to see it.{" "}
             <Link
               href="/courses"
               className="underline transition-colors hover:text-[var(--color-text-secondary)]"

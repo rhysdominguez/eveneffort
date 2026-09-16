@@ -51,7 +51,7 @@ export function UploadedCourseNotice({ elevationSource, expiresAtISO }: Props) {
       <p className="text-sm text-[var(--color-text-secondary)]">
         {expiresAtISO ? (
           <>
-            This link works until {formatDate(expiresAtISO)} — keep it
+            This link works until {formatDate(expiresAtISO)}, so keep it
             somewhere, because it is the only way back to this course. Ordering
             a printed paceband keeps it for good.
           </>

@@ -64,7 +64,7 @@ export default function PrivacyPage() {
             The weather feature needs coordinates, but they are the{" "}
             <em>race course&rsquo;s</em> coordinates, not yours. When you pick
             the Boston Marathon, we look up the forecast for the Boston start
-            line — a fixed point in our course data that is identical for every
+            line, a fixed point in our course data that is identical for every
             visitor. The site never requests browser geolocation permission and
             has no code that could. Those course coordinates and your chosen
             start time go to our forecast provider, Tomorrow.io, and nothing
@@ -79,10 +79,9 @@ export default function PrivacyPage() {
           <p className="text-base leading-relaxed text-[var(--color-text-secondary)]">
             We use Vercel Analytics to count page views, which reports
             aggregate traffic without cookies and without building a profile of
-            individual visitors. Separately, we count two in-app moments — when
-            the print dialog is opened and when someone clicks through to order
-            a band — by writing the event name and a timestamp to our server
-            log. No identifier, no IP address, and nothing about your pacing
+            individual visitors. Separately, we count two in-app moments, the
+            opening of the print dialog and a click through to order a band, by
+            writing the event name and a timestamp to our server log. No identifier, no IP address, and nothing about your pacing
             plan is attached to either one. They exist to tell us whether the
             band is worth continuing to make.
           </p>
@@ -141,8 +140,8 @@ export default function PrivacyPage() {
             >
               {SUPPORT_EMAIL}
             </a>{" "}
-            and we will tell you exactly what we hold, correct it, or delete it
-            — subject to the order records we are required to keep for tax
+            and we will tell you exactly what we hold, correct it, or delete
+            it, subject to the order records we are required to keep for tax
             purposes. Depending on where you live you may have additional
             rights under the GDPR or CCPA; ask and we will honour them.
           </p>

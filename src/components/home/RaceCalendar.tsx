@@ -35,6 +35,7 @@ import {
 import { WEEKDAY_LABELS, monthGrid, todayISO } from "@/lib/units/date";
 import { useStoredState } from "@/hooks/useStoredState";
 import { HOME_CALENDAR, type CalendarSnapshot } from "@/lib/stateKeys";
+import { SelectChevron } from "@/components/SelectChevron";
 
 /**
  * The race calendar band — the catalogue's second entry point, answering
@@ -61,11 +62,24 @@ interface Props {
   todayISO: string;
 }
 
+/**
+ * How many races a single day cell shows before collapsing the rest behind a
+ * "See more" button. Fixed so every week row is exactly the same height no
+ * matter how many marathons fall on its busiest day — a day with five races is
+ * as tall as a day with none. The overflow opens in a popover that floats above
+ * the grid, so revealing it never reflows the calendar.
+ */
+const MAX_CHIPS_PER_DAY = 2;
+
 const navButtonClass =
   "flex h-9 w-9 items-center justify-center rounded-lg text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-elevated)] hover:text-[var(--color-text-primary)] disabled:pointer-events-none disabled:text-[var(--color-text-tertiary)] disabled:opacity-40";
 
 export function RaceCalendar({ editions, todayISO: serverToday }: Props) {
   const [today, setToday] = useState(serverToday);
+
+  // Which day cell has its overflow popover open, by ISO date. Only one at a
+  // time; stepping the month clears it.
+  const [expandedDay, setExpandedDay] = useState<string | null>(null);
 
   // This band renders inside a page Next prerenders at build time, so
   // `serverToday` can be days stale by the time anyone reads it — and it is a
@@ -115,6 +129,7 @@ export function RaceCalendar({ editions, todayISO: serverToday }: Props) {
   const place = locationLabel(editions, filter);
 
   const go = (delta: number) => {
+    setExpandedDay(null);
     store({ filter, view: stepMonth(view, delta, bounds) });
   };
 
@@ -148,7 +163,7 @@ export function RaceCalendar({ editions, todayISO: serverToday }: Props) {
           <p className="text-base text-[var(--color-text-secondary)]">
             Every edition we hold a course profile for, on the day it&rsquo;s
             run. Narrow it to where you&rsquo;ll be, then choose one and
-            we&rsquo;ll open a plan for it straight away — you can adjust your
+            we&rsquo;ll open a plan for it straight away. You can adjust your
             goal time from there.
           </p>
         </div>
@@ -282,33 +297,89 @@ export function RaceCalendar({ editions, todayISO: serverToday }: Props) {
                     {cells.slice(week * 7, week * 7 + 7).map((iso) => {
                       const inMonth = iso.startsWith(monthPrefix);
                       const isToday = iso === today;
+                      const dayEditions = byDate.get(iso) ?? [];
+                      const past = isPastDate(iso, today);
+                      const overflow = dayEditions.length - MAX_CHIPS_PER_DAY;
+                      const dayNumber = (
+                        <span
+                          className={`px-1 text-xs font-tabular ${
+                            isToday
+                              ? "font-semibold text-[var(--color-text-primary)]"
+                              : inMonth
+                                ? "text-[var(--color-text-secondary)]"
+                                : "text-[var(--color-text-tertiary)]"
+                          }`}
+                        >
+                          {Number(iso.slice(8))}
+                        </span>
+                      );
                       return (
                         <td
                           key={iso}
-                          className={`h-24 border-b border-r border-[var(--color-border)] align-top last:border-r-0 ${
+                          className={`relative h-36 border-b border-r border-[var(--color-border)] align-top last:border-r-0 ${
                             inMonth ? "" : "bg-[var(--color-bg-elevated)]"
                           }`}
                         >
-                          <div className="flex h-full flex-col gap-1 p-1.5">
-                            <span
-                              className={`px-1 text-xs font-tabular ${
-                                isToday
-                                  ? "font-semibold text-[var(--color-text-primary)]"
-                                  : inMonth
-                                    ? "text-[var(--color-text-secondary)]"
-                                    : "text-[var(--color-text-tertiary)]"
-                              }`}
-                            >
-                              {Number(iso.slice(8))}
-                            </span>
-                            {(byDate.get(iso) ?? []).map((edition) => (
-                              <EditionChip
-                                key={edition.editionSlug}
-                                edition={edition}
-                                past={isPastDate(iso, today)}
-                              />
-                            ))}
+                          <div className="flex h-full flex-col gap-1 overflow-hidden p-1.5">
+                            {dayNumber}
+                            {dayEditions
+                              .slice(0, MAX_CHIPS_PER_DAY)
+                              .map((edition) => (
+                                <EditionChip
+                                  key={edition.editionSlug}
+                                  edition={edition}
+                                  past={past}
+                                />
+                              ))}
+                            {overflow > 0 && (
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setExpandedDay((cur) =>
+                                    cur === iso ? null : iso,
+                                  )
+                                }
+                                aria-expanded={expandedDay === iso}
+                                className="rounded-lg px-1.5 py-0.5 text-left text-xs font-medium text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-elevated)] hover:text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-border-focus)]"
+                              >
+                                See {overflow} more
+                              </button>
+                            )}
                           </div>
+
+                          {expandedDay === iso && (
+                            <>
+                              {/* Click-away layer. Sits under the popover but
+                                  over everything else so the next click closes
+                                  it without also activating a link. */}
+                              <button
+                                type="button"
+                                aria-label="Close"
+                                onClick={() => setExpandedDay(null)}
+                                className="fixed inset-0 z-10 cursor-default"
+                              />
+                              {/* Anchored to the top of the cell for the upper
+                                  weeks and to the bottom for the lower ones, so
+                                  a crowded day never grows past the calendar's
+                                  rounded frame (which clips its overflow). Its
+                                  own height is capped and scrolls internally
+                                  when even that is not enough room. */}
+                              <div
+                                className={`absolute inset-x-1 z-20 flex max-h-56 flex-col gap-1 overflow-y-auto rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-surface)] p-1.5 shadow-lg ${
+                                  week <= 2 ? "top-1" : "bottom-1"
+                                }`}
+                              >
+                                {dayNumber}
+                                {dayEditions.map((edition) => (
+                                  <EditionChip
+                                    key={edition.editionSlug}
+                                    edition={edition}
+                                    past={past}
+                                  />
+                                ))}
+                              </div>
+                            </>
+                          )}
                         </td>
                       );
                     })}
@@ -380,19 +451,25 @@ function FilterSelect({
       >
         {label}
       </label>
-      <select
-        id={id}
-        value={value ?? ""}
-        onChange={(e) => onChange(e.target.value || null)}
-        className="h-10 min-w-[10rem] rounded-[var(--radius-control)] border border-[var(--color-border)] bg-[var(--color-bg-surface)] px-3 text-sm text-[var(--color-text-primary)] transition-colors hover:border-[var(--color-text-tertiary)] focus:border-[var(--color-border-focus)] focus:outline-none"
-      >
-        <option value="">{allLabel}</option>
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label} ({option.count})
-          </option>
-        ))}
-      </select>
+      {/* The chevron is ours, not the OS's: `appearance-none` drops the
+          platform arrow so these read as the same dropdown as the race-year
+          picker on the calculator. */}
+      <div className="relative">
+        <select
+          id={id}
+          value={value ?? ""}
+          onChange={(e) => onChange(e.target.value || null)}
+          className="h-10 w-full min-w-[10rem] appearance-none rounded-[var(--radius-control)] border border-[var(--color-border)] bg-[var(--color-bg-surface)] pl-3 pr-9 text-sm text-[var(--color-text-primary)] transition-colors hover:border-[var(--color-text-tertiary)] focus:border-[var(--color-border-focus)] focus:outline-none"
+        >
+          <option value="">{allLabel}</option>
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label} ({option.count})
+            </option>
+          ))}
+        </select>
+        <SelectChevron className="right-3" />
+      </div>
     </div>
   );
 }

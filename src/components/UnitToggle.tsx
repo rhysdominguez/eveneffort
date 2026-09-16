@@ -7,11 +7,16 @@
 //   a field label. DESIGN.md sanctions red for an active toggle, but the
 //   stronger "keep red rare" principle wins here — several of these appear
 //   at once, and red is reserved for consequential controls. See DESIGN.md.
-// - "prominent": for the one unit toggle that sets the whole form's display
-//   system (distance, km/mi) rather than a single field — sized and colored
-//   like the weather On/Off switch (red when active) so it reads as a
-//   top-level setting, not a per-field detail. Still a step down from
-//   weather's own toggle since it's not quite as consequential.
+// - "prominent": for the top-level toggles that set what the form means rather
+//   than a single field's unit — the distance system (km/mi) and the goal
+//   input mode (Time / Pace / GAP). Sized and colored like the weather On/Off
+//   switch (red when active), with an opaque fill on every segment so it reads
+//   as a setting, not a per-field detail. Still a step down from weather's own
+//   toggle since it's not quite as consequential.
+//
+// Both variants use the same neutral `--color-border` hairline. A red border
+// around the whole control read as a persistent alert/error outline rather
+// than a setting, on every backdrop it appears on.
 interface Props<T extends string> {
   /** Accessible name for the group, e.g. "Temperature unit". */
   label: string;
@@ -44,7 +49,7 @@ export function UnitToggle<T extends string>({
     <div
       role="group"
       aria-label={label}
-      className={`inline-flex overflow-hidden border border-[var(--color-border)] ${
+      className={`inline-flex shrink-0 overflow-hidden border border-[var(--color-border)] ${
         prominent ? "rounded-lg" : "rounded-md"
       } ${disabled ? "opacity-50" : ""}`}
     >
@@ -61,7 +66,7 @@ export function UnitToggle<T extends string>({
             onClick={() => onChange(optionValue)}
             className={
               prominent
-                ? `px-3 py-1 text-sm font-medium transition-colors ${
+                ? `px-3 py-1 text-sm font-medium transition-colors disabled:opacity-40 ${
                     active
                       ? "bg-[var(--color-red-primary)] text-white"
                       : "bg-[var(--color-bg-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-elevated)]"

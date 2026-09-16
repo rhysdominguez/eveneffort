@@ -63,9 +63,9 @@ describe("SiteNav", () => {
     expect(current[0].getAttribute("href")).toBe("/");
   });
 
-  it("is sticky everywhere except home", () => {
+  it("is sticky everywhere, home included", () => {
     const home = render(<SiteNav />);
-    expect(home.container.querySelector("nav")?.className).not.toContain("sticky");
+    expect(home.container.querySelector("nav")?.className).toContain("sticky top-0");
 
     route.pathname = "/methodology";
     const other = render(<SiteNav />);
@@ -73,7 +73,6 @@ describe("SiteNav", () => {
   });
 
   it("holds its flow height constant while compressing", () => {
-    route.pathname = "/methodology";
     const { container } = render(<SiteNav />);
     const nav = container.querySelector("nav")!;
     const row = nav.firstElementChild!;

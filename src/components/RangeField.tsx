@@ -16,6 +16,9 @@ interface Props {
   step: number;
   onChange: (n: number) => void;
   disabled?: boolean;
+  /** Keep the label for assistive tech but hide it visually (e.g. when a
+   *  section heading already names the control). */
+  hideLabel?: boolean;
   /** Current value rendered beside the label, e.g. "60 g/hr". */
   valueLabel: string;
   /** Plain-language reading of what the value means, shown under the track. */
@@ -31,13 +34,17 @@ export function RangeField({
   step,
   onChange,
   disabled = false,
+  hideLabel = false,
   valueLabel,
   hint,
 }: Props) {
   return (
     <div>
       <div className="mb-2 flex min-h-[1.25rem] items-center justify-between gap-2">
-        <label htmlFor={id} className={fieldEyebrowClass}>
+        <label
+          htmlFor={id}
+          className={hideLabel ? "sr-only" : fieldEyebrowClass}
+        >
           {label}
         </label>
         <span className="font-tabular text-base font-medium text-[var(--color-text-primary)]">

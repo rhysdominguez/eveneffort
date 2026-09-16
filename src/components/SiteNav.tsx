@@ -6,14 +6,13 @@ import { usePopover } from "@/hooks/usePopover";
 
 // Shared top nav, rendered for every page via the root layout.
 //
-// Sticky to the top of the viewport on every page EXCEPT home (see isHome
-// below) — those pages are ordinary document scrolls, so this stays visible
-// everywhere as you scroll. z-30 keeps it above the date/time popovers
-// (z-20), which should slide under it rather than over.
+// Sticky to the top of the viewport on every page, home included — so this
+// stays visible everywhere as you scroll. z-30 keeps it above the date/time
+// popovers (z-20), which should slide under it rather than over.
 //
-// On those same pages it also COMPRESSES once scrolled: only the vertical
-// padding changes, so the wordmark stays exactly the same size and stays
-// vertically centred — the bar just gets shorter.
+// It also COMPRESSES once scrolled: only the vertical padding changes, so
+// the wordmark stays exactly the same size and stays vertically centred —
+// the bar just gets shorter.
 
 // The link group is DATA, not markup — a new tool appends one object here
 // rather than editing markup twice (the desktop row and the mobile panel both
@@ -31,11 +30,12 @@ import { usePopover } from "@/hooks/usePopover";
 // touched to make room is the padding/margin pair further down — that is
 // load-bearing for scroll anchoring, not for fit.
 const NAV_LINKS = [
-  { label: "Pacing calculator", href: "/" },
-  { label: "Race comparison", href: "/compare" },
-  { label: "Course rankings", href: "/courses" },
-  { label: "Boston qualifier", href: "/boston-qualifier" },
-  { label: "Upload a course", href: "/upload" },
+  { label: "Pacing Calculator", href: "/" },
+  { label: "Race Comparison", href: "/compare" },
+  { label: "Course Rankings", href: "/courses" },
+  { label: "Boston Qualifier", href: "/boston-qualifier" },
+  // "a" stays lowercase — title case, not capitalise-every-word.
+  { label: "Upload a Course", href: "/upload" },
   { label: "Methodology", href: "/methodology" },
 ] as const;
 
@@ -55,21 +55,38 @@ function isCurrent(href: string, pathname: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-function linkClass(current: boolean) {
-  return `text-sm transition-colors hover:text-[var(--color-text-primary)] ${
+// The weight is what reads as "designed" rather than defaulted: Montserrat 600
+// (the Section-heading role in DESIGN.md), not the 400 the links used to be.
+// Colour still carries the hierarchy — secondary at rest, primary on hover and
+// for the current page.
+function linkColour(current: boolean) {
+  return current
+    ? "text-[var(--color-text-primary)]"
+    : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]";
+}
+
+// Desktop entry: colour alone carries the state — secondary at rest, primary on
+// hover and for the current page. No underline accent: it was a always-on-screen
+// rule that added visual noise the colour shift already communicates.
+function desktopLinkClass(current: boolean) {
+  return `py-1 text-sm font-semibold tracking-tight transition-colors ${linkColour(current)}`;
+}
+
+// Mobile row: no underline animation in a stacked list — the current page gets
+// a left accent bar and the elevated fill instead.
+function mobileLinkClass(current: boolean) {
+  return `block border-l-2 px-6 py-3 text-sm font-semibold transition-colors ${
     current
-      ? "text-[var(--color-text-primary)]"
-      : "text-[var(--color-text-secondary)]"
-  }`;
+      ? "border-[var(--color-text-primary)] bg-[var(--color-bg-elevated)]"
+      : "border-transparent"
+  } ${linkColour(current)}`;
 }
 
 export function SiteNav() {
-  // The home page has its own hero layout (headline + calculator side by
-  // side, logo cloud below); sticky + compress was designed for the longer,
-  // scroll-heavy result/methodology pages. On home the bar just scrolls
-  // away with the rest of the hero, expanded, like ordinary page content.
+  // Sticky + compress runs on every page, home included: the bar stays
+  // pinned to the top and shrinks once you scroll past the hero, the same
+  // as on the longer result/methodology pages.
   const pathname = usePathname();
-  const isHome = pathname === "/";
 
   const [compressed, setCompressed] = useState(false);
 
@@ -79,10 +96,6 @@ export function SiteNav() {
   const { open, setOpen, containerRef, triggerRef } = usePopover();
 
   useEffect(() => {
-    if (isHome) {
-      setCompressed(false);
-      return;
-    }
     // Read once on mount too: a restored scroll position (back navigation, or
     // a reload partway down) must render compressed without waiting for a
     // scroll event that may never come.
@@ -93,7 +106,7 @@ export function SiteNav() {
     sync();
     window.addEventListener("scroll", sync, { passive: true });
     return () => window.removeEventListener("scroll", sync);
-  }, [isHome]);
+  }, []);
 
   // usePopover knows about pointers and keys but nothing about routing, and a
   // client-side navigation unmounts nothing here — so a tapped menu link would
@@ -120,14 +133,15 @@ export function SiteNav() {
     // it never enters the bar's own flow. An in-flow panel would change the
     // bar's height and hand the scroll-anchor loop straight back.
     <nav
-      className={`${isHome ? "" : "sticky top-0 z-30"} relative shrink-0 border-b border-[var(--color-border)] bg-[var(--color-bg-surface)] transition-[margin] duration-200 ease-out print:hidden ${
+      className={`sticky top-0 z-30 relative shrink-0 border-b border-[var(--color-border)] bg-[var(--color-bg-surface)] transition-[margin] duration-200 ease-out print:hidden ${
         compressed ? "mb-8" : "mb-0"
       }`}
     >
       {/* Nothing in this row may exceed the wordmark's 32px
           (text-[2rem] leading-none), or the bar stops being the height it was
-          in both states: the links are 20px of line box, the menu button is
-          h-8 on the nose. If something doesn't fit, shrink the control — do
+          in both states: the links are a 20px line box in 4px of vertical
+          padding (28px, for the underline accent to sit in), the menu button
+          is h-8 on the nose. If something doesn't fit, shrink the control — do
           not re-derive the padding/margin pair above to make room. */}
       <div
         className={`mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 transition-[padding] duration-200 ease-out ${
@@ -141,13 +155,13 @@ export function SiteNav() {
           eveneffort
         </Link>
 
-        <div className="hidden items-center gap-6 lg:flex">
+        <div className="hidden items-center gap-6 lg:flex xl:gap-8">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               aria-current={isCurrent(link.href, pathname) ? "page" : undefined}
-              className={linkClass(isCurrent(link.href, pathname))}
+              className={desktopLinkClass(isCurrent(link.href, pathname))}
             >
               {link.label}
             </Link>
@@ -203,9 +217,9 @@ export function SiteNav() {
                       aria-current={
                         isCurrent(link.href, pathname) ? "page" : undefined
                       }
-                      className={`block px-6 py-3 ${linkClass(
+                      className={mobileLinkClass(
                         isCurrent(link.href, pathname),
-                      )}`}
+                      )}
                     >
                       {link.label}
                     </Link>

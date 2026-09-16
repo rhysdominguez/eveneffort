@@ -29,7 +29,7 @@ export const PACEBAND_PRODUCT = {
   name: "eveneffort printed paceband",
   priceLabel: PACEBAND_PRICE_LABEL,
   blurb:
-    "Waterproof, tear-resistant, and cut to wrap your wrist — your exact splits, printed and mailed to you.",
+    "Waterproof, tear-resistant, and cut to wrap your wrist. Your exact splits, printed and mailed to you.",
   shipping: "Free shipping, US only.",
   fulfillment: `Hand-made and mailed within ${FULFILLMENT_WINDOW}.`,
 } as const;

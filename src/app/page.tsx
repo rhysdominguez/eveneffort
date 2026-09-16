@@ -46,7 +46,7 @@ export default async function Page() {
             eyebrow="Elevation"
             title="Splits shaped by the course, not a calculator's average"
             bullets={[
-              "Built from the official elevation profile — every climb and descent where the race actually puts it.",
+              "Built from the official elevation profile, with every climb and descent where the race actually puts it.",
               "Paces ease on the way up and pick up on the way down, so the effort stays level even though the ground doesn't.",
               "Your goal finish time never changes. Only the way you spend it does.",
             ]}
@@ -64,7 +64,7 @@ export default async function Page() {
             eyebrow="Weather"
             title="The forecast, already priced into your plan"
             bullets={[
-              "Heat, humidity and wind all change what a given pace costs you — and none of them settle until race week.",
+              "Heat, humidity and wind all change what a given pace costs you, and none of them settle until race week.",
               "We pull the hourly forecast for your start time and location, then layer it onto the elevation-adjusted plan.",
               "Heat that builds through the back half gets worked into your splits the same way a hill does.",
             ]}
