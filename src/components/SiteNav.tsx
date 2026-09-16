@@ -3,6 +3,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { usePopover } from "@/hooks/usePopover";
+import { useStoredState } from "@/hooks/useStoredState";
+import { HOME_FORM, type HomeFormSnapshot } from "@/lib/stateKeys";
+import { buildResultsHref } from "@/lib/resultsParams";
+import { toSeconds } from "@/lib/units/time";
+import type { CourseSummary } from "@/types";
 
 // Shared top nav, rendered for every page via the root layout.
 //
@@ -31,12 +36,12 @@ import { usePopover } from "@/hooks/usePopover";
 // load-bearing for scroll anchoring, not for fit.
 const NAV_LINKS = [
   { label: "Pacing Calculator", href: "/" },
-  { label: "Race Comparison", href: "/compare" },
   { label: "Course Rankings", href: "/courses" },
   { label: "Boston Qualifier", href: "/boston-qualifier" },
+  { label: "Race Comparison", href: "/compare" },
   // "a" stays lowercase — title case, not capitalise-every-word.
   { label: "Upload a Course", href: "/upload" },
-  { label: "Methodology", href: "/methodology" },
+  { label: "Our Methodology", href: "/methodology" },
 ] as const;
 
 // Hysteresis, not a single threshold. A trackpad delivers sub-pixel scroll
@@ -53,6 +58,50 @@ const EXPAND_BELOW = 8;
 function isCurrent(href: string, pathname: string) {
   if (href === "/") return pathname === "/" || pathname.startsWith("/results");
   return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+// Mirrors InputForm's own DEFAULT_GOAL_TIME (4:00:00) — used only as the nav's
+// fallback when there is nothing stored to restore, never shown as a real
+// finish time.
+const DEFAULT_GOAL_TIME_SECONDS = 4 * 3600;
+
+/**
+ * The "Pacing Calculator" nav entry always points at /results, never back at
+ * the marketing home page: it should reopen the chart someone already built,
+ * or otherwise land them straight on the course-setup screen rather than
+ * making them scroll past the hero, calendar and feature rows again. HOME_FORM
+ * is the same snapshot the hero form persists, so a valid one restores the
+ * exact chart; with nothing stored yet, `defaultCourseId` (the catalog's own
+ * first course, same fallback InputForm uses) plus a placeholder goal time
+ * fills the setup screen instead.
+ *
+ * "Pace" and "GAP" goal modes store a target pace rather than a finish time,
+ * and turning that into seconds needs the course's distance, which this
+ * snapshot doesn't carry and the nav has no reason to fetch — so the stored
+ * course still carries over, just with the placeholder time in its place.
+ */
+function homeFormResultsHref(
+  form: HomeFormSnapshot | null,
+  defaultCourseId: string | null,
+): string | null {
+  const courseId = form?.courseId ?? defaultCourseId;
+  if (!courseId) return null;
+
+  const storedGoalTimeSeconds =
+    form && (!form.goalMode || form.goalMode === "time")
+      ? toSeconds(form.goalTime)
+      : 0;
+
+  return buildResultsHref({
+    courseId,
+    unit: form?.unit ?? "km",
+    goalTimeSeconds:
+      storedGoalTimeSeconds > 0
+        ? storedGoalTimeSeconds
+        : DEFAULT_GOAL_TIME_SECONDS,
+    ...(form?.raceDate ? { raceDateISO: form.raceDate } : {}),
+    ...(form?.raceStartTime ? { raceStartTime: form.raceStartTime } : {}),
+  });
 }
 
 // The weight is what reads as "designed" rather than defaulted: Montserrat 600
@@ -82,11 +131,18 @@ function mobileLinkClass(current: boolean) {
   } ${linkColour(current)}`;
 }
 
-export function SiteNav() {
+export function SiteNav({ catalog }: { catalog: CourseSummary[] }) {
   // Sticky + compress runs on every page, home included: the bar stays
   // pinned to the top and shrinks once you scroll past the hero, the same
   // as on the longer result/methodology pages.
   const pathname = usePathname();
+
+  // Null on the server and during the hydrating render (see useStoredState),
+  // so the very first paint still points "Pacing Calculator" at the default
+  // course rather than a restored one — the upgrade to the actual stored
+  // chart happens a beat later, never as a hydration mismatch.
+  const [homeForm] = useStoredState(HOME_FORM);
+  const resultsHref = homeFormResultsHref(homeForm, catalog[0]?.id ?? null);
 
   const [compressed, setCompressed] = useState(false);
 
@@ -159,7 +215,7 @@ export function SiteNav() {
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
-              href={link.href}
+              href={link.href === "/" && resultsHref ? resultsHref : link.href}
               aria-current={isCurrent(link.href, pathname) ? "page" : undefined}
               className={desktopLinkClass(isCurrent(link.href, pathname))}
             >
@@ -213,7 +269,7 @@ export function SiteNav() {
                 {NAV_LINKS.map((link) => (
                   <li key={link.href}>
                     <Link
-                      href={link.href}
+                      href={link.href === "/" && resultsHref ? resultsHref : link.href}
                       aria-current={
                         isCurrent(link.href, pathname) ? "page" : undefined
                       }

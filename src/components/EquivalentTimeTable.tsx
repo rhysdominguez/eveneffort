@@ -2,9 +2,9 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import type { CourseId, CourseSummary } from "@/types";
-import { effortMultiplier, equivalentGoalTime } from "@/lib/pacing/effort";
+import { equivalentGoalTime } from "@/lib/pacing/effort";
 import { formatHMS, formatSignedHMS } from "@/lib/units/time";
-import { formatVsFlat } from "@/lib/units/effort";
+import { formatVsFlat, totalEffortMultiplier } from "@/lib/units/effort";
 import { formatLocation } from "@/lib/location";
 import { buildResultsHref } from "@/lib/resultsParams";
 import { filterCourses } from "@/components/CourseSearch";
@@ -221,7 +221,7 @@ export function EquivalentTimeTable({
                       {formatSignedHMS(delta)}
                     </td>
                     <td className="px-4 py-3 text-right font-tabular text-[var(--color-text-secondary)]">
-                      {formatVsFlat(effortMultiplier(course.effort))}
+                      {formatVsFlat(totalEffortMultiplier(course))}
                     </td>
                     <td className="px-4 py-3">
                       <DifficultyBadge terrain={course.terrain} compact />

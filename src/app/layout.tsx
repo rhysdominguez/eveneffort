@@ -7,6 +7,7 @@ import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ADSENSE_CLIENT } from "@/lib/ads";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
+import { getCourseCatalog } from "@/db/queries";
 
 // Montserrat drives the whole site (body + headings).
 const montserrat = Montserrat({
@@ -55,18 +56,23 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Light, cached read (see src/db/queries.ts) — this is the same catalog the
+  // home page fetches, reused here so the nav's "Pacing Calculator" link
+  // always has a default course to send you to, even with nothing set up yet.
+  const catalog = await getCourseCatalog();
+
   return (
     <html
       lang="en"
       className={`${montserrat.variable} ${fraunces.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <SiteNav />
+        <SiteNav catalog={catalog} />
         {children}
         <SiteFooter />
         {/* Page views only — the paceband funnel's in-app steps go through

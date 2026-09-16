@@ -277,21 +277,25 @@ export function InputForm({
   const courseEffort = catalog.find((c) => c.id === courseId)?.effort ?? null;
   const gapAvailable = courseEffort !== null;
 
-  // GAP is a dashboard-only goal mode. The hero form is deliberately minimal —
-  // core race setup plus Calculate — and grade-adjusted pace is a concept that
-  // only earns its place once the runner is looking at a chart. Live mode (the
-  // dashboard) still offers it; button mode (the hero) does not.
-  const gapOffered = live;
+  // How the goal may be STATED is a dashboard question. The hero form is
+  // deliberately minimal — core race setup plus Calculate — and it asks for a
+  // finish time, full stop: pace and grade-adjusted pace only earn their place
+  // once the runner is looking at a chart, and a mode toggle over a single
+  // field put a choice in front of visitors before the form had told them
+  // anything. Live mode (the dashboard) still offers all three.
+  const modesOffered = live;
 
-  const goalModeOptions = gapOffered
-    ? GOAL_MODE_OPTIONS
-    : GOAL_MODE_OPTIONS.filter(([mode]) => mode !== "gap");
+  const goalModeOptions = GOAL_MODE_OPTIONS;
 
   const goalMode: GoalMode = ((): GoalMode => {
+    // Not merely a default on the hero: there is no control to leave, so a
+    // stored Pace or GAP preference carried over from the dashboard would
+    // strand someone in a mode they could not get out of.
+    if (!modesOffered) return "time";
     const chosen = goalModeEdit ?? restored?.goalMode ?? storedGoalMode ?? "time";
     // A stored preference for GAP must not strand the runner on a form whose
-    // goal field cannot be evaluated — or one that doesn't offer the mode.
-    return chosen === "gap" && (!gapAvailable || !gapOffered) ? "time" : chosen;
+    // goal field cannot be evaluated.
+    return chosen === "gap" && !gapAvailable ? "time" : chosen;
   })();
 
   // Seeded FROM the incoming goal time, not from a constant. A runner whose
@@ -769,24 +773,27 @@ export function InputForm({
           )}
         </div>
       )}
-      {/* Three ways to say the same thing. The engine only ever receives a
-          finish time, so the mode is a view over one value — which is why a
-          shared link never has to carry it. */}
+      {/* Three ways to say the same thing on the dashboard, one on the hero.
+          The engine only ever receives a finish time, so the mode is a view
+          over one value — which is why a shared link never has to carry it,
+          and why the hero can drop the choice without losing anything. */}
       <div>
         <div className="mb-2 flex flex-wrap items-center gap-x-2 gap-y-1.5">
           <label className={`min-w-0 flex-1 ${eyebrowClass}`}>
             {goalFieldLabel}
           </label>
-          <div className="shrink-0">
-            <UnitToggle
-              label="Goal input mode"
-              value={goalMode}
-              options={goalModeOptions}
-              onChange={selectGoalMode}
-              disabledValues={gapAvailable ? undefined : ["gap"]}
-              variant="prominent"
-            />
-          </div>
+          {modesOffered && (
+            <div className="shrink-0">
+              <UnitToggle
+                label="Goal input mode"
+                value={goalMode}
+                options={goalModeOptions}
+                onChange={selectGoalMode}
+                disabledValues={gapAvailable ? undefined : ["gap"]}
+                variant="prominent"
+              />
+            </div>
+          )}
         </div>
         {goalMode === "time" ? (
           <div className="grid grid-cols-3 gap-3">
@@ -852,14 +859,14 @@ export function InputForm({
                 {unit === "km" ? "/km" : "/mi"}
               </span>
             </div>
-            {/* One line on what the entered pace means — the two modes differ
-                only here, and the distinction (effort vs. clock) is the whole
-                reason GAP exists. */}
-            <p className="mt-3 text-sm text-[var(--color-text-secondary)]">
-              {goalMode === "gap"
-                ? "Your goal pace on flat ground. Each split follows the course's hills, so your real average comes out slower."
-                : "Your goal average pace for the whole race. The splits shift with the hills but average out to this."}
-            </p>
+            {/* GAP only. Grade-adjusted pace is the idea that needs explaining;
+                an average goal pace explains itself, and the line under it was
+                noise. */}
+            {goalMode === "gap" && (
+              <p className="mt-3 text-sm text-[var(--color-text-secondary)]">
+                Your goal pace on flat ground.
+              </p>
+            )}
           </div>
         )}
       </div>
@@ -979,6 +986,11 @@ export function InputForm({
                 weather.enabled ? "" : "opacity-50"
               }`}
             >
+              <h3 className={eyebrowClass}>Body Metrics</h3>
+              <p className="text-sm text-[var(--color-text-secondary)]">
+                Your weight and height feed the wind drag model, so pacing
+                only shifts when weather is on.
+              </p>
               <div className="grid grid-cols-2 gap-3">
                 <NumericField
                   id="mass"

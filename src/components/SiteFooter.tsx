@@ -24,7 +24,7 @@ const LINK_COLUMNS = [
       { label: "Race Comparison", href: "/compare" },
       { label: "Course Rankings", href: "/courses" },
       { label: "Boston Qualifier", href: "/boston-qualifier" },
-      { label: "Methodology", href: "/methodology" },
+      { label: "Our Methodology", href: "/methodology" },
     ],
   },
   {

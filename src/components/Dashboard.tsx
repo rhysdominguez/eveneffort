@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { Course, CourseSummary, PacingInput, WeatherConditions } from "@/types";
 import { usePacingChart } from "@/hooks/usePacingChart";
@@ -14,6 +13,7 @@ import { UploadedCourseNotice } from "@/components/UploadedCourseNotice";
 import { formatLocation } from "@/lib/location";
 import { courseEffort, effortMultiplier } from "@/lib/pacing/effort";
 import { courseTerrain } from "@/lib/pacing/terrain";
+import { courseAltitude } from "@/lib/pacing/altitude";
 import { bqStatus } from "@/lib/bq/qualify";
 import { useStoredState } from "@/hooks/useStoredState";
 import { BQ_PROFILE } from "@/lib/stateKeys";
@@ -46,14 +46,18 @@ export function Dashboard({
   // silently wrong, so hold off until the two agree.
   const courseIsCurrent = course.id === current.courseId;
 
-  // Both are reductions over the same 44 points, and `effortMultiplier` runs
-  // Minetti across every segment in both segmentations — cheap once, wasteful
-  // on every keystroke in a form that recomputes live.
+  // All three are reductions over the same 44 points, and `effortMultiplier`
+  // runs Minetti across every segment in both segmentations — cheap once,
+  // wasteful on every keystroke in a form that recomputes live.
   const terrain = useMemo(() => courseTerrain(course.elevations), [course]);
   const effort = useMemo(
     () => effortMultiplier(courseEffort(course.elevations)),
     [course],
   );
+  // Derived here rather than read off the catalog because an UPLOADED course
+  // is never in the catalog, and a runner who uploads a mountain race should
+  // see its altitude cost like anyone else.
+  const altitude = useMemo(() => courseAltitude(course.elevations), [course]);
 
   // Judged on the GOAL time, not the weather-adjusted finish: the standard is
   // a fact about the plan the runner is building here, and pairing it with a
@@ -96,16 +100,9 @@ export function Dashboard({
     // print:p-0 — the screen padding otherwise pushes the paceband + fold
     // guide past one printed page.
     <main className="mx-auto w-full max-w-7xl flex-1 px-6 py-12 print:p-0">
-      <Link
-        href="/"
-        className="text-sm font-medium text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-primary)] print:hidden"
-      >
-        ← Back to start
-      </Link>
-
       {/* print:hidden on the whole grid so the paceband below is the only
           content the printer sees. */}
-      <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(320px,380px)_1fr] print:hidden">
+      <div className="grid gap-10 lg:grid-cols-[minmax(320px,380px)_1fr] print:hidden">
         {/* self-start keeps the card at its content height — grid items
             stretch by default, which would otherwise pull this bordered box
             down to match the much taller results column. */}
@@ -150,6 +147,7 @@ export function Dashboard({
                 // this one course — no catalog lookup, nothing new fetched.
                 terrain={terrain}
                 effortMultiplier={effort}
+                altitude={altitude}
                 bq={bq}
               />
               <ElevationChart

@@ -31,6 +31,9 @@ const PLACEHOLDER_GLYPH_ALLOWED = new Set([
   "lib/units/time.ts",
   "components/PaceChartTable.tsx",
   "components/BostonQualifier.tsx",
+  // The Altitude column: most of the catalog is below the penalty threshold,
+  // and the empty cell takes the same placeholder glyph as the tables above.
+  "components/CourseRankingTable.tsx",
 ]);
 
 const SKIP_DIRS = new Set(["db/seed", "test"]);

@@ -293,12 +293,12 @@ describe("InputForm — Fueling strategy", () => {
     expect(getByText(/Weather & Wind/).closest("button")).toBeNull();
   });
 
-  it("exposes a 30–100 slider in steps of 5", () => {
+  it("exposes a 30–120 slider in steps of 5", () => {
     const { getByLabelText } = openFueling();
     const slider = getByLabelText("Carbs per hour") as HTMLInputElement;
     expect(slider.type).toBe("range");
     expect(slider.min).toBe("30");
-    expect(slider.max).toBe("100");
+    expect(slider.max).toBe("120");
     expect(slider.step).toBe("5");
     expect(slider.value).toBe("60");
   });
@@ -949,6 +949,15 @@ describe("InputForm — goal as time, pace or GAP", () => {
     expect(Math.abs(last().goalTimeSeconds - beforeGoal)).toBeLessThan(15);
   });
 
+  // Average goal pace needs no gloss; grade-adjusted pace does.
+  it("explains the pace only in GAP mode", () => {
+    const { view } = mounted();
+    fireEvent.click(view.getByText("Pace"));
+    expect(view.container.textContent).not.toContain("average out to this");
+    fireEvent.click(view.getByText("GAP"));
+    expect(view.container.textContent).toContain("Your goal pace on flat ground");
+  });
+
   it("rejects a pace that implies an absurd race", () => {
     const { view } = mounted();
     fireEvent.click(view.getByText("Pace"));
@@ -995,30 +1004,39 @@ describe("InputForm — goal as time, pace or GAP", () => {
     expect(last().goalTimeSeconds).toBeGreaterThan(3 * 3600);
   });
 
-  it("offers GAP on the dashboard but not on the hero", () => {
+  it("asks the hero for a finish time only, with no mode toggle", () => {
     // The hero form is deliberately minimal — core race setup plus Calculate —
-    // so grade-adjusted pace is a dashboard-only mode.
+    // so pace and GAP are dashboard-only ways of stating the goal, and with a
+    // single mode there is no toggle to show.
     const hero = render(
       <InputForm catalog={FIXTURE_CATALOG} onCalculate={() => {}} />,
     );
+    expect(hero.getByText("Goal finish time")).toBeTruthy();
+    expect(hero.queryByLabelText("Goal input mode")).toBeNull();
+    expect(hero.queryByText("Pace")).toBeNull();
     expect(hero.queryByText("GAP")).toBeNull();
 
     const dashboard = render(
       <InputForm catalog={FIXTURE_CATALOG} onChange={() => {}} />,
     );
-    expect(
-      dashboard.getByText("GAP").hasAttribute("disabled"),
-    ).toBe(false);
+    expect(dashboard.getByLabelText("Goal input mode")).toBeTruthy();
+    expect(dashboard.getByText("GAP").hasAttribute("disabled")).toBe(false);
   });
 
-  it("falls back to time on the hero when the stored preference is GAP", () => {
-    writeState(GOAL_MODE, "gap");
-    const hero = render(
-      <InputForm catalog={FIXTURE_CATALOG} onCalculate={() => {}} />,
-    );
-    expect(hero.getByText("Goal finish time")).toBeTruthy();
-    expect(hero.queryByText("GAP")).toBeNull();
-  });
+  // Without a toggle, a mode carried over from the dashboard would be a room
+  // with no door: the hero has to ignore the stored preference, not honor it.
+  it.each(["pace", "gap"] as const)(
+    "puts the hero on a finish time when the stored preference is %s",
+    (mode) => {
+      writeState(GOAL_MODE, mode);
+      const hero = render(
+        <InputForm catalog={FIXTURE_CATALOG} onCalculate={() => {}} />,
+      );
+      expect(hero.getByText("Goal finish time")).toBeTruthy();
+      expect(hero.queryByLabelText("pace minutes")).toBeNull();
+      expect(hero.getByLabelText("hours")).toBeTruthy();
+    },
+  );
 
   it("disables GAP rather than guessing when no course effort is known", () => {
     // The no-database degradation: an empty catalog still has to render a

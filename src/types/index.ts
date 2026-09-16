@@ -48,6 +48,23 @@ export interface CourseTerrain {
 }
 
 /**
+ * How high a course runs, and what the thin air costs.
+ *
+ * `multiplier` is >= 1: 1.04 means a runner spending the same effort finishes
+ * 4% slower here than at sea level. It is exactly 1 for every course topping
+ * out below 1,000 m, which is most of them. See src/lib/pacing/altitude.ts for
+ * the model, the citation, and why the threshold sits where it does.
+ */
+export interface CourseAltitude {
+  /** Mean elevation over the 44-point array, metres above sea level. */
+  meanM: number;
+  /** Highest point on the course, metres above sea level. */
+  maxM: number;
+  /** Aerobic cost multiplier, >= 1. Exactly 1 below the threshold. */
+  multiplier: number;
+}
+
+/**
  * Course profile, matching the six labels findmymarathon.com publishes so a
  * runner reads the same vocabulary in both places. Five are bands of total
  * climbing; `downhill` is an override on a big net drop. See
@@ -246,6 +263,18 @@ export interface CourseSummary {
    * faster than flat and still climbs 96 m.
    */
   terrain: CourseTerrain;
+  /**
+   * How high the course runs and what that costs aerobically. Three more
+   * scalars off the same 44-point array, still no geometry on the wire.
+   *
+   * The THIRD independent question about a course, after how hilly (`terrain`)
+   * and how fast its grades make it (`effort`). Nothing in `effort` knows about
+   * altitude — the Minetti curve reads gradient alone — so a mile-high course
+   * and a sea-level one with the same profile are indistinguishable there and
+   * are told apart only here. `totalEffortMultiplier` in src/lib/units/effort.ts
+   * is where the two are combined for display; keep them separate on the wire.
+   */
+  altitude: CourseAltitude;
   /** Next scheduled edition, for prefilling the race-date picker. */
   nextRaceDateISO: string | null;
   /**

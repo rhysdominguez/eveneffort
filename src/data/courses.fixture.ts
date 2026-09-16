@@ -19,6 +19,7 @@ import { CITY_SEED } from "@/db/seed/cities";
 import { buildEditionSeed } from "@/db/seed/editions";
 import { courseEffort } from "@/lib/pacing/effort";
 import { courseTerrain } from "@/lib/pacing/terrain";
+import { courseAltitude } from "@/lib/pacing/altitude";
 
 type Pairs = [number, number][];
 
@@ -150,6 +151,7 @@ export const FIXTURE_CATALOG: CourseSummary[] = CORE_SERIES.map((s) => {
     // Computed exactly as loadCourseCatalog does, from the same elevation
     // array the seed loads — courses.fixture.test.ts holds the two in step.
     effort: courseEffort(geo.elevations),
+    altitude: courseAltitude(geo.elevations),
     terrain: courseTerrain(geo.elevations),
     nextRaceDateISO: null,
     editions: fixtureEditions(s.slug),

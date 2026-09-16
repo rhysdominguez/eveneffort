@@ -1,5 +1,10 @@
-// The race calendar's location filter, DOM-free so the whole cascade is unit
+// The catalogue's location filter, DOM-free so the whole cascade is unit
 // testable — same split as calendarData.ts / courseMapData.ts.
+//
+// Generic over anything that carries a country, a region and a series slug, so
+// the race calendar (editions) and the course rankings (courses) narrow by the
+// SAME three levels with one implementation and one set of tests behind them.
+// LocationFilterBar is the shared control that drives it.
 //
 // Three levels, narrowing: continent -> country -> state/region. That shape is
 // forced by the catalogue rather than chosen for symmetry. It spans 60+
@@ -11,7 +16,6 @@
 // Counts are of SERIES, not editions. A series usually has two editions seeded
 // (this year and next), and "Italy (42)" has to mean forty-two races, not
 // twenty-one races counted twice.
-import type { EditionSummary } from "@/types";
 import {
   CONTINENT_CODES,
   CONTINENT_NAMES,
@@ -19,6 +23,22 @@ import {
   continentOf,
 } from "@/lib/continents";
 import { subdivisionCode } from "@/lib/location";
+
+/**
+ * The minimum a row needs to be filed under a place and counted.
+ *
+ * Structural rather than a union of EditionSummary | CourseSummary: the
+ * filter genuinely does not care what else a row carries, and a new caller
+ * should not have to be added to a type here to use it.
+ */
+export interface Locatable {
+  /** What a count counts. One race, however many editions of it are in the list. */
+  seriesSlug: string;
+  countryCode: string;
+  countryName: string;
+  regionCode: string | null;
+  regionName: string | null;
+}
 
 /** The "Elsewhere" bucket: races whose country the continent table lacks. */
 export const OTHER_CONTINENT = "other";
@@ -55,54 +75,54 @@ export function isFiltered(filter: LocationFilter): boolean {
   );
 }
 
-const continentValueOf = (edition: EditionSummary): ContinentValue =>
-  continentOf(edition.countryCode) ?? OTHER_CONTINENT;
+const continentValueOf = (row: Locatable): ContinentValue =>
+  continentOf(row.countryCode) ?? OTHER_CONTINENT;
 
-/** Does one edition survive the filter? Each level is independent and ANDed. */
+/** Does one row survive the filter? Each level is independent and ANDed. */
 export function matchesLocation(
-  edition: EditionSummary,
+  row: Locatable,
   filter: LocationFilter,
 ): boolean {
-  if (filter.continent && continentValueOf(edition) !== filter.continent) {
+  if (filter.continent && continentValueOf(row) !== filter.continent) {
     return false;
   }
-  if (filter.countryCode && edition.countryCode !== filter.countryCode) {
+  if (filter.countryCode && row.countryCode !== filter.countryCode) {
     return false;
   }
   // A race with no recorded subdivision cannot match a state choice. It stays
   // reachable one level up, at its country — which is where it is filed.
-  if (filter.regionCode && edition.regionCode !== filter.regionCode) {
+  if (filter.regionCode && row.regionCode !== filter.regionCode) {
     return false;
   }
   return true;
 }
 
-export function filterEditions(
-  editions: EditionSummary[],
+export function filterByLocation<T extends Locatable>(
+  rows: T[],
   filter: LocationFilter,
-): EditionSummary[] {
-  if (!isFiltered(filter)) return editions;
-  return editions.filter((e) => matchesLocation(e, filter));
+): T[] {
+  if (!isFiltered(filter)) return rows;
+  return rows.filter((row) => matchesLocation(row, filter));
 }
 
 /**
- * Options for one select level. `key` buckets an edition; entries with no key
- * are skipped, and the count of each bucket is its distinct series.
+ * Options for one select level. `key` buckets a row; entries with no key are
+ * skipped, and the count of each bucket is its distinct series.
  */
 function optionsBy(
-  editions: EditionSummary[],
-  key: (e: EditionSummary) => { value: string; label: string } | null,
+  rows: Locatable[],
+  key: (row: Locatable) => { value: string; label: string } | null,
 ): FilterOption[] {
   const buckets = new Map<string, { label: string; series: Set<string> }>();
-  for (const edition of editions) {
-    const bucket = key(edition);
+  for (const row of rows) {
+    const bucket = key(row);
     if (!bucket) continue;
     const existing = buckets.get(bucket.value);
-    if (existing) existing.series.add(edition.seriesSlug);
+    if (existing) existing.series.add(row.seriesSlug);
     else {
       buckets.set(bucket.value, {
         label: bucket.label,
-        series: new Set([edition.seriesSlug]),
+        series: new Set([row.seriesSlug]),
       });
     }
   }
@@ -118,9 +138,9 @@ function optionsBy(
  * than by count — a list that reshuffles as races are imported is a list
  * nobody can build a habit on. "Elsewhere" always sits last.
  */
-export function continentOptions(editions: EditionSummary[]): FilterOption[] {
-  const options = optionsBy(editions, (e) => {
-    const value = continentValueOf(e);
+export function continentOptions(rows: Locatable[]): FilterOption[] {
+  const options = optionsBy(rows, (row) => {
+    const value = continentValueOf(row);
     return {
       value,
       label: value === OTHER_CONTINENT ? "Elsewhere" : CONTINENT_NAMES[value],
@@ -134,15 +154,15 @@ export function continentOptions(editions: EditionSummary[]): FilterOption[] {
 
 /** Countries inside the chosen continent (or all of them), A-Z by name. */
 export function countryOptions(
-  editions: EditionSummary[],
+  rows: Locatable[],
   continent: ContinentValue | null,
 ): FilterOption[] {
   const scoped = continent
-    ? editions.filter((e) => continentValueOf(e) === continent)
-    : editions;
-  return optionsBy(scoped, (e) => ({
-    value: e.countryCode,
-    label: e.countryName,
+    ? rows.filter((row) => continentValueOf(row) === continent)
+    : rows;
+  return optionsBy(scoped, (row) => ({
+    value: row.countryCode,
+    label: row.countryName,
   })).sort((a, b) => a.label.localeCompare(b.label));
 }
 
@@ -158,19 +178,19 @@ export function countryOptions(
  * specific enough to be useful.
  */
 export function regionOptions(
-  editions: EditionSummary[],
+  rows: Locatable[],
   countryCode: string | null,
 ): FilterOption[] | null {
   if (!countryCode) return null;
   const options = optionsBy(
-    editions.filter((e) => e.countryCode === countryCode),
-    (e) =>
-      e.regionCode
+    rows.filter((row) => row.countryCode === countryCode),
+    (row) =>
+      row.regionCode
         ? {
-            value: e.regionCode,
+            value: row.regionCode,
             // The name is what the option reads; the bare code is the fallback
             // for a city seeded with a code but no name, never "US-CA".
-            label: e.regionName ?? subdivisionCode(e.regionCode),
+            label: row.regionName ?? subdivisionCode(row.regionCode),
           }
         : null,
   ).sort((a, b) => a.label.localeCompare(b.label));
@@ -235,15 +255,15 @@ export function selectRegion(
  * "Europe" — for the summary line and the empty month's copy. Empty string
  * when nothing is narrowed, so callers can fall back to their own wording.
  *
- * Labels come from the matching editions rather than a lookup table, because
- * the country and region NAMES only exist in the data.
+ * Labels come from the matching rows rather than a lookup table, because the
+ * country and region NAMES only exist in the data.
  */
 export function locationLabel(
-  editions: EditionSummary[],
+  rows: Locatable[],
   filter: LocationFilter,
 ): string {
   if (!isFiltered(filter)) return "";
-  const match = editions.find((e) => matchesLocation(e, filter));
+  const match = rows.find((row) => matchesLocation(row, filter));
 
   if (filter.regionCode) {
     const region = match?.regionName ?? filter.regionCode;
@@ -257,7 +277,7 @@ export function locationLabel(
 
 /** Distinct races (series, not editions) still to come in a filtered list. */
 export function upcomingSeriesCount(
-  editions: EditionSummary[],
+  editions: (Locatable & { raceDateISO: string })[],
   todayISO: string,
 ): number {
   const series = new Set<string>();

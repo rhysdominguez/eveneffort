@@ -123,10 +123,60 @@ describe("DifficultyBadge", () => {
     expect(boston).toContain("−436 ft net");
   });
 
+  // The altitude pill (ROADMAP #7). It is absent far more often than present,
+  // so most of what matters here is that it stays quiet.
+  describe("the altitude pill", () => {
+    const high = { meanM: 2000, maxM: 2200, multiplier: 1.07 };
+    const low = { meanM: 40, maxM: 80, multiplier: 1 };
+
+    it("is absent when no altitude is supplied at all", () => {
+      const { container } = render(<DifficultyBadge terrain={terrain(300)} />);
+      expect(container.textContent).not.toMatch(/slower/);
+    });
+
+    it("is absent for a course below the threshold", () => {
+      const { container } = render(
+        <DifficultyBadge terrain={terrain(300)} altitude={low} />,
+      );
+      expect(container.textContent).not.toMatch(/slower/);
+    });
+
+    it("names the penalty and the mean height when it is real", () => {
+      const { container } = render(
+        <DifficultyBadge terrain={terrain(300)} altitude={high} />,
+      );
+      expect(container.textContent).toContain("7.0% slower");
+      expect(container.textContent).toContain("6562 ft up");
+    });
+
+    it("stays out of the compact rows, which have their own column", () => {
+      const { container } = render(
+        <DifficultyBadge terrain={terrain(300)} altitude={high} compact />,
+      );
+      expect(container.textContent).not.toMatch(/slower/);
+    });
+
+    it("takes no colour of its own, leaving the profile pill the only one", () => {
+      const { container } = render(
+        <DifficultyBadge terrain={terrain(300)} altitude={high} />,
+      );
+      const pills = container.querySelectorAll("span > span");
+      const altitudePill = Array.from(pills).find((p) =>
+        p.textContent?.includes("slower"),
+      );
+      expect(altitudePill?.className).toContain("--color-text-secondary");
+    });
+  });
+
   // Rule 2: tokens only. A hex literal or a zinc-*/red-* utility here would be
   // invisible in review and would fork the palette.
   it("uses design tokens for every color", () => {
-    const { container } = render(<DifficultyBadge terrain={terrain(600, -1000)} />);
+    const { container } = render(
+      <DifficultyBadge
+        terrain={terrain(600, -1000)}
+        altitude={{ meanM: 2000, maxM: 2200, multiplier: 1.07 }}
+      />,
+    );
     const html = container.innerHTML;
     expect(html).not.toMatch(/#[0-9a-fA-F]{3,6}/);
     expect(html).not.toMatch(

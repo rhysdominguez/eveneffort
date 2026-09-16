@@ -180,7 +180,7 @@ export function WeatherFields({
                 ["F", "°F"],
               ]}
               onChange={onTempUnitChange}
-              disabled={!enabled}
+              disabled={!editable}
             />
           }
           value={
@@ -208,7 +208,7 @@ export function WeatherFields({
                 ["dew", "dew"],
               ]}
               onChange={onHumidityUnitChange}
-              disabled={!enabled}
+              disabled={!editable}
             />
           }
           value={
@@ -256,7 +256,7 @@ export function WeatherFields({
                 ["mph", "mph"],
               ]}
               onChange={onSpeedUnitChange}
-              disabled={!enabled}
+              disabled={!editable}
             />
           }
           value={

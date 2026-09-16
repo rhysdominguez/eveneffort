@@ -9,10 +9,11 @@
 //   at once, and red is reserved for consequential controls. See DESIGN.md.
 // - "prominent": for the top-level toggles that set what the form means rather
 //   than a single field's unit — the distance system (km/mi) and the goal
-//   input mode (Time / Pace / GAP). Sized and colored like the weather On/Off
-//   switch (red when active), with an opaque fill on every segment so it reads
-//   as a setting, not a per-field detail. Still a step down from weather's own
-//   toggle since it's not quite as consequential.
+//   input mode (Time / Pace / GAP). Colored like the weather On/Off switch
+//   (red when active), with an opaque fill on every segment so it reads as a
+//   setting, not a per-field detail. Only slightly larger than "compact": the
+//   fill and the red already carry the emphasis, so the earlier text-sm/px-3
+//   sizing just made it bulky next to the field it labels.
 //
 // Both variants use the same neutral `--color-border` hairline. A red border
 // around the whole control read as a persistent alert/error outline rather
@@ -49,9 +50,9 @@ export function UnitToggle<T extends string>({
     <div
       role="group"
       aria-label={label}
-      className={`inline-flex shrink-0 overflow-hidden border border-[var(--color-border)] ${
-        prominent ? "rounded-lg" : "rounded-md"
-      } ${disabled ? "opacity-50" : ""}`}
+      className={`inline-flex shrink-0 overflow-hidden rounded-md border border-[var(--color-border)] ${
+        disabled ? "opacity-50" : ""
+      }`}
     >
       {options.map(([optionValue, optionLabel]) => {
         const active = optionValue === value;
@@ -66,7 +67,7 @@ export function UnitToggle<T extends string>({
             onClick={() => onChange(optionValue)}
             className={
               prominent
-                ? `px-3 py-1 text-sm font-medium transition-colors disabled:opacity-40 ${
+                ? `px-2.5 py-1 text-xs font-medium transition-colors disabled:opacity-40 ${
                     active
                       ? "bg-[var(--color-red-primary)] text-white"
                       : "bg-[var(--color-bg-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-elevated)]"

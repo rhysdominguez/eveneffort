@@ -5,7 +5,7 @@ import {
   ALL_LOCATIONS,
   continentOptions,
   countryOptions,
-  filterEditions,
+  filterByLocation,
   isFiltered,
   locationLabel,
   regionOptions,
@@ -13,7 +13,7 @@ import {
   selectCountry,
   selectRegion,
   upcomingSeriesCount,
-} from "@/components/home/calendarFilters";
+} from "@/lib/locationFilter";
 import { continentOf } from "@/lib/continents";
 
 const slugs = (editions: EditionSummary[]) =>
@@ -45,14 +45,14 @@ describe("continentOf", () => {
 describe("calendar location filter", () => {
   it("passes everything through when nothing is narrowed", () => {
     expect(isFiltered(ALL_LOCATIONS)).toBe(false);
-    expect(filterEditions(FIXTURE_EDITIONS, ALL_LOCATIONS)).toBe(
+    expect(filterByLocation(FIXTURE_EDITIONS, ALL_LOCATIONS)).toBe(
       FIXTURE_EDITIONS,
     );
   });
 
   it("narrows to a continent", () => {
     const filter = selectContinent("EU");
-    expect(slugs(filterEditions(FIXTURE_EDITIONS, filter))).toEqual([
+    expect(slugs(filterByLocation(FIXTURE_EDITIONS, filter))).toEqual([
       "berlin-marathon-2026",
       "london-marathon-2026",
     ]);
@@ -60,7 +60,7 @@ describe("calendar location filter", () => {
 
   it("narrows to a country, and keeps every edition of it", () => {
     const filter = selectCountry(ALL_LOCATIONS, "US");
-    expect(slugs(filterEditions(FIXTURE_EDITIONS, filter))).toEqual([
+    expect(slugs(filterByLocation(FIXTURE_EDITIONS, filter))).toEqual([
       "boston-marathon-2026",
       "chicago-marathon-2026",
     ]);
@@ -83,7 +83,7 @@ describe("calendar location filter", () => {
 
   it("narrows to a state inside a country", () => {
     const filter = selectRegion(selectCountry(ALL_LOCATIONS, "US"), "US-IL");
-    expect(slugs(filterEditions(FIXTURE_EDITIONS, filter))).toEqual([
+    expect(slugs(filterByLocation(FIXTURE_EDITIONS, filter))).toEqual([
       "chicago-marathon-2026",
     ]);
   });
@@ -119,7 +119,7 @@ describe("calendar location filter", () => {
     const options = continentOptions([...FIXTURE_EDITIONS, unknown]);
     expect(labels(options).at(-1)).toBe("Elsewhere");
     expect(
-      slugs(filterEditions([...FIXTURE_EDITIONS, unknown], selectContinent("other"))),
+      slugs(filterByLocation([...FIXTURE_EDITIONS, unknown], selectContinent("other"))),
     ).toEqual(["atlantis-marathon-2026"]);
   });
 
@@ -170,7 +170,7 @@ describe("calendar location filter", () => {
     expect(upcomingSeriesCount(FIXTURE_EDITIONS, FIXTURE_TODAY)).toBe(5);
     expect(
       upcomingSeriesCount(
-        filterEditions(FIXTURE_EDITIONS, selectCountry(ALL_LOCATIONS, "US")),
+        filterByLocation(FIXTURE_EDITIONS, selectCountry(ALL_LOCATIONS, "US")),
         FIXTURE_TODAY,
       ),
     ).toBe(1);

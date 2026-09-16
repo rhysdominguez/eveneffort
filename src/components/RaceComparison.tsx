@@ -2,15 +2,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { CourseId, CourseSummary, GoalTimeInput, Unit } from "@/types";
-import {
-  effortMultiplier,
-  equivalentGoalTime,
-  gapPaceFromGoalTime,
-} from "@/lib/pacing/effort";
+import { equivalentGoalTime, gapPaceFromGoalTime } from "@/lib/pacing/effort";
 import { MILE_IN_KM } from "@/lib/pacing/segments";
 import { formatHMS, formatSignedHMS, toSeconds } from "@/lib/units/time";
 import { formatPace } from "@/lib/units/pace";
-import { formatVsFlat } from "@/lib/units/effort";
+import { formatVsFlat, totalEffortMultiplier } from "@/lib/units/effort";
 import { formatLocation } from "@/lib/location";
 import { buildResultsHref } from "@/lib/resultsParams";
 import {
@@ -353,10 +349,10 @@ function CourseStat({
         {formatLocation(course.city, course.regionCode, course.countryName)}
       </p>
       <div className="pt-1">
-        <DifficultyBadge terrain={course.terrain} compact />
+        <DifficultyBadge terrain={course.terrain} altitude={course.altitude} />
       </div>
       <p className="text-sm text-[var(--color-text-tertiary)]">
-        {formatVsFlat(effortMultiplier(course.effort))}
+        {formatVsFlat(totalEffortMultiplier(course))}
       </p>
     </div>
   );

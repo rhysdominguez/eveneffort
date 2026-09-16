@@ -83,6 +83,27 @@ export default function MethodologyPage() {
 
         <div className="space-y-4">
           <h2 className="font-display text-xl text-[var(--color-text-primary)]">
+            And how high it all happens
+          </h2>
+          <p className="text-base leading-relaxed text-[var(--color-text-secondary)]">
+            A hill is a hill whether it sits at sea level or a mile up, but the
+            air is not. Above about 1,000 metres there is measurably less oxygen
+            in every breath, and a marathon is run at a fixed share of what your
+            aerobic system can deliver. We use the linear decline in VO2 max
+            that Wehrlin and Hallen measured in trained endurance athletes:
+            roughly 6.3% for every 1,000 metres of ascent. Denver comes out
+            about 4% slower for the same effort, Leadville closer to 18%.
+          </p>
+          <p className="text-base leading-relaxed text-[var(--color-text-secondary)]">
+            Thin air cuts the other way too, and we count that as well: there is
+            less of it to push through, so wind and drag cost less than they
+            would at the coast. Below 1,000 metres, which is where most
+            marathons are run, none of this applies and nothing changes.
+          </p>
+        </div>
+
+        <div className="space-y-4">
+          <h2 className="font-display text-xl text-[var(--color-text-primary)]">
             What you get
           </h2>
           <p className="text-base leading-relaxed text-[var(--color-text-secondary)]">

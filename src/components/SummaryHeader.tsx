@@ -3,7 +3,7 @@ import { usePopover } from "@/hooks/usePopover";
 import { PrintModal } from "@/components/PrintModal";
 import { OrderModal } from "@/components/OrderModal";
 import type { PacingResult } from "@/hooks/usePacingChart";
-import type { CourseTerrain } from "@/types";
+import type { CourseAltitude, CourseTerrain } from "@/types";
 import type { BqStatus } from "@/lib/bq/qualify";
 import { DifficultyBadge } from "@/components/DifficultyBadge";
 import { BqBadge } from "@/components/BqBadge";
@@ -25,6 +25,14 @@ interface Props {
    * the geometry, which the printed paceband's own render path doesn't hold.
    */
   effortMultiplier?: number;
+  /**
+   * How high the course runs and what the thin air costs. Optional for the same
+   * reason `terrain` is: the printed paceband's render path holds no geometry.
+   *
+   * Folded into the effort sentence rather than replacing it, and shown as its
+   * own pill beside the profile — see the header of DifficultyBadge.tsx.
+   */
+  altitude?: CourseAltitude;
   /**
    * Whether the goal time clears this runner's Boston standard on this course.
    *
@@ -78,6 +86,7 @@ export function SummaryHeader({
   location,
   terrain,
   effortMultiplier,
+  altitude,
   bq,
 }: Props) {
   const printPopover = usePopover();
@@ -106,15 +115,24 @@ export function SummaryHeader({
               {location}
             </p>
           )}
-          {/* What the ground does, and what it costs — the two halves of a
-              course's character. print:hidden with the rest of the chrome:
-              the paceband carries splits, not commentary. */}
+          {/* What the ground does, how high it does it, and what the two cost
+              together — the three halves of a course's character, which is one
+              more than a pair, and that is the point: altitude is invisible in
+              a profile chart and in the Minetti curve alike. print:hidden with
+              the rest of the chrome: the paceband carries splits, not
+              commentary. */}
           {terrain && (
             <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 print:hidden">
-              <DifficultyBadge terrain={terrain} />
+              <DifficultyBadge terrain={terrain} altitude={altitude} />
               {effortMultiplier !== undefined && (
                 <span className="text-xs text-[var(--color-text-tertiary)]">
-                  {effortSummary(effortMultiplier)}
+                  {/* The ALL-IN cost, grades times air, so this sentence and
+                      the "vs flat" column on /courses answer the same question
+                      with the same number. Below the altitude threshold the
+                      multiplier is exactly 1 and this is unchanged. */}
+                  {effortSummary(
+                    effortMultiplier * (altitude?.multiplier ?? 1),
+                  )}
                 </span>
               )}
             </div>

@@ -12,6 +12,12 @@ import { frontalArea } from "./bsa";
 // is derived from temperature via the ideal gas law (15 °C → 1.225 kg/m³).
 const SEA_LEVEL_PRESSURE_PA = 101325;
 const GAS_CONSTANT_DRY_AIR = 287.05; // J·kg⁻¹·K⁻¹
+// International Standard Atmosphere, for the pressure lapse with height:
+// tropospheric temperature lapse rate, sea-level standard temperature, and the
+// exponent g·M/(R*·L) ≈ 5.25588 that falls out of the barometric formula.
+const ISA_LAPSE_RATE_K_PER_M = 0.0065;
+const ISA_SEA_LEVEL_TEMP_K = 288.15;
+const BAROMETRIC_EXPONENT = 5.25588;
 const DRAG_COEFFICIENT = 0.8; // C_d for a runner
 const GRAVITY = 9.81; // m/s²
 // Wind-profile power law: station height 10 m → runner height 1.5 m, α = 0.30.
@@ -22,12 +28,47 @@ const WIND_PROFILE_ALPHA = 0.3;
 const COST_PER_PCT_BODYWEIGHT = 0.0613;
 
 /**
- * Air density (kg/m³) at sea-level pressure for a given air temperature (°C),
- * via the ideal gas law: ρ = P / (R·T). 15 °C gives the ISA standard 1.225;
- * warm race-day air is measurably thinner (≈ −5 % at 30 °C), reducing drag.
+ * Ambient pressure (Pa) at a height above sea level, from the barometric
+ * formula over the ISA troposphere:
+ *
+ *   P(h) = P₀ · (1 − L·h / T₀) ^ (g·M / (R*·L))
+ *
+ * Sea level returns exactly P₀. Denver (1,600 m) returns ≈ 83.5 kPa, i.e. 82 %
+ * of sea-level pressure, which is the whole reason a mile-high race feels
+ * different to the legs and to the drag model alike.
  */
-export function airDensityKgM3(tempC: number): number {
-  return SEA_LEVEL_PRESSURE_PA / (GAS_CONSTANT_DRY_AIR * (273.15 + tempC));
+export function pressureAtElevationPa(elevationM: number): number {
+  if (!Number.isFinite(elevationM) || elevationM <= 0) {
+    return SEA_LEVEL_PRESSURE_PA;
+  }
+  return (
+    SEA_LEVEL_PRESSURE_PA *
+    (1 - (ISA_LAPSE_RATE_K_PER_M * elevationM) / ISA_SEA_LEVEL_TEMP_K) **
+      BAROMETRIC_EXPONENT
+  );
+}
+
+/**
+ * Air density (kg/m³) for a given air temperature (°C) at a given height above
+ * sea level, via the ideal gas law: ρ = P / (R·T). 15 °C at sea level gives the
+ * ISA standard 1.225; warm race-day air is measurably thinner (≈ −5 % at 30 °C)
+ * and so is high air (≈ −18 % at 1,600 m), both reducing drag.
+ *
+ * MEASURED TEMPERATURE, MODELLED PRESSURE. The pressure comes from the standard
+ * atmosphere because we do not have a barometer reading, but the temperature is
+ * the real forecast value — so this is not the ISA density at height, it is the
+ * ISA pressure divided by the actual air temperature. That is the right pairing:
+ * of the two, temperature is the one that varies hour to hour on race morning
+ * and the one we actually know.
+ *
+ * `elevationM` defaults to sea level, which keeps every call that predates
+ * ROADMAP #7a returning exactly what it did before.
+ */
+export function airDensityKgM3(tempC: number, elevationM = 0): number {
+  return (
+    pressureAtElevationPa(elevationM) /
+    (GAS_CONSTANT_DRY_AIR * (273.15 + tempC))
+  );
 }
 
 const toRad = (deg: number): number => (deg * Math.PI) / 180;
@@ -94,7 +135,7 @@ function signedDrag(
 
 /**
  * Metabolic-cost multiplier (≈1) for one segment given the runner's ground
- * speed and the wind. The still-air drag the runner already overcomes is
+ * speed, the wind, and the height it is run at. The still-air drag the runner already overcomes is
  * subtracted so zero wind returns exactly 1.0; only the wind-induced *delta*
  * in impeding force is converted to cost. The quadratic drag preserves the
  * headwind-hurts-more-than-tailwind-helps asymmetry.
@@ -106,10 +147,11 @@ export function windMultiplier(
   windSpeed10m: number,
   windFromDirection: number,
   tempC: number = 15,
+  elevationM = 0,
 ): number {
   if (runnerSpeedMS <= 0) return 1;
   const Ap = frontalArea(body.massKg, body.heightCm);
-  const rho = airDensityKgM3(tempC);
+  const rho = airDensityKgM3(tempC, elevationM);
   const windRunner = windAtRunnerHeight(windSpeed10m);
   const headwind = headwindComponent(
     travelBearing,
@@ -175,6 +217,10 @@ export function buildWindMultipliers(
     const [lat2, lon2] = coordAt(coords, seg.endDistanceKm);
     const bearing = segmentBearing(lat1, lon1, lat2, lon2);
     const weather = weatherBySegment[i];
+    // The segment's own mean height, not the course's: on a course that climbs
+    // 1,500 m the drag at the top is meaningfully lower than at the start, and
+    // the segments are already the right granularity to say so.
+    const elevationM = (seg.startElevationM + seg.endElevationM) / 2;
     return windMultiplier(
       body,
       segmentSpeedsMS[i],
@@ -182,6 +228,7 @@ export function buildWindMultipliers(
       weather.windSpeed,
       weather.windDirection,
       weather.tempC,
+      elevationM,
     );
   });
 }

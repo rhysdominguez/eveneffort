@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { getCourseCatalog } from "@/db/queries";
 import { CourseRankingTable } from "@/components/CourseRankingTable";
 
@@ -23,32 +22,13 @@ export default async function CoursesPage() {
   return (
     <main className="w-full flex-1">
       <section className="mx-auto w-full max-w-7xl space-y-8 px-6 py-16">
-        <header className="max-w-2xl space-y-4">
+        <header className="space-y-2">
           <p className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-tertiary)]">
             Course rankings
           </p>
           <h1 className="font-display text-3xl tracking-tight text-[var(--color-text-primary)] sm:text-4xl">
-            Which marathon courses actually run fast
+            Select your course
           </h1>
-          <p className="text-lg text-[var(--color-text-secondary)]">
-            Every course we hold an official elevation profile for, measured the
-            same way: how much it climbs, where it finishes relative to the
-            start, and what the terrain costs against a flat marathon. Sort by
-            any column; pick a race to load it into the calculator.
-          </p>
-          <p className="text-sm text-[var(--color-text-tertiary)]">
-            Climbing is measured per kilometre from each course&rsquo;s
-            elevation profile, so it is a consistent floor rather than a
-            surveyed figure, and it is comparable across races because every
-            race is measured identically. Net change is exact.{" "}
-            <Link
-              href="/methodology"
-              className="underline transition-colors hover:text-[var(--color-text-secondary)]"
-            >
-              How the cost is calculated
-            </Link>
-            .
-          </p>
         </header>
 
         {catalog.length === 0 ? (

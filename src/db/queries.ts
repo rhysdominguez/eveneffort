@@ -19,6 +19,7 @@ import type {
 } from "@/types";
 import { courseEffort } from "@/lib/pacing/effort";
 import { courseTerrain } from "@/lib/pacing/terrain";
+import { courseAltitude } from "@/lib/pacing/altitude";
 import { getDb, isDatabaseConfigured } from "./client";
 import { isUserCourseId, readUserCourse } from "./userCourses";
 import {
@@ -177,6 +178,7 @@ async function loadCourseCatalog(): Promise<CourseSummary[]> {
     timezone: r.timezone,
     effort: courseEffort(r.elevations),
     terrain: courseTerrain(r.elevations),
+    altitude: courseAltitude(r.elevations),
     nextRaceDateISO: r.nextRaceDate ?? null,
     editions: (r.editions ?? []).map(
       (e): EditionOption => ({
@@ -195,9 +197,18 @@ async function loadCourseCatalog(): Promise<CourseSummary[]> {
   }));
 }
 
+// The key carries a SHAPE VERSION, and it has to be bumped whenever a field is
+// added to CourseSummary. Vercel's data cache survives a deployment, so the
+// first requests after a deploy can be served an entry written by the previous
+// build — one that predates the new field. Every consumer then reads undefined
+// off it, and a display helper that dereferences the new field (as
+// `totalEffortMultiplier` does with `altitude.multiplier`) throws on a page
+// that rendered perfectly in CI. Bumping the key sidesteps it: old entries are
+// simply never read again.
+//   v2 — ROADMAP #7 added `altitude`.
 export const getCourseCatalog = unstable_cache(
   loadCourseCatalog,
-  ["course-catalog"],
+  ["course-catalog-v2"],
   { revalidate: REVALIDATE_SECONDS, tags: [CATALOG_TAG] },
 );
 

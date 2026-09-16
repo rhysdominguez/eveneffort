@@ -10,6 +10,11 @@ import { FIXTURE_CATALOG } from "@/data/courses.fixture";
 const getCourseCatalog = vi.hoisted(() => vi.fn());
 vi.mock("@/db/queries", () => ({ getCourseCatalog }));
 
+// The ranking table's rows are clickable, so it calls useRouter — which
+// throws outside a mounted app router. Rendering a page component by hand is
+// exactly that situation.
+vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn() }) }));
+
 import CoursesPage from "./page";
 
 const renderPage = async () => render(await CoursesPage());
@@ -21,7 +26,7 @@ describe("/courses", () => {
     expect(container.querySelectorAll("tbody tr")).toHaveLength(
       FIXTURE_CATALOG.length,
     );
-    expect(container.textContent).toContain("Which marathon courses actually run fast");
+    expect(container.textContent).toContain("Select your course");
   });
 
   it("says so plainly, and renders no table, with no database", async () => {

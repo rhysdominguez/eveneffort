@@ -20,7 +20,7 @@ need new human research, and does it touch the locked pacing algorithm.
 | 4 | Dew point as the humidity input | 1 | ●●○○○ | **4a done** 2026-08-30 · 4b deferred |
 | 5 | Course difficulty rating + fastest-course ranking | 2 | ●○○○○ | **Done** 2026-08-30 |
 | 6 | Nav restructure (tools in the navbar) | 2 | ●●○○○ | **Done** 2026-08-31 |
-| 7 | Altitude penalty | 2 | ●●●○○ | Not started |
+| 7 | Altitude penalty | 2 | ●●●○○ | **Done** 2026-09-16 |
 | 8 | Race comparison / time conversion calculator | 2 | ●●○○○ | **Done** 2026-09-04 |
 | 9 | Boston qualifier standards + per-race BQ status | 3 | ●●●●○ | **9a + 9b done** 2026-09-04 · 9c blocked |
 | 10 | Bring your own course (GPX / KML / Strava upload) | 3 | ●●●●● | **Done** 2026-09-04 |
@@ -341,6 +341,24 @@ sitemap. `metresToFeet` moved to
 [src/lib/units/elevation.ts](src/lib/units/elevation.ts), out of two copies in
 ElevationChart and its test.
 
+**Follow-up, 2026-09-16:** the ranking table gained the calendar's location
+filter (continent -> country -> state/province) plus a live count of what
+survives it. The cascade moved out of `src/components/home/calendarFilters.ts`
+to [src/lib/locationFilter.ts](src/lib/locationFilter.ts), generic over a
+structural `Locatable` rather than `EditionSummary`, and the three selects moved
+to [src/components/LocationFilterBar.tsx](src/components/LocationFilterBar.tsx)
+so both lists narrow through one control. The region level keeps hiding itself
+unless the chosen country has races in two or more of them, which today means
+the US, Canada and Australia.
+
+The whole row is now the click target, opening `/results` with that course set
+up. The race name stays a real `<a>` (keyboard, crawlers, right-click); the row
+handler only widens the target for a mouse, gets out of the way when the click
+already landed on the link, and opens a tab on a modified click. The href moved
+to `buildResultsHref` with `DEFAULT_FUELING`, because the hand-built query left
+`carbs` out and InputForm reads that absence as "the runner turned fueling off",
+so every row had been landing on a chart with the gel cues missing.
+
 **Narrowed deliberately:** the badge is on the results header only. The course
 picker, the race calendar and the map popups were dropped — the calendar would
 need a courseId→terrain map threaded in from the home page, since
@@ -422,7 +440,7 @@ previously had no nav route in" stops being true the moment this ships.
 
 ## 7. Altitude penalty
 
-**Status:** Not started · **Ease:** ●●●○○
+**Status:** Done 2026-09-16 · **Ease:** ●●●○○
 
 Today `src/lib/weather/wind.ts` hardcodes sea-level pressure (101325 Pa), so a race
 at 2,000 m gets sea-level air density and no aerobic penalty at all. ultraPacer,
@@ -446,6 +464,64 @@ over an array we already ship. This was the project's feared blocker and it is n
   above the threshold. Must not silently change any sea-level course — assert that
   in a test.
 - Consider surfacing acclimatization later as an input; out of scope here.
+
+**Shipped, both halves, as planned.** `src/lib/pacing/altitude.ts` is the new
+module; `src/lib/weather/wind.ts` gained `pressureAtElevationPa` for 7a. The
+prediction that there was no blocker held: no schema change, no new data, and
+the whole thing is a reduce over the 44 points the catalog already reads.
+
+What turned out differently:
+
+- **The threshold is a judgement call, not a lookup.** The plan said "roughly
+  1,000-1,500 m". The source chosen for the decrement (Wehrlin & Hallen 2006,
+  6.3% of VO2max per 1,000 m in trained endurance athletes) actually measured
+  the decline starting near **300 m**, which is lower than coaching practice
+  assumes and would have put a visible penalty on Madrid, Munich and a long
+  tail of ordinary European road races. Taking it literally was a bigger claim
+  than this product should make quietly, so the decrement runs from 1,000 m.
+  The argument is in the module header; if it is ever revisited, that is the
+  paragraph to argue with.
+- **The multiplier is averaged per kilometre, not evaluated at the mean
+  elevation.** It is convex and the threshold makes it piecewise, so a course
+  that starts low and climbs high is badly described by its mean. Costs one
+  more reduce, and gets Pikes Peak (2,960 m mean, 4,277 m high point) right.
+- **7a and 7b have opposite signs, so they shipped together**, as the plan
+  implied but did not say outright. Shipping only the air-density half would
+  have made Denver read *faster*, which is true of the drag and false of the
+  race.
+- **The sea-level guard the plan asked for is stronger than a unit test.**
+  `altitude.test.ts` walks every course file on disk, not the seven-course
+  fixture, because the fixture is the majors and is entirely at sea level: it
+  could not tell this model from one that returned 1.0 unconditionally.
+
+**Where it surfaces.** Not in the splits, deliberately, and this is the one
+open question left. Altitude is a thing *said about* a course today, not a
+thing *done to* a paceband:
+
+- A third pill on `DifficultyBadge`, beside the profile and net-change ones,
+  reading "6562 ft up, 7.0% slower". Absent entirely below the threshold, which
+  is 298 of the 326 seeded courses.
+- A sortable **Altitude** column on `/courses`, with an em dash placeholder for
+  the low majority (registered in `PLACEHOLDER_GLYPH_ALLOWED`, Rule 11).
+- Folded into **"vs flat"** everywhere it appears, via `totalEffortMultiplier`
+  in `src/lib/units/effort.ts`. That is a display-layer product: `effort` stays
+  geometry-only on the wire and in `equivalentGoalTime`, so **no chart, no
+  split and no shared link moved**. The Minetti curve reads gradient alone and
+  is untouched (Rule 1).
+- A methodology section naming the source and the threshold.
+
+Sanity check against the seeded catalog: La Paz 20.2%, Leadville 18.1%, Pikes
+Peak 14.4%, Denver Colfax 4.1%, Boulderthon 3.9%. 28 of 326 courses clear the
+0.5% dead band.
+
+**Open: should the penalty extend the finish time?** `/compare` now says a 3:20
+at Berlin is worth more time at Boulder, but the pacing chart at Boulder still
+hands back exactly the goal you typed. Weather already sets the precedent for
+the other behaviour: heat and wind multipliers are applied after normalization
+and deliberately push the finish past the goal. Doing the same with altitude is
+a one-line change in `computePaceChart` and a real product decision, because it
+changes the headline number on the results page for ~28 courses. Not taken
+unilaterally.
 
 ## 8. Race comparison / time conversion calculator
 

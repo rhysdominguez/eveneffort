@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import heroRunner from "../../../public/hero-runner-v2.jpg";
+import heroRunner from "../../../public/hero-runner-v3.jpg";
 import type { CourseSummary } from "@/types";
 import { InputForm } from "@/components/InputForm";
 import { useHomeSelection } from "@/components/home/HomeSelectionProvider";
@@ -69,7 +69,7 @@ export function HeroSection({ catalog }: { catalog: CourseSummary[] }) {
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <div />
           <InputForm
-            title="The World's Most Sophisticated Pacing Calculator"
+            title="The World's Most Sophisticated Marathon Pacing Calculator"
             subtitle="Elevation-adjusted mile-by-mile or km-by-km splits for your goal time, course, and conditions."
             catalog={catalog}
             requestedCourseId={selection?.courseId ?? null}

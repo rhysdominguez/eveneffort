@@ -6,6 +6,7 @@ import {
   buildWindMultipliers,
   coordAt,
   headwindComponent,
+  pressureAtElevationPa,
   segmentBearing,
   windAtRunnerHeight,
   windMultiplier,
@@ -50,6 +51,46 @@ describe("airDensityKgM3", () => {
     // ~5% thinner at 30 °C than at 15 °C.
     expect(airDensityKgM3(30) / airDensityKgM3(15)).toBeCloseTo(0.95, 2);
   });
+
+  // ROADMAP #7a. Before this the pressure was pinned at sea level, so a race at
+  // 2,000 m got sea-level drag.
+  it("defaults to sea level, so nothing that predates #7a moved", () => {
+    expect(airDensityKgM3(15, 0)).toBe(airDensityKgM3(15));
+    expect(airDensityKgM3(22, 0)).toBe(airDensityKgM3(22));
+  });
+
+  it("thins with height", () => {
+    expect(airDensityKgM3(15, 1609)).toBeLessThan(airDensityKgM3(15));
+    // Denver: ~82% of sea-level density, hence ~18% less drag.
+    expect(airDensityKgM3(15, 1609) / airDensityKgM3(15)).toBeCloseTo(0.82, 2);
+  });
+});
+
+describe("pressureAtElevationPa", () => {
+  it("is the ISA standard at sea level", () => {
+    expect(pressureAtElevationPa(0)).toBeCloseTo(101325, 6);
+  });
+
+  it("matches published standard-atmosphere pressures", () => {
+    // ISA table values, to within a tenth of a kPa.
+    expect(pressureAtElevationPa(1000)).toBeCloseTo(89875, -2);
+    expect(pressureAtElevationPa(2000)).toBeCloseTo(79495, -2);
+    expect(pressureAtElevationPa(5000)).toBeCloseTo(54020, -2);
+  });
+
+  it("falls monotonically and never goes negative", () => {
+    let previous = Infinity;
+    for (let m = 0; m <= 9000; m += 250) {
+      const p = pressureAtElevationPa(m);
+      expect(p).toBeLessThan(previous);
+      expect(p).toBeGreaterThan(0);
+      previous = p;
+    }
+  });
+
+  it("clamps below sea level rather than extrapolating", () => {
+    expect(pressureAtElevationPa(-400)).toBe(101325);
+  });
 });
 
 describe("windMultiplier", () => {
@@ -57,6 +98,28 @@ describe("windMultiplier", () => {
 
   it("is exactly 1.0 in still air", () => {
     expect(windMultiplier(DEFAULT_BODY, speed, 0, 0, 0)).toBe(1);
+  });
+
+  it("is still exactly 1.0 in still air at altitude", () => {
+    // The still-air baseline is subtracted at whatever the local density is, so
+    // thin air changes how much the WIND costs, never the no-wind case.
+    expect(windMultiplier(DEFAULT_BODY, speed, 0, 0, 0, 15, 2500)).toBe(1);
+  });
+
+  it("makes a headwind cost less in thin air", () => {
+    const seaLevel = windMultiplier(DEFAULT_BODY, speed, 0, 8, 0, 15, 0);
+    const high = windMultiplier(DEFAULT_BODY, speed, 0, 8, 0, 15, 2500);
+    expect(seaLevel).toBeGreaterThan(1);
+    expect(high).toBeGreaterThan(1);
+    expect(high).toBeLessThan(seaLevel);
+  });
+
+  it("makes a tailwind help less in thin air", () => {
+    const seaLevel = windMultiplier(DEFAULT_BODY, speed, 0, 8, 180, 15, 0);
+    const high = windMultiplier(DEFAULT_BODY, speed, 0, 8, 180, 15, 2500);
+    expect(seaLevel).toBeLessThan(1);
+    expect(high).toBeGreaterThan(seaLevel);
+    expect(high).toBeLessThan(1);
   });
 
   it("charges a smaller headwind penalty in hot (thin) air than cold air", () => {

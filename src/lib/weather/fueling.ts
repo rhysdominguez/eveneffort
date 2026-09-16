@@ -16,7 +16,7 @@ export const GEL_INTERVAL_SECONDS = 25 * 60; // 1500 s
 // fuelling plan; the high end is what a gut-trained runner on a modern
 // high-carb protocol takes.
 export const CARBS_PER_HOUR_MIN = 30;
-export const CARBS_PER_HOUR_MAX = 100;
+export const CARBS_PER_HOUR_MAX = 120;
 export const CARBS_PER_HOUR_STEP = 5;
 
 /**

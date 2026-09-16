@@ -14,7 +14,7 @@ import {
   reviveMapCamera,
   reviveYearMonth,
 } from "@/lib/stateKeys";
-import { ALL_LOCATIONS } from "@/components/home/calendarFilters";
+import { ALL_LOCATIONS } from "@/lib/locationFilter";
 import { clearStoredState } from "@/test/storage";
 
 // Every validator here guards a value that arrives from browser storage, which

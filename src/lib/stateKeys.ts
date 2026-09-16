@@ -27,7 +27,7 @@ import {
   OTHER_CONTINENT,
   type ContinentValue,
   type LocationFilter,
-} from "@/components/home/calendarFilters";
+} from "@/lib/locationFilter";
 import { CONTINENT_CODES } from "@/lib/continents";
 import {
   BQ_DIVISIONS,

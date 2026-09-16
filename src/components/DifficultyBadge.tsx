@@ -1,7 +1,8 @@
-import type { TerrainLabel, CourseTerrain } from "@/types";
+import type { TerrainLabel, CourseTerrain, CourseAltitude } from "@/types";
 import { terrainLabel, TERRAIN_LABELS } from "@/lib/pacing/terrain";
 import { metresToFeet } from "@/lib/units/elevation";
-import { formatSignedFeet } from "@/lib/chart/geometry";
+import { formatFeet, formatSignedFeet } from "@/lib/chart/geometry";
+import { formatAltitudePenalty } from "@/lib/units/effort";
 
 // How hilly a course is, and whether it finishes below where it started — two
 // pills, because they are two independent facts and one chip would have to pick
@@ -28,6 +29,15 @@ import { formatSignedFeet } from "@/lib/chart/geometry";
 // course it would only restate what the label already says. (This replaced an
 // earlier "847 ft up" total-gain figure that read as a contradiction on loop
 // courses, and a green-when-downhill treatment.)
+//
+// PILL THREE — ALTITUDE, and it is ABSENT far more often than it is present.
+// It appears only when a course runs high enough for thin air to cost a
+// measurable amount (ROADMAP #7), which is a small minority of the catalog, and
+// it says the penalty and the height that causes it in one breath: a runner who
+// sees "4.1% slower" wants to know immediately whether that is a mountain race
+// or a surprise. Neutral grey like pill two, for the same reason: the profile
+// pill owns the only colour in this row, and a second coloured pill would make
+// a reader work out which one to read first.
 const pillBase =
   "inline-flex items-center gap-1.5 rounded-full border border-[var(--color-border)] px-2.5 py-1 text-xs font-medium";
 
@@ -61,12 +71,27 @@ const ICON_PATHS: Record<TerrainLabel, string> = {
 
 interface Props {
   terrain: CourseTerrain;
-  /** Drops the net-change pill, for the dense rows of the ranking table. */
+  /**
+   * The course's thin-air cost. Optional because two of this component's
+   * callers render from a printed paceband's own data, which holds terrain and
+   * no altitude; a low course supplies it and still shows no pill.
+   */
+  altitude?: CourseAltitude;
+  /**
+   * Drops the net-change and altitude pills, for the dense rows of the ranking
+   * table — which carries both as their own sortable columns, so the pills
+   * would only say the same thing twice in a narrower space.
+   */
   compact?: boolean;
 }
 
-export function DifficultyBadge({ terrain, compact = false }: Props) {
+export function DifficultyBadge({
+  terrain,
+  altitude,
+  compact = false,
+}: Props) {
   const label = terrainLabel(terrain);
+  const altitudePenalty = altitude ? formatAltitudePenalty(altitude) : null;
 
   return (
     <span className="inline-flex flex-wrap items-center gap-2">
@@ -90,6 +115,30 @@ export function DifficultyBadge({ terrain, compact = false }: Props) {
           className={`${pillBase} font-tabular text-[var(--color-text-secondary)]`}
         >
           {formatSignedFeet(metresToFeet(terrain.netM))} net
+        </span>
+      )}
+      {!compact && altitudePenalty && altitude && (
+        <span
+          className={`${pillBase} font-tabular text-[var(--color-text-secondary)]`}
+          title={`Mean elevation ${formatFeet(
+            metresToFeet(altitude.meanM),
+          )}, high point ${formatFeet(metresToFeet(altitude.maxM))}`}
+        >
+          <svg
+            viewBox="0 0 20 20"
+            aria-hidden="true"
+            className="h-3 w-3 shrink-0"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            {/* A peak with a datum line under it: height above sea level,
+                which is the one thing the profile glyphs above never say. */}
+            <path d="M2 17h16M4 13l4-7 3 4 2-2 3 5" />
+          </svg>
+          {formatFeet(metresToFeet(altitude.meanM))} up, {altitudePenalty}
         </span>
       )}
     </span>
