@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import heroRunner from "../../../public/hero-runner1.jpg";
+import heroRunner from "../../../public/hero-runner-v2.jpg";
 import type { CourseSummary } from "@/types";
 import { InputForm } from "@/components/InputForm";
 import { useHomeSelection } from "@/components/home/HomeSelectionProvider";
@@ -34,7 +34,17 @@ export function HeroSection({ catalog }: { catalog: CourseSummary[] }) {
       id="calculator"
       className="relative w-full min-h-[30rem] scroll-mt-24 lg:min-h-[44rem]"
     >
-      {/* Imported rather than referenced by path on purpose. A static import
+      {/* The filename carries a version suffix deliberately. The optimizer
+          serves /_next/image responses `immutable` for a year, and the request
+          URL is built from the source basename, its content hash and the w/q
+          params. Before the contentDispositionType fix in next.config.ts, that
+          exact URL was answered with `Content-Disposition: attachment`, and
+          nothing about it changed afterwards, so every browser that had
+          already loaded the broken response kept painting nothing and never
+          revalidated. Renaming the file is the only lever that moves the URL.
+          If a serving bug like that ever recurs, bump the suffix again.
+
+          Imported rather than referenced by path on purpose. A static import
           gets a content-hashed URL, which the optimizer serves `immutable`
           instead of the `max-age=0, must-revalidate` a public/ path gets, and
           it makes Next generate `blurDataURL` at build time.
