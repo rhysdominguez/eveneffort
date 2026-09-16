@@ -3,8 +3,8 @@ import { Montserrat, Fraunces } from "next/font/google";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
-import { SiteChrome } from "@/components/SiteChrome";
-import { SitePasswordGate } from "@/components/SitePasswordGate";
+import { SiteNav } from "@/components/SiteNav";
+import { SiteFooter } from "@/components/SiteFooter";
 import { ADSENSE_CLIENT } from "@/lib/ads";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
@@ -66,9 +66,9 @@ export default function RootLayout({
       className={`${montserrat.variable} ${fraunces.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <SitePasswordGate>
-          <SiteChrome>{children}</SiteChrome>
-        </SitePasswordGate>
+        <SiteNav />
+        {children}
+        <SiteFooter />
         {/* Page views only — the paceband funnel's in-app steps go through
             /api/event (see lib/analytics.ts) and payment through Stripe. */}
         <Analytics />
@@ -78,18 +78,6 @@ export default function RootLayout({
           strategy="afterInteractive"
           crossOrigin="anonymous"
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
-        />
-        {/* Roomvo assistant widget. The script reads its config from the
-            data-* attributes on its own tag, so the id must stay. */}
-        <Script
-          id="roomvoAssistant"
-          async
-          strategy="afterInteractive"
-          fetchPriority="high"
-          type="text/javascript"
-          data-locale="en-us"
-          data-position="bottom-right"
-          src="https://www.roomvo.com/static/scripts/b2b/common/assistant-chatbot-fallback.js"
         />
       </body>
     </html>
