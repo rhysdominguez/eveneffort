@@ -7,8 +7,10 @@ import { SUPPORT_EMAIL } from "@/lib/orders";
 //
 // Two dark tiers following the Macmillan reference's structure: wordmark and
 // rule-separated link columns on top, a step-darker centred band closing it.
-// This is the site's ONLY dark surface and the only place the `*-on-dark`
-// tokens may be used — see DESIGN.md § Theme; it is a band, not a dark mode.
+// In light mode this is the site's ONLY dark surface, and the only place the
+// `*-on-dark` tokens may be used. It is a band, not the dark theme: in dark
+// mode its fills go lighter than the page so it stays a band. See DESIGN.md
+// § Theme.
 //
 // No newsletter signup, unlike the Macmillan reference: there is no backend to
 // take an address, and a form that silently discards input is worse than none.

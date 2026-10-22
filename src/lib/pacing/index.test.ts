@@ -18,6 +18,7 @@ const courseFrom = (elevations: number[]): Course => ({
   countryCode: "DE",
   countryName: "Germany",
   regionCode: null,
+  outline: null,
   regionName: null,
   elevations,
   profile: [],

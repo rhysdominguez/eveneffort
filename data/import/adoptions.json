@@ -14,7 +14,7 @@
     "parse -> qa -> promote run afterwards exactly as they do for a goandrace",
     "import, review step included."
   ],
-  "updatedAt": "2026-08-19",
+  "updatedAt": "2026-09-25",
   "races": [
     {
       "courseSlug": "bend-marathon",
@@ -93,6 +93,58 @@
       "countryCode": "US",
       "websiteUrl": "https://406raceseries.com/montanamarathon",
       "organizer": "406 Race Series"
+    },
+    {
+      "courseSlug": "warsaw-marathon",
+      "name": "Warsaw Marathon",
+      "routeUrl": "https://maratonwarszawski.com/wp-content/uploads/2026/08/48_Maraton_Warszawski.gpx",
+      "routeSource": "organizer",
+      "routeNote": "Linked as the course file from the organiser's own site (maratonwarszawski.com), uploaded by them in August 2026 for the 48th edition. Retrieved 2026-09-25. Carries no <ele>, so elevation is modelled. Race confirmed still running: the 48th edition runs 2026-09-27 and the file is that edition's.",
+      "startDate": "2026-09-27",
+      "locality": "Warsaw",
+      "region": null,
+      "countryCode": "PL",
+      "websiteUrl": "https://maratonwarszawski.com",
+      "organizer": null
+    },
+    {
+      "courseSlug": "ljubljana-marathon",
+      "name": "Ljubljana Marathon",
+      "routeUrl": "https://ljubljanskimaraton.si/upload/trase/ljubljanskimaraton_42km_2026.gpx",
+      "routeSource": "organizer",
+      "routeNote": "Published by the organiser as the 42 km course file for the 2026 edition, from ljubljanskimaraton.si/en/marathon. Retrieved 2026-09-25. Carries surveyed elevation on every point. Race confirmed still running: the organiser advertises 2026-10-18.",
+      "startDate": "2026-10-18",
+      "locality": "Ljubljana",
+      "region": null,
+      "countryCode": "SI",
+      "websiteUrl": "https://ljubljanskimaraton.si",
+      "organizer": null
+    },
+    {
+      "courseSlug": "sofia-marathon",
+      "name": "Sofia Marathon",
+      "routeUrl": "https://sofiamarathon.bg/wp-content/uploads/gpx/WizzAirMarathon-Sofia-42_2-course.gpx",
+      "routeSource": "organizer",
+      "routeNote": "Linked from the organiser's own 42 km distance page (sofiamarathon.bg/en/distances/marathon-42km/) and hosted on their own domain. Retrieved 2026-09-25. Race confirmed still running: the 43rd edition runs 2026-10-11 with registration open and 10,600+ entrants announced 2026-09-17.",
+      "startDate": "2026-10-11",
+      "locality": "Sofia",
+      "region": null,
+      "countryCode": "BG",
+      "websiteUrl": "https://sofiamarathon.bg",
+      "organizer": null
+    },
+    {
+      "courseSlug": "geneva-marathon",
+      "name": "Geneva Marathon",
+      "routeUrl": "https://512763f9-e0e1-4531-92c1-a627ccca8323.filesusr.com/ugd/a32e51_1851e34d983d4d3ca2569fba05324ff3.gpx?dn=Marathon_ggm2026.gpx",
+      "routeSource": "organizer",
+      "routeNote": "The organiser's own TELECHARGER LE GPX link on generaligenevemarathon.com/marathon; the host is their Wix asset CDN, not a third-party route site. Retrieved 2026-09-25, file is the 2026 marathon course. Race confirmed still running: the site's header advertises 8-9 May 2027. NOTE: a stale race card on the same page still shows a 2025 date, so the exact 2027 start date wants re-checking before the edition is trusted.",
+      "startDate": "2027-05-09",
+      "locality": "Geneva",
+      "region": null,
+      "countryCode": "CH",
+      "websiteUrl": "https://www.generaligenevemarathon.com",
+      "organizer": null
     }
   ]
 }

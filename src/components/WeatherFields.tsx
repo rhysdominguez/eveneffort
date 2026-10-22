@@ -33,8 +33,6 @@ interface Props {
   humidityUnit: HumidityUnit;
   onHumidityUnitChange: (unit: HumidityUnit) => void;
   hasTiming: boolean;
-  /** True when the start time shown is our 7:30 assumption, not a published one. */
-  startTimeAssumed?: boolean;
 }
 
 export function WeatherFields({
@@ -47,7 +45,6 @@ export function WeatherFields({
   humidityUnit,
   onHumidityUnitChange,
   hasTiming,
-  startTimeAssumed = false,
 }: Props) {
   const {
     mode,
@@ -92,16 +89,18 @@ export function WeatherFields({
     }
   };
 
-  // The auto tab names its own source. "Forecast" was a lie for the two most
-  // common cases — a race already run and a race months out — and the runner
-  // has no other way to tell a prediction from a record.
-  const autoLabel =
-    source === "historical" ? "Actual" : source === "typical" ? "Typical" : "Forecast";
+  // The auto tab always reads "Forecast" — renaming it per source was a
+  // trap for the runner's eye, flipping label text they'd already read past.
+  // When the answer isn't actually a live forecast (typical average, or a
+  // failed fetch), the tab grays out instead so the mismatch shows without
+  // changing the word.
+  const autoDegraded = mode === "forecast" && (source === "typical" || (!!error && !loading));
 
   const toggleButton = (
     label: string,
     active: boolean,
     onClick: () => void,
+    muted = false,
   ) => (
     <button
       type="button"
@@ -109,7 +108,9 @@ export function WeatherFields({
       onClick={onClick}
       className={`px-4 py-1.5 text-sm font-medium transition-colors ${
         active
-          ? "bg-[var(--color-red-primary)] text-white"
+          ? muted
+            ? "bg-[var(--color-bg-elevated)] text-[var(--color-text-tertiary)]"
+            : "bg-[var(--color-red-fill)] text-white"
           : "bg-[var(--color-bg-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-elevated)]"
       }`}
     >
@@ -121,7 +122,7 @@ export function WeatherFields({
     if (mode === "off") return null;
     if (mode === "forecast") {
       if (loading) return "Loading conditions…";
-      if (error) return `Conditions unavailable. (${error})`;
+      if (error) return `Forecast unavailable: ${error}.`;
       if (!hasTiming) return "Add a race date and start time for live conditions.";
       if (source === "historical") {
         const when = meta?.raceDateISO
@@ -133,38 +134,28 @@ export function WeatherFields({
         const when = meta?.raceDateISO
           ? ` for ${formatDateDisplay(meta.raceDateISO)}`
           : "";
-        return `Race day is too far out to forecast, so these are typical conditions${when}, averaged over the last ${meta?.years ?? 10} years.`;
+        return `Forecast unavailable, so these are typical conditions${when}.`;
       }
+      // Only a resolved live forecast earns this sentence. `source` is null
+      // before the first fetch resolves and after any reset, and falling
+      // through to the claim there put "Showing the live forecast" over
+      // fallback or stale numbers that no forecast had ever supplied.
+      if (source !== "forecast") return "Loading conditions…";
       return "Showing the live forecast for your race start.";
     }
     return "Enter conditions below.";
   })();
 
-  // Only worth saying once conditions are actually on screen: the assumption
-  // matters because it is what keys the hour the numbers were read at.
-  const startTimeNote =
-    mode === "forecast" && startTimeAssumed && source && !loading && !error
-      ? "Assumed a 7:30 AM local start. Adjust the start time if you know the real one."
-      : null;
-
   return (
     <div className="space-y-4">
       <div className="inline-flex overflow-hidden rounded-lg border border-[var(--color-border)]">
-        {toggleButton(autoLabel, mode === "forecast", () => setMode("forecast"))}
+        {toggleButton("Forecast", mode === "forecast", () => setMode("forecast"), autoDegraded)}
         {toggleButton("Manual", mode === "manual", () => setMode("manual"))}
         {toggleButton("Off", mode === "off", () => setMode("off"))}
       </div>
 
       {helperText && (
-        <p className="text-sm text-[var(--color-text-secondary)]">
-          {helperText}
-        </p>
-      )}
-
-      {startTimeNote && (
-        <p className="text-sm text-[var(--color-text-tertiary)]">
-          {startTimeNote}
-        </p>
+        <p className="text-xs text-[var(--color-text-secondary)]">{helperText}</p>
       )}
 
       <div className={`grid grid-cols-2 gap-3 ${enabled ? "" : "opacity-50"}`}>

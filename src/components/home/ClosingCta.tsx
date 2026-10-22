@@ -14,7 +14,7 @@ export function ClosingCta() {
         </p>
         <a
           href="#calculator"
-          className="mt-10 inline-block rounded-lg bg-[var(--color-red-primary)] px-10 py-4 text-base font-semibold text-[var(--color-bg-surface)] transition-colors hover:bg-[var(--color-red-deep)]"
+          className="mt-10 inline-block rounded-lg bg-[var(--color-red-fill)] px-10 py-4 text-base font-semibold text-white transition-colors hover:bg-[var(--color-red-fill-hover)]"
         >
           Build my pacing plan
         </a>

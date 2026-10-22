@@ -71,6 +71,8 @@ export interface UserCourseGeometry {
   elevations: number[];
   coords: [number, number][];
   profile: [number, number][];
+  /** Simplified [lat, lon] silhouette (ROADMAP #21). Null when too sparse. */
+  outline: [number, number][] | null;
   timezone: string;
   elevationSource: string;
   distanceM: number;
@@ -114,6 +116,7 @@ export async function readUserCourse(token: string): Promise<StoredUserCourse | 
       elevations: r.elevations,
       coords: r.coords,
       profile: r.profile,
+      outline: r.outline ?? null,
       startLat: Number(r.startLat),
       startLon: Number(r.startLon),
       timezone: r.timezone,
@@ -149,6 +152,7 @@ export async function insertUserCourse(
       elevations: geometry.elevations,
       coords: geometry.coords,
       profile: geometry.profile,
+      outline: geometry.outline,
       // == coords[0], denormalised the same way `course` does it.
       startLat: String(geometry.coords[0][0]),
       startLon: String(geometry.coords[0][1]),

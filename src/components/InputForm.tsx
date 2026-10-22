@@ -13,6 +13,7 @@ import type {
 } from "@/types";
 import { DEFAULT_BODY, DEFAULT_FUELING, DEFAULT_SPLIT } from "@/types";
 import { toSeconds } from "@/lib/units/time";
+import { GOAL_INPUT_MODES_ENABLED } from "@/lib/featureFlags";
 import {
   avgPaceFromGoalTime,
   gapPaceFromGoalTime,
@@ -33,7 +34,12 @@ import {
   CARBS_PER_HOUR_STEP,
   gelIntervalSeconds,
 } from "@/lib/weather/fueling";
-import { useWeather } from "@/hooks/useWeather";
+import {
+  useWeather,
+  type WeatherMeta,
+  type WeatherMode,
+  type WeatherSource,
+} from "@/hooks/useWeather";
 import { HeightField } from "@/components/HeightField";
 import type {
   HeightUnit,
@@ -48,6 +54,7 @@ import {
   roundForDisplay,
 } from "@/lib/units/weather";
 import { useStoredState } from "@/hooks/useStoredState";
+import { defaultCourseId } from "@/lib/catalog";
 import { DISPLAY_UNITS, GOAL_MODE, HOME_FORM } from "@/lib/stateKeys";
 import {
   defaultStartTime,
@@ -55,7 +62,6 @@ import {
   editionForYear,
   nextEdition,
   resolveRaceDate,
-  startTimeIsAssumed,
   weatherSourceFor,
 } from "@/lib/editions";
 import { todayISO } from "@/lib/units/date";
@@ -68,13 +74,38 @@ import { todayISO } from "@/lib/units/date";
 //   starting state from the URL-parsed PacingInput.
 //
 // Weather is owned here (not passed in) so it renders identically in both
-// modes, including the homepage. `onHourlyChange` lets the dashboard capture
-// the live forecast series for per-segment sampling in the pacing engine —
-// the homepage has no use for it and simply omits the prop.
+// modes, including the homepage. `onWeatherChange` lets the dashboard capture
+// the live forecast series for per-segment sampling in the pacing engine, and
+// everything the weather timeline needs to describe where those numbers came
+// from — the homepage has no use for it and simply omits the prop.
+//
+// The hook stays HERE rather than being lifted to the dashboard: lifting it
+// would mean threading eight props back down and giving the hero a second path
+// through the same component, to move state that only one of the two callers
+// reads.
+/**
+ * Everything outside this form needs to know about the weather it fetched.
+ *
+ * One object rather than five callbacks, but it MUST be memoised on the
+ * primitives below before it is handed over: the effect that publishes it runs
+ * on every render, and a freshly-built object would fail its own dependency
+ * check every time and set state in the parent forever.
+ */
+export interface WeatherView {
+  mode: WeatherMode;
+  source: WeatherSource | null;
+  hours: WeatherConditions[] | null;
+  lead: WeatherConditions[] | null;
+  meta: WeatherMeta | null;
+  loading: boolean;
+  /** See `key` on UseWeather: what this data was actually fetched for. */
+  key: string | null;
+}
+
 interface Props {
   onCalculate?: (input: PacingInput) => void;
   onChange?: (input: PacingInput) => void;
-  onHourlyChange?: (hourly: WeatherConditions[] | null) => void;
+  onWeatherChange?: (view: WeatherView) => void;
   /**
    * Every selectable course, fetched server-side and passed down. Light
    * metadata only — the elevation geometry is loaded on /results for the one
@@ -159,27 +190,27 @@ const SPLIT_SCALE: readonly {
 }[] = [
   {
     value: "negative-aggressive",
-    label: "Strong negative split",
+    label: "Strong Negative Split",
     hint: "Run the second half about 3% faster than the first.",
   },
   {
     value: "negative",
-    label: "Negative split",
+    label: "Negative Split",
     hint: "Run the second half about 1.5% faster than the first.",
   },
   {
     value: "even-effort",
-    label: "Even effort",
+    label: "Even Effort",
     hint: "The recommended default. The same effort up every hill and down the far side.",
   },
   {
     value: "positive",
-    label: "Positive split",
+    label: "Positive Split",
     hint: "Run the first half about 1.5% faster than the second.",
   },
   {
     value: "positive-aggressive",
-    label: "Strong positive split",
+    label: "Strong Positive Split",
     hint: "Run the first half about 3% faster than the second.",
   },
 ];
@@ -196,7 +227,7 @@ function splitIndexOf(split: SplitStrategy): number {
 export function InputForm({
   onCalculate,
   onChange,
-  onHourlyChange,
+  onWeatherChange,
   catalog,
   requestedCourseId,
   initial,
@@ -254,7 +285,7 @@ export function InputForm({
   const [storedGoalMode, storeGoalMode] = useStoredState(GOAL_MODE);
   const [goalPaceEdit, setGoalPaceEdit] = useState<PaceInput | null>(null);
 
-  const initialCourseId = initial?.courseId ?? catalog[0]?.id ?? "";
+  const initialCourseId = initial?.courseId ?? defaultCourseId(catalog) ?? "";
   const [courseIdEdit, setCourseIdEdit] = useState<CourseId | null>(null);
   // A restored slug is only honoured while the course is still selectable —
   // courses are database rows, and one can leave the seed between two visits.
@@ -277,13 +308,16 @@ export function InputForm({
   const courseEffort = catalog.find((c) => c.id === courseId)?.effort ?? null;
   const gapAvailable = courseEffort !== null;
 
-  // How the goal may be STATED is a dashboard question. The hero form is
+  // How the goal may be STATED was a dashboard question: the hero form is
   // deliberately minimal — core race setup plus Calculate — and it asks for a
-  // finish time, full stop: pace and grade-adjusted pace only earn their place
-  // once the runner is looking at a chart, and a mode toggle over a single
-  // field put a choice in front of visitors before the form had told them
-  // anything. Live mode (the dashboard) still offers all three.
-  const modesOffered = live;
+  // finish time, full stop, because pace and grade-adjusted pace only earn
+  // their place once the runner is looking at a chart.
+  //
+  // The dashboard now asks the same single question, because the control is
+  // switched off behind GOAL_INPUT_MODES_ENABLED — see that flag for why. The
+  // machinery below is untouched and still tested, so the modes come back by
+  // flipping one constant; `modesOffered` false simply pins the form to time.
+  const modesOffered = live && GOAL_INPUT_MODES_ENABLED;
 
   const goalModeOptions = GOAL_MODE_OPTIONS;
 
@@ -555,9 +589,33 @@ export function InputForm({
     live,
   );
 
+  // Every field below is a useState reference, so this memo only rebuilds when
+  // one of them actually changes — which is what keeps the effect below from
+  // looping. See the note on WeatherView.
+  const weatherView: WeatherView = useMemo(
+    () => ({
+      mode: weather.mode,
+      source: weather.source,
+      hours: weather.hourly,
+      lead: weather.lead,
+      meta: weather.meta,
+      loading: weather.loading,
+      key: weather.key,
+    }),
+    [
+      weather.mode,
+      weather.source,
+      weather.hourly,
+      weather.lead,
+      weather.meta,
+      weather.loading,
+      weather.key,
+    ],
+  );
+
   useEffect(() => {
-    onHourlyChange?.(weather.hourly);
-  }, [onHourlyChange, weather.hourly]);
+    onWeatherChange?.(weatherView);
+  }, [onWeatherChange, weatherView]);
 
   // Switching course carries the YEAR across where the new race has one, and
   // otherwise moves to its next edition. Carrying the year is what makes the
@@ -778,12 +836,25 @@ export function InputForm({
           over one value — which is why a shared link never has to carry it,
           and why the hero can drop the choice without losing anything. */}
       <div>
+        {/* The distance unit rides in this header rather than in a row of its
+            own. It had a full "Unit of measurement" eyebrow and a line to
+            itself above, which left a toggle floating with nothing beside it.
+            The km/mi segments say what they set, so the label was redundant,
+            and sitting on the goal line puts it exactly where it bites: it
+            decides what the fields below read in, and it also sets the
+            wind-speed unit (km => km/h, mi => mph).
+
+            With the goal-mode control switched off this is the row's only
+            toggle, which is the point: two of them side by side in a sidebar
+            this narrow was the crowding that led to turning the other one off.
+            The wrapper is kept so that re-enabling the flag puts them back on
+            one line, wrapping together and staying right-aligned. */}
         <div className="mb-2 flex flex-wrap items-center gap-x-2 gap-y-1.5">
           <label className={`min-w-0 flex-1 ${eyebrowClass}`}>
             {goalFieldLabel}
           </label>
-          {modesOffered && (
-            <div className="shrink-0">
+          <div className="ml-auto flex shrink-0 items-center gap-2">
+            {modesOffered && (
               <UnitToggle
                 label="Goal input mode"
                 value={goalMode}
@@ -792,8 +863,18 @@ export function InputForm({
                 disabledValues={gapAvailable ? undefined : ["gap"]}
                 variant="prominent"
               />
-            </div>
-          )}
+            )}
+            <UnitToggle
+              label="Distance unit"
+              value={unit}
+              options={[
+                ["km", "km"],
+                ["miles", "mi"],
+              ]}
+              onChange={(value) => selectUnit(value as Unit)}
+              variant="prominent"
+            />
+          </div>
         </div>
         {goalMode === "time" ? (
           <div className="grid grid-cols-3 gap-3">
@@ -942,21 +1023,6 @@ export function InputForm({
         </div>
       </div>
 
-      {/* Unit also sets the wind-speed unit (km ⇒ km/h, mi ⇒ mph). */}
-      <div className="flex items-center justify-between gap-2">
-        <label className={eyebrowClass}>Unit of measurement</label>
-        <UnitToggle
-          label="Distance unit"
-          value={unit}
-          options={[
-            ["km", "km"],
-            ["miles", "mi"],
-          ]}
-          onChange={(value) => selectUnit(value as Unit)}
-          variant="prominent"
-        />
-      </div>
-
       {/* Weather/wind and fueling are dashboard-only: the homepage is just
           the core race setup + Calculate, per the product decision to keep
           the hero form minimal. Both sections read/write state that only
@@ -976,18 +1042,17 @@ export function InputForm({
               humidityUnit={humidityUnit}
               onHumidityUnitChange={setHumidityUnitEdit}
               hasTiming={Boolean(raceDate && raceStartTime)}
-              startTimeAssumed={startTimeIsAssumed(currentEdition, raceStartTime)}
             />
             {/* Body metrics feed the wind drag model, so they live in this
                 section rather than a separate "Advanced" disclosure — and they
                 dim with it, since they have no effect when weather is off. */}
             <div
-              className={`space-y-3 border-t border-[var(--color-border)] pt-4 ${
+              className={`-mb-3 border-t border-[var(--color-border)] pt-4 ${
                 weather.enabled ? "" : "opacity-50"
               }`}
             >
               <h3 className={eyebrowClass}>Body Metrics</h3>
-              <p className="text-sm text-[var(--color-text-secondary)]">
+              <p className="mt-4 mb-6 text-xs text-[var(--color-text-secondary)]">
                 Your weight and height feed the wind drag model, so pacing
                 only shifts when weather is on.
               </p>
@@ -1071,7 +1136,7 @@ export function InputForm({
                   onClick={() => setFuelingEnabled(on)}
                   className={`px-4 py-1.5 text-sm font-medium transition-colors ${
                     fuelingEnabled === on
-                      ? "bg-[var(--color-red-primary)] text-white"
+                      ? "bg-[var(--color-red-fill)] text-white"
                       : "bg-[var(--color-bg-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-elevated)]"
                   }`}
                 >
@@ -1105,7 +1170,7 @@ export function InputForm({
             type="button"
             onClick={handleSubmit}
             disabled={!isValid}
-            className="w-full rounded-lg bg-[var(--color-red-primary)] py-4 text-base font-semibold text-white transition-colors hover:bg-[var(--color-red-deep)] disabled:bg-[var(--color-border)] disabled:text-[var(--color-text-tertiary)]"
+            className="w-full rounded-lg bg-[var(--color-red-fill)] py-4 text-base font-semibold text-white transition-colors hover:bg-[var(--color-red-fill-hover)] disabled:bg-[var(--color-border)] disabled:text-[var(--color-text-tertiary)]"
           >
             Calculate
           </button>

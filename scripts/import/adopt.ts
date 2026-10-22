@@ -9,6 +9,7 @@
 //   --dry-run          fetch and validate; write no GPX and no batch
 //   --force            re-adopt an entry whose GPX is already on disk
 //   --provider <id>    DEM provider for elevation (default srtm30m)
+//   --allow-route-host permit routeSource "route-host" (see docs/COURSE-RIGHTS.md)
 //
 // Why this exists: goandrace's catalogue is ~1,089 events and the calendar is
 // strong in the US and Italy and thin everywhere else. 558 of the 766 rows in
@@ -57,8 +58,19 @@ interface Adoption {
   name: string;
   /** http(s) URL, or a path relative to the repo for a file downloaded by hand. */
   routeUrl: string;
-  /** organizer is the one to prefer; route-host means check the rights again. */
-  routeSource: "organizer" | "route-host" | "manual";
+  /**
+   * Where the geometry came from, and the rights class it falls in — see
+   * docs/COURSE-RIGHTS.md, which is what this union now enumerates.
+   *
+   * `organizer` is the preferred class and the only one that needs no argument.
+   * `traced` is geometry we drew ourselves from a published course map (#23);
+   * it is labelled through to decisions.json the way `dem:` elevation is.
+   * `route-host` is third-party uploaded geometry and is refused without an
+   * explicit `--allow-route-host`.
+   */
+  routeSource: "organizer" | "certification" | "traced" | "route-host" | "manual";
+  /** Set by trace.ts. Carries the method into RawEvent.geometrySource. */
+  traceMethod?: string;
   /** Where this came from and why it is trusted. Free text, for the record. */
   routeNote: string;
   startDate: string | null;
@@ -127,6 +139,12 @@ async function adopt(
         ? new URL(race.websiteUrl).hostname
         : "manual",
     routeNote: `${race.routeSource}: ${race.routeNote}`,
+    // Absent means "gpx", the same convention elevationSource uses. A traced
+    // course is a real course, but it is a different kind of number from a
+    // surveyed one and qa.ts surfaces it for exactly that reason.
+    ...(race.routeSource === "traced"
+      ? { geometrySource: `traced:${race.traceMethod ?? "manual"}` as const }
+      : {}),
     warnings: [],
   };
 
@@ -182,6 +200,7 @@ async function adopt(
 async function main(argv: string[]): Promise<void> {
   const dryRun = argv.includes("--dry-run");
   const force = argv.includes("--force");
+  const allowRouteHost = argv.includes("--allow-route-host");
   const providerId = flagValue(argv, "--provider") ?? OPENTOPODATA.id;
   if (!PROVIDERS[providerId]) throw new Error(`unknown DEM provider "${providerId}"`);
   const onlyRaw = flagValue(argv, "--only");
@@ -211,6 +230,19 @@ async function main(argv: string[]): Promise<void> {
     // overwrite the geometry behind links people have already paid for.
     if (published.has(race.courseSlug)) {
       console.log(`    ${race.courseSlug}: skipped — already in the published slug ledger`);
+      continue;
+    }
+    // The rights gate. Route-host geometry is a third runner's upload, on a
+    // site that mostly signals no to automated access, and pacebands are paid
+    // product — docs/COURSE-RIGHTS.md §5 has the argument. The escape hatch is
+    // explicit because the alternative is someone relabelling the entry
+    // "manual" and the refusal never being recorded anywhere.
+    if (race.routeSource === "route-host" && !allowRouteHost) {
+      console.log(
+        `    ${race.courseSlug}: refused — routeSource "route-host" is not admissible ` +
+          `(docs/COURSE-RIGHTS.md §5). Prefer the organizer's own file, or pass ` +
+          `--allow-route-host and say why in routeNote.`,
+      );
       continue;
     }
     if (claimed.has(race.courseSlug)) {

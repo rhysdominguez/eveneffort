@@ -23,7 +23,7 @@ describe("ComparePage", () => {
   it("renders the comparison when the catalog is there", async () => {
     const { container } = await page({ from: "boston", to: "berlin", t: "12000" });
     expect(container.querySelectorAll('[role="combobox"]')).toHaveLength(2);
-    expect(container.textContent).toContain("3:21:10");
+    expect(container.textContent).toContain("3:21:53");
   });
 
   // Rule 9: the build and the test suite both run with no database reachable,

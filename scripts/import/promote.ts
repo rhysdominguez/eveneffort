@@ -95,6 +95,23 @@ function elevationNote(courses: StagedCourse[]): string {
   );
 }
 
+/**
+ * Flag a batch whose route line was traced rather than published (#23).
+ *
+ * Same job as elevationNote, one field over: the seed file is the durable
+ * record of where a course came from, and "we drew this from the race's
+ * published map" is exactly the kind of thing that record should say out loud.
+ */
+function geometryNote(courses: StagedCourse[]): string {
+  const traced = courses.filter((c) => (c.source.geometry ?? "gpx") !== "gpx");
+  if (traced.length === 0) return "";
+  const methods = [...new Set(traced.map((c) => c.source.geometry!))].sort();
+  return (
+    `\n  // The route line for ${traced.length} of these is traced from the race's\n` +
+    `  // published course map (${methods.join(", ")}), not a route file the race published.`
+  );
+}
+
 function cityBlock(courses: StagedCourse[], batch: string): string {
   const cities = courses.map((c) => c.city).filter((c) => c !== null);
   if (cities.length === 0) return "";
@@ -136,7 +153,7 @@ function seriesBlock(courses: StagedCourse[], batch: string): string {
     )
     .join("");
   return `  // Imported from ${sourceLabel(courses)} — batch ${batch}.` +
-    `${elevationNote(courses)}\n${entries}`;
+    `${elevationNote(courses)}${geometryNote(courses)}\n${entries}`;
 }
 
 function recurrenceBlock(courses: StagedCourse[], batch: string): string {

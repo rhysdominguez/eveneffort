@@ -2,10 +2,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { usePopover } from "@/hooks/usePopover";
 import { useStoredState } from "@/hooks/useStoredState";
 import { HOME_FORM, type HomeFormSnapshot } from "@/lib/stateKeys";
 import { buildResultsHref } from "@/lib/resultsParams";
+import { defaultCourseId } from "@/lib/catalog";
 import { toSeconds } from "@/lib/units/time";
 import type { CourseSummary } from "@/types";
 
@@ -24,13 +26,18 @@ import type { CourseSummary } from "@/types";
 // render from this). Labels are duplicated in SiteFooter's Product column and
 // must keep saying the same words as these.
 //
-// THE DESKTOP ROW BREAKS AT `lg`, NOT `sm`, AND THAT IS A FIT CONSTRAINT.
-// Five text-sm labels are ~600px of text; with `gap-6` and the wordmark's
-// ~160px the bar wants ~930px, so at the original `sm` seam it overflowed
-// everywhere between 640px and 1024px. Below `lg` the links now live behind the
-// menu button, which already existed and needed no change.
+// THE DESKTOP ROW BREAKS AT `xl`, NOT `lg`, AND THAT IS A FIT CONSTRAINT.
+// It has moved twice as the row grew. Five text-sm labels are ~600px, which
+// overflowed at the original `sm` seam and pushed it to `lg`. The sixth ("Upload
+// a Course") then outgrew `lg` too: at 1024px every label wrapped onto two
+// lines, and stayed wrapped until ~1050px. The theme toggle (32px plus a 24px
+// gap) stretched that to ~1100px. Measured at `xl` (1280px) the row needs ~1145px
+// with the toggle, and there is room to spare.
 //
-// Widening the breakpoint is the lever to pull when a sixth tool arrives too;
+// Below `xl` the links live behind the menu button, which already existed and
+// needed no change. The toggle stays on the bar at every width.
+//
+// Widening the breakpoint is the lever to pull when a seventh tool arrives too;
 // a narrower gap buys ~25px an entry and runs out immediately. What must NOT be
 // touched to make room is the padding/margin pair further down — that is
 // load-bearing for scroll anchoring, not for fit.
@@ -71,9 +78,9 @@ const DEFAULT_GOAL_TIME_SECONDS = 4 * 3600;
  * or otherwise land them straight on the course-setup screen rather than
  * making them scroll past the hero, calendar and feature rows again. HOME_FORM
  * is the same snapshot the hero form persists, so a valid one restores the
- * exact chart; with nothing stored yet, `defaultCourseId` (the catalog's own
- * first course, same fallback InputForm uses) plus a placeholder goal time
- * fills the setup screen instead.
+ * exact chart; with nothing stored yet, `defaultCourseId` (Boston, same
+ * fallback InputForm uses — see src/lib/catalog.ts) plus a placeholder goal
+ * time fills the setup screen instead.
  *
  * "Pace" and "GAP" goal modes store a target pace rather than a finish time,
  * and turning that into seconds needs the course's distance, which this
@@ -82,9 +89,9 @@ const DEFAULT_GOAL_TIME_SECONDS = 4 * 3600;
  */
 function homeFormResultsHref(
   form: HomeFormSnapshot | null,
-  defaultCourseId: string | null,
+  fallbackCourseId: string | null,
 ): string | null {
-  const courseId = form?.courseId ?? defaultCourseId;
+  const courseId = form?.courseId ?? fallbackCourseId;
   if (!courseId) return null;
 
   const storedGoalTimeSeconds =
@@ -142,7 +149,7 @@ export function SiteNav({ catalog }: { catalog: CourseSummary[] }) {
   // course rather than a restored one — the upgrade to the actual stored
   // chart happens a beat later, never as a hydration mismatch.
   const [homeForm] = useStoredState(HOME_FORM);
-  const resultsHref = homeFormResultsHref(homeForm, catalog[0]?.id ?? null);
+  const resultsHref = homeFormResultsHref(homeForm, defaultCourseId(catalog));
 
   const [compressed, setCompressed] = useState(false);
 
@@ -211,7 +218,7 @@ export function SiteNav({ catalog }: { catalog: CourseSummary[] }) {
           eveneffort
         </Link>
 
-        <div className="hidden items-center gap-6 lg:flex xl:gap-8">
+        <div className="hidden items-center gap-8 xl:flex">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
@@ -224,66 +231,75 @@ export function SiteNav({ catalog }: { catalog: CourseSummary[] }) {
           ))}
         </div>
 
-        {/* The wrapper is usePopover's outside-click boundary, not the panel's
-            positioning context — the panel resolves against the <nav>. */}
-        <div ref={containerRef} className="lg:hidden">
-          <button
-            ref={triggerRef}
-            type="button"
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-            aria-controls="site-nav-menu"
-            onClick={() => setOpen((was) => !was)}
-            className="flex h-8 w-8 items-center justify-center rounded-[var(--radius-control)] text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-bg-elevated)]"
-          >
-            <svg
-              viewBox="0 0 20 20"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.75"
-              strokeLinecap="round"
-              className="h-4 w-4"
-              aria-hidden="true"
-            >
-              {open ? (
-                <>
-                  <path d="M5 5 15 15" />
-                  <path d="M15 5 5 15" />
-                </>
-              ) : (
-                <>
-                  <path d="M3 6h14" />
-                  <path d="M3 10h14" />
-                  <path d="M3 14h14" />
-                </>
-              )}
-            </svg>
-          </button>
+        {/* Theme toggle and menu button share one group so the bar keeps its
+            three-way spacing (wordmark, links, controls) at every width. The
+            toggle sits outside the menu's wrapper on purpose: usePopover
+            treats a pointer-down anywhere outside that wrapper as "dismiss",
+            and pressing the toggle should not also be a menu gesture. */}
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
 
-          {open && (
-            <div
-              id="site-nav-menu"
-              className="absolute inset-x-0 top-full z-30 border-b border-[var(--color-border)] bg-[var(--color-bg-surface)]"
+          {/* The wrapper is usePopover's outside-click boundary, not the panel's
+              positioning context — the panel resolves against the <nav>. */}
+          <div ref={containerRef} className="xl:hidden">
+            <button
+              ref={triggerRef}
+              type="button"
+              aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
+              aria-controls="site-nav-menu"
+              onClick={() => setOpen((was) => !was)}
+              className="flex h-8 w-8 items-center justify-center rounded-[var(--radius-control)] text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-bg-elevated)]"
             >
-              <ul className="divide-y divide-[var(--color-border)]">
-                {NAV_LINKS.map((link) => (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href === "/" && resultsHref ? resultsHref : link.href}
-                      aria-current={
-                        isCurrent(link.href, pathname) ? "page" : undefined
-                      }
-                      className={mobileLinkClass(
-                        isCurrent(link.href, pathname),
-                      )}
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+              <svg
+                viewBox="0 0 20 20"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+                className="h-4 w-4"
+                aria-hidden="true"
+              >
+                {open ? (
+                  <>
+                    <path d="M5 5 15 15" />
+                    <path d="M15 5 5 15" />
+                  </>
+                ) : (
+                  <>
+                    <path d="M3 6h14" />
+                    <path d="M3 10h14" />
+                    <path d="M3 14h14" />
+                  </>
+                )}
+              </svg>
+            </button>
+
+            {open && (
+              <div
+                id="site-nav-menu"
+                className="absolute inset-x-0 top-full z-30 border-b border-[var(--color-border)] bg-[var(--color-bg-surface)]"
+              >
+                <ul className="divide-y divide-[var(--color-border)]">
+                  {NAV_LINKS.map((link) => (
+                    <li key={link.href}>
+                      <Link
+                        href={link.href === "/" && resultsHref ? resultsHref : link.href}
+                        aria-current={
+                          isCurrent(link.href, pathname) ? "page" : undefined
+                        }
+                        className={mobileLinkClass(
+                          isCurrent(link.href, pathname),
+                        )}
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </nav>

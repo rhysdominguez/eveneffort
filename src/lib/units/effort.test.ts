@@ -1,11 +1,10 @@
 import { describe, it, expect } from "vitest";
 import {
-  formatAltitudePenalty,
   formatVsFlat,
   totalEffortMultiplier,
   FLAT_EQUIVALENT_BAND,
 } from "./effort";
-import { effortMultiplier } from "@/lib/pacing/effort";
+import { costMultiplier } from "@/lib/pacing/courseCost";
 
 // Moved here with the function when /compare became its second consumer.
 describe("formatVsFlat", () => {
@@ -37,20 +36,20 @@ describe("formatVsFlat", () => {
 describe("totalEffortMultiplier", () => {
   const sea = { meanM: 0, maxM: 0, multiplier: 1 };
 
-  // 41.7 flat-equivalent km against 42.195 is ~1.2% easier than flat.
+  // 41.7 cost-equivalent km against 42.195 is ~1.2% easier than flat.
   const easyGrades = { km: 41.7, miles: 25.9 };
 
-  it("is the grade multiplier alone at sea level", () => {
+  it("is the cost multiplier alone at sea level", () => {
     expect(
-      totalEffortMultiplier({ effort: easyGrades, altitude: sea }),
-    ).toBeCloseTo(effortMultiplier(easyGrades), 12);
+      totalEffortMultiplier({ cost: easyGrades, altitude: sea }),
+    ).toBeCloseTo(costMultiplier(easyGrades), 12);
   });
 
   it("multiplies the two costs together", () => {
     const high = { meanM: 2000, maxM: 2100, multiplier: 1.07 };
     expect(
-      totalEffortMultiplier({ effort: easyGrades, altitude: high }),
-    ).toBeCloseTo(effortMultiplier(easyGrades) * 1.07, 12);
+      totalEffortMultiplier({ cost: easyGrades, altitude: high }),
+    ).toBeCloseTo(costMultiplier(easyGrades) * 1.07, 12);
   });
 
   it("can turn a course that is easy on grade into a hard one overall", () => {
@@ -58,24 +57,9 @@ describe("totalEffortMultiplier", () => {
     // altitude reads FASTER than flat on geometry alone and slower once the
     // air is counted. Leadville and Pikes Peak are both this shape.
     const high = { meanM: 3400, maxM: 4000, multiplier: 1.18 };
-    expect(effortMultiplier(easyGrades)).toBeLessThan(1);
+    expect(costMultiplier(easyGrades)).toBeLessThan(1);
     expect(
-      totalEffortMultiplier({ effort: easyGrades, altitude: high }),
+      totalEffortMultiplier({ cost: easyGrades, altitude: high }),
     ).toBeGreaterThan(1);
-  });
-});
-
-describe("formatAltitudePenalty", () => {
-  it("is null below the dead band, so low courses say nothing", () => {
-    expect(formatAltitudePenalty({ meanM: 0, maxM: 0, multiplier: 1 })).toBeNull();
-    expect(
-      formatAltitudePenalty({ meanM: 900, maxM: 980, multiplier: 1.002 }),
-    ).toBeNull();
-  });
-
-  it("words a real penalty", () => {
-    expect(
-      formatAltitudePenalty({ meanM: 1618, maxM: 1687, multiplier: 1.0412 }),
-    ).toBe("4.1% slower");
   });
 });

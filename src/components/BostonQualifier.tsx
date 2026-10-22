@@ -140,6 +140,7 @@ export function BostonQualifier({ catalog }: { catalog: CourseSummary[] }) {
                 setDivisionEdit(next);
                 remember(age, next);
               }}
+              variant="prominent"
             />
           </div>
 
@@ -274,12 +275,20 @@ export function BostonQualifier({ catalog }: { catalog: CourseSummary[] }) {
 
       <section className="space-y-4">
         <h2 className="font-display text-2xl tracking-tight text-[var(--color-text-primary)]">
-          {BQ_YEAR} Boston Marathon qualifying standards
+          Standards by age group
         </h2>
-        <p className="max-w-2xl text-sm text-[var(--color-text-secondary)]">
+        <p className="text-lg text-[var(--color-text-secondary)]">
           Your age group is the one you fall into on race day,{" "}
           {BQ_RACE_DATE_LABEL}. A time equal to the standard qualifies; it does
-          not have to be faster.
+          not have to be faster. Qualifying times are judged on chip time, not
+          gun time. See the{" "}
+          <Link
+            href="https://www.baa.org/races/boston-marathon/qualify/"
+            className="underline transition-colors hover:text-[var(--color-text-primary)]"
+          >
+            B.A.A.&rsquo;s official qualifying standards page
+          </Link>{" "}
+          for the source standards and full entry rules.
         </p>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[32rem] border-collapse text-left">
@@ -326,7 +335,7 @@ export function BostonQualifier({ catalog }: { catalog: CourseSummary[] }) {
         <h2 className="font-display text-2xl tracking-tight text-[var(--color-text-primary)]">
           What acceptance actually cost
         </h2>
-        <p className="max-w-2xl text-sm text-[var(--color-text-secondary)]">
+        <p className="text-lg text-[var(--color-text-secondary)]">
           More runners qualify than Boston has places, so the B.A.A. fills its
           field with whoever ran furthest under their standard. This is the
           buffer that was really required, by year. A zero means every
@@ -363,7 +372,7 @@ export function BostonQualifier({ catalog }: { catalog: CourseSummary[] }) {
         <h2 className="font-display text-2xl tracking-tight text-[var(--color-text-primary)]">
           The net-downhill rule
         </h2>
-        <p className="max-w-2xl text-sm text-[var(--color-text-secondary)]">
+        <p className="text-lg text-[var(--color-text-secondary)]">
           New for {BQ_YEAR}: a qualifying time run on a course that finishes far
           below where it started has time <strong>added to it</strong> before it
           is compared against the standard: +5:00 from 1,500 ft of net drop,
@@ -371,7 +380,7 @@ export function BostonQualifier({ catalog }: { catalog: CourseSummary[] }) {
         </p>
         {indexedCourses.length > 0 && (
           <>
-            <p className="max-w-2xl text-sm text-[var(--color-text-tertiary)]">
+            <p className="text-sm text-[var(--color-text-tertiary)]">
               These are the races in our catalog the rule reaches, measured from
               each course&rsquo;s own elevation profile. That is{" "}
               <strong>our estimate, not the B.A.A.&rsquo;s determination</strong>

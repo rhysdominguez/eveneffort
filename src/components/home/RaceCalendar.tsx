@@ -24,6 +24,7 @@ import {
 } from "@/lib/locationFilter";
 import { LocationFilterBar } from "@/components/LocationFilterBar";
 import { WEEKDAY_LABELS, monthGrid, todayISO } from "@/lib/units/date";
+import { FORECAST_HORIZON_DAYS, hasLiveForecast } from "@/lib/weather/horizon";
 import { useStoredState } from "@/hooks/useStoredState";
 import { HOME_CALENDAR, type CalendarSnapshot } from "@/lib/stateKeys";
 
@@ -115,6 +116,15 @@ export function RaceCalendar({ editions, todayISO: serverToday }: Props) {
   const cells = monthGrid(view.year, view.month);
   const monthPrefix = `${monthKey(view)}-`;
   const monthEditions = editionsInMonth(visible, view);
+  // Does anything ON SCREEN wear the green edge? Computed over `cells`, not
+  // over `monthEditions`, because the grid's first and last rows spill into
+  // the neighbouring months and those chips are marked too. A legend for a
+  // mark that is not on screen is noise, so it renders only when one is.
+  const anyForecast = cells.some((iso) =>
+    (byDate.get(iso) ?? []).some((e) =>
+      hasLiveForecast(e.raceDateISO, today),
+    ),
+  );
   const label = monthLabel(view);
   const place = locationLabel(editions, filter);
 
@@ -183,6 +193,19 @@ export function RaceCalendar({ editions, todayISO: serverToday }: Props) {
             {upcomingSeriesCount(visible, today) === 1 ? "" : "s"}
             {place ? ` in ${place}` : " worldwide"}.
           </p>
+
+          {/* The legend. Colour alone cannot carry the meaning of the edge, and
+              a tooltip is not reachable by touch, so the key is stated in the
+              open. Only shown when something on screen actually carries it. */}
+          {anyForecast && (
+            <p className="flex items-center gap-2 text-xs text-[var(--color-text-secondary)]">
+              <span
+                aria-hidden="true"
+                className="inline-block h-3 w-5 shrink-0 rounded-sm border border-[var(--color-border)] bg-[var(--color-green-fill)]"
+              />
+              Race-day forecast available (within {FORECAST_HORIZON_DAYS} days).
+            </p>
+          )}
 
           <div className="overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-surface)]">
             <div className="flex items-center justify-between border-b border-[var(--color-border)] px-4 py-3">
@@ -275,6 +298,7 @@ export function RaceCalendar({ editions, todayISO: serverToday }: Props) {
                                   key={edition.editionSlug}
                                   edition={edition}
                                   past={past}
+                                  forecast={hasLiveForecast(edition.raceDateISO, today)}
                                 />
                               ))}
                             {overflow > 0 && (
@@ -321,6 +345,7 @@ export function RaceCalendar({ editions, todayISO: serverToday }: Props) {
                                     key={edition.editionSlug}
                                     edition={edition}
                                     past={past}
+                                    forecast={hasLiveForecast(edition.raceDateISO, today)}
                                   />
                                 ))}
                               </div>
@@ -343,6 +368,7 @@ export function RaceCalendar({ editions, todayISO: serverToday }: Props) {
                   <EditionRow
                     edition={edition}
                     past={isPastDate(edition.raceDateISO, today)}
+                    forecast={hasLiveForecast(edition.raceDateISO, today)}
                   />
                 </li>
               ))}
@@ -368,13 +394,23 @@ export function RaceCalendar({ editions, todayISO: serverToday }: Props) {
 const chipClass =
   "block rounded-lg border px-1.5 py-1 text-left text-xs leading-tight transition-colors";
 
+/**
+ * What the green edge means, in words. One string, used by the chip's tooltip,
+ * the agenda row's tooltip and the legend, so the three can never drift into
+ * describing the same mark differently.
+ */
+const FORECAST_TITLE = `Race-day forecast available (within ${FORECAST_HORIZON_DAYS} days)`;
+
 /** One race inside a day cell. A link when it's still to come, plain text once it isn't. */
 function EditionChip({
   edition,
   past,
+  forecast,
 }: {
   edition: EditionSummary;
   past: boolean;
+  /** Race day falls inside the forecast horizon (ROADMAP #19). */
+  forecast: boolean;
 }) {
   const body = (
     <>
@@ -391,10 +427,43 @@ function EditionChip({
   // dashboard could only forecast. Now a past edition pairs the course with the
   // conditions actually recorded that morning, which is a destination worth
   // having. Still dimmed, so the calendar reads the same at a glance.
+  // A marked chip is TINTED, and that is all that changes about it.
+  //
+  // Two earlier attempts bracket this one. A 3px green left rule was invisible:
+  // in a grid of pale chips a hairline reads as a rendering artefact. Then a
+  // saturated mint fill plus a --color-green-primary outline was too loud in
+  // the other direction: on a page of pure neutrals it read as an alert, and
+  // the dark green 1px rule made the chip look SELECTED rather than annotated,
+  // which is a claim about state that the calendar is not making.
+  //
+  // So: --color-green-fill as the surface, the same neutral --color-border
+  // every other chip carries, and --color-text-primary for the race name. The
+  // structure of the chip is unchanged because nothing structural changed; the
+  // name stays neutral because the name is the content and the colour is the
+  // annotation. Greening the text as well would read as a link state, and the
+  // chip is already a link.
+  //
+  // The past branch wins over the fill on purpose. A race that has been run is
+  // never marked, so the two can never actually collide, but stating the order
+  // here means a future edit to `hasLiveForecast` cannot quietly produce a
+  // green-tinted chip for last month's marathon.
+  if (forecast && !past) {
+    return (
+      <Link
+        href={editionHref(edition)}
+        aria-label={editionLinkLabel(edition, true)}
+        title={FORECAST_TITLE}
+        className={`${chipClass} border-[var(--color-border)] bg-[var(--color-green-fill)] text-[var(--color-text-primary)] focus:outline-none hover:border-[var(--color-border-focus)] focus:border-[var(--color-border-focus)]`}
+      >
+        {body}
+      </Link>
+    );
+  }
+
   return (
     <Link
       href={editionHref(edition)}
-      aria-label={editionLinkLabel(edition)}
+      aria-label={editionLinkLabel(edition, false)}
       className={`${chipClass} bg-[var(--color-bg-elevated)] focus:outline-none ${
         past
           ? "border-transparent text-[var(--color-text-tertiary)] hover:border-[var(--color-border)] hover:text-[var(--color-text-secondary)] focus:border-[var(--color-border-focus)]"
@@ -410,9 +479,12 @@ function EditionChip({
 function EditionRow({
   edition,
   past,
+  forecast,
 }: {
   edition: EditionSummary;
   past: boolean;
+  /** Race day falls inside the forecast horizon (ROADMAP #19). */
+  forecast: boolean;
 }) {
   const day = Number(edition.raceDateISO.slice(8));
   const body = (
@@ -438,15 +510,22 @@ function EditionRow({
     </>
   );
 
-  // Linked whether past or not — see EditionChip for why.
+  // Linked whether past or not — see EditionChip for why. The agenda row takes
+  // the same fill as the grid chip rather than inventing a second signal, so
+  // the two layouts are the same feature at two widths. It keeps its hover,
+  // which the row has and the chip does not.
+  const marked = forecast && !past;
   return (
     <Link
       href={editionHref(edition)}
-      aria-label={editionLinkLabel(edition)}
-      className={`flex items-center gap-3 px-4 py-3 transition-colors hover:bg-[var(--color-bg-elevated)] ${
-        past
-          ? "text-[var(--color-text-tertiary)]"
-          : "text-[var(--color-text-primary)]"
+      aria-label={editionLinkLabel(edition, marked)}
+      title={marked ? FORECAST_TITLE : undefined}
+      className={`flex items-center gap-3 px-4 py-3 transition-colors ${
+        marked
+          ? "bg-[var(--color-green-fill)] text-[var(--color-text-primary)]"
+          : past
+            ? "text-[var(--color-text-tertiary)] hover:bg-[var(--color-bg-elevated)]"
+            : "text-[var(--color-text-primary)] hover:bg-[var(--color-bg-elevated)]"
       }`}
     >
       {body}

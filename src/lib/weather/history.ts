@@ -30,15 +30,38 @@ export const OPEN_METEO_CUSTOMER_FORECAST_ENDPOINT =
   "https://customer-api.open-meteo.com/v1/forecast";
 
 /**
- * The four variables the pacing engine consumes, in Tomorrow.io's order.
+ * The four variables the pacing engine consumes, in Tomorrow.io's order,
+ * followed by the two the weather timeline displays.
+ *
  * Open-Meteo names them differently but returns exactly the same quantities.
+ * `precipitation` (mm) rather than `precipitation_probability`: the latter is a
+ * forecast-model product and does not exist on the archive at all, so both
+ * past paths derive the display figure from how much rain actually fell. See
+ * `PRECIP_TRACE_MM`.
  */
 const HOURLY_VARS = [
   "temperature_2m",
   "relative_humidity_2m",
   "wind_speed_10m",
   "wind_direction_10m",
+  "cloud_cover",
+  "precipitation",
 ] as const;
+
+/**
+ * How much rain counts as rain, in millimetres per hour.
+ *
+ * NOT zero, and this is the one constant in this file that would quietly
+ * produce a confidently wrong panel. ERA5 and the operational model both emit
+ * tiny non-zero drizzle values (0.01 to 0.05 mm) on mornings a person standing
+ * outside would call dry. Testing `precipitation > 0` therefore reports "it
+ * rained" on most dry race days, and the ten-year climatology built on top of
+ * it reports a chance of rain everywhere on earth.
+ *
+ * 0.1 mm is the conventional "trace" floor in surface observation practice and
+ * is roughly the smallest amount a standard gauge resolves.
+ */
+export const PRECIP_TRACE_MM = 0.1;
 
 /**
  * ERA5 — the reanalysis behind the archive — publishes on a ~5 day delay, so a
@@ -69,6 +92,8 @@ interface OpenMeteoHourly {
   relative_humidity_2m?: (number | null)[];
   wind_speed_10m?: (number | null)[];
   wind_direction_10m?: (number | null)[];
+  cloud_cover?: (number | null)[];
+  precipitation?: (number | null)[];
 }
 
 export interface OpenMeteoResponse {
@@ -204,6 +229,30 @@ export function selectHistoricalWindow(
   windowHours: number = 8,
   maxDeltaHours: number = 1,
 ): WeatherConditions[] | null {
+  const picked = selectHistoricalWindowWithLead(
+    data,
+    targetISO,
+    windowHours,
+    0,
+    maxDeltaHours,
+  );
+  return picked ? picked.hours : null;
+}
+
+/**
+ * The same selection, plus the `leadHours` entries immediately BEFORE the start.
+ * The sibling of `selectHourlyWindowWithLead` in forecast.ts, and the same
+ * contract: `hours` is untouched and still begins at the gun, `lead` is a
+ * separate chronological array, and an empty `lead` means no pre-race row
+ * rather than a failure.
+ */
+export function selectHistoricalWindowWithLead(
+  data: OpenMeteoResponse,
+  targetISO: string,
+  windowHours: number = 8,
+  leadHours: number = 1,
+  maxDeltaHours: number = 1,
+): { hours: WeatherConditions[]; lead: WeatherConditions[] } | null {
   const h = data.hourly;
   if (!h?.time || h.time.length === 0) return null;
 
@@ -224,16 +273,36 @@ export function selectHistoricalWindow(
   }
   if (best > maxDeltaHours * 3_600_000) return null;
 
-  const out: WeatherConditions[] = [];
-  for (let i = startIdx; i < Math.min(startIdx + windowHours, h.time.length); i++) {
-    out.push({
+  const at = (i: number): WeatherConditions => {
+    const cloud = h.cloud_cover?.[i];
+    const rainMm = h.precipitation?.[i];
+    return {
       tempC: h.temperature_2m?.[i] ?? 0,
       humidity: h.relative_humidity_2m?.[i] ?? 0,
       windSpeed: h.wind_speed_10m?.[i] ?? 0,
       windDirection: h.wind_direction_10m?.[i] ?? 0,
-    });
+      // Absent stays absent — see the doc comments on WeatherConditions.
+      ...(Number.isFinite(cloud) ? { cloudCover: cloud as number } : {}),
+      // 0 or 100, because this is a record of a morning that has happened: it
+      // either rained or it did not. Averaging a set of these across years is
+      // what turns them into a real probability (see `averageWindows`).
+      ...(Number.isFinite(rainMm)
+        ? { precipProbability: (rainMm as number) > PRECIP_TRACE_MM ? 100 : 0 }
+        : {}),
+    };
+  };
+
+  const hours: WeatherConditions[] = [];
+  for (let i = startIdx; i < Math.min(startIdx + windowHours, h.time.length); i++) {
+    hours.push(at(i));
   }
-  return out.length > 0 ? out : null;
+  if (hours.length === 0) return null;
+
+  const lead: WeatherConditions[] = [];
+  for (let i = Math.max(0, startIdx - leadHours); i < startIdx; i++) {
+    lead.push(at(i));
+  }
+  return { hours, lead };
 }
 
 function asUTC(naive: string): number {
@@ -284,11 +353,18 @@ export function averageWindows(
   const out: WeatherConditions[] = [];
   for (let i = 0; i < hours; i++) {
     const slice = usable.map((w) => w[i]);
+    // The arithmetic mean of a set of 0/100 values IS the percentage of years
+    // with rain in that hour, so the climatological probability falls out of
+    // the same averaging as everything else with no special case.
+    const cloud = meanOptional(slice.map((c) => c.cloudCover));
+    const rain = meanOptional(slice.map((c) => c.precipProbability));
     out.push({
       tempC: mean(slice.map((c) => c.tempC)),
       humidity: mean(slice.map((c) => c.humidity)),
       windSpeed: mean(slice.map((c) => c.windSpeed)),
       windDirection: meanBearing(slice.map((c) => c.windDirection)),
+      ...(cloud === undefined ? {} : { cloudCover: cloud }),
+      ...(rain === undefined ? {} : { precipProbability: rain }),
     });
   }
   return out;
@@ -296,4 +372,16 @@ export function averageWindows(
 
 function mean(values: number[]): number {
   return values.reduce((a, b) => a + b, 0) / values.length;
+}
+
+/**
+ * Mean of the values that are actually there, or undefined when none are.
+ *
+ * The optional display fields cannot go through `mean`: one year missing
+ * `cloud_cover` makes the sum NaN, NaN survives every later comparison, and the
+ * panel renders "NaN%" for a ten-year average that was nine-tenths fine.
+ */
+function meanOptional(values: (number | undefined)[]): number | undefined {
+  const finite = values.filter((v): v is number => Number.isFinite(v));
+  return finite.length === 0 ? undefined : mean(finite);
 }

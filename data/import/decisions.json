@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-18T15:40:32.438Z",
+  "updatedAt": "2026-09-25T08:20:42.193Z",
   "courses": [
     {
       "courseSlug": "1-100-km-nel-gargano",
@@ -9438,6 +9438,60 @@
       }
     },
     {
+      "courseSlug": "charleroi-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.508 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/marathon-international-de-charleroi-metropole-2024.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/05/12/gpx_20240512_id9821_race1_20240502101620.gpx?t=1790324123",
+        "gpxSha256": "5d47a246d900c9f69b50ad2499e4e2dd5bbe39d38d5c248b46bc40bb0287e9f9",
+        "site": "goandrace.com",
+        "elevation": "gpx",
+        "geometry": "gpx"
+      },
+      "stats": {
+        "totalKm": 42.50760282312475,
+        "gainM": 102.99999999999999
+      },
+      "city": {
+        "slug": "charleroi-be",
+        "name": "Charleroi",
+        "countryCode": "BE",
+        "countryName": "Belgium",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 50.41089,
+        "longitude": 4.4376,
+        "timezone": "Europe/Brussels"
+      },
+      "citySlug": "charleroi-be",
+      "series": {
+        "slug": "charleroi-marathon",
+        "name": "Charleroi Marathon",
+        "citySlug": "charleroi-be",
+        "courseSlug": "charleroi-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://www.charleroimarathon.be",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "charleroi-marathon",
+        "month": 4,
+        "weekday": 0,
+        "nth": 4,
+        "note": "Derived from the confirmed 2027-04-25 edition, read off the organizer's own site 2026-09-25"
+      },
+      "edition": {
+        "seriesSlug": "charleroi-marathon",
+        "year": 2027,
+        "raceDate": "2027-04-25"
+      }
+    },
+    {
       "courseSlug": "charleston-marathon-charleston",
       "verdict": "rejected",
       "reasons": [
@@ -12418,6 +12472,60 @@
       }
     },
     {
+      "courseSlug": "geneva-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://512763f9-e0e1-4531-92c1-a627ccca8323.filesusr.com/ugd/a32e51_1851e34d983d4d3ca2569fba05324ff3.gpx?dn=Marathon_ggm2026.gpx",
+        "gpxUrl": "https://512763f9-e0e1-4531-92c1-a627ccca8323.filesusr.com/ugd/a32e51_1851e34d983d4d3ca2569fba05324ff3.gpx?dn=Marathon_ggm2026.gpx",
+        "gpxSha256": "1b21b47bdc0388cf2c040cb2f916192cced8c730aa20c6579867d9434dc476db",
+        "site": "512763f9-e0e1-4531-92c1-a627ccca8323.filesusr.com",
+        "elevation": "gpx",
+        "geometry": "gpx",
+        "note": "organizer: The organiser's own TELECHARGER LE GPX link on generaligenevemarathon.com/marathon; the host is their Wix asset CDN, not a third-party route site. Retrieved 2026-09-25, file is the 2026 marathon course. Race confirmed still running: the site's header advertises 8-9 May 2027. NOTE: a stale race card on the same page still shows a 2025 date, so the exact 2027 start date wants re-checking before the edition is trusted."
+      },
+      "stats": {
+        "totalKm": 42.19945836453139,
+        "gainM": 76.90000000000003
+      },
+      "city": {
+        "slug": "geneva-ch",
+        "name": "Geneva",
+        "countryCode": "CH",
+        "countryName": "Switzerland",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 46.20625,
+        "longitude": 6.17294,
+        "timezone": "Europe/Zurich"
+      },
+      "citySlug": "geneva-ch",
+      "series": {
+        "slug": "geneva-marathon",
+        "name": "Geneva Marathon",
+        "citySlug": "geneva-ch",
+        "courseSlug": "geneva-marathon",
+        "isMajor": false,
+        "typicalMonth": 5,
+        "websiteUrl": "https://www.generaligenevemarathon.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "geneva-marathon",
+        "month": 5,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2027-05-09 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "geneva-marathon",
+        "year": 2027,
+        "raceDate": "2027-05-09"
+      }
+    },
+    {
       "courseSlug": "glendalough-lap-of-the-gap-marathon",
       "verdict": "ready",
       "reasons": [
@@ -12677,6 +12785,60 @@
         "seriesSlug": "grandmas-marathon",
         "year": 2024,
         "raceDate": "2024-06-22"
+      }
+    },
+    {
+      "courseSlug": "great-limerick-run",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.627 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/great-limerick-run-2024.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/05/05/gpx_20240505_id9803_race1_20240426161458.gpx?t=1790324098",
+        "gpxSha256": "28e6c76f6afa0a8056ed2dd797fa29375ac291520deeb0fd01bc8b9c191353e6",
+        "site": "goandrace.com",
+        "elevation": "gpx",
+        "geometry": "gpx"
+      },
+      "stats": {
+        "totalKm": 42.627123398283636,
+        "gainM": 118.1
+      },
+      "city": {
+        "slug": "limerick-ie",
+        "name": "Limerick",
+        "countryCode": "IE",
+        "countryName": "Ireland",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 52.6593,
+        "longitude": -8.62839,
+        "timezone": "Europe/Dublin"
+      },
+      "citySlug": "limerick-ie",
+      "series": {
+        "slug": "great-limerick-run",
+        "name": "Great Limerick Run",
+        "citySlug": "limerick-ie",
+        "courseSlug": "great-limerick-run",
+        "isMajor": false,
+        "typicalMonth": 5,
+        "websiteUrl": "https://greatlimerickrun.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "great-limerick-run",
+        "month": 5,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the confirmed 2027-05-02 edition, read off the organizer's own site 2026-09-25"
+      },
+      "edition": {
+        "seriesSlug": "great-limerick-run",
+        "year": 2027,
+        "raceDate": "2027-05-02"
       }
     },
     {
@@ -13009,6 +13171,112 @@
         "seriesSlug": "hannover-marathon",
         "year": 2026,
         "raceDate": "2026-04-12"
+      }
+    },
+    {
+      "courseSlug": "hanoi-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.598 km, outside the [42.0, 42.4] band"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/standard-chartered-hanoi-marathon-heritage-race-2024.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/11/03/gpx_20241103_id10034_race1_20241009190837.gpx?t=1790324164",
+        "gpxSha256": "5e8e3290efba54fa1ef4e7176acf98500b6952f7ef8b609829c6683204330324",
+        "site": "goandrace.com",
+        "elevation": "gpx",
+        "geometry": "gpx"
+      },
+      "stats": {
+        "totalKm": 42.59766172771235,
+        "gainM": 28.099999999999998
+      },
+      "city": {
+        "slug": "hanoi-vn",
+        "name": "Hanoi",
+        "countryCode": "VN",
+        "countryName": "Vietnam",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 21.018277,
+        "longitude": 105.84744,
+        "timezone": "Asia/Ho_Chi_Minh"
+      },
+      "citySlug": "hanoi-vn",
+      "series": {
+        "slug": "hanoi-marathon",
+        "name": "Hanoi Marathon",
+        "citySlug": "hanoi-vn",
+        "courseSlug": "hanoi-marathon",
+        "isMajor": false,
+        "typicalMonth": 11,
+        "websiteUrl": "www.hanoi-marathon.com",
+        "organizer": "+8496 207 44 89"
+      },
+      "recurrence": {
+        "seriesSlug": "hanoi-marathon",
+        "month": 11,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the confirmed 2026-11-08 edition, read off the organizer's own site 2026-09-25"
+      },
+      "edition": {
+        "seriesSlug": "hanoi-marathon",
+        "year": 2026,
+        "raceDate": "2026-11-08"
+      }
+    },
+    {
+      "courseSlug": "havana-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "human review: the earlier rejection was stale (country code CU was missing from COUNTRY_NAMES; added 2026-09-25). Race confirmed still running: Marabana 2026 runs 2026-11-15 at 06:00 per maratondelahabana.com."
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/maraton-de-la-habana-marabana-2024.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/11/17/gpx_20241117_id10060_race1_20241103225037.gpx?t=1790324131",
+        "gpxSha256": null,
+        "site": "goandrace.com",
+        "elevation": "gpx",
+        "geometry": "gpx"
+      },
+      "stats": {
+        "totalKm": 42.74,
+        "gainM": 88.1
+      },
+      "city": {
+        "slug": "havana-cu",
+        "name": "Havana",
+        "countryCode": "CU",
+        "countryName": "Cuba",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 23.127762,
+        "longitude": -82.383266,
+        "timezone": "America/Havana"
+      },
+      "citySlug": "havana-cu",
+      "series": {
+        "slug": "havana-marathon",
+        "name": "Havana Marathon",
+        "citySlug": "havana-cu",
+        "courseSlug": "havana-marathon",
+        "isMajor": false,
+        "typicalMonth": 11,
+        "websiteUrl": "https://maratondelahabana.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "havana-marathon",
+        "month": 11,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the confirmed 2026-11-15 edition, read off the organizer's own site 2026-09-25"
+      },
+      "edition": {
+        "seriesSlug": "havana-marathon",
+        "year": 2026,
+        "raceDate": "2026-11-15"
       }
     },
     {
@@ -13995,6 +14263,59 @@
       "edition": null
     },
     {
+      "courseSlug": "izmir-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "human review: still-runs check failed: the organiser (maratonizmir.org) now lists only the 14th International 9 Eylul Izmir HALF marathon for 2026. No 42 km edition is advertised, so the full marathon appears discontinued and the slug must not be spent."
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/marathonizmir-avek-2024.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/04/21/gpx_20240421_id9627_race1_20240314224804.gpx?t=1790324127",
+        "gpxSha256": "dcf8075db99e1974b90c25955aa6fc50a39619f98bfc1104e468a3296276abd2",
+        "site": "goandrace.com",
+        "elevation": "gpx",
+        "geometry": "gpx"
+      },
+      "stats": {
+        "totalKm": 42.3002824576553,
+        "gainM": 24.299999999999997
+      },
+      "city": {
+        "slug": "izmir-tr",
+        "name": "Izmir",
+        "countryCode": "TR",
+        "countryName": "Turkey",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 38.430521,
+        "longitude": 27.142328,
+        "timezone": "Europe/Istanbul"
+      },
+      "citySlug": "izmir-tr",
+      "series": {
+        "slug": "izmir-marathon",
+        "name": "Izmir Marathon",
+        "citySlug": "izmir-tr",
+        "courseSlug": "izmir-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://www.maratonizmir.org",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "izmir-marathon",
+        "month": 4,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2024-04-21 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "izmir-marathon",
+        "year": 2024,
+        "raceDate": "2024-04-21"
+      }
+    },
+    {
       "courseSlug": "jack-and-jill-s-downhill-marathon-snoqualmie",
       "verdict": "rejected",
       "reasons": [
@@ -14188,6 +14509,59 @@
       "edition": null
     },
     {
+      "courseSlug": "jungfrau-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/jungfrau-marathon-2024-interlaken.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/09/07/gpx_20240907_id9957_race1_20240804095630.gpx?t=1790324102",
+        "gpxSha256": "0c76380c600abda99f45284bce95daaa4fcb6d7ce4bb54081e2ff2fe14157f42",
+        "site": "goandrace.com",
+        "elevation": "gpx",
+        "geometry": "gpx"
+      },
+      "stats": {
+        "totalKm": 42.03983733721213,
+        "gainM": 1771.5
+      },
+      "city": {
+        "slug": "interlaken-ch",
+        "name": "Interlaken",
+        "countryCode": "CH",
+        "countryName": "Switzerland",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 46.687142,
+        "longitude": 7.859477,
+        "timezone": "Europe/Zurich"
+      },
+      "citySlug": "interlaken-ch",
+      "series": {
+        "slug": "jungfrau-marathon",
+        "name": "Jungfrau-Marathon",
+        "citySlug": "interlaken-ch",
+        "courseSlug": "jungfrau-marathon",
+        "isMajor": false,
+        "typicalMonth": 9,
+        "websiteUrl": "https://www.jungfrau-marathon.ch",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "jungfrau-marathon",
+        "month": 9,
+        "weekday": 6,
+        "nth": 2,
+        "note": "Derived from the confirmed 2027-09-11 edition, read off the organizer's own site 2026-09-25"
+      },
+      "edition": {
+        "seriesSlug": "jungfrau-marathon",
+        "year": 2027,
+        "raceDate": "2027-09-11"
+      }
+    },
+    {
       "courseSlug": "kansas-city-marathon",
       "verdict": "ready",
       "reasons": [
@@ -14288,6 +14662,60 @@
         "seriesSlug": "kauai-marathon",
         "year": 2023,
         "raceDate": "2023-09-03"
+      }
+    },
+    {
+      "courseSlug": "kaunas-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.470 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/kaunas-marathon-2024-kaunas-marathon.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/04/28/gpx_20240428_id9638_race1_20240320104609.gpx?t=1790324107",
+        "gpxSha256": "272e83b3ce17025412ef6d7ccd682feb818649668666b12d179bb2596cbfba72",
+        "site": "goandrace.com",
+        "elevation": "gpx",
+        "geometry": "gpx"
+      },
+      "stats": {
+        "totalKm": 42.47007408038166,
+        "gainM": 67.59999999999998
+      },
+      "city": {
+        "slug": "kaunas-lt",
+        "name": "Kaunas",
+        "countryCode": "LT",
+        "countryName": "Lithuania",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 54.8967,
+        "longitude": 23.886681,
+        "timezone": "Europe/Vilnius"
+      },
+      "citySlug": "kaunas-lt",
+      "series": {
+        "slug": "kaunas-marathon",
+        "name": "Kaunas Marathon",
+        "citySlug": "kaunas-lt",
+        "courseSlug": "kaunas-marathon",
+        "isMajor": false,
+        "typicalMonth": 4,
+        "websiteUrl": "https://www.kaunasmarathon.lt",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "kaunas-marathon",
+        "month": 4,
+        "weekday": 0,
+        "nth": 4,
+        "note": "Derived from the confirmed 2027-04-25 edition, read off the organizer's own site 2026-09-25"
+      },
+      "edition": {
+        "seriesSlug": "kaunas-marathon",
+        "year": 2027,
+        "raceDate": "2027-04-25"
       }
     },
     {
@@ -14552,6 +14980,60 @@
         "seriesSlug": "knysna-forest-marathon",
         "year": 2026,
         "raceDate": "2026-07-04"
+      }
+    },
+    {
+      "courseSlug": "kobe-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.647 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/kobe-marathon-2024-kobe.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/11/17/gpx_20241117_id10061_race1_20241104164316.gpx?t=1790324111",
+        "gpxSha256": "83568fca0b20d5ae959f17bc6163648bd2c2b8292217ac32647061b355faf44a",
+        "site": "goandrace.com",
+        "elevation": "gpx",
+        "geometry": "gpx"
+      },
+      "stats": {
+        "totalKm": 42.647143811272095,
+        "gainM": 34.1
+      },
+      "city": {
+        "slug": "kobe-jp",
+        "name": "Kobe",
+        "countryCode": "JP",
+        "countryName": "Japan",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 34.68934,
+        "longitude": 135.196299,
+        "timezone": "Asia/Tokyo"
+      },
+      "citySlug": "kobe-jp",
+      "series": {
+        "slug": "kobe-marathon",
+        "name": "Kobe Marathon",
+        "citySlug": "kobe-jp",
+        "courseSlug": "kobe-marathon",
+        "isMajor": false,
+        "typicalMonth": 11,
+        "websiteUrl": "https://kobe-marathon.net/2024",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "kobe-marathon",
+        "month": 11,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the confirmed 2026-11-15 edition, read off the organizer's own site 2026-09-25"
+      },
+      "edition": {
+        "seriesSlug": "kobe-marathon",
+        "year": 2026,
+        "raceDate": "2026-11-15"
       }
     },
     {
@@ -14959,6 +15441,59 @@
       }
     },
     {
+      "courseSlug": "lausanne-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "human review: measured 41.520 km, 675 m short of 42.195 and one metre above the parser floor. A shortfall that size is missing geometry, not a digitising tolerance, and every split would be paced against a course that is not the race."
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/lausanne-marathon-2024-lausanne.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/10/27/gpx_20241027_id10042_race1_20241015121227.gpx?t=1790324115",
+        "gpxSha256": "9501767bc4b0d8e18beca6eb24a2504b9b6f487f787c3792f076cf56cc48f935",
+        "site": "goandrace.com",
+        "elevation": "gpx",
+        "geometry": "gpx"
+      },
+      "stats": {
+        "totalKm": 41.52035893480782,
+        "gainM": 67.19999999999993
+      },
+      "city": {
+        "slug": "lausanne-ch",
+        "name": "Lausanne",
+        "countryCode": "CH",
+        "countryName": "Switzerland",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 46.513868,
+        "longitude": 6.620657,
+        "timezone": "Europe/Zurich"
+      },
+      "citySlug": "lausanne-ch",
+      "series": {
+        "slug": "lausanne-marathon",
+        "name": "Lausanne Marathon",
+        "citySlug": "lausanne-ch",
+        "courseSlug": "lausanne-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://fr.lausanne-marathon.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "lausanne-marathon",
+        "month": 10,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2024-10-27 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "lausanne-marathon",
+        "year": 2024,
+        "raceDate": "2024-10-27"
+      }
+    },
+    {
       "courseSlug": "leadville-trail-marathon",
       "verdict": "ready",
       "reasons": [],
@@ -15340,6 +15875,60 @@
       }
     },
     {
+      "courseSlug": "ljubljana-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://ljubljanskimaraton.si/upload/trase/ljubljanskimaraton_42km_2026.gpx",
+        "gpxUrl": "https://ljubljanskimaraton.si/upload/trase/ljubljanskimaraton_42km_2026.gpx",
+        "gpxSha256": "00bf3902c3bdf299311b7bc7bac54f3987c3d9534c3ce6b730f6205cf1c231e8",
+        "site": "ljubljanskimaraton.si",
+        "elevation": "gpx",
+        "geometry": "gpx",
+        "note": "organizer: Published by the organiser as the 42 km course file for the 2026 edition, from ljubljanskimaraton.si/en/marathon. Retrieved 2026-09-25. Carries surveyed elevation on every point. Race confirmed still running: the organiser advertises 2026-10-18."
+      },
+      "stats": {
+        "totalKm": 42.31093008353984,
+        "gainM": 63.2999999999999
+      },
+      "city": {
+        "slug": "ljubljana-si",
+        "name": "Ljubljana",
+        "countryCode": "SI",
+        "countryName": "Slovenia",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 46.054174,
+        "longitude": 14.504391,
+        "timezone": "Europe/Ljubljana"
+      },
+      "citySlug": "ljubljana-si",
+      "series": {
+        "slug": "ljubljana-marathon",
+        "name": "Ljubljana Marathon",
+        "citySlug": "ljubljana-si",
+        "courseSlug": "ljubljana-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://ljubljanskimaraton.si",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "ljubljana-marathon",
+        "month": 10,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the 2026-10-18 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "ljubljana-marathon",
+        "year": 2026,
+        "raceDate": "2026-10-18"
+      }
+    },
+    {
       "courseSlug": "loch-ness-marathon",
       "verdict": "ready",
       "reasons": [
@@ -15676,6 +16265,60 @@
         "seriesSlug": "lost-dutchman-marathon",
         "year": 2024,
         "raceDate": "2024-02-18"
+      }
+    },
+    {
+      "courseSlug": "lucerne-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.434 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/swisscitymarathon-lucerne-2024.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/10/27/gpx_20241027_id10043_race1_20241016222215.gpx?t=1790324169",
+        "gpxSha256": "64e8dd13a358d11e82233f3537ece45712568474556a1826b4bc14d026a6faa3",
+        "site": "goandrace.com",
+        "elevation": "gpx",
+        "geometry": "gpx"
+      },
+      "stats": {
+        "totalKm": 42.43433343683234,
+        "gainM": 117
+      },
+      "city": {
+        "slug": "lucerne-ch",
+        "name": "Lucerne",
+        "countryCode": "CH",
+        "countryName": "Switzerland",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 47.055499,
+        "longitude": 8.326734,
+        "timezone": "Europe/Zurich"
+      },
+      "citySlug": "lucerne-ch",
+      "series": {
+        "slug": "lucerne-marathon",
+        "name": "Lucerne Marathon",
+        "citySlug": "lucerne-ch",
+        "courseSlug": "lucerne-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://www.swisscitymarathon.ch",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "lucerne-marathon",
+        "month": 10,
+        "weekday": 0,
+        "nth": 4,
+        "note": "Derived from the confirmed 2026-10-25 edition, read off the organizer's own site 2026-09-25"
+      },
+      "edition": {
+        "seriesSlug": "lucerne-marathon",
+        "year": 2026,
+        "raceDate": "2026-10-25"
       }
     },
     {
@@ -18743,6 +19386,59 @@
       }
     },
     {
+      "courseSlug": "nicosia-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/quantum-nicosia-marathon-2024.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/12/08/gpx_20241208_id10082_race1_20241204095625.gpx?t=1790324148",
+        "gpxSha256": "ad6fc6a2d0209e166c9e8f2d009535ba836e67ae7330c178f5ea32a1cd0d8a81",
+        "site": "goandrace.com",
+        "elevation": "gpx",
+        "geometry": "gpx"
+      },
+      "stats": {
+        "totalKm": 42.12789798006841,
+        "gainM": 119.10000000000001
+      },
+      "city": {
+        "slug": "nicosia-cy",
+        "name": "Nicosia",
+        "countryCode": "CY",
+        "countryName": "Cyprus",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 35.172265,
+        "longitude": 33.355447,
+        "timezone": "Asia/Nicosia"
+      },
+      "citySlug": "nicosia-cy",
+      "series": {
+        "slug": "nicosia-marathon",
+        "name": "Nicosia Marathon",
+        "citySlug": "nicosia-cy",
+        "courseSlug": "nicosia-marathon",
+        "isMajor": false,
+        "typicalMonth": 1,
+        "websiteUrl": "https://www.nicosiamarathon.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "nicosia-marathon",
+        "month": 1,
+        "weekday": 0,
+        "nth": 4,
+        "note": "Derived from the confirmed 2027-01-24 edition, read off the organizer's own site 2026-09-25"
+      },
+      "edition": {
+        "seriesSlug": "nicosia-marathon",
+        "year": 2027,
+        "raceDate": "2027-01-24"
+      }
+    },
+    {
       "courseSlug": "nn-marathon-rotterdam",
       "verdict": "rejected",
       "reasons": [
@@ -19688,6 +20384,61 @@
       }
     },
     {
+      "courseSlug": "patagonian-international-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.411 km, outside the [42.0, 42.4] band",
+        "timezone America/Santiago was guessed from longitude (CL spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/patagonian-international-marathon-2024-puerto-natales.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/09/07/gpx_20240907_id9652_race1_20240730225556.gpx?t=1790324135",
+        "gpxSha256": "1da0ad09e4262a17ca7eceef15a01a569ca092e3a5b000b583034e3f85a701af",
+        "site": "goandrace.com",
+        "elevation": "gpx",
+        "geometry": "gpx"
+      },
+      "stats": {
+        "totalKm": 42.41086298209189,
+        "gainM": 565.4000000000001
+      },
+      "city": {
+        "slug": "puerto-natales-cl",
+        "name": "Puerto Natales",
+        "countryCode": "CL",
+        "countryName": "Chile",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": -51.161682,
+        "longitude": -72.962657,
+        "timezone": "America/Santiago"
+      },
+      "citySlug": "puerto-natales-cl",
+      "series": {
+        "slug": "patagonian-international-marathon",
+        "name": "Patagonian International Marathon",
+        "citySlug": "puerto-natales-cl",
+        "courseSlug": "patagonian-international-marathon",
+        "isMajor": false,
+        "typicalMonth": 9,
+        "websiteUrl": "www.patagonianinternationalmarathon.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "patagonian-international-marathon",
+        "month": 9,
+        "weekday": 6,
+        "nth": 1,
+        "note": "Derived from the confirmed 2027-09-04 edition, read off the organizer's own site 2026-09-25"
+      },
+      "edition": {
+        "seriesSlug": "patagonian-international-marathon",
+        "year": 2027,
+        "raceDate": "2027-09-04"
+      }
+    },
+    {
       "courseSlug": "philadelphia-marathon",
       "verdict": "ready",
       "reasons": [
@@ -19955,6 +20706,60 @@
         "seriesSlug": "pokhara-international-marathon",
         "year": 2025,
         "raceDate": "2025-02-15"
+      }
+    },
+    {
+      "courseSlug": "polar-circle-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "timezone America/Nuuk was guessed from longitude (GL spans zones) — confirm it",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/polar-circle-marathon-2024-kangerlussuaq.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/10/26/gpx_20241026_id10040_race1_20241014081132.gpx?t=1790324140",
+        "gpxSha256": "071b9f3e69a497201774908d9e8b21a982493260308e7794c7df972c8a0263ea",
+        "site": "goandrace.com",
+        "elevation": "gpx",
+        "geometry": "gpx"
+      },
+      "stats": {
+        "totalKm": 42.30069266574113,
+        "gainM": 217.10000000000002
+      },
+      "city": {
+        "slug": "kangerlussuaq-gl",
+        "name": "Kangerlussuaq",
+        "countryCode": "GL",
+        "countryName": "Greenland",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 67.144297,
+        "longitude": -50.111856,
+        "timezone": "America/Nuuk"
+      },
+      "citySlug": "kangerlussuaq-gl",
+      "series": {
+        "slug": "polar-circle-marathon",
+        "name": "Polar Circle Marathon",
+        "citySlug": "kangerlussuaq-gl",
+        "courseSlug": "polar-circle-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://polar-circle-marathon.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "polar-circle-marathon",
+        "month": 10,
+        "weekday": 0,
+        "nth": 4,
+        "note": "Derived from the confirmed 2026-10-25 edition, read off the organizer's own site 2026-09-25"
+      },
+      "edition": {
+        "seriesSlug": "polar-circle-marathon",
+        "year": 2026,
+        "raceDate": "2026-10-25"
       }
     },
     {
@@ -20350,6 +21155,30 @@
       "edition": null
     },
     {
+      "courseSlug": "punta-cana-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "parser failed: total route length 10.005 km is outside [41.5, 43.6] km"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/punta-cana-marathon-2021-punta-cana.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2021/11/21/gpx_20211121_id7114_race3_20210613193452.gpx?t=1790324144",
+        "gpxSha256": null,
+        "site": "goandrace.com",
+        "elevation": "gpx",
+        "geometry": "gpx"
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
       "courseSlug": "ravenna-marathon",
       "verdict": "rejected",
       "reasons": [
@@ -20398,6 +21227,60 @@
         "seriesSlug": "ravenna-marathon",
         "year": 2023,
         "raceDate": "2023-11-12"
+      }
+    },
+    {
+      "courseSlug": "reggae-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 41.954 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/reggae-marathon-2022-negril.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2022/12/04/gpx_20221204_id7609_race1_20220515124638.gpx?t=1790324152",
+        "gpxSha256": "64e788189872c6bb2451746f0568effb43ea0f0876d237ef0649d45b24bcb1ca",
+        "site": "goandrace.com",
+        "elevation": "gpx",
+        "geometry": "gpx"
+      },
+      "stats": {
+        "totalKm": 41.95424315893001,
+        "gainM": 22.299999999999997
+      },
+      "city": {
+        "slug": "negril-jm",
+        "name": "Negril",
+        "countryCode": "JM",
+        "countryName": "Jamaica",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 18.315607,
+        "longitude": -78.33641,
+        "timezone": "America/Jamaica"
+      },
+      "citySlug": "negril-jm",
+      "series": {
+        "slug": "reggae-marathon",
+        "name": "Reggae Marathon",
+        "citySlug": "negril-jm",
+        "courseSlug": "reggae-marathon",
+        "isMajor": false,
+        "typicalMonth": 12,
+        "websiteUrl": "https://www.reggaemarathon.com/",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "reggae-marathon",
+        "month": 12,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the confirmed 2026-12-06 edition, read off the organizer's own site 2026-09-25"
+      },
+      "edition": {
+        "seriesSlug": "reggae-marathon",
+        "year": 2026,
+        "raceDate": "2026-12-06"
       }
     },
     {
@@ -20617,6 +21500,59 @@
         "seriesSlug": "richmond-marathon",
         "year": 2025,
         "raceDate": "2025-11-15"
+      }
+    },
+    {
+      "courseSlug": "riga-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/rimi-riga-marathon-2024.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/05/19/gpx_20240519_id9819_race1_20240501112347.gpx?t=1790324156",
+        "gpxSha256": "f8fffdfc67e03215e61c215b3708e1329ec17c779b9d842f3f8cb82eb4158996",
+        "site": "goandrace.com",
+        "elevation": "gpx",
+        "geometry": "gpx"
+      },
+      "stats": {
+        "totalKm": 42.14759530875322,
+        "gainM": 96.80000000000001
+      },
+      "city": {
+        "slug": "riga-lv",
+        "name": "Riga",
+        "countryCode": "LV",
+        "countryName": "Latvia",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 56.946602,
+        "longitude": 24.104744,
+        "timezone": "Europe/Riga"
+      },
+      "citySlug": "riga-lv",
+      "series": {
+        "slug": "riga-marathon",
+        "name": "Riga Marathon",
+        "citySlug": "riga-lv",
+        "courseSlug": "riga-marathon",
+        "isMajor": false,
+        "typicalMonth": 5,
+        "websiteUrl": "https://rimirigamarathon.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "riga-marathon",
+        "month": 5,
+        "weekday": 0,
+        "nth": 3,
+        "note": "Derived from the confirmed 2027-05-16 edition, read off the organizer's own site 2026-09-25"
+      },
+      "edition": {
+        "seriesSlug": "riga-marathon",
+        "year": 2027,
+        "raceDate": "2027-05-16"
       }
     },
     {
@@ -20916,6 +21852,59 @@
         "seriesSlug": "rota-marathon",
         "year": 2025,
         "raceDate": "2025-01-17"
+      }
+    },
+    {
+      "courseSlug": "rotorua-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "human review: still runs (2027-05-01, entries open) but the organiser states the 2027 route reverses to anti-clockwise around Lake Rotorua for the first time in over 50 years. This 2024 geometry is the old direction, so its elevation profile runs backwards against the race. Re-source once the new direction is published."
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/lion-foundation-rotorua-marathon-2024.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/05/04/gpx_20240504_id9802_race1_20240426142916.gpx?t=1790324119",
+        "gpxSha256": "e3e058b6ecbd4cc1919d3728442b5e763aa83a277726ac377efaa9432eb27aa2",
+        "site": "goandrace.com",
+        "elevation": "gpx",
+        "geometry": "gpx"
+      },
+      "stats": {
+        "totalKm": 42.565529554108,
+        "gainM": 133.90000000000003
+      },
+      "city": {
+        "slug": "rotorua-nz",
+        "name": "Rotorua",
+        "countryCode": "NZ",
+        "countryName": "New Zealand",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": -38.1349,
+        "longitude": 176.25873,
+        "timezone": "Pacific/Auckland"
+      },
+      "citySlug": "rotorua-nz",
+      "series": {
+        "slug": "rotorua-marathon",
+        "name": "Rotorua Marathon",
+        "citySlug": "rotorua-nz",
+        "courseSlug": "rotorua-marathon",
+        "isMajor": false,
+        "typicalMonth": 5,
+        "websiteUrl": "https://www.rotoruamarathon.co.nz",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "rotorua-marathon",
+        "month": 5,
+        "weekday": 5,
+        "nth": 1,
+        "note": "Derived from the 2024-05-03 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "rotorua-marathon",
+        "year": 2024,
+        "raceDate": "2024-05-03"
       }
     },
     {
@@ -22026,6 +23015,60 @@
       }
     },
     {
+      "courseSlug": "singapore-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.578 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/singapore-marathon-2024-singapore.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2024/12/01/gpx_20241201_id10067_race1_20241111170942.gpx?t=1790324160",
+        "gpxSha256": "058f41f5c0f2af871b53d2a141022bcc5430cc98e7bdc2f8c4d299e687bea6c7",
+        "site": "goandrace.com",
+        "elevation": "gpx",
+        "geometry": "gpx"
+      },
+      "stats": {
+        "totalKm": 42.57781198068146,
+        "gainM": 146.4
+      },
+      "city": {
+        "slug": "singapore-sg",
+        "name": "Singapore",
+        "countryCode": "SG",
+        "countryName": "Singapore",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 1.292701,
+        "longitude": 103.864015,
+        "timezone": "Asia/Singapore"
+      },
+      "citySlug": "singapore-sg",
+      "series": {
+        "slug": "singapore-marathon",
+        "name": "Singapore Marathon",
+        "citySlug": "singapore-sg",
+        "courseSlug": "singapore-marathon",
+        "isMajor": false,
+        "typicalMonth": 12,
+        "websiteUrl": "https://www.singaporemarathon.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "singapore-marathon",
+        "month": 12,
+        "weekday": 0,
+        "nth": 1,
+        "note": "Derived from the confirmed 2026-12-06 edition, read off the organizer's own site 2026-09-25"
+      },
+      "edition": {
+        "seriesSlug": "singapore-marathon",
+        "year": 2026,
+        "raceDate": "2026-12-06"
+      }
+    },
+    {
       "courseSlug": "sioux-falls-marathon",
       "verdict": "ready",
       "reasons": [
@@ -22076,6 +23119,61 @@
         "seriesSlug": "sioux-falls-marathon",
         "year": 2025,
         "raceDate": "2025-09-21"
+      }
+    },
+    {
+      "courseSlug": "sofia-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "measured 42.886 km, outside the [42.0, 42.4] band",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://sofiamarathon.bg/wp-content/uploads/gpx/WizzAirMarathon-Sofia-42_2-course.gpx",
+        "gpxUrl": "https://sofiamarathon.bg/wp-content/uploads/gpx/WizzAirMarathon-Sofia-42_2-course.gpx",
+        "gpxSha256": "11c9cd6e86c02eb6dd162aabf79d4a2633a8f5c54001203e639118a4eefc339e",
+        "site": "sofiamarathon.bg",
+        "elevation": "gpx",
+        "geometry": "gpx",
+        "note": "organizer: Linked from the organiser's own 42 km distance page (sofiamarathon.bg/en/distances/marathon-42km/) and hosted on their own domain. Retrieved 2026-09-25. Race confirmed still running: the 43rd edition runs 2026-10-11 with registration open and 10,600+ entrants announced 2026-09-17."
+      },
+      "stats": {
+        "totalKm": 42.886042685564135,
+        "gainM": 145.29999999999984
+      },
+      "city": {
+        "slug": "sofia-bg",
+        "name": "Sofia",
+        "countryCode": "BG",
+        "countryName": "Bulgaria",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 42.696375,
+        "longitude": 23.326352,
+        "timezone": "Europe/Sofia"
+      },
+      "citySlug": "sofia-bg",
+      "series": {
+        "slug": "sofia-marathon",
+        "name": "Sofia Marathon",
+        "citySlug": "sofia-bg",
+        "courseSlug": "sofia-marathon",
+        "isMajor": false,
+        "typicalMonth": 10,
+        "websiteUrl": "https://sofiamarathon.bg",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "sofia-marathon",
+        "month": 10,
+        "weekday": 0,
+        "nth": 2,
+        "note": "Derived from the 2026-10-11 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "sofia-marathon",
+        "year": 2026,
+        "raceDate": "2026-10-11"
       }
     },
     {
@@ -24273,6 +25371,61 @@
       "edition": null
     },
     {
+      "courseSlug": "warsaw-marathon",
+      "verdict": "ready",
+      "reasons": [
+        "elevation is modelled (dem:srtm30m), not surveyed — confirm the profile looks like the real course before spending the slug",
+        "no organizer name published — fill SeriesSeed.organizer by hand"
+      ],
+      "source": {
+        "eventUrl": "https://maratonwarszawski.com/wp-content/uploads/2026/08/48_Maraton_Warszawski.gpx",
+        "gpxUrl": "https://maratonwarszawski.com/wp-content/uploads/2026/08/48_Maraton_Warszawski.gpx",
+        "gpxSha256": "a913a95451678736ce5b97f9d7fb099332254726a0dcb5c2f83907e293cbfc12",
+        "site": "maratonwarszawski.com",
+        "elevation": "dem:srtm30m",
+        "geometry": "gpx",
+        "note": "organizer: Linked as the course file from the organiser's own site (maratonwarszawski.com), uploaded by them in August 2026 for the 48th edition. Retrieved 2026-09-25. Carries no <ele>, so elevation is modelled. Race confirmed still running: the 48th edition runs 2026-09-27 and the file is that edition's."
+      },
+      "stats": {
+        "totalKm": 42.19588357380275,
+        "gainM": 69.2
+      },
+      "city": {
+        "slug": "warsaw-pl",
+        "name": "Warsaw",
+        "countryCode": "PL",
+        "countryName": "Poland",
+        "regionCode": null,
+        "regionName": null,
+        "latitude": 52.234986,
+        "longitude": 21.007307,
+        "timezone": "Europe/Warsaw"
+      },
+      "citySlug": "warsaw-pl",
+      "series": {
+        "slug": "warsaw-marathon",
+        "name": "Warsaw Marathon",
+        "citySlug": "warsaw-pl",
+        "courseSlug": "warsaw-marathon",
+        "isMajor": false,
+        "typicalMonth": 9,
+        "websiteUrl": "https://maratonwarszawski.com",
+        "organizer": ""
+      },
+      "recurrence": {
+        "seriesSlug": "warsaw-marathon",
+        "month": 9,
+        "weekday": 0,
+        "nth": -1,
+        "note": "Derived from the 2026-09-27 edition; not verified against the organizer"
+      },
+      "edition": {
+        "seriesSlug": "warsaw-marathon",
+        "year": 2026,
+        "raceDate": "2026-09-27"
+      }
+    },
+    {
       "courseSlug": "white-marble-marathon",
       "verdict": "ready",
       "reasons": [
@@ -24711,12 +25864,39 @@
       "courseSlug": "zurich-rock-n-roll-running-series-madrid",
       "verdict": "rejected",
       "reasons": [
-        "fetch: looks like the already-seeded \"Zürich Marathon\" (name+city match 1.00) — skipping to avoid a duplicate"
+        "parser failed: total route length 39.759 km is outside [41.5, 43.6] km"
       ],
       "source": {
-        "eventUrl": "https://www.goandrace.com/en/running-events/zurich-rock-n-roll-running-series-madrid-2025.php",
-        "gpxUrl": null,
-        "gpxSha256": null
+        "eventUrl": "https://www.goandrace.com/en/running-events/zurich-rock-n-roll-running-series-madrid-2023.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2023/04/23/gpx_20230423_id7965_race1_20230317212715.gpx?t=1790324173",
+        "gpxSha256": null,
+        "site": "goandrace.com",
+        "elevation": "gpx",
+        "geometry": "gpx"
+      },
+      "stats": {
+        "totalKm": null,
+        "gainM": null
+      },
+      "city": null,
+      "citySlug": "",
+      "series": null,
+      "recurrence": null,
+      "edition": null
+    },
+    {
+      "courseSlug": "zurich-san-sebastian-marathon",
+      "verdict": "rejected",
+      "reasons": [
+        "parser failed: total route length 41.499 km is outside [41.5, 43.6] km"
+      ],
+      "source": {
+        "eventUrl": "https://www.goandrace.com/en/running-events/zurich-san-sebastian-marathon-2022.php",
+        "gpxUrl": "https://www.goandrace.com/gpx/2022/11/27/gpx_20221127_id7650_race1_20220601233457.gpx?t=1790324177",
+        "gpxSha256": null,
+        "site": "goandrace.com",
+        "elevation": "gpx",
+        "geometry": "gpx"
       },
       "stats": {
         "totalKm": null,

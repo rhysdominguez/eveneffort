@@ -22,8 +22,33 @@ export type WeatherSource = "forecast" | "historical" | "typical";
 
 export interface CachedWindow {
   hours: WeatherConditions[];
+  /** The hours before the gun, chronological. Empty is normal — see the schema. */
+  lead: WeatherConditions[];
   meta: { raceDateISO?: string; years?: number } | null;
 }
+
+/**
+ * The shape of `hours` this code writes and is willing to read back.
+ *
+ * BUMP THIS whenever a field is added to WeatherConditions, or a stored window
+ * stops meaning what it meant. `historical` rows are PERMANENT by design, so a
+ * row written under an older shape would otherwise be served unchanged forever,
+ * and the feature that needed the new field would silently never work on
+ * exactly the races that had been visited before.
+ *
+ * Why a version rather than checking whether the field is there: a provider
+ * that legitimately omitted cloud cover for an hour is indistinguishable from a
+ * stale row under that test, so such a key would miss on every request, forever,
+ * and re-buy the same metered answer each time. That is the opposite of what
+ * this table is for.
+ *
+ * Old rows are simply invisible to `readWindow`. They are re-fetched once and
+ * overwritten in place, because `version` is not part of the conflict target.
+ *
+ *   1  tempC, humidity, windSpeed, windDirection
+ *   2  + cloudCover, precipProbability, and a stored `lead`
+ */
+export const WINDOW_VERSION = 2;
 
 /**
  * How long each source stays usable.
@@ -61,7 +86,11 @@ export async function readWindow(
   if (!isDatabaseConfigured()) return null;
   try {
     const rows = await getDb()
-      .select({ hours: weatherWindows.hours, meta: weatherWindows.meta })
+      .select({
+        hours: weatherWindows.hours,
+        lead: weatherWindows.lead,
+        meta: weatherWindows.meta,
+      })
       .from(weatherWindows)
       .where(
         and(
@@ -69,6 +98,7 @@ export async function readWindow(
           eq(weatherWindows.lon, String(roundCoord(lon))),
           eq(weatherWindows.startUtc, new Date(startUtc)),
           eq(weatherWindows.source, source),
+          eq(weatherWindows.version, WINDOW_VERSION),
           // A null expiry is permanent; anything else must still be in date.
           or(
             isNull(weatherWindows.expiresAt),
@@ -82,6 +112,7 @@ export async function readWindow(
     if (!hours || hours.length === 0) return null;
     return {
       hours,
+      lead: (rows[0].lead as WeatherConditions[] | null) ?? [],
       meta: (rows[0].meta as CachedWindow["meta"]) ?? null,
     };
   } catch {
@@ -107,6 +138,7 @@ export async function writeWindow(
   startUtc: string,
   source: WeatherSource,
   hours: WeatherConditions[],
+  lead: WeatherConditions[],
   meta: CachedWindow["meta"],
 ): Promise<void> {
   if (!isDatabaseConfigured()) return;
@@ -122,8 +154,10 @@ export async function writeWindow(
         startUtc: new Date(startUtc),
         source,
         hours,
+        lead,
         meta,
         expiresAt,
+        version: WINDOW_VERSION,
       })
       .onConflictDoUpdate({
         target: [
@@ -134,8 +168,10 @@ export async function writeWindow(
         ],
         set: {
           hours,
+          lead,
           meta,
           expiresAt,
+          version: WINDOW_VERSION,
           fetchedAt: new Date(),
         },
       });

@@ -10,9 +10,65 @@
   --color-red-primary: #B91C1C;
   --color-red-deep: #7F1D1D;
 
-  /* Semantic green — faster-than-goal deltas, and the Downhill course profile.
+  /* Red as a FILL under white text (primary buttons, the active toggle segment,
+     a selected day), as opposed to red as TEXT or a data mark above. The two
+     roles part company in dark mode: a red light enough to read as text on a
+     near-black page cannot also carry white type at AA, so the text red
+     lightens there and these two stay put. Identical in both themes on
+     purpose. Only a control that pairs with `text-white` uses them. */
+  --color-red-fill: #B91C1C;
+  --color-red-fill-hover: #7F1D1D;
+
+  /* Semantic green — faster-than-goal deltas, the Downhill course profile, and
+     the calendar's "a real forecast exists for this race" marker.
      Keep it as rare as red. */
   --color-green-primary: #15803D;
+
+  /* The green's FILL role, added for the calendar marker. Green now has two
+     roles for the same reason red does: #15803D is a text and data-mark
+     colour, and a chip filled with it would be a solid block of green in a
+     grid of white cells, which is louder than the fact it reports. This is the
+     surface the marked chip sits on, under --color-text-primary.
+
+     TUNED DOWN from #DCFCE7, which was 84% HSL saturation sitting in a page of
+     pure neutrals and read as an alert rather than an annotation. This is 44%:
+     the only chromatic thing on the calendar should be quieter than the only
+     chromatic thing on a chart, because the calendar is a reading surface and
+     the mark is a footnote on it. It stays ~7.6 ΔE from --color-bg-elevated,
+     which is the surface it replaces, so it is still found at a glance.
+
+     The marked chip keeps the NEUTRAL --color-border of every other chip. An
+     outline in --color-green-primary was tried and made the chip read as
+     selected rather than annotated: a near-black-green 1px rule is a strong
+     shape signal, and the structure of the chip is not what changed. Green
+     appears once here, as a tint, and never as this chip's border.
+
+     Deliberately NOT a fill under white text, which is what --color-red-fill
+     is. The two greens therefore pair differently and are not interchangeable.
+     Both themes are checked in globals.tokens.test.ts. */
+  --color-green-fill: #E8F6EC;
+
+  /* Semantic blue — THE PRECIPITATION MARK ON THE WEATHER TIMELINE, and
+     nothing else. The third and last exception to the red/white/black palette,
+     opened deliberately (DESIGN.md records the argument).
+
+     Why it earned one: rain is the only quantity on this site that readers
+     already hold a colour for. Every weather app they have ever opened draws
+     falling water blue, and a monochrome rain glyph in a column headed "Rain
+     chance" reads as a smudge under the cloud rather than as rain. Red and
+     green are semantic HERE too — faster, slower, hotter — so rain cannot
+     borrow either without saying something about pace that it does not mean.
+
+     Fenced the same way green is. It colours the three falling strokes of the
+     precipitation glyph and may not be used for text, borders, fills, links,
+     or a second data series. It is a mark, not an accent, and the percentage
+     beside it is what actually carries the claim.
+
+     70% HSL saturation, in the band the other light accents sit in (red 74%,
+     green 72%), so it does not shout past them; 7.0:1 on white and 6.7:1 on
+     --color-bg-elevated, which is well past AA even though the glyph is
+     decorative and labelled in text. */
+  --color-blue-primary: #1F5CAD;
 
   /* COURSE-PROFILE RAMP — six stops, one per profile, sweeping green → maroon:
      Downhill (green above) → Very Flat (lime) → Mostly Flat (gold) → Rolling
@@ -35,10 +91,11 @@
   --color-bg-page: #FFFFFF;
   --color-bg-surface: #FFFFFF;
   --color-bg-elevated: #FAFAFA;
-  /* Footer — the one dark surface on the site. This is NOT dark mode: it's an
-     inverted band at the foot of a white page (the Macmillan reference's
-     structure), so it needs its own on-dark text/border ramp. Nothing above
-     the footer may use these. */
+  /* Footer — the one deliberately dark surface in light mode. It is an inverted
+     band at the foot of a white page (the Macmillan reference's structure), so
+     it needs its own on-dark text/border ramp, and it is not the dark theme.
+     Nothing above the footer may use these. In dark mode it is lighter than the
+     page instead, so it stays a band. */
   --color-bg-footer: #262626;
   --color-bg-footer-deep: #171717;
   --color-text-on-dark: #FAFAFA;
@@ -52,6 +109,11 @@
   --color-border: #E5E5E5;
   --color-border-focus: #0A0A0A;
 
+  /* Modal and gesture-hint backdrops. Its own token because the obvious
+     stand-in, text-primary at some opacity, is black in light mode and WHITE in
+     dark mode, and a white veil over a dark page is a flashbang. */
+  --color-scrim: #0A0A0A;
+
   /* Type families */
   --font-display: var(--font-montserrat), system-ui, sans-serif;
   --font-sans: var(--font-montserrat), system-ui, sans-serif;
@@ -63,11 +125,140 @@
 }
 
 html {
-  /* Light mode only — keep native UI (form controls, scrollbars) light. */
+  /* Light unless the reader has pressed the toggle. `color-scheme` follows the
+     theme (dark block below) so native controls, the date and time inputs,
+     spinners and scrollbars come along with it. */
   color-scheme: light;
   background: var(--color-bg-page);
   color: var(--color-text-primary);
   font-family: var(--font-sans);
+}
+
+/* DARK THEME. A second value for every colour token above, applied by the
+   `data-theme="dark"` attribute the toggle sets on <html> (src/lib/theme.ts)
+   and that a blocking script in layout.tsx restores before first paint. It is
+   opt-in: nothing here keys off `prefers-color-scheme`, because the site is
+   white by design and someone who never pressed the toggle asked for nothing.
+   See DESIGN.md § Theme.
+
+   EVERY colour token is redeclared here, including the ones that keep their
+   light value (red-fill, the footer's on-dark text). The forgotten-token
+   failure mode is a dark page with one patch of light chrome silently
+   inheriting from :root, and the parity test in globals.tokens.test.ts fails
+   on a token defined in @theme but absent here.
+
+   `@media not print` is what keeps the printed paceband light whatever the
+   theme. Print simply never sees this block, so a dark-mode order does not come
+   off the printer as a black rectangle. Nothing has to be re-declared for
+   paper, and the light values stay written in exactly one place.
+
+   SURFACES ARE A LADDER, NOT A SINGLE BLACK. This is the part a dark theme gets
+   wrong by default, and the first pass here did: page and card were both #0A0A0A,
+   so a card never lifted off the page, and the only thing separating them was a
+   border at 1.3:1. Dark mode cannot lean on shadows the way light does, because a
+   shadow on near-black is invisible, so depth has to come from lightness. Each
+   step up the ladder is a step lighter:
+
+     page #121212  ->  surface (cards, inputs, nav, modals) #1C1C1C
+                   ->  elevated (table heads, hover, chips) #242424
+
+   In light, page and surface are both #FFFFFF and elevated is a hair off it,
+   because there white IS the top of the scale and a border can do the work. Dark
+   has room below, so it uses it.
+
+   The specific values follow the usual dark-theme guidance rather than being
+   invented: a soft near-black around #121212 instead of #000 (pure black plus
+   near-white text is a ~19:1 contrast that blooms for astigmatic readers, and it
+   leaves nowhere to go for elevation), off-white #E6E6E6 rather than #FAFAFA for
+   body text, and accents desaturated for a dark field. */
+@media not print {
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+
+    /* The profile ramp again, six stops, still one scale, and still AA on every
+       dark surface including the lightest. Two things had to change from the
+       light values: they are lighter (maroon #7F1D1D on near-black is nowhere
+       near readable) and they are DESATURATED, HSL 52-71% against the light
+       ramp's 69-96%, because a fully saturated accent on a dark field vibrates.
+       The scale still behaves: hue falls at every step (158 -> 126 -> 83 -> 59
+       -> 38 -> 25 in CIELAB) and lightness descends gently with it (L* 76 -> 60)
+       so harder still reads as heavier. Very Hilly stays the darker of the two
+       reds, as in light. Same closed set, same six roles, same rule that nothing
+       else may borrow it. */
+    --color-green-primary: #68CF9A;
+    /* The fill cannot carry across: a pale mint on a near-black page is a lamp,
+       and the marked chip would outshine the race names around it. Dark takes a
+       deep tint instead, chosen to sit ABOVE --color-bg-elevated rather than
+       below it, so the mark still reads as a raised, lit cell and not as a
+       hole. Desaturated alongside the light tint for the same reason (28% HSL,
+       down from 38%), and for the reason the profile ramp is desaturated in
+       dark: a vivid accent on a dark field vibrates. */
+    --color-green-fill: #1B3025;
+    /* Lightened and desaturated for a dark field, on the same rule as the
+       profile ramp and the dark green: 55% HSL against the light token's 70%,
+       which puts it beside --color-green-primary (52%) and --color-red-primary
+       (64%) rather than vibrating past them. 7.5:1 on the page, 6.2:1 on
+       --color-bg-elevated. */
+    --color-blue-primary: #79A8D8;
+    --color-lime-primary: #8FC954;
+    --color-gold-primary: #D3AE69;
+    --color-orange-primary: #DB9E76;
+    --color-red-primary: #E08571;
+    --color-red-deep: #E66B6D;
+
+    --color-red-fill: #B91C1C;
+    --color-red-fill-hover: #7F1D1D;
+
+    --color-bg-page: #121212;
+    --color-bg-surface: #1C1C1C;
+    --color-bg-elevated: #242424;
+
+    /* The footer inverts, as it does in light: there it is the single DARKEST
+       element, anchoring the foot of a white page, so here it is the single
+       LIGHTEST one, above even the elevated surface.
+
+       It has to clear TWO neighbours, which is what makes it awkward and what a
+       first pass at #1F1F1F got wrong. On most pages the footer meets the page
+       itself, but on the home page it meets the closing CTA, which is already an
+       elevated band, and against that a #1F1F1F footer was 1.06:1 and simply
+       merged into it. These values are the pair that maximises the WORSE of the
+       two separations (1.6:1 against the page, 1.3:1 against the CTA band).
+
+       border-on-dark rises with them, or the column dividers disappear into the
+       lighter fill they sit on. Text ramp unchanged, still footer only. */
+    --color-bg-footer: #383838;
+    --color-bg-footer-deep: #2E2E2E;
+    --color-text-on-dark: #FAFAFA;
+    --color-text-on-dark-muted: #B5B5B5;
+    --color-border-on-dark: #555555;
+
+    /* Off-white, not near-white: #FAFAFA on #0A0A0A measured 19:1, which is the
+       halation people mean when they say a dark theme is harsh. This is 15:1 on
+       the page and still 12:1 on the lightest surface. Tertiary is up from
+       #737373, which failed AA (3.8:1) on the elevated surface it labels. */
+    --color-text-primary: #E6E6E6;
+    --color-text-secondary: #ADADAD;
+    --color-text-tertiary: #919191;
+
+    --color-border: #333333;
+    --color-border-focus: #E6E6E6;
+
+    --color-scrim: #000000;
+  }
+}
+
+/* The toggle's two glyphs. Both are in the markup and this picks one, so the
+   right icon is there on first paint with no React round trip. No colours. */
+.theme-toggle-sun {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-toggle-sun {
+  display: inline;
+}
+
+:root[data-theme="dark"] .theme-toggle-moon {
+  display: none;
 }
 
 /* Tabular numerals utility — for pace chart, splits, timer-like values */
@@ -115,6 +306,35 @@ html {
       color-mix(in srgb, var(--color-bg-page) 95%, transparent) 100%
     );
   }
+}
+
+/* Pace opportunity meter — the closing line of the Impact breakdown. The six
+   stops are the DifficultyBadge profile ramp, reversed: hardest on the left,
+   fastest on the right. It is deliberately the SAME ramp and not a new one.
+   Both scales say fast-to-slow, so inventing a second red-amber-green here
+   would have been the actual violation of the palette rule; see DESIGN.md.
+
+   THE STOPS ARE NOT EVENLY SPACED, AND MUST NOT BE "TIDIED" BACK TO 20% STEPS.
+   They are pinned to the band thresholds in opportunity.ts: orange lands on the
+   challenging/moderate edge (38.6) and lime on the moderate/favorable edge (65),
+   so the pixel under the marker changes family exactly where the verdict word
+   changes. Evenly spaced stops shipped first and were wrong in use: the word
+   flipped to Favorable at 55 while the bar was still amber until 86, so on a
+   cool day most races read "Favorable" over a yellow pixel. If those thresholds
+   move, these stops move with them.
+
+   Gradient geometry only — every color still comes from a token, so both
+   themes follow from the token layer with no `dark:` variant anywhere. */
+.opportunity-track {
+  background: linear-gradient(
+    90deg,
+    var(--color-red-deep) 0%,
+    var(--color-red-primary) 19%,
+    var(--color-orange-primary) 38.6%,
+    var(--color-gold-primary) 52%,
+    var(--color-lime-primary) 65%,
+    var(--color-green-primary) 85%
+  );
 }
 
 /* Printable paceband — the wrist strip PaceBand.tsx renders. Screen never
@@ -221,12 +441,24 @@ html {
    preview follows it. */
 .paceband-preview {
   --pb-scale: 1.85;
+
+  /* The band prints on white paper whatever the theme, so its preview is white
+     paper too, not a dark-mode restyling of it. These are the light values of
+     the five tokens the strip reads, restated for this subtree only; the
+     parity test in globals.tokens.test.ts fails if one drifts from @theme. */
+  --color-text-primary: #0A0A0A;
+  --color-text-tertiary: #A3A3A3;
+  --color-bg-surface: #FFFFFF;
+  --color-border: #E5E5E5;
+  --color-red-primary: #B91C1C;
 }
 
 .paceband-preview .paceband-strip {
   width: calc(1.3in * var(--pb-scale));
   /* Square corners: the printed strip is cut from a sheet, not a rounded card. */
   border-radius: 0;
+  /* The paper. Transparent was fine while the page behind it was always white. */
+  background: var(--color-bg-surface);
 }
 
 .paceband-preview .paceband-bar {
@@ -471,8 +703,8 @@ html {
   margin-top: 0.75rem;
   width: 100%;
   border-radius: var(--radius-control);
-  background: var(--color-red-primary);
-  color: var(--color-bg-surface);
+  background: var(--color-red-fill);
+  color: var(--color-white);
   padding: 0.5rem 0.75rem;
   font-size: 0.8125rem;
   font-weight: 600;
@@ -481,12 +713,12 @@ html {
 }
 
 .course-pin-cta:hover {
-  background: var(--color-red-deep);
+  background: var(--color-red-fill-hover);
 }
 
 /* The two-finger / ctrl-scroll hint MapLibre overlays when a scroll gesture is
    swallowed by the page. Its default is a dark scrim with white text. */
 .maplibregl-cooperative-gesture-screen {
-  background: color-mix(in srgb, var(--color-text-primary) 45%, transparent);
+  background: color-mix(in srgb, var(--color-scrim) 45%, transparent);
   font-family: var(--font-sans);
 }

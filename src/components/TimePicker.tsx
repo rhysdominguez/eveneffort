@@ -43,7 +43,7 @@ const HOURS_12 = Array.from({ length: 12 }, (_, i) => i + 1);
 function optionClass(active: boolean): string {
   return `w-full rounded-lg px-2 py-1 text-sm font-tabular transition-colors ${
     active
-      ? "bg-[var(--color-red-primary)] text-white"
+      ? "bg-[var(--color-red-fill)] text-white"
       : "text-[var(--color-text-primary)] hover:bg-[var(--color-bg-elevated)]"
   }`;
 }

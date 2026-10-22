@@ -185,7 +185,7 @@ export function CourseSearch({
                     onMouseEnter={() => setActiveId(c.id)}
                     className={`cursor-pointer rounded-lg px-3 py-2 text-sm transition-colors ${
                       isSelected
-                        ? "bg-[var(--color-red-primary)] text-white"
+                        ? "bg-[var(--color-red-fill)] text-white"
                         : c.id === activeId
                           ? "bg-[var(--color-bg-elevated)] text-[var(--color-text-primary)]"
                           : "text-[var(--color-text-primary)]"

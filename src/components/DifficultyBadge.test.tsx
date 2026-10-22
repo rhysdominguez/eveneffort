@@ -123,37 +123,38 @@ describe("DifficultyBadge", () => {
     expect(boston).toContain("−436 ft net");
   });
 
-  // The altitude pill (ROADMAP #7). It is absent far more often than present,
-  // so most of what matters here is that it stays quiet.
+  // The altitude pill (ROADMAP #7). It states a height and never a cost: the
+  // thin-air penalty is already inside the "vs flat" figure, so quoting it here
+  // charged the reader for the same fact twice.
   describe("the altitude pill", () => {
     const high = { meanM: 2000, maxM: 2200, multiplier: 1.07 };
     const low = { meanM: 40, maxM: 80, multiplier: 1 };
 
     it("is absent when no altitude is supplied at all", () => {
       const { container } = render(<DifficultyBadge terrain={terrain(300)} />);
-      expect(container.textContent).not.toMatch(/slower/);
+      expect(container.textContent).not.toMatch(/elevation/);
     });
 
-    it("is absent for a course below the threshold", () => {
+    it("shows for a course below the threshold, which is most of them", () => {
       const { container } = render(
         <DifficultyBadge terrain={terrain(300)} altitude={low} />,
       );
-      expect(container.textContent).not.toMatch(/slower/);
+      expect(container.textContent).toContain("131 ft avg. elevation");
     });
 
-    it("names the penalty and the mean height when it is real", () => {
+    it("names the mean height on a high course, and no percentage", () => {
       const { container } = render(
         <DifficultyBadge terrain={terrain(300)} altitude={high} />,
       );
-      expect(container.textContent).toContain("7.0% slower");
-      expect(container.textContent).toContain("6562 ft up");
+      expect(container.textContent).toContain("6562 ft avg. elevation");
+      expect(container.textContent).not.toMatch(/slower|%/);
     });
 
     it("stays out of the compact rows, which have their own column", () => {
       const { container } = render(
         <DifficultyBadge terrain={terrain(300)} altitude={high} compact />,
       );
-      expect(container.textContent).not.toMatch(/slower/);
+      expect(container.textContent).not.toMatch(/elevation/);
     });
 
     it("takes no colour of its own, leaving the profile pill the only one", () => {
@@ -162,7 +163,7 @@ describe("DifficultyBadge", () => {
       );
       const pills = container.querySelectorAll("span > span");
       const altitudePill = Array.from(pills).find((p) =>
-        p.textContent?.includes("slower"),
+        p.textContent?.includes("elevation"),
       );
       expect(altitudePill?.className).toContain("--color-text-secondary");
     });

@@ -250,6 +250,29 @@ export const GOAL_MODE: StateKey<GoalMode> = defineKey<GoalMode>(
 );
 
 
+// --- Colour theme --------------------------------------------------------
+
+/**
+ * `local`: the theme is a preference about the reader, not about this visit.
+ * There is deliberately no "system" member. Absent means light, because the
+ * page is white by design and only someone who pressed the toggle has asked
+ * for anything else (DESIGN.md § Theme). `prefers-color-scheme` is never read.
+ *
+ * The blocking script in layout.tsx reads this same key before first paint,
+ * so its name and its JSON shape are part of that script's contract. See
+ * `themeInitScript` in src/lib/theme.ts, which builds the script from this
+ * key so the two cannot drift.
+ */
+export const THEMES = ["light", "dark"] as const;
+export type Theme = (typeof THEMES)[number];
+
+export const THEME: StateKey<Theme> = defineKey<Theme>(
+  "prefs.theme",
+  "local",
+  (raw) => (isOneOf(raw, THEMES) ? raw : null),
+);
+
+
 // --- Boston qualifier profile --------------------------------------------
 
 export interface BqProfile {

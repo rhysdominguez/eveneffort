@@ -91,3 +91,47 @@ export function calculateHeatAdjustment(tempC: number, humidity: number): number
   if (tempC <= HEAT_THRESHOLD_C) return 1.0;
   return 1 + slowdownFromHeatIndex(heatIndexC(tempC, humidity));
 }
+
+/**
+ * The relative humidity the Heat/Humidity SPLIT is measured against: bone-dry
+ * air. Presentation only. Nothing in the pacing engine reads it, and
+ * `calculateHeatAdjustment` is untouched by its existence.
+ *
+ * The model has no humidity term to read: `heatIndexC` folds RH into a single
+ * apparent temperature before any slowdown is computed, so "what humidity
+ * costs" is not a quantity that exists until a baseline is named. Naming dry
+ * air as the baseline makes the two lines mean something a runner can check:
+ * Heat is what the air temperature alone would cost, and Humidity is what the
+ * moisture adds on top of it.
+ *
+ * WHY 0 AND NOT A TYPICAL MORNING like 30 or 50 %. A non-zero reference makes
+ * the humidity line NEGATIVE on any drier-than-reference day, which reads as
+ * "the humidity is helping" when what actually happened is that the reference
+ * was picked badly. At 0 the marginal is non-negative everywhere the model is
+ * defined, and it behaves: negligible in cool air (0.1 % at 20 °C / 10 % RH),
+ * dominant in a hot swamp (17 % at 32 °C / 95 % RH). The NWS formulae are
+ * continuous and finite there, which `heat.test.ts` pins.
+ */
+export const DRY_REFERENCE_RH = 0;
+
+/**
+ * What the air temperature alone costs, with humidity held at the dry
+ * reference. The Heat tile on the impact panel.
+ *
+ * Pairs with `humidityAdjustment` below so that
+ * `dryHeatAdjustment(t) * humidityAdjustment(t, rh) === calculateHeatAdjustment(t, rh)`
+ * exactly. That identity is the whole contract: the split is a way of READING
+ * the existing multiplier, never a second model that could disagree with it.
+ */
+export function dryHeatAdjustment(tempC: number): number {
+  return calculateHeatAdjustment(tempC, DRY_REFERENCE_RH);
+}
+
+/**
+ * What the moisture adds on top of the temperature: the actual multiplier over
+ * the dry-reference one. 1.0 in dry air, and 1.0 below the 13 °C threshold
+ * where neither term does anything.
+ */
+export function humidityAdjustment(tempC: number, humidity: number): number {
+  return calculateHeatAdjustment(tempC, humidity) / dryHeatAdjustment(tempC);
+}

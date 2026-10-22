@@ -1,23 +1,17 @@
 "use client";
-import { useEffect, useState } from "react";
-import Link from "next/link";
+import { useState } from "react";
 import type { CourseId, CourseSummary, GoalTimeInput, Unit } from "@/types";
-import { equivalentGoalTime, gapPaceFromGoalTime } from "@/lib/pacing/effort";
-import { MILE_IN_KM } from "@/lib/pacing/segments";
+import {
+  equalEffortPace,
+  equivalentGoalTime,
+  type CourseCostBasis,
+} from "@/lib/pacing/effort";
 import { formatHMS, formatSignedHMS, toSeconds } from "@/lib/units/time";
 import { formatPace } from "@/lib/units/pace";
-import { formatVsFlat, totalEffortMultiplier } from "@/lib/units/effort";
 import { formatLocation } from "@/lib/location";
-import { buildResultsHref } from "@/lib/resultsParams";
-import {
-  buildCompareHref,
-  MAX_COMPARE_SECONDS,
-  type CompareSelection,
-} from "@/lib/compareParams";
+import { MAX_COMPARE_SECONDS, type CompareSelection } from "@/lib/compareParams";
 import { CourseSearch } from "@/components/CourseSearch";
-import { DifficultyBadge } from "@/components/DifficultyBadge";
 import { UnitToggle } from "@/components/UnitToggle";
-import { EquivalentTimeTable } from "@/components/EquivalentTimeTable";
 
 // ROADMAP #8. Two courses, one finish time, and the time that costs the same
 // effort at the other race.
@@ -69,23 +63,22 @@ export function goalTimeError(time: GoalTimeInput): string | null {
 }
 
 /**
- * The grade-adjusted pace both finishes are run at, in the display unit.
+ * The equal-effort pace both finishes are run at, in the display unit.
  *
- * Derived from the km figure and then unit-converted, NOT recomputed against
- * the mile segmentation. That distinction is the whole reason this is a
- * function: GAP is one physical quantity — seconds per flat-equivalent
- * kilometre — and rendering it per mile is a unit conversion. Recomputing it
- * from `effort.miles` would instead re-segment the course, and since
- * `equivalentGoalTime` is defined on km, the two finishes would then print
- * *different* grade-adjusted paces while the page claims they are the same.
+ * Thin wrapper over `equalEffortPace` so this page keeps one named concept for
+ * the number it prints. The unit conversion, and the reason it is a conversion
+ * rather than a re-segmentation, live there.
+ *
+ * It reads the same `cost` x `altitude` product `equivalentGoalTime` divides,
+ * which is what makes the page's claim literally true rather than nearly true:
+ * the pace shown is the invariant the conversion holds fixed.
  */
 export function sharedGapPace(
   goalTimeSeconds: number,
-  effort: CourseSummary["effort"],
+  course: CourseCostBasis,
   unit: Unit,
 ): number {
-  const perKm = gapPaceFromGoalTime(goalTimeSeconds, effort, "km");
-  return unit === "km" ? perKm : perKm * MILE_IN_KM;
+  return equalEffortPace(goalTimeSeconds, course, unit);
 }
 
 interface Props {
@@ -107,20 +100,9 @@ export function RaceComparison({ catalog, initial }: Props) {
   const from = catalog.find((c) => c.id === fromId) ?? null;
   const to = catalog.find((c) => c.id === toId) ?? null;
 
-  // The address bar is rewritten in place rather than navigated: replaceState
-  // leaves no history entry (so Back still leaves the page rather than undoing
-  // one keystroke at a time), re-renders nothing, and needs no router. Skipped
-  // entirely while the time is invalid — a half-typed field should not blow
-  // away a URL the runner may be about to copy.
-  const href = buildCompareHref({ fromId, toId, goalTimeSeconds, unit });
-  useEffect(() => {
-    if (error) return;
-    window.history.replaceState(null, "", href);
-  }, [href, error]);
-
   const converted =
     from && to && !error
-      ? equivalentGoalTime(goalTimeSeconds, from.effort, to.effort)
+      ? equivalentGoalTime(goalTimeSeconds, from, to)
       : null;
   const delta = converted === null ? 0 : converted - goalTimeSeconds;
 
@@ -147,6 +129,7 @@ export function RaceComparison({ catalog, initial }: Props) {
               value={unit}
               options={UNIT_OPTIONS}
               onChange={setUnit}
+              variant="prominent"
             />
           </div>
           <div className="grid grid-cols-3 gap-3">
@@ -247,15 +230,6 @@ export function RaceComparison({ catalog, initial }: Props) {
           unit={unit}
         />
       )}
-
-      {from && !error && (
-        <EquivalentTimeTable
-          catalog={catalog}
-          from={from}
-          toId={toId}
-          goalTimeSeconds={goalTimeSeconds}
-        />
-      )}
     </div>
   );
 }
@@ -295,31 +269,11 @@ function Result({
           </p>
         </CourseStat>
         <div className="space-y-1">
-          <p className={eyebrowClass}>Grade-adjusted pace</p>
+          <p className={eyebrowClass}>Equal-effort pace</p>
           <p className="font-tabular text-2xl font-medium text-[var(--color-text-primary)]">
-            {formatPace(sharedGapPace(goalTimeSeconds, from.effort, unit), unit)}
-          </p>
-          <p className="text-sm text-[var(--color-text-secondary)]">
-            The same on both, which is what makes the two times equal effort.
+            {formatPace(sharedGapPace(goalTimeSeconds, from, unit), unit)}
           </p>
         </div>
-      </div>
-
-      <div className="flex flex-wrap items-center gap-4">
-        <Link
-          href={buildResultsHref({
-            courseId: to.id,
-            unit,
-            goalTimeSeconds: Math.round(converted),
-          })}
-          className="rounded-lg bg-[var(--color-red-primary)] px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-[var(--color-red-deep)]"
-        >
-          Build a pacing chart for {to.displayName}
-        </Link>
-        <p className="text-sm text-[var(--color-text-tertiary)]">
-          Terrain only. Weather, altitude and race-day conditions are not in
-          this number.
-        </p>
       </div>
     </section>
   );
@@ -347,12 +301,6 @@ function CourseStat({
       {children}
       <p className="text-sm text-[var(--color-text-secondary)]">
         {formatLocation(course.city, course.regionCode, course.countryName)}
-      </p>
-      <div className="pt-1">
-        <DifficultyBadge terrain={course.terrain} altitude={course.altitude} />
-      </div>
-      <p className="text-sm text-[var(--color-text-tertiary)]">
-        {formatVsFlat(totalEffortMultiplier(course))}
       </p>
     </div>
   );

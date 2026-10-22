@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getCourseCatalog } from "@/db/queries";
+import { getCourseCatalog, getCourseProfilePaths } from "@/db/queries";
 import { CourseRankingTable } from "@/components/CourseRankingTable";
 
 export const metadata: Metadata = {
@@ -15,9 +15,14 @@ export const metadata: Metadata = {
 //
 // Server component: the whole table is derived from the catalog the picker
 // already loads, so nothing here is fetched twice and no geometry ships. The
-// only client island is the table itself, which owns the sort state.
+// one addition is the Terrain column's elevation thumbnail, which arrives as a
+// finished SVG path per course (ROADMAP #15) rather than as numbers. The only
+// client island is the table itself, which owns the sort state.
 export default async function CoursesPage() {
-  const catalog = await getCourseCatalog();
+  const [catalog, profilePaths] = await Promise.all([
+    getCourseCatalog(),
+    getCourseProfilePaths(),
+  ]);
 
   return (
     <main className="w-full flex-1">
@@ -41,7 +46,7 @@ export default async function CoursesPage() {
             </p>
           </div>
         ) : (
-          <CourseRankingTable catalog={catalog} />
+          <CourseRankingTable catalog={catalog} profilePaths={profilePaths} />
         )}
       </section>
     </main>

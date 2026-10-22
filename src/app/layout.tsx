@@ -8,6 +8,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { ADSENSE_CLIENT } from "@/lib/ads";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import { getCourseCatalog } from "@/db/queries";
+import { themeInitScript } from "@/lib/theme";
 
 // Montserrat drives the whole site (body + headings).
 const montserrat = Montserrat({
@@ -67,10 +68,20 @@ export default async function RootLayout({
   const catalog = await getCourseCatalog();
 
   return (
+    // suppressHydrationWarning is for the theme script below and nothing else:
+    // it adds `data-theme` to this element before React hydrates, so the
+    // attribute the server rendered differs from the one the client finds. The
+    // flag applies to this element's own attributes only, not to its children.
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${montserrat.variable} ${fraunces.variable} h-full antialiased`}
     >
+      <head>
+        {/* Blocking on purpose: it has to run before first paint, or a reader
+            who chose dark sees a white frame on every load. See themeInitScript. */}
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript() }} />
+      </head>
       <body className="min-h-full flex flex-col">
         <SiteNav catalog={catalog} />
         {children}

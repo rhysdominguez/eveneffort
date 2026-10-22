@@ -10,9 +10,11 @@
 "use client";
 
 export type AppEvent =
+  | "copy_link_clicked"
   | "print_modal_opened"
   | "order_modal_opened"
-  | "order_clicked";
+  | "order_clicked"
+  | "course_map_opened";
 
 /** Fire-and-forget: never blocks, never throws, never breaks the UI. */
 export function track(event: AppEvent): void {

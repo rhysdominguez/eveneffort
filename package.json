@@ -20,12 +20,17 @@
     "db:seed": "node --env-file-if-exists=.env.local scripts/seed.ts",
     "import:fetch": "node scripts/import/fetch.ts",
     "import:adopt": "node scripts/import/adopt.ts",
+    "import:roster": "node scripts/import/roster.ts",
+    "import:backlog": "node scripts/import/backlog.ts",
+    "import:trace": "node scripts/import/trace.ts",
     "import:elevate": "node scripts/import/elevate.ts",
     "import:calibrate-dem": "node scripts/import/calibrate-dem.ts",
     "import:parse": "python3 scripts/gpx_parser/parse_gpx.py",
+    "build:outlines": "node scripts/build-outlines.ts",
     "import:qa": "node scripts/import/qa.ts",
     "import:promote": "node scripts/import/promote.ts",
-    "import:reconcile": "node scripts/import/reconcile-csv.ts"
+    "import:reconcile": "node scripts/import/reconcile-csv.ts",
+    "import:findmymarathon": "node scripts/import/findmymarathon.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

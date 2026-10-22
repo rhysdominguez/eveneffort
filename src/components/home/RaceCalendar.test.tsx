@@ -342,4 +342,132 @@ describe("RaceCalendar", () => {
       expect(heights).toEqual(new Set(["h-36"]));
     });
   });
+  // ROADMAP #19 — the green edge marking races whose day is close enough for a
+  // real forecast. FIXTURE_TODAY is 2026-08-04 and FORECAST_HORIZON_DAYS is 5,
+  // so the window is 2026-08-04 .. 2026-08-09 inclusive.
+  describe("forecast-available highlight", () => {
+    const base = {
+      seriesSlug: "synthetic",
+      courseId: "synthetic",
+      city: "Nowhere",
+      countryCode: "US",
+      countryName: "United States",
+      regionCode: "US-CA",
+      regionName: "California",
+      startTimeLocal: "08:00",
+    };
+    const edition = (
+      slug: string,
+      raceDateISO: string,
+      dateConfidence: "confirmed" | "estimated" = "confirmed",
+    ) => ({
+      ...base,
+      editionSlug: slug,
+      displayName: `Race ${slug}`,
+      raceDateISO,
+      dateConfidence,
+    });
+
+    const MARK = "bg-[var(--color-green-fill)]";
+    const chipFor = (container: HTMLElement, name: string) =>
+      Array.from(container.querySelectorAll<HTMLAnchorElement>("a")).find((a) =>
+        a.textContent?.includes(name),
+      )!;
+
+    it("marks a race inside the horizon and leaves one outside unmarked", () => {
+      const { container } = renderCalendar([
+        edition("near", "2026-08-06"),
+        edition("far", "2026-08-20"),
+      ]);
+      expect(chipFor(container, "Race near").className).toContain(MARK);
+      expect(chipFor(container, "Race far").className).not.toContain(MARK);
+    });
+
+    // The boundary is a decision, not an accident: day 5 is in, day 6 is out.
+    it("decides the boundary day explicitly", () => {
+      const { container } = renderCalendar([
+        edition("last", "2026-08-09"),
+        edition("past-edge", "2026-08-10"),
+      ]);
+      expect(chipFor(container, "Race last").className).toContain(MARK);
+      expect(chipFor(container, "Race past-edge").className).not.toContain(MARK);
+    });
+
+    // `estimated` is the seed's default, so excluding it left the mark on
+    // almost nothing. A future date gets a real forecast whatever its
+    // confidence, and the chip still carries its own "est." qualifier.
+    it("marks a future race whose date is only estimated", () => {
+      const { container } = renderCalendar([
+        edition("guessed", "2026-08-06", "estimated"),
+      ]);
+      const chip = chipFor(container, "Race guessed");
+      expect(chip.className).toContain(MARK);
+      expect(chip.textContent).toContain("est.");
+    });
+
+    it("does not mark a race that has already been run", () => {
+      const { container } = renderCalendar([edition("done", "2026-08-01")]);
+      expect(chipFor(container, "Race done").className).not.toContain(MARK);
+    });
+
+    // Colour cannot carry the meaning on its own, in either layout.
+    // The tint is the whole treatment. A green OUTLINE was tried and made the
+    // chip read as selected rather than annotated, so the marked chip keeps the
+    // same neutral border every other chip has and the race name stays neutral
+    // too — the name is the content, the colour is the annotation.
+    it("tints the chip without restyling its border or its text", () => {
+      const { container } = renderCalendar([edition("near", "2026-08-06")]);
+      const chip = chipFor(container, "Race near");
+      expect(chip.className).toContain("bg-[var(--color-green-fill)]");
+      expect(chip.className).toContain("border-[var(--color-border)]");
+      expect(chip.className).toContain("text-[var(--color-text-primary)]");
+      expect(chip.className).not.toContain("green-primary");
+    });
+
+    it("names the meaning in the accessible name and the tooltip", () => {
+      const { container } = renderCalendar([edition("near", "2026-08-06")]);
+      const chip = chipFor(container, "Race near");
+      expect(chip.getAttribute("aria-label")).toContain(
+        "Race-day forecast available",
+      );
+      expect(chip.getAttribute("title")).toContain(
+        "Race-day forecast available",
+      );
+    });
+
+    it("shows the legend only when something on screen carries the mark", () => {
+      const withMark = renderCalendar([edition("near", "2026-08-06")]);
+      expect(withMark.container.textContent).toContain(
+        "Race-day forecast available",
+      );
+      withMark.unmount();
+      clearStoredState();
+      const without = renderCalendar([edition("far", "2026-08-20")]);
+      expect(without.container.textContent).not.toContain(
+        "Race-day forecast available",
+      );
+    });
+
+    // The grid renders hundreds of editions; one fetch per race would be a
+    // fan-out the homepage cannot afford. The flag is arithmetic on the date.
+    it("issues no weather request while rendering", () => {
+      const fetchSpy = vi.spyOn(globalThis, "fetch");
+      renderCalendar([edition("near", "2026-08-06")]);
+      expect(fetchSpy).not.toHaveBeenCalled();
+      fetchSpy.mockRestore();
+    });
+
+    // Both layouts ship the state: the desktop grid is a <td> chip, the sub-sm
+    // agenda is a list row, and a marker in only one of them is half a feature.
+    it("marks the race in the mobile agenda list as well as the grid", () => {
+      const { container } = renderCalendar([edition("near", "2026-08-06")]);
+      const marked = Array.from(
+        container.querySelectorAll<HTMLAnchorElement>("a"),
+      ).filter((a) => a.className.includes(MARK));
+      expect(marked).toHaveLength(2);
+      expect(container.querySelector("ul.sm\\:hidden a")!.className).toContain(
+        MARK,
+      );
+    });
+  });
 });

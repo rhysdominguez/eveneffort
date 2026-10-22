@@ -14,6 +14,12 @@
 //   setting, not a per-field detail. Only slightly larger than "compact": the
 //   fill and the red already carry the emphasis, so the earlier text-sm/px-3
 //   sizing just made it bulky next to the field it labels.
+// - "tab": "prominent" colouring at "compact" size, for a control that chooses
+//   which of several series a chart is drawing (RaceSplitsChart's factor tabs).
+//   The red is right because the selection IS the panel's subject rather than
+//   one field's unit, which is the case DESIGN.md hands `--color-red-fill` as
+//   "the active toggle segment"; the smaller size is right because the control
+//   sits on a heading row next to an h2 and the prominent padding crowds it.
 //
 // Both variants use the same neutral `--color-border` hairline. A red border
 // around the whole control read as a persistent alert/error outline rather
@@ -33,8 +39,15 @@ interface Props<T extends string> {
    * unavailable rather than silently missing.
    */
   disabledValues?: readonly T[];
-  variant?: "compact" | "prominent";
+  variant?: "compact" | "prominent" | "tab";
 }
+
+/** Padding and type size. "tab" borrows "compact"'s, by definition. */
+const SIZE: Record<NonNullable<Props<string>["variant"]>, string> = {
+  compact: "px-2 py-0.5 text-xs",
+  prominent: "px-2.5 py-1 text-xs",
+  tab: "px-2 py-0.5 text-xs",
+};
 
 export function UnitToggle<T extends string>({
   label,
@@ -45,7 +58,9 @@ export function UnitToggle<T extends string>({
   disabledValues,
   variant = "compact",
 }: Props<T>) {
-  const prominent = variant === "prominent";
+  // Both red variants paint every segment, active or not, so the control reads
+  // as one object rather than as a lit segment floating on the page.
+  const red = variant === "prominent" || variant === "tab";
   return (
     <div
       role="group"
@@ -65,19 +80,15 @@ export function UnitToggle<T extends string>({
             disabled={optionDisabled}
             aria-pressed={active}
             onClick={() => onChange(optionValue)}
-            className={
-              prominent
-                ? `px-2.5 py-1 text-xs font-medium transition-colors disabled:opacity-40 ${
-                    active
-                      ? "bg-[var(--color-red-primary)] text-white"
-                      : "bg-[var(--color-bg-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-elevated)]"
-                  }`
-                : `px-2 py-0.5 text-xs font-medium transition-colors disabled:opacity-40 ${
-                    active
-                      ? "bg-[var(--color-bg-elevated)] text-[var(--color-text-primary)]"
-                      : "text-[var(--color-text-tertiary)] hover:text-[var(--color-text-secondary)]"
-                  }`
-            }
+            className={`${SIZE[variant]} font-medium transition-colors disabled:opacity-40 ${
+              red
+                ? active
+                  ? "bg-[var(--color-red-fill)] text-white"
+                  : "bg-[var(--color-bg-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-elevated)]"
+                : active
+                  ? "bg-[var(--color-bg-elevated)] text-[var(--color-text-primary)]"
+                  : "text-[var(--color-text-tertiary)] hover:text-[var(--color-text-secondary)]"
+            }`}
           >
             {optionLabel}
           </button>

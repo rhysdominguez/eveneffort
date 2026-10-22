@@ -10,7 +10,14 @@
 //   1. cp .env.example .env.local  and paste your key, or
 //   2. TOMORROW_IO_API_KEY=xxx npm run test -- forecast.live
 //
-// It costs a handful of API calls against the free tier's daily quota.
+// It costs a handful of API calls against the free tier's daily quota — which
+// is 25 requests an hour, and a run of this file plus a few page refreshes in
+// the dev server will spend it. When that happens Tomorrow.io answers 429, and
+// a 429 is NOT evidence that the contract this file guards has changed: it is
+// evidence that the contract could not be checked right now. So every test
+// here skips on 429 rather than failing. Letting a quota turn `npm run test`
+// red would teach everyone to ignore a red suite, which is the one thing a
+// test suite cannot afford.
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, it, expect } from "vitest";
@@ -35,13 +42,30 @@ function readKey(): string | undefined {
 
 const apiKey = readKey();
 
+/**
+ * One shared fetch of the live forecast. Three tests each pulled the same
+ * payload, so a single run spent three of the twenty-five hourly calls to ask
+ * the identical question. Memoised, it spends one.
+ */
+let cached: Promise<Response> | null = null;
+function fetchForecast(lat: number, lon: number): Promise<Response> {
+  cached ??= fetch(buildForecastUrl(lat, lon, apiKey!), {
+    headers: { accept: "application/json" },
+  });
+  return cached.then((r) => r.clone());
+}
+
+/** True when the quota is spent — the caller should skip, not fail. */
+function rateLimited(res: Response): boolean {
+  return res.status === 429;
+}
+
 describe.skipIf(!apiKey)("Tomorrow.io — live forecast retrieval", () => {
   const berlin = fixtureCourse("berlin");
 
-  it("returns an hourly timeline with the fields we map", async () => {
-    const res = await fetch(buildForecastUrl(berlin.start.lat, berlin.start.lon, apiKey!), {
-      headers: { accept: "application/json" },
-    });
+  it("returns an hourly timeline with the fields we map", async (ctx) => {
+    const res = await fetchForecast(berlin.start.lat, berlin.start.lon);
+    if (rateLimited(res)) ctx.skip();
     expect(res.ok, `HTTP ${res.status}: ${await res.clone().text()}`).toBe(true);
 
     const data = await res.json();
@@ -65,10 +89,9 @@ describe.skipIf(!apiKey)("Tomorrow.io — live forecast retrieval", () => {
     expect(v.windSpeed).toBeLessThan(40);
   });
 
-  it("selects a usable window for a start time inside the horizon", async () => {
-    const res = await fetch(buildForecastUrl(berlin.start.lat, berlin.start.lon, apiKey!), {
-      headers: { accept: "application/json" },
-    });
+  it("selects a usable window for a start time inside the horizon", async (ctx) => {
+    const res = await fetchForecast(berlin.start.lat, berlin.start.lon);
+    if (rateLimited(res)) ctx.skip();
     const data = await res.json();
 
     // Tomorrow.io's hourly timeline reaches only ~5 days out, so target a race
@@ -89,10 +112,9 @@ describe.skipIf(!apiKey)("Tomorrow.io — live forecast retrieval", () => {
     }
   });
 
-  it("rejects a race date beyond the forecast horizon instead of guessing", async () => {
-    const res = await fetch(buildForecastUrl(berlin.start.lat, berlin.start.lon, apiKey!), {
-      headers: { accept: "application/json" },
-    });
+  it("rejects a race date beyond the forecast horizon instead of guessing", async (ctx) => {
+    const res = await fetchForecast(berlin.start.lat, berlin.start.lon);
+    if (rateLimited(res)) ctx.skip();
     const data = await res.json();
 
     const farOut = new Date(Date.now() + 120 * 86_400_000)

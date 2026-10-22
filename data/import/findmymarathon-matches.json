@@ -1,0 +1,10 @@
+{
+  "_comment": "Hand rulings for scripts/import/reconcile-csv.ts, keyed \"<Marathon Name>|<State/Country>\" exactly as findmymarathon-tracker.csv spells them. A course slug asserts the race is ours; null asserts it is NOT the seeded race it resembles. Add an entry only after checking: a wrong yes hides a race we lack. Each entry below was confirmed on 2026-09-25 by findmymarathon's finish line sitting within 0.2 km of our course.",
+  "matches": {
+    "Belfast City Marathon|IE": "belfast-marathon",
+    "Coeur d Alene Marathon|ID": "coeur-d-alene-marathon",
+    "Bryan-College Station Marathon|TX": "bcs-marathon",
+    "OC Marathon|CA": "orange-county-marathon",
+    "Jack and Jills Downhill Marathon (Saturday)|WA": "jack-and-jills-downhill-marathon"
+  }
+}

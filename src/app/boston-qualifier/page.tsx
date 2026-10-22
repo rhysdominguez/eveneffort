@@ -20,30 +20,26 @@ export default async function BostonQualifierPage() {
   return (
     <main className="w-full flex-1">
       <section className="mx-auto w-full max-w-7xl space-y-8 px-6 py-16">
-        <header className="max-w-2xl space-y-4">
+        <header className="space-y-4">
           <p className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-tertiary)]">
             Boston qualifier
           </p>
           <h1 className="font-display text-3xl tracking-tight text-[var(--color-text-primary)] sm:text-4xl">
-            What you actually need to run for Boston
+            {BQ_YEAR} Boston Marathon qualifying standards
           </h1>
           <p className="text-lg text-[var(--color-text-secondary)]">
-            Your {BQ_YEAR} qualifying standard by age and division, whether a
-            goal time clears it, and, the part most calculators leave out,
-            whether it would have been enough to actually get in.
-          </p>
-          <p className="text-sm text-[var(--color-text-tertiary)]">
-            Standards are published by the B.A.A.; the cut-offs are what
-            acceptance historically required on top of them. If the race you are
-            qualifying at drops steeply, the new net-downhill rule adds time to
-            your result, so pick the course to see it.{" "}
+            Enter your age, division, and goal time to see whether it clears
+            your standard, and whether it would have been enough to actually
+            get in. Standards come from the B.A.A.; the cut-offs are what
+            acceptance has historically required on top of them, and the
+            net-downhill rule adds time back on courses that drop steeply, so{" "}
             <Link
               href="/courses"
               className="underline transition-colors hover:text-[var(--color-text-secondary)]"
             >
-              Compare course profiles
-            </Link>
-            .
+              compare course profiles
+            </Link>{" "}
+            to check yours.
           </p>
         </header>
 

@@ -2,7 +2,6 @@ import type { TerrainLabel, CourseTerrain, CourseAltitude } from "@/types";
 import { terrainLabel, TERRAIN_LABELS } from "@/lib/pacing/terrain";
 import { metresToFeet } from "@/lib/units/elevation";
 import { formatFeet, formatSignedFeet } from "@/lib/chart/geometry";
-import { formatAltitudePenalty } from "@/lib/units/effort";
 
 // How hilly a course is, and whether it finishes below where it started — two
 // pills, because they are two independent facts and one chip would have to pick
@@ -30,14 +29,16 @@ import { formatAltitudePenalty } from "@/lib/units/effort";
 // earlier "847 ft up" total-gain figure that read as a contradiction on loop
 // courses, and a green-when-downhill treatment.)
 //
-// PILL THREE — ALTITUDE, and it is ABSENT far more often than it is present.
-// It appears only when a course runs high enough for thin air to cost a
-// measurable amount (ROADMAP #7), which is a small minority of the catalog, and
-// it says the penalty and the height that causes it in one breath: a runner who
-// sees "4.1% slower" wants to know immediately whether that is a mountain race
-// or a surprise. Neutral grey like pill two, for the same reason: the profile
-// pill owns the only colour in this row, and a second coloured pill would make
-// a reader work out which one to read first.
+// PILL THREE — ALTITUDE, which is a plain statement of where the course sits:
+// its mean height above sea level, nothing more. It shipped with the thin-air
+// penalty spelled out beside it ("6562 ft up, 7.0% slower") and that half was
+// dropped on 2026-09-17: the cost is already carried by the "vs flat" figure
+// everywhere it appears, so the pill was quoting a percentage the reader had no
+// way to place, and it went silent on the ~300 low courses where "40 ft" is a
+// perfectly useful thing to know. It now shows for every course whose altitude
+// is supplied, penalty or not. Neutral grey like pill two, for the same reason:
+// the profile pill owns the only colour in this row, and a second coloured pill
+// would make a reader work out which one to read first.
 const pillBase =
   "inline-flex items-center gap-1.5 rounded-full border border-[var(--color-border)] px-2.5 py-1 text-xs font-medium";
 
@@ -72,9 +73,9 @@ const ICON_PATHS: Record<TerrainLabel, string> = {
 interface Props {
   terrain: CourseTerrain;
   /**
-   * The course's thin-air cost. Optional because two of this component's
-   * callers render from a printed paceband's own data, which holds terrain and
-   * no altitude; a low course supplies it and still shows no pill.
+   * Where the course sits above sea level. Optional because two of this
+   * component's callers render from a printed paceband's own data, which holds
+   * terrain and no altitude; when it is supplied the pill always renders.
    */
   altitude?: CourseAltitude;
   /**
@@ -91,7 +92,6 @@ export function DifficultyBadge({
   compact = false,
 }: Props) {
   const label = terrainLabel(terrain);
-  const altitudePenalty = altitude ? formatAltitudePenalty(altitude) : null;
 
   return (
     <span className="inline-flex flex-wrap items-center gap-2">
@@ -117,12 +117,10 @@ export function DifficultyBadge({
           {formatSignedFeet(metresToFeet(terrain.netM))} net
         </span>
       )}
-      {!compact && altitudePenalty && altitude && (
+      {!compact && altitude && (
         <span
           className={`${pillBase} font-tabular text-[var(--color-text-secondary)]`}
-          title={`Mean elevation ${formatFeet(
-            metresToFeet(altitude.meanM),
-          )}, high point ${formatFeet(metresToFeet(altitude.maxM))}`}
+          title={`High point ${formatFeet(metresToFeet(altitude.maxM))}`}
         >
           <svg
             viewBox="0 0 20 20"
@@ -138,7 +136,7 @@ export function DifficultyBadge({
                 which is the one thing the profile glyphs above never say. */}
             <path d="M2 17h16M4 13l4-7 3 4 2-2 3 5" />
           </svg>
-          {formatFeet(metresToFeet(altitude.meanM))} up, {altitudePenalty}
+          {formatFeet(metresToFeet(altitude.meanM))} avg. elevation
         </span>
       )}
     </span>

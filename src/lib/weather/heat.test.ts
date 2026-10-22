@@ -1,8 +1,11 @@
 import { describe, it, expect } from "vitest";
 import {
   calculateHeatAdjustment,
+  dryHeatAdjustment,
+  humidityAdjustment,
   heatIndexC,
   slowdownFromHeatIndex,
+  DRY_REFERENCE_RH,
 } from "./heat";
 
 describe("slowdownFromHeatIndex — empirical anchors", () => {
@@ -68,5 +71,77 @@ describe("calculateHeatAdjustment", () => {
     expect(calculateHeatAdjustment(30, 90)).toBeGreaterThan(
       calculateHeatAdjustment(30, 40),
     );
+  });
+});
+
+// The Heat / Humidity split the impact panel shows. It is a way of reading
+// `calculateHeatAdjustment`, so every test here is really about that identity
+// holding rather than about a second model being right.
+describe("dry-reference heat / humidity split", () => {
+  const TEMPS = [5, 12, 13, 14, 16, 20, 25, 28, 32, 36, 40];
+  const HUMIDITIES = [0, 10, 30, 50, 70, 90, 100];
+
+  it("multiplies back to the combined multiplier, everywhere", () => {
+    for (const t of TEMPS) {
+      for (const rh of HUMIDITIES) {
+        expect(dryHeatAdjustment(t) * humidityAdjustment(t, rh)).toBeCloseTo(
+          calculateHeatAdjustment(t, rh),
+          12,
+        );
+      }
+    }
+  });
+
+  it("never attributes a saving to humidity", () => {
+    // A negative humidity line would read as "the humidity is helping", which
+    // is the failure mode a badly chosen reference produces.
+    for (const t of TEMPS) {
+      for (const rh of HUMIDITIES) {
+        expect(humidityAdjustment(t, rh)).toBeGreaterThanOrEqual(1);
+      }
+    }
+  });
+
+  it("is exactly 1 at the reference humidity", () => {
+    for (const t of TEMPS) {
+      expect(humidityAdjustment(t, DRY_REFERENCE_RH)).toBe(1);
+      expect(dryHeatAdjustment(t)).toBe(
+        calculateHeatAdjustment(t, DRY_REFERENCE_RH),
+      );
+    }
+  });
+
+  it("rises with humidity at a fixed temperature", () => {
+    for (const t of [20, 25, 28, 32]) {
+      for (let i = 1; i < HUMIDITIES.length; i++) {
+        expect(humidityAdjustment(t, HUMIDITIES[i])).toBeGreaterThan(
+          humidityAdjustment(t, HUMIDITIES[i - 1]),
+        );
+      }
+    }
+  });
+
+  it("does nothing at all below the 13 C threshold", () => {
+    for (const t of [5, 12, 13]) {
+      for (const rh of HUMIDITIES) {
+        expect(dryHeatAdjustment(t)).toBe(1);
+        expect(humidityAdjustment(t, rh)).toBe(1);
+      }
+    }
+  });
+
+  it("stays small in cool air and grows large in a hot swamp", () => {
+    // The two ends the reference was chosen against.
+    expect((humidityAdjustment(20, 10) - 1) * 100).toBeLessThan(0.5);
+    expect((humidityAdjustment(32, 95) - 1) * 100).toBeGreaterThan(10);
+  });
+
+  it("returns finite numbers across the whole grid", () => {
+    for (const t of TEMPS) {
+      for (const rh of HUMIDITIES) {
+        expect(Number.isFinite(dryHeatAdjustment(t))).toBe(true);
+        expect(Number.isFinite(humidityAdjustment(t, rh))).toBe(true);
+      }
+    }
   });
 });

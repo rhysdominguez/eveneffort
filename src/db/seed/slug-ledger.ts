@@ -378,6 +378,25 @@ export const PUBLISHED_COURSE_SLUGS: string[] = [
   "montana-marathon",
   "old-forge-marathon",
   "staunton-rocks-marathon",
+  // Batch 2026-09-25, imported from 5 sources (see data/import/decisions.json) on 2026-09-25.
+  "charleroi-marathon",
+  "geneva-marathon",
+  "great-limerick-run",
+  "hanoi-marathon",
+  "havana-marathon",
+  "jungfrau-marathon",
+  "kaunas-marathon",
+  "kobe-marathon",
+  "ljubljana-marathon",
+  "lucerne-marathon",
+  "nicosia-marathon",
+  "patagonian-international-marathon",
+  "polar-circle-marathon",
+  "reggae-marathon",
+  "riga-marathon",
+  "singapore-marathon",
+  "sofia-marathon",
+  "warsaw-marathon",
 ];
 
 /** The shape every course slug must take: lowercase, digits, single hyphens. */

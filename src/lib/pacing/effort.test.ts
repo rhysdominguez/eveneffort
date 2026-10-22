@@ -3,12 +3,17 @@ import {
   avgPaceFromGoalTime,
   courseEffort,
   effortMultiplier,
+  equalEffortPace,
   equivalentGoalTime,
   gapPaceFromGoalTime,
   goalTimeFromAvgPace,
   goalTimeFromGapPace,
   raceDistance,
+  type CourseCostBasis,
 } from "./effort";
+import { courseCost } from "./courseCost";
+import { courseAltitude } from "./altitude";
+import { totalEffortMultiplier } from "@/lib/units/effort";
 import { adjustmentFactor } from "./adjustment";
 import { buildSegments, MARATHON_KM, MARATHON_MILES } from "./segments";
 import { computeElevationDurations } from "./index";
@@ -199,35 +204,41 @@ describe("a GAP goal survives a shaped race", () => {
 
 });
 
-// ROADMAP #8. The /compare page's whole claim in one function.
+// ROADMAP #8, re-based on `cost` by ROADMAP #12.
 //
 // Pikes Peak and REVEL Mt Charleston come through `loadGeometry` rather than
 // `fixtureCourse`: FIXTURE_COURSES is pinned to seven for the reasons its
 // header gives, and widening it would break the literal counts other suites
-// assert. These two are the catalog's actual extremes (1.071 and 0.936), which
-// is what makes the direction assertions below worth anything.
+// assert. These two are the catalog's actual extremes, which is what makes the
+// direction assertions below worth anything.
+//
+// `basis` builds the {cost, altitude} pair every conversion now takes. Both
+// halves come off the same 44 points, so a test course is still one array.
+const basis = (elevations: number[]): CourseCostBasis => ({
+  cost: courseCost(elevations),
+  altitude: courseAltitude(elevations),
+});
+
 describe("equivalentGoalTime", () => {
-  const BOSTON = courseEffort(fixtureCourse("boston").elevations);
-  const PIKES = courseEffort(loadGeometry("pikes-peak-marathon").elevations);
-  const REVEL = courseEffort(
-    loadGeometry("revel-mt-charleston-marathon").elevations,
-  );
+  const BOSTON = basis(fixtureCourse("boston").elevations);
+  const PIKES = basis(loadGeometry("pikes-peak-marathon").elevations);
+  const REVEL = basis(loadGeometry("revel-mt-charleston-marathon").elevations);
   const T = 3 * 3600 + 20 * 60; // 3:20:00
 
   it("is the identity when both courses are the same", () => {
     expect(equivalentGoalTime(T, BOSTON, BOSTON)).toBeCloseTo(T, 9);
   });
 
-  it("round-trips A → B → A", () => {
+  it("round-trips A \u2192 B \u2192 A", () => {
     const there = equivalentGoalTime(T, BOSTON, PIKES);
     expect(equivalentGoalTime(there, PIKES, BOSTON)).toBeCloseTo(T, 9);
   });
 
-  it("is exactly the ratio of the two effort multipliers", () => {
+  it("is exactly the ratio of the two total-cost multipliers", () => {
     // Both multipliers divide by the same MARATHON_KM, so the constant
     // cancels — the page can quote either number without them disagreeing.
     expect(equivalentGoalTime(T, BOSTON, PIKES)).toBeCloseTo(
-      (T * effortMultiplier(PIKES)) / effortMultiplier(BOSTON),
+      (T * totalEffortMultiplier(PIKES)) / totalEffortMultiplier(BOSTON),
       9,
     );
   });
@@ -238,87 +249,90 @@ describe("equivalentGoalTime", () => {
   });
 
   it("is symmetric between a flat course and itself, whatever the shape", () => {
-    const FLAT = courseEffort(flat());
-    const ROLLING = courseEffort(rolling(30));
+    const FLAT = basis(flat());
+    const ROLLING = basis(rolling(30));
     expect(equivalentGoalTime(T, FLAT, FLAT)).toBeCloseTo(T, 9);
     // A rolling course costs more, so the same effort finishes later on it.
     expect(equivalentGoalTime(T, FLAT, ROLLING)).toBeGreaterThan(T);
     expect(equivalentGoalTime(T, ROLLING, FLAT)).toBeLessThan(T);
   });
 
+  it("charges a rolling course far more than the engine's curve would", () => {
+    // THE REGRESSION THIS MODULE EXISTS FOR. Under the damped, symmetric
+    // engine curve a rolling course with equal gain and loss came out at
+    // almost exactly its flat distance, which is what collapsed 292 of 326
+    // seeded courses into one "flat-equivalent" band. The cost curve has to
+    // separate them by a margin a runner would actually notice.
+    // Measured on this fixture: the engine's curve charges 17.8 s for 30 m of
+    // rolling over a 3:20 marathon, the cost curve charges 99.3 s. The bounds
+    // are loose around those, but the 5x gap between them is the finding.
+    const shape = rolling(30);
+    const viaEngine =
+      (T * effortMultiplier(courseEffort(shape))) /
+      effortMultiplier(courseEffort(flat()));
+    const viaCost = equivalentGoalTime(T, basis(flat()), basis(shape));
+    expect(viaEngine - T).toBeLessThan(30);
+    expect(viaCost - T).toBeGreaterThan(90);
+    expect(viaCost - T).toBeGreaterThan(4 * (viaEngine - T));
+  });
+
+  it("carries the altitude penalty, not just the grades", () => {
+    // Two identical profiles, one of them 2,000 m up. Geometry alone cannot
+    // tell them apart — the Minetti curve never sees absolute height — so if
+    // altitude were dropped from the conversion this would be the identity.
+    const seaLevel = basis(flat(10));
+    const high = basis(flat(2010));
+    expect(high.cost.km).toBeCloseTo(seaLevel.cost.km, 9);
+    expect(equivalentGoalTime(T, seaLevel, high)).toBeGreaterThan(T + 5 * 60);
+  });
+
   it("ignores the display unit — the answer is the km figure either way", () => {
     // The property the km/mi toggle on /compare depends on: it re-renders the
-    // pace line and nothing else. There is no unit parameter to pass, so this
-    // asserts the miles segmentation genuinely is NOT consulted.
-    const viaMiles = goalTimeFromGapPace(
-      gapPaceFromGoalTime(T, BOSTON, "miles"),
-      PIKES,
-      "miles",
-    );
+    // pace line and nothing else. There is no unit parameter to pass, so the
+    // mile segmentation genuinely is NOT consulted.
+    const viaMiles =
+      (T * PIKES.cost.miles * PIKES.altitude.multiplier) /
+      (BOSTON.cost.miles * BOSTON.altitude.multiplier);
     const shipped = equivalentGoalTime(T, BOSTON, PIKES);
-    // They are close but must not be assumed equal — Pikes is the course where
-    // the two segmentations disagree most (0.43%), which is minutes here.
+    // Close, but must not be assumed equal — Pikes is the course where the two
+    // segmentations disagree most, which is minutes here.
     expect(Math.abs(shipped - viaMiles)).toBeGreaterThan(1);
-    expect(shipped).toBeCloseTo(
-      goalTimeFromGapPace(gapPaceFromGoalTime(T, BOSTON, "km"), PIKES, "km"),
-      12,
-    );
   });
 });
 
 // The load-bearing one. Everything above is arithmetic about a ratio; this
-// asserts the ratio means what /compare will claim it means — that the two
-// finish times are genuinely run at the same effort, as the ENGINE computes
-// effort, not as this module asserts it.
-describe("an equivalent time is the same effort in the engine", () => {
+// asserts the ratio means what /compare claims it means — that both finish
+// times are run at one shared equal-effort pace, the invariant the page prints.
+describe("an equivalent time is one equal-effort pace", () => {
   const units: Unit[] = ["km", "miles"];
 
-  it.each(units)(
-    "both courses' charts share one flat-equivalent pace (%s)",
-    (unit) => {
-      // Both from the pinned seven, because this needs whole Course objects to
-      // feed the engine. Sydney climbs 190 m against Boston's 96, so the two
-      // genuinely disagree and the conversion has real work to do.
-      const from = fixtureCourse("boston");
-      const to = fixtureCourse("sydney");
-      const goalTimeSeconds = 3 * 3600 + 20 * 60;
-      const converted = equivalentGoalTime(
-        goalTimeSeconds,
-        courseEffort(from.elevations),
-        courseEffort(to.elevations),
-      );
+  it.each(units)("both finishes share one equal-effort pace (%s)", (unit) => {
+    const from = basis(fixtureCourse("boston").elevations);
+    const to = basis(fixtureCourse("sydney").elevations);
+    const goalTimeSeconds = 3 * 3600 + 20 * 60;
+    const converted = equivalentGoalTime(goalTimeSeconds, from, to);
 
-      // The race-average grade-adjusted pace of each chart, read back off the
-      // engine's own durations rather than off `effort`.
-      const gapOf = (input: PacingInput, course: typeof from) => {
-        const { segments, durations } = computeElevationDurations(input, course);
-        const total = durations.reduce((a, b) => a + b, 0);
-        const flatEquivalentKm = segments.reduce(
-          (t, seg) => t + seg.lengthKm * adjustmentFactor(seg.gradient),
-          0,
-        );
-        return total / flatEquivalentKm;
-      };
+    // Exact in BOTH units, unlike the old engine-based check: the pace is
+    // defined on km and unit-converted, never re-segmented, which is the whole
+    // reason `equalEffortPace` is a function rather than a division at the
+    // call site.
+    expect(equalEffortPace(converted, to, unit)).toBeCloseTo(
+      equalEffortPace(goalTimeSeconds, from, unit),
+      9,
+    );
+  });
 
-      const before = gapOf(
-        { goalTimeSeconds, courseId: from.id, unit },
-        from,
-      );
-      const after = gapOf(
-        { goalTimeSeconds: converted, courseId: to.id, unit },
-        to,
-      );
-
-      // In km both charts are segmented the way `equivalentGoalTime` measures,
-      // so they match to the engine's own precision. In miles the segmentation
-      // differs from the km basis the conversion is defined on, so they agree
-      // to within that known ~0.4% rather than exactly — which is precisely
-      // why the page quotes ONE canonical answer instead of two.
-      if (unit === "km") {
-        expect(after).toBeCloseTo(before, 6);
-      } else {
-        expect(Math.abs(after / before - 1)).toBeLessThan(0.005);
-      }
-    },
-  );
+  it("is NOT the engine's grade-adjusted pace, and must not be mistaken for it", () => {
+    // Sydney, because it separates the two curves most of the pinned seven:
+    // 190 m of climbing that the symmetric engine curve nearly cancels against
+    // the matching descent (effort 0.9973, so "slightly easier than flat") and
+    // the cost curve does not (cost 1.0075). Measured gap is 2.88 s/km at 3:20.
+    // If these ever converge, one model has been quietly pointed at the other
+    // and either the pace band or the conversion is wrong.
+    const course = fixtureCourse("sydney");
+    const T = 3 * 3600 + 20 * 60;
+    const engine = gapPaceFromGoalTime(T, courseEffort(course.elevations), "km");
+    const equalEffort = equalEffortPace(T, basis(course.elevations), "km");
+    expect(Math.abs(engine - equalEffort)).toBeGreaterThan(1);
+  });
 });

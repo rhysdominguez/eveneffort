@@ -1,6 +1,7 @@
 import type { Course, PacingInput } from "@/types";
 import type { PacingResult } from "@/hooks/usePacingChart";
 import { computePaceChart } from "@/lib/pacing";
+import { buildSegments } from "@/lib/pacing/segments";
 import bostonElev from "@/data/courses/boston.json";
 import bostonProfile from "@/data/courses/boston.profile.json";
 import bostonCoords from "@/data/courses/boston.coords.json";
@@ -33,6 +34,10 @@ export const DEMO_COURSE: Course = {
   countryName: "United States",
   regionCode: "US-MA",
   regionName: "Massachusetts",
+  // The home page never renders a course outline, and this figure is baked
+  // into the marketing bundle, so there is no reason to ship 1 KB of polyline
+  // with it. The dashboard reads the real one from the geometry endpoint.
+  outline: null,
   elevations: bostonElev,
   profile: bostonProfile as [number, number][],
   coords: bostonCoords as [number, number][],
@@ -64,6 +69,23 @@ function buildDemoResult(): PacingResult {
     input: DEMO_INPUT,
     adjustedFinishSeconds,
     weatherApplied: false,
+    // The demo is elevation-only, so every weather multiplier is a flat 1 and
+    // the durations are just the rows' own splits differenced.
+    segmentDurations: rows.map(
+      (row, i) =>
+        row.cumulativeSplitSeconds -
+        (i === 0 ? 0 : rows[i - 1].cumulativeSplitSeconds),
+    ),
+    // Same segmentation the rows came from, so the splits chart's even-pace
+    // baseline lines up with them.
+    segmentLengthsKm: buildSegments(DEMO_COURSE.elevations, DEMO_INPUT.unit).map(
+      (seg) => seg.lengthKm,
+    ),
+    heatMultipliers: rows.map(() => 1),
+    dryHeatMultipliers: rows.map(() => 1),
+    windMultipliers: rows.map(() => 1),
+    // Weather is off in the demo, so there is no hourly series.
+    hourlySeries: [],
   };
 }
 

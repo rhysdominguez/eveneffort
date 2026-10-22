@@ -180,7 +180,7 @@ export function CourseUpload() {
       <button
         type="submit"
         disabled={!file || busy}
-        className="w-full rounded-lg bg-[var(--color-red-primary)] py-4 text-base font-semibold text-white transition-colors hover:bg-[var(--color-red-deep)] disabled:bg-[var(--color-border)] disabled:text-[var(--color-text-tertiary)]"
+        className="w-full rounded-lg bg-[var(--color-red-fill)] py-4 text-base font-semibold text-white transition-colors hover:bg-[var(--color-red-fill-hover)] disabled:bg-[var(--color-border)] disabled:text-[var(--color-text-tertiary)]"
       >
         {busy ? "Reading your course…" : "Build my pacing chart"}
       </button>

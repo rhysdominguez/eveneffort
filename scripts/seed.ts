@@ -19,7 +19,7 @@
 //   --dry-run           report what would change; touch nothing
 //   --skip-geometry     upsert cities/series/editions but no course jsonb
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { sql } from "drizzle-orm";
 import { getDb } from "../src/db/client.ts";
@@ -62,6 +62,18 @@ function readCourseJson<T>(slug: string, suffix: string): T {
   return JSON.parse(
     readFileSync(join(COURSE_DIR, `${slug}${suffix}.json`), "utf8"),
   ) as T;
+}
+
+/**
+ * The outline (ROADMAP #21) is the one geometry file allowed to be missing:
+ * scripts/build-outlines.ts writes it, not the Python parser, so a course can
+ * be seeded before it has one. Missing means the column stays null and the UI
+ * draws nothing, which is strictly better than refusing to seed the course.
+ */
+function readOutlineJson(slug: string): [number, number][] | null {
+  const path = join(COURSE_DIR, `${slug}.outline.json`);
+  if (!existsSync(path)) return null;
+  return JSON.parse(readFileSync(path, "utf8")) as [number, number][];
 }
 
 function checksum(...parts: unknown[]): string {
@@ -141,6 +153,7 @@ async function main() {
     elevations: number[];
     coords: [number, number][];
     profile: [number, number][];
+    outline: [number, number][] | null;
     checksum: string;
   }[] = [];
 
@@ -150,10 +163,12 @@ async function main() {
       let elevations: number[];
       let coords: [number, number][];
       let profile: [number, number][];
+      let outline: [number, number][] | null;
       try {
         elevations = readCourseJson<number[]>(slug, "");
         coords = readCourseJson<[number, number][]>(slug, ".coords");
         profile = readCourseJson<[number, number][]>(slug, ".profile");
+        outline = readOutlineJson(slug);
       } catch (err) {
         // Missing geometry used to be an unhandled ENOENT that killed the run.
         failures.push({
@@ -163,7 +178,9 @@ async function main() {
         });
         continue;
       }
-      const sum = checksum(elevations, coords, profile);
+      // The outline is IN the checksum: without it, regenerating an outline
+      // for an already-seeded course would be silently skipped as unchanged.
+      const sum = checksum(elevations, coords, profile, outline);
       const existing = existingBySlug.get(slug);
       if (existing && existing.checksum === sum) {
         courseIdBySlug.set(slug, existing.id); // unchanged — skip the jsonb write
@@ -175,6 +192,7 @@ async function main() {
         elevations,
         coords,
         profile,
+        outline,
         checksum: sum,
       });
     }
@@ -297,6 +315,7 @@ async function main() {
       elevations: g.elevations,
       coords: g.coords,
       profile: g.profile,
+      outline: g.outline,
       startLat: String(g.coords[0][0]),
       startLon: String(g.coords[0][1]),
       gpxSourcePath: `data/gpx_sources/${g.slug}.gpx`,
@@ -318,6 +337,7 @@ async function main() {
             elevations: sql`excluded.elevations`,
             coords: sql`excluded.coords`,
             profile: sql`excluded.profile`,
+            outline: sql`excluded.outline`,
             startLat: sql`excluded.start_lat`,
             startLon: sql`excluded.start_lon`,
             checksum: sql`excluded.checksum`,

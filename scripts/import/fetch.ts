@@ -36,6 +36,7 @@ import {
   flagValue,
   getResponse,
   getText,
+  repairMojibake,
   proposeCourseSlug,
   slugify,
   sleep,
@@ -195,12 +196,17 @@ async function scrapeEvent(
   const ld = extractJsonLd(html);
   if (ld) {
     const address = ld.location?.address ?? {};
-    base.name = ld.name ?? courseSlug;
+    // goandrace's own pages are double-encoded: they declare and serve UTF-8
+    // while containing the bytes for "ZÃ¼rich" where "Zürich" belongs. Repair
+    // on the way in, before any of these become a city slug, a display name or
+    // the locality findNameMatch weighs against the seeded citySlug.
+    const fix = (v: string | null | undefined) => (v ? repairMojibake(v) : null);
+    base.name = fix(ld.name) ?? courseSlug;
     base.startDate = ld.startDate ?? null;
-    base.locality = address.addressLocality || null;
-    base.region = address.addressRegion || null;
+    base.locality = fix(address.addressLocality);
+    base.region = fix(address.addressRegion);
     base.countryCode = address.addressCountry || null;
-    base.organizer = ld.organizer?.name || null;
+    base.organizer = fix(ld.organizer?.name);
     base.websiteUrl = ld.organizer?.url || null;
 
     if (ld.name) {
@@ -210,7 +216,7 @@ async function scrapeEvent(
       // Marathon 2026" vs. our seeded "Cincinnati Flying Pig Marathon"). This
       // runs before the slug clash check below and before the map/GPX fetch,
       // so a match skips two more requests as well as the download.
-      const seeded = findNameMatch(ld.name, base.locality, SERIES_SEED);
+      const seeded = findNameMatch(base.name, base.locality, SERIES_SEED);
       if (seeded) {
         base.error =
           `looks like the already-seeded "${seeded.name}" ` +

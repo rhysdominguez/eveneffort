@@ -2067,6 +2067,116 @@ export const RECURRENCE: Record<string, RecurrenceRule> = {
     nth: 4,
     note: "Derived from the 2026-08-22 edition; not verified against the organizer",
   },
+  // Imported from 5 sources (see data/import/decisions.json) — batch 2026-09-25. Each rule is derived
+  // from one observed date, not from the organizer's own statement.
+  "charleroi-marathon": {
+    month: 4,
+    weekday: 0,
+    nth: 4,
+    note: "Derived from the confirmed 2027-04-25 edition, read off the organizer's own site 2026-09-25",
+  },
+  "geneva-marathon": {
+    month: 5,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2027-05-09 edition; not verified against the organizer",
+  },
+  "great-limerick-run": {
+    month: 5,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the confirmed 2027-05-02 edition, read off the organizer's own site 2026-09-25",
+  },
+  "hanoi-marathon": {
+    month: 11,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the confirmed 2026-11-08 edition, read off the organizer's own site 2026-09-25",
+  },
+  "havana-marathon": {
+    month: 11,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the confirmed 2026-11-15 edition, read off the organizer's own site 2026-09-25",
+  },
+  "jungfrau-marathon": {
+    month: 9,
+    weekday: 6,
+    nth: 2,
+    note: "Derived from the confirmed 2027-09-11 edition, read off the organizer's own site 2026-09-25",
+  },
+  "kaunas-marathon": {
+    month: 4,
+    weekday: 0,
+    nth: 4,
+    note: "Derived from the confirmed 2027-04-25 edition, read off the organizer's own site 2026-09-25",
+  },
+  "kobe-marathon": {
+    month: 11,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the confirmed 2026-11-15 edition, read off the organizer's own site 2026-09-25",
+  },
+  "ljubljana-marathon": {
+    month: 10,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the 2026-10-18 edition; not verified against the organizer",
+  },
+  "lucerne-marathon": {
+    month: 10,
+    weekday: 0,
+    nth: 4,
+    note: "Derived from the confirmed 2026-10-25 edition, read off the organizer's own site 2026-09-25",
+  },
+  "nicosia-marathon": {
+    month: 1,
+    weekday: 0,
+    nth: 4,
+    note: "Derived from the confirmed 2027-01-24 edition, read off the organizer's own site 2026-09-25",
+  },
+  "patagonian-international-marathon": {
+    month: 9,
+    weekday: 6,
+    nth: 1,
+    note: "Derived from the confirmed 2027-09-04 edition, read off the organizer's own site 2026-09-25",
+  },
+  "polar-circle-marathon": {
+    month: 10,
+    weekday: 0,
+    nth: 4,
+    note: "Derived from the confirmed 2026-10-25 edition, read off the organizer's own site 2026-09-25",
+  },
+  "reggae-marathon": {
+    month: 12,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the confirmed 2026-12-06 edition, read off the organizer's own site 2026-09-25",
+  },
+  "riga-marathon": {
+    month: 5,
+    weekday: 0,
+    nth: 3,
+    note: "Derived from the confirmed 2027-05-16 edition, read off the organizer's own site 2026-09-25",
+  },
+  "singapore-marathon": {
+    month: 12,
+    weekday: 0,
+    nth: 1,
+    note: "Derived from the confirmed 2026-12-06 edition, read off the organizer's own site 2026-09-25",
+  },
+  "sofia-marathon": {
+    month: 10,
+    weekday: 0,
+    nth: 2,
+    note: "Derived from the 2026-10-11 edition; not verified against the organizer",
+  },
+  "warsaw-marathon": {
+    month: 9,
+    weekday: 0,
+    nth: -1,
+    note: "Derived from the 2026-09-27 edition; not verified against the organizer",
+  },
 };
 
 export interface ConfirmedEdition {
@@ -2772,6 +2882,29 @@ export const CONFIRMED_EDITIONS: ConfirmedEdition[] = [
   { seriesSlug: "wisconsin-marathon", year: 2024, raceDate: "2024-05-04" },
   { seriesSlug: "zurich-marathon", year: 2024, raceDate: "2024-04-21" },
 
+  // Imported from 5 sources (see data/import/decisions.json) — batch 2026-09-25. Dates as published by
+  // the event listing, or verified against the organizer during review.
+  // startTimeLocal appears only where a real one was read off the
+  // organizer's page — never guessed, since a wrong hour silently keys
+  // the weather forecast to it.
+  { seriesSlug: "charleroi-marathon", year: 2027, raceDate: "2027-04-25" },
+  { seriesSlug: "geneva-marathon", year: 2027, raceDate: "2027-05-09" },
+  { seriesSlug: "great-limerick-run", year: 2027, raceDate: "2027-05-02" },
+  { seriesSlug: "hanoi-marathon", year: 2026, raceDate: "2026-11-08" },
+  { seriesSlug: "havana-marathon", year: 2026, raceDate: "2026-11-15" },
+  { seriesSlug: "jungfrau-marathon", year: 2027, raceDate: "2027-09-11" },
+  { seriesSlug: "kaunas-marathon", year: 2027, raceDate: "2027-04-25" },
+  { seriesSlug: "kobe-marathon", year: 2026, raceDate: "2026-11-15" },
+  { seriesSlug: "ljubljana-marathon", year: 2026, raceDate: "2026-10-18" },
+  { seriesSlug: "lucerne-marathon", year: 2026, raceDate: "2026-10-25" },
+  { seriesSlug: "nicosia-marathon", year: 2027, raceDate: "2027-01-24" },
+  { seriesSlug: "patagonian-international-marathon", year: 2027, raceDate: "2027-09-04" },
+  { seriesSlug: "polar-circle-marathon", year: 2026, raceDate: "2026-10-25" },
+  { seriesSlug: "reggae-marathon", year: 2026, raceDate: "2026-12-06" },
+  { seriesSlug: "riga-marathon", year: 2027, raceDate: "2027-05-16" },
+  { seriesSlug: "singapore-marathon", year: 2026, raceDate: "2026-12-06" },
+  { seriesSlug: "sofia-marathon", year: 2026, raceDate: "2026-10-11" },
+  { seriesSlug: "warsaw-marathon", year: 2026, raceDate: "2026-09-27" },
 ];
 
 /**

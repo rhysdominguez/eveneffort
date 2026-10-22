@@ -181,12 +181,12 @@ describe("real courses off disk", () => {
       counts[label] = (counts[label] ?? 0) + 1;
     }
     expect(counts).toEqual({
-      veryFlat: 20,
-      mostlyFlat: 118,
-      rolling: 120,
+      veryFlat: 21,
+      mostlyFlat: 124,
+      rolling: 128,
       downhill: 28,
-      hilly: 22,
-      veryHilly: 18,
+      hilly: 23,
+      veryHilly: 20,
     });
   });
 

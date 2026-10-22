@@ -4,9 +4,11 @@
 // Must stay in step with the event names lib/analytics.ts emits: anything not
 // listed here is silently dropped.
 const ALLOWED = new Set([
+  "copy_link_clicked",
   "print_modal_opened",
   "order_modal_opened",
   "order_clicked",
+  "course_map_opened",
 ]);
 
 export async function POST(request: Request): Promise<Response> {

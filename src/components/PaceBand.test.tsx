@@ -30,6 +30,12 @@ const resultWith = (rows: PaceChartRow[]): PacingResult => ({
   input,
   adjustedFinishSeconds: 10800,
   weatherApplied: false,
+  segmentDurations: rows.map(() => 256),
+  segmentLengthsKm: rows.map(() => 1),
+  heatMultipliers: rows.map(() => 1),
+  dryHeatMultipliers: rows.map(() => 1),
+  windMultipliers: rows.map(() => 1),
+  hourlySeries: [],
 });
 
 describe("PaceBand", () => {

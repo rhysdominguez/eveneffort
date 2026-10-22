@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { TTL_SECONDS, readWindow, roundCoord, writeWindow } from "@/db/weatherCache";
+import {
+  TTL_SECONDS,
+  WINDOW_VERSION,
+  readWindow,
+  roundCoord,
+  writeWindow,
+} from "@/db/weatherCache";
 
 // These run with NO DATABASE — which is the point. CLAUDE.md Rule 9 requires
 // the suite to pass with nothing reachable, and this module's whole contract is
@@ -19,9 +25,20 @@ describe("weather cache — degrades without a database", () => {
         "2026-04-20T13:00:00Z",
         "historical",
         [{ tempC: 6, humidity: 60, windSpeed: 3.8, windDirection: 275 }],
+        [{ tempC: 5, humidity: 62, windSpeed: 3.5, windDirection: 270 }],
         { raceDateISO: "2026-04-20" },
       ),
     ).resolves.toBeUndefined();
+  });
+});
+
+describe("stored window version", () => {
+  it("is greater than 1, so pre-cloud rows are not served", () => {
+    // `historical` rows never expire, so the ONLY thing that retires a row
+    // written before cloud cover and precipitation were fetched is this number
+    // going up. If it ever falls back to 1, every previously-visited past race
+    // silently loses its weather timeline and nothing else fails.
+    expect(WINDOW_VERSION).toBeGreaterThan(1);
   });
 });
 

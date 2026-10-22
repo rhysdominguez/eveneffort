@@ -99,6 +99,41 @@ export function feetInchesToCm(feet: number, inches: number): number {
   return (feet * INCHES_PER_FOOT + inches) * CM_PER_INCH;
 }
 
+const COMPASS_POINTS = [
+  "N",
+  "NNE",
+  "NE",
+  "ENE",
+  "E",
+  "ESE",
+  "SE",
+  "SSE",
+  "S",
+  "SSW",
+  "SW",
+  "WSW",
+  "W",
+  "WNW",
+  "NW",
+  "NNW",
+] as const;
+
+/**
+ * A meteorological bearing as the compass point it blows FROM: 0° is "N", 225°
+ * is "SW". Sixteen points rather than eight, because a marathon turns often
+ * enough that the difference between NW and WNW changes which straight is into
+ * the wind.
+ *
+ * Negative and over-360 bearings wrap rather than being rejected: the value
+ * reaches here from a forecast provider and from a free-text manual field, and
+ * a wrapped label is better than a blank one.
+ */
+export function compassPoint(degrees: number): string {
+  if (!Number.isFinite(degrees)) return "";
+  const wrapped = ((degrees % 360) + 360) % 360;
+  return COMPASS_POINTS[Math.round(wrapped / 22.5) % COMPASS_POINTS.length];
+}
+
 export function tempUnitLabel(unit: TempUnit): string {
   return unit === "C" ? "°C" : "°F";
 }

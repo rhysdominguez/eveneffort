@@ -174,11 +174,18 @@ export function editionHref(edition: EditionSummary): string {
  * The link's accessible name. The visible chip is a truncated race name in a
  * grid cell; a screen reader gets the date and the destination spelled out.
  */
-export function editionLinkLabel(edition: EditionSummary): string {
+export function editionLinkLabel(
+  edition: EditionSummary,
+  forecast: boolean = false,
+): string {
   const date = formatDateDisplay(edition.raceDateISO);
   const confidence =
     edition.dateConfidence === "confirmed" ? "" : " (estimated date)";
-  return `${edition.displayName}, ${edition.city}, ${date}${confidence}. Build a pacing plan.`;
+  // The green marker on the chip is colour, and colour alone cannot carry a
+  // meaning. A screen reader is told the same thing in words, here, rather
+  // than being left with a border it has no way to perceive.
+  const weather = forecast ? " Race-day forecast available." : "";
+  return `${edition.displayName}, ${edition.city}, ${date}${confidence}.${weather} Build a pacing plan.`;
 }
 
 function parseMonthKey(key: string): YearMonth {

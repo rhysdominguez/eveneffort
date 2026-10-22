@@ -50,11 +50,32 @@ export interface UseWeather {
    * manual — the engine then synthesizes a fall-morning progression).
    */
   hourly: WeatherConditions[] | null;
+  /**
+   * The hours immediately BEFORE the gun, chronological, so the last entry is
+   * the hour before the start. Feeds the weather timeline's pre-race row.
+   * Deliberately separate from `hourly`, whose index 0 the pacing engine reads
+   * as the race start.
+   */
+  lead: WeatherConditions[] | null;
   loading: boolean;
   error: string | null;
   /** Which of the three sources answered, or null before any fetch resolves. */
   source: WeatherSource | null;
   meta: WeatherMeta | null;
+  /**
+   * The `lat,lon,instant` this data was actually fetched for, or null when
+   * nothing has resolved.
+   *
+   * Exists because the data OUTLIVES the request that asked for it: switching
+   * course does not clear `hourly` (only `setMode` does), so between the switch
+   * and the next fetch resolving, this hook holds the previous race's weather.
+   * The pacing engine has always had that window and changing it would move
+   * published splits, so it is left alone. A panel that PRINTS conditions
+   * cannot afford it: "Tokyo, 11:00 AM, 12 C" drawn from Boston's forecast is a
+   * claim, not a lag. Compare this against the course being charted and render
+   * nothing when they disagree.
+   */
+  key: string | null;
   /** Patch one or more fields. Only meaningful in "manual" mode. */
   updateManual: (patch: Partial<WeatherConditions>) => void;
   /** Re-attempt the live forecast for the current course + timing. */
@@ -115,6 +136,8 @@ export function useWeather(
     initial ?? null,
   );
   const [hourly, setHourly] = useState<WeatherConditions[] | null>(null);
+  const [lead, setLead] = useState<WeatherConditions[] | null>(null);
+  const [key, setKey] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [source, setSource] = useState<WeatherSource | null>(null);
@@ -134,6 +157,7 @@ export function useWeather(
     const url =
       `/api/weather?lat=${start.lat}&lon=${start.lon}&time=${encodeURIComponent(iso)}` +
       (preferTypical ? "&typical=1" : "");
+    const requestKey = `${start.lat},${start.lon},${iso}`;
     let cancelled = false;
 
     // Wrapped in an async function so the loading/error state updates happen in
@@ -150,14 +174,17 @@ export function useWeather(
         if (cancelled) return;
         const hours = data.hours as WeatherConditions[];
         setHourly(hours);
+        setLead((data.lead as WeatherConditions[]) ?? []);
         setConditions(hours[0]);
         setSource((data.source as WeatherSource) ?? "forecast");
         setMeta((data.meta as WeatherMeta) ?? null);
+        setKey(requestKey);
       } catch (e: unknown) {
         if (!cancelled) {
           setError(e instanceof Error ? e.message : "Forecast unavailable.");
           setSource(null);
           setMeta(null);
+          setKey(null);
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -181,20 +208,31 @@ export function useWeather(
   ]);
 
   const setMode = useCallback((next: WeatherMode) => {
+    // Re-picking the mode you are already in is not a mode change, and it must
+    // not behave like one. Everything below clears `error` and `source` — but
+    // the fetch effect keys off `mode`, so when the mode does not actually
+    // change nothing refetches, and the panel is left claiming a live forecast
+    // over whatever numbers the last (possibly failed, possibly climatology)
+    // attempt left on screen. Clicking Forecast twice was a way to launder
+    // "Forecast unavailable" into "Showing the live forecast".
+    // Re-attempting is what the Refresh button is for.
+    if (next === mode) return;
     setChosenMode(next);
     if (persistMode) storeMode(next);
     setError(null);
     // Manual and Off have no source to speak of; forecast rebuilds its own.
     setSource(null);
     setMeta(null);
+    setKey(null);
     if (next === "off") return;
     // Switching modes always starts from a clean forecast series — "manual"
     // has none, and "forecast" rebuilds its own via the effect above.
     setHourly(null);
+    setLead(null);
     // Never on-but-empty: prefill the visible defaults so every value that
     // will affect the chart is on screen before it applies.
     setConditions((prev) => prev ?? FALLBACK_CONDITIONS);
-  }, [persistMode, storeMode]);
+  }, [mode, persistMode, storeMode]);
 
   const updateManual = useCallback((patch: Partial<WeatherConditions>) => {
     setConditions((prev) => ({ ...(prev ?? FALLBACK_CONDITIONS), ...patch }));
@@ -210,10 +248,12 @@ export function useWeather(
     enabled: mode !== "off",
     conditions,
     hourly,
+    lead,
     loading,
     error,
     source,
     meta,
+    key,
     updateManual,
     refreshForecast,
   };

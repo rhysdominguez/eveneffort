@@ -414,7 +414,7 @@ export function ElevationChart({ profile, unit, rows }: Props) {
   return (
     <figure className="space-y-1">
       <figcaption className="text-lg font-semibold text-[var(--color-text-primary)]">
-        Elevation profile
+        Elevation Profile
       </figcaption>
       <svg
         ref={svgRef}

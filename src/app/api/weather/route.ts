@@ -15,7 +15,11 @@
 //
 // On any failure the response is a JSON error with a non-200 status, so the
 // client can still fall back to manual entry.
-import { buildForecastUrl, selectHourlyWindow } from "@/lib/weather/forecast";
+import {
+  buildForecastUrl,
+  selectHourlyWindowWithLead,
+} from "@/lib/weather/forecast";
+import { FORECAST_HORIZON_DAYS, daysUntilISO } from "@/lib/weather/horizon";
 import {
   averageWindows,
   buildArchiveUrl,
@@ -23,7 +27,7 @@ import {
   buildRecentPastUrl,
   CLIMATOLOGY_YEARS,
   isArchived,
-  selectHistoricalWindow,
+  selectHistoricalWindowWithLead,
   shiftDate,
   utcDateOf,
 } from "@/lib/weather/history";
@@ -34,6 +38,17 @@ export type WeatherSource = "forecast" | "historical" | "typical";
 
 interface WeatherPayload {
   hours: WeatherConditions[];
+  /**
+   * The hours immediately before the gun, chronological, so the last entry is
+   * the hour before the start. The weather timeline's pre-race row reads this
+   * and nothing else does.
+   *
+   * Kept OUT of `hours` deliberately. `hours[0]` being the race start is a
+   * contract the pacing engine is built on: `conditionsAtElapsed` indexes
+   * straight off it, so prepending an hour would shift every segment's
+   * conditions by an hour and move published splits. Empty is normal.
+   */
+  lead: WeatherConditions[];
   source: WeatherSource;
   /** What the UI needs to explain the number it is showing. */
   meta?: { raceDateISO?: string; years?: number };
@@ -88,6 +103,7 @@ export async function GET(request: Request): Promise<Response> {
   if (hit) {
     return Response.json({
       hours: hit.hours,
+      lead: hit.lead,
       source: wanted,
       ...(hit.meta ? { meta: hit.meta } : {}),
       cached: true,
@@ -113,6 +129,7 @@ export async function GET(request: Request): Promise<Response> {
       if (fallback) {
         return Response.json({
           hours: fallback.hours,
+          lead: fallback.lead,
           source: "typical",
           ...(fallback.meta ? { meta: fallback.meta } : {}),
           cached: true,
@@ -133,7 +150,15 @@ export async function GET(request: Request): Promise<Response> {
     // time. Awaited rather than fired-and-forgotten because a serverless
     // function can be frozen the moment its response is returned, which would
     // drop the write and make the cache permanently cold.
-    await writeWindow(lat, lon, time, payload.source, payload.hours, payload.meta ?? null);
+    await writeWindow(
+      lat,
+      lon,
+      time,
+      payload.source,
+      payload.hours,
+      payload.lead,
+      payload.meta ?? null,
+    );
 
     return Response.json(payload);
   } catch {
@@ -144,7 +169,22 @@ export async function GET(request: Request): Promise<Response> {
   }
 }
 
-/** Tomorrow.io, unchanged. Returns null when race day is past its horizon. */
+/**
+ * Tomorrow.io. Returns null when race day is past its horizon — and ALSO when
+ * the upstream call itself fails.
+ *
+ * That second case is the whole reason this does not just let `fetchJson`
+ * throw. A thrown error unwinds past the climatology fallback in `GET` and
+ * lands in its outer catch, which answers 502. So a rate-limited key (the free
+ * tier is 25 requests an hour, and a few page refreshes in development spend
+ * it) turned a race with a perfectly good ten-year average into "Conditions
+ * unavailable", with a manual-entry form as the only way forward. A provider
+ * being briefly unreachable is not a reason to have no answer: swallowing it
+ * here puts the request back on the same path a race beyond the horizon takes.
+ *
+ * Only the forecast leg does this. `loadHistorical` still throws, because its
+ * fallback is climatology too and `GET` already routes it there on a null.
+ */
 async function loadForecast(
   lat: number,
   lon: number,
@@ -152,10 +192,24 @@ async function loadForecast(
 ): Promise<WeatherPayload | null> {
   const apiKey = process.env.TOMORROW_IO_API_KEY;
   if (!apiKey) return null;
-  const data = await fetchJson(buildForecastUrl(lat, lon, apiKey), CACHE_FORECAST);
-  const hours = selectHourlyWindow(data as never, time);
-  if (!hours || hours.length === 0) return null;
-  return { hours, source: "forecast" };
+
+  // Beyond the shared horizon there is nothing to ask for. Checked before the
+  // request rather than after it so a long-dated race never spends quota that
+  // a race next week needs — the same constant the calendar's badge reads.
+  if (daysUntilISO(time.slice(0, 10), new Date().toISOString().slice(0, 10)) >
+    FORECAST_HORIZON_DAYS) {
+    return null;
+  }
+
+  let data: unknown;
+  try {
+    data = await fetchJson(buildForecastUrl(lat, lon, apiKey), CACHE_FORECAST);
+  } catch {
+    return null;
+  }
+  const picked = selectHourlyWindowWithLead(data as never, time);
+  if (!picked || picked.hours.length === 0) return null;
+  return { hours: picked.hours, lead: picked.lead, source: "forecast" };
 }
 
 /**
@@ -169,13 +223,22 @@ async function loadHistorical(
 ): Promise<WeatherPayload | null> {
   const apiKey = process.env.OPEN_METEO_API_KEY;
   const date = utcDateOf(time);
+  // From the day BEFORE race day, not race day. A race starting between 00:00
+  // and 00:59 UTC has no earlier hour inside its own calendar day, so the
+  // timeline's pre-race row would be missing for exactly those races. One extra
+  // day of hourly values in an already-cheap request buys it back.
   const url = isArchived(time)
-    ? buildArchiveUrl(lat, lon, date, shiftDate(date, 1), apiKey)
+    ? buildArchiveUrl(lat, lon, shiftDate(date, -1), shiftDate(date, 1), apiKey)
     : buildRecentPastUrl(lat, lon, time, apiKey);
   const data = await fetchJson(url, CACHE_HISTORICAL);
-  const hours = selectHistoricalWindow(data as never, time);
-  if (!hours || hours.length === 0) return null;
-  return { hours, source: "historical", meta: { raceDateISO: date } };
+  const picked = selectHistoricalWindowWithLead(data as never, time);
+  if (!picked || picked.hours.length === 0) return null;
+  return {
+    hours: picked.hours,
+    lead: picked.lead,
+    source: "historical",
+    meta: { raceDateISO: date },
+  };
 }
 
 /** The same calendar date across the previous ten years, averaged. */
@@ -191,17 +254,25 @@ async function loadTypical(
   const results = await Promise.allSettled(
     urls.map((u) => fetchJson(u, CACHE_TYPICAL)),
   );
-  const windows = results.map((r, i) =>
+  const picked = results.map((r, i) =>
     r.status === "fulfilled"
       ? // Each year's window is keyed to the same clock time on its own date.
-        selectHistoricalWindow(r.value as never, shiftYear(time, yearOfUrl(urls[i])))
+        selectHistoricalWindowWithLead(
+          r.value as never,
+          shiftYear(time, yearOfUrl(urls[i])),
+        )
       : null,
   );
 
-  const hours = averageWindows(windows);
+  // Averaged independently, over the same function. Each year contributes its
+  // own lead hour, so the pre-race row is a ten-year average like every row
+  // below it rather than one arbitrary year's morning.
+  const hours = averageWindows(picked.map((p) => (p ? p.hours : null)));
   if (!hours || hours.length === 0) return null;
+  const lead = averageWindows(picked.map((p) => (p ? p.lead : null)));
   return {
     hours,
+    lead: lead ?? [],
     source: "typical",
     meta: { raceDateISO: utcDateOf(time), years: CLIMATOLOGY_YEARS },
   };

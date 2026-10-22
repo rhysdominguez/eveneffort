@@ -44,7 +44,7 @@ export function PrintModal({ open, panelRef, onClose, onPrint }: Props) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-[var(--color-text-primary)]/40 p-4 print:hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-[var(--color-scrim)]/40 p-4 print:hidden">
       <div
         ref={panelRef}
         role="dialog"

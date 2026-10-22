@@ -32,6 +32,28 @@ export interface CourseEffort {
 }
 
 /**
+ * A course's FLAT-EQUIVALENT DISTANCE FOR PERFORMANCE, Σ(lengthKm ×
+ * courseCostFactor). Same shape and same segmentation as `CourseEffort`, and
+ * deliberately a separate number rather than a replacement for it.
+ *
+ * `effort` answers "how does the pacing engine spread a goal time over these
+ * hills", and inverts exactly against the engine, which is what makes a GAP
+ * goal round-trip. `cost` answers "what finish time do these hills cost against
+ * another course", and is what /compare and the course ranking read. The two
+ * use different grade-response curves because they are calibrated against
+ * different evidence: see the header of src/lib/pacing/courseCost.ts.
+ *
+ * GEOMETRY ONLY, like `effort`. Altitude stays the separate multiplier it has
+ * always been, so nothing double-counts it.
+ */
+export interface CourseCost {
+  /** Cost-equivalent kilometres, from the km segmentation. */
+  km: number;
+  /** Cost-equivalent miles, from the mile segmentation. */
+  miles: number;
+}
+
+/**
  * How much a course climbs and drops, from its 44-point elevation array.
  *
  * `gainM`/`lossM` are per-kilometre figures — a consistent floor on the true
@@ -62,6 +84,37 @@ export interface CourseAltitude {
   maxM: number;
   /** Aerobic cost multiplier, >= 1. Exactly 1 below the threshold. */
   multiplier: number;
+}
+
+/**
+ * One significant climb on a course, detected from the 44-point elevation
+ * array by src/lib/pacing/hills.ts. Always kilometre-resolution, whatever unit
+ * the page displays, so a short wall sits inside the longer climb around it.
+ *
+ * `excessKm` is the score, and it is deliberately a DISTANCE rather than a
+ * duration: the excess flat-equivalent kilometres this climb adds, which
+ * becomes seconds only when multiplied by a particular runner's flat pace
+ * (`hillCostSeconds`). That keeps the detected climbs identical for every
+ * runner on a course, and it is named `excessKm` rather than `costKm` because
+ * `CourseCost.km` already means a course total, not a delta against flat.
+ *
+ * `riseM` is net rise, foot to top, so it can go with an internal dip counted
+ * against it; it is the figure the hill panel prints and the figure the
+ * detector's floor is applied to, deliberately the same one.
+ */
+export interface HillSegment {
+  /** First and last km-segment index covered, inclusive. Never overlapping. */
+  startSegmentIndex: number;
+  endSegmentIndex: number;
+  startDistanceKm: number;
+  endDistanceKm: number;
+  lengthKm: number;
+  /** Net rise in metres: top minus foot. */
+  riseM: number;
+  /** Average gradient over the whole climb, rise/run, dimensionless. */
+  gradient: number;
+  /** Excess flat-equivalent kilometres this climb costs. Always > 0. */
+  excessKm: number;
 }
 
 /**
@@ -135,6 +188,29 @@ export interface WeatherConditions {
   humidity: number; // relative humidity, %
   windSpeed: number; // m/s, reported at the standard 10 m station height
   windDirection: number; // degrees, the direction the wind blows FROM (meteorological)
+  /**
+   * Sky cover, 0-100. PRESENTATION ONLY: nothing in the pacing engine reads it.
+   *
+   * Optional, and absent is NOT zero. `cloudCover: 0` is a claim about a clear
+   * sky; a missing value means the provider did not report one. Defaulting it
+   * to 0 the way the four fields above default would draw a sun over every gap.
+   */
+  cloudCover?: number;
+  /**
+   * 0-100, and its MEANING DEPENDS ON THE SOURCE that produced it:
+   *
+   *   forecast    the provider's own probability of precipitation
+   *   historical  0 or 100 - whether rain actually fell in that hour
+   *   typical     the share of the sampled years with rain in that hour
+   *
+   * All three are honest numbers and none of them is the same claim, so
+   * anything rendering this must branch on `WeatherSource` and say which it is
+   * holding. "100%" printed bare reads as certainty about the future when what
+   * it records is a wet morning in 2019.
+   *
+   * Presentation only, and optional on the same terms as `cloudCover`.
+   */
+  precipProbability?: number;
 }
 
 /** Phase 2: runner body metrics for the aerodynamic-drag wind model. */
@@ -253,14 +329,27 @@ export interface CourseSummary {
    */
   effort: CourseEffort;
   /**
+   * What the course's grades cost a FINISH TIME, as flat-equivalent distance.
+   * Two more scalars off the same 44-point array, and still no geometry on the
+   * wire.
+   *
+   * Sits beside `effort` rather than replacing it because they are calibrated
+   * against different evidence and used for different jobs: `effort` inverts
+   * the pacing engine exactly (a GAP goal round-trips through it), while `cost`
+   * is what /compare converts with and what the course ranking sorts on. See
+   * the header of src/lib/pacing/courseCost.ts for why one number could not do
+   * both. Combined with `altitude` by `totalCostKm`; keep them separate here.
+   */
+  cost: CourseCost;
+  /**
    * How hilly the course is: gain, loss and net change over the same 44-point
    * array `effort` is reduced from. Three more scalars, well inside this
    * type's "a few numbers" budget, and the geometry itself still never ships.
    *
-   * Separate from `effort` on purpose — they answer different questions. A
-   * course's effort multiplier says how FAST it is, and climbing and descending
-   * nearly cancel inside it; this says how HILLY it is. Boston reads 0.2%
-   * faster than flat and still climbs 96 m.
+   * Separate from `cost` on purpose — they answer different questions. A
+   * course's cost multiplier says how much TIME its shape costs; this says how
+   * HILLY it is, in metres, and is what the profile badge reads. Boston reads
+   * 0.6% faster than flat and still climbs 96 m.
    */
   terrain: CourseTerrain;
   /**
@@ -366,6 +455,17 @@ export interface Course {
    * engine never reads this.
    */
   coords: [number, number][];
+  /**
+   * The course's SHAPE: a simplified [lat, lon] polyline, a few hundred points,
+   * for drawing the silhouette (ROADMAP #21). Null when the course has no
+   * outline stored yet, which every consumer must handle by rendering nothing
+   * rather than an empty frame.
+   *
+   * Deliberately absent from CourseSummary: the catalog ships every course to
+   * the client and this is 2-12 KB a row, the same reasoning that keeps
+   * `profile` out of it. See the header of src/db/queries.ts.
+   */
+  outline: [number, number][] | null;
   /** Phase 2: start-line coordinates (== coords[0]) for the weather lookup. */
   start: { lat: number; lon: number };
   /**

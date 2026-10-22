@@ -17,21 +17,18 @@ import {
 } from "./courseMapData";
 import { readState, writeState } from "@/lib/clientState";
 import { HOME_MAP_CAMERA } from "@/lib/stateKeys";
+import { useTheme } from "@/hooks/useTheme";
+import { readAppliedTheme, type Theme } from "@/lib/theme";
+import {
+  BASEMAP_STYLES,
+  MAPLIBRE_WORKER_URL,
+  readToken,
+  styleFontStack,
+} from "@/lib/map/basemap";
 
-/**
- * OpenFreeMap's "positron" style — a near-white basemap with grey roads and no
- * saturated colour of its own, which is the only reason a map can live on this
- * site at all: it leaves red free to mean "race", the way red means something
- * everywhere else here. Free, keyless and OpenStreetMap-derived.
- *
- * If it ever needs to become a paid, SLA-backed provider (MapTiler et al.),
- * this constant plus an env var is the whole change — nothing below knows
- * where its tiles come from.
- */
-const BASEMAP_STYLE = "https://tiles.openfreemap.org/styles/positron";
-
-/** Written by `scripts/sync-maplibre-worker.mjs`. See its header for why. */
-const MAPLIBRE_WORKER_URL = "/maplibre/maplibre-gl-worker.mjs";
+// The basemap styles, the worker URL and the two helpers below it moved to
+// src/lib/map/basemap.ts when the interactive course map (ROADMAP #22) became
+// the second map on the site. Their reasoning went with them.
 
 const SOURCE_ID = "courses";
 const CLUSTER_LAYER = "course-clusters";
@@ -39,48 +36,20 @@ const CLUSTER_COUNT_LAYER = "course-cluster-count";
 const PIN_LAYER = "course-pins";
 
 /**
- * MapLibre paints on a WebGL canvas, so its colours must be literal values —
- * `var(--color-red-primary)` means nothing to a shader. Reading the tokens off
- * the document at runtime keeps globals.css the single source of truth
- * (DESIGN.md rule 5) instead of re-declaring the palette in JS.
+ * The "you are here" marker: text-primary, so it reads against either basemap
+ * and never competes with the red race pins. Read at creation, so a theme change
+ * has to redraw it (see the theme effect in `CourseMap`).
  */
-function readToken(name: string, fallback: string): string {
-  if (typeof window === "undefined") return fallback;
-  const value = getComputedStyle(document.documentElement)
-    .getPropertyValue(name)
-    .trim();
-  return value || fallback;
-}
-
-/**
- * A font stack the basemap can actually render the cluster count in.
- *
- * `text-font` names glyph sets served by the style, not CSS families — asking
- * for Montserrat (or MapLibre's default "Open Sans Regular") would silently
- * render nothing if the provider doesn't host it. Rather than hardcode a guess
- * about OpenFreeMap's glyphs, borrow a stack the style already uses for its
- * own labels, so this keeps working if the basemap is ever swapped.
- *
- * Bold is preferred, then anything non-italic: positron's first symbol layer
- * happens to be italic (water labels), and a cluster count set in italic reads
- * as a typo.
- */
-function styleFontStack(map: MapLibreMap): string[] | undefined {
-  const stacks: string[][] = [];
-  for (const layer of map.getStyle()?.layers ?? []) {
-    if (layer.type !== "symbol") continue;
-    const font = layer.layout?.["text-font"];
-    if (Array.isArray(font) && font.every((f) => typeof f === "string")) {
-      stacks.push(font as string[]);
-    }
-  }
-  const named = (needle: string) =>
-    stacks.find((s) => s.some((f) => f.includes(needle)));
-  return (
-    named("Bold") ??
-    stacks.find((s) => !s.some((f) => f.includes("Italic"))) ??
-    stacks[0]
-  );
+function markerAt(
+  maplibregl: typeof import("maplibre-gl"),
+  map: MapLibreMap,
+  at: { lng: number; lat: number },
+): Marker {
+  return new maplibregl.Marker({
+    color: readToken("--color-text-primary", "#0A0A0A"),
+  })
+    .setLngLat([at.lng, at.lat])
+    .addTo(map);
 }
 
 interface Props {
@@ -106,6 +75,10 @@ export function CourseMap({ catalog, onSelectCourse }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const youAreHereRef = useRef<Marker | null>(null);
+  // Which basemap the map is currently showing, so the theme effect below can
+  // tell "the theme changed" from "the effect ran". Set by the build.
+  const basemapThemeRef = useRef<Theme | null>(null);
+  const [theme] = useTheme();
   const [locating, setLocating] = useState(false);
   const [locationNote, setLocationNote] = useState<string | null>(null);
 
@@ -140,12 +113,15 @@ export function CourseMap({ catalog, onSelectCourse }: Props) {
       // prebuild; this points MapLibre at that copy.
       maplibregl.setWorkerUrl(MAPLIBRE_WORKER_URL);
 
-      const red = readToken("--color-red-primary", "#B91C1C");
-      const surface = readToken("--color-bg-surface", "#FFFFFF");
+      // The theme as the document has it NOW, not the hook's value captured
+      // when this effect was set up: the build is async and starts on scroll,
+      // so the two can differ.
+      const initialTheme = readAppliedTheme();
+      basemapThemeRef.current = initialTheme;
 
       const map = new maplibregl.Map({
         container,
-        style: BASEMAP_STYLE,
+        style: BASEMAP_STYLES[initialTheme],
         // Zoomed out over the Atlantic until `fitBounds` lands. Without a
         // center the map opens at null island and visibly jumps.
         center: [0, 25],
@@ -198,8 +174,18 @@ export function CourseMap({ catalog, onSelectCourse }: Props) {
         });
       });
 
-      map.on("load", () => {
-        if (cancelled) return;
+      // Our source and layers live in the STYLE, and `setStyle` (a theme change)
+      // discards the whole thing, so they are added on every `style.load`, the
+      // first one included, rather than once on `load`. The colours are read
+      // here for the same reason: they are the theme's, and this runs again
+      // after the theme has changed. The click and hover handlers below are
+      // keyed by layer id and live on the map, so they survive a style swap and
+      // are registered once.
+      map.on("style.load", () => {
+        if (cancelled || map.getSource(SOURCE_ID)) return;
+
+        const red = readToken("--color-red-primary", "#B91C1C");
+        const surface = readToken("--color-bg-surface", "#FFFFFF");
 
         map.addSource(SOURCE_ID, {
           type: "geojson",
@@ -250,6 +236,10 @@ export function CourseMap({ catalog, onSelectCourse }: Props) {
             "circle-stroke-color": surface,
           },
         });
+      });
+
+      map.on("load", () => {
+        if (cancelled) return;
 
         // Zoom into a cluster rather than trying to popup seven races at once.
         map.on("click", CLUSTER_LAYER, async (e: MapLayerMouseEvent) => {
@@ -326,6 +316,33 @@ export function CourseMap({ catalog, onSelectCourse }: Props) {
     };
   }, [catalog]);
 
+  // A theme change swaps the basemap in place. The camera, any open popup and
+  // the clustered source's own state all belong to the map rather than the
+  // style, so none of them is lost the way they would be by tearing the map
+  // down and rebuilding it. Our layers are re-added by the `style.load`
+  // handler above. Before the build has run (the band is below the fold and
+  // builds lazily) there is nothing to swap, and the build reads the theme
+  // itself.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || basemapThemeRef.current === theme) return;
+    basemapThemeRef.current = theme;
+    map.setStyle(BASEMAP_STYLES[theme]);
+
+    // The "you are here" marker is filled with the theme's text colour, which
+    // is now the opposite of what it was drawn in: near-black on the dark map,
+    // or near-white on the light one. Redraw it in place.
+    const marker = youAreHereRef.current;
+    if (marker) {
+      const at = marker.getLngLat();
+      void import("maplibre-gl").then((maplibregl) => {
+        if (mapRef.current !== map) return;
+        marker.remove();
+        youAreHereRef.current = markerAt(maplibregl, map, at);
+      });
+    }
+  }, [theme]);
+
   /**
    * "Near me" — geolocation is requested here and nowhere else. Nothing
    * prompts on page load: a marketing page that fires a permission dialog at a
@@ -350,11 +367,10 @@ export function CourseMap({ catalog, onSelectCourse }: Props) {
         if (!mapRef.current) return;
 
         youAreHereRef.current?.remove();
-        youAreHereRef.current = new maplibregl.Marker({
-          color: readToken("--color-text-primary", "#0A0A0A"),
-        })
-          .setLngLat([longitude, latitude])
-          .addTo(mapRef.current);
+        youAreHereRef.current = markerAt(maplibregl, mapRef.current, {
+          lng: longitude,
+          lat: latitude,
+        });
 
         mapRef.current.flyTo({ center: [longitude, latitude], zoom: 6 });
 

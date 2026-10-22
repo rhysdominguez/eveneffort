@@ -18,8 +18,10 @@ import type {
   EditionSummary,
 } from "@/types";
 import { courseEffort } from "@/lib/pacing/effort";
+import { courseCost } from "@/lib/pacing/courseCost";
 import { courseTerrain } from "@/lib/pacing/terrain";
 import { courseAltitude } from "@/lib/pacing/altitude";
+import { elevationSparklinePath } from "@/lib/chart/sparkline";
 import { getDb, isDatabaseConfigured } from "./client";
 import { isUserCourseId, readUserCourse } from "./userCourses";
 import {
@@ -177,6 +179,7 @@ async function loadCourseCatalog(): Promise<CourseSummary[]> {
     start: { lat: Number(r.startLat), lon: Number(r.startLon) },
     timezone: r.timezone,
     effort: courseEffort(r.elevations),
+    cost: courseCost(r.elevations),
     terrain: courseTerrain(r.elevations),
     altitude: courseAltitude(r.elevations),
     nextRaceDateISO: r.nextRaceDate ?? null,
@@ -206,9 +209,45 @@ async function loadCourseCatalog(): Promise<CourseSummary[]> {
 // that rendered perfectly in CI. Bumping the key sidesteps it: old entries are
 // simply never read again.
 //   v2 — ROADMAP #7 added `altitude`.
+//   v3 — ROADMAP #12 added `cost`.
 export const getCourseCatalog = unstable_cache(
   loadCourseCatalog,
-  ["course-catalog-v2"],
+  ["course-catalog-v3"],
+  { revalidate: REVALIDATE_SECONDS, tags: [CATALOG_TAG] },
+);
+
+/**
+ * Every course's elevation thumbnail, as a finished SVG path keyed by course id,
+ * for the /courses ranking table (ROADMAP #15).
+ *
+ * A separate read from the catalog, and deliberately so. The catalog rides on
+ * the homepage as well, and its contract is that it stays small; a path is
+ * roughly 400 bytes a course, which would double it for a page that never draws
+ * one. Keeping this off `CourseSummary` also means no shape-version bump and no
+ * change to anything the picker or the map reads.
+ *
+ * The path is built here, on the server, from the 44-point array the catalog
+ * already reads, so the browser receives strings and no geometry.
+ */
+async function loadCourseProfilePaths(): Promise<Record<string, string>> {
+  if (!isDatabaseConfigured()) return {};
+  const db = getDb();
+
+  const rows = await db
+    .select({ slug: courses.slug, elevations: courses.elevations })
+    .from(courses)
+    .where(sql`${courses.effectiveToYear} is null`);
+
+  return Object.fromEntries(
+    rows.map((r) => [r.slug, elevationSparklinePath(r.elevations)]),
+  );
+}
+
+// Versioned like the catalog key: bump it if the path's shape or scale changes,
+// so a deploy never serves paths drawn against the old band.
+export const getCourseProfilePaths = unstable_cache(
+  loadCourseProfilePaths,
+  ["course-profile-paths-v1"],
   { revalidate: REVALIDATE_SECONDS, tags: [CATALOG_TAG] },
 );
 
@@ -297,6 +336,10 @@ async function loadCourseBySlug(slug: string): Promise<Course | null> {
       elevations: courses.elevations,
       coords: courses.coords,
       profile: courses.profile,
+      // Rides with the single-course geometry read, never the catalog: 2-12 KB
+      // a row across 326 rows is exactly what the light/heavy split exists to
+      // keep out of the client bundle.
+      outline: courses.outline,
       startLat: courses.startLat,
       startLon: courses.startLon,
       seriesName: eventSeries.name,
@@ -326,6 +369,7 @@ async function loadCourseBySlug(slug: string): Promise<Course | null> {
     elevations: r.elevations,
     coords: r.coords,
     profile: r.profile,
+    outline: r.outline ?? null,
     start: { lat: Number(r.startLat), lon: Number(r.startLon) },
     timezone: r.timezone,
   };
@@ -355,6 +399,7 @@ async function loadUserCourseAsCourse(token: string): Promise<Course | null> {
     elevations: row.elevations,
     coords: row.coords,
     profile: row.profile,
+    outline: row.outline ?? null,
     start: { lat: row.startLat, lon: row.startLon },
     timezone: row.timezone,
     isUserUpload: true,

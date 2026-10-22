@@ -121,6 +121,7 @@ function assess(
       gpxSha256: null,
       site: event.sourceSite ?? DEFAULT_SOURCE_SITE,
       elevation: event.elevationSource ?? "gpx",
+      geometry: event.geometrySource ?? "gpx",
       ...(event.routeNote ? { note: event.routeNote } : {}),
     },
     stats: { totalKm: null, gainM: null },
@@ -193,6 +194,16 @@ function assess(
     reasons.push(
       `elevation is modelled (${event.elevationSource}), not surveyed — confirm the ` +
         `profile looks like the real course before spending the slug`,
+    );
+  }
+  // A traced course reaches the human review step by construction, never
+  // silently — the same guarantee modelled elevation gets above. The line was
+  // drawn from a published map rather than surveyed, so the one check that
+  // matters is that it goes where the map says it goes.
+  if ((event.geometrySource ?? "gpx") !== "gpx") {
+    reasons.push(
+      `route is traced (${event.geometrySource}), not a published route file — compare ` +
+        `the course line against the map it was traced from before spending the slug`,
     );
   }
 

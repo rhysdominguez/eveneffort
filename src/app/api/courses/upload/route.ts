@@ -21,6 +21,7 @@ import { fillElevationDecimated } from "@/lib/course/decimate";
 import { lacksElevation } from "@/lib/course/elevate";
 import { OPENTOPODATA } from "@/lib/course/dem";
 import { CourseParseError, resampleCourse } from "@/lib/course/resample";
+import { simplifyOutline } from "@/lib/course/outline";
 import {
   RouteError,
   assertSingleTrack,
@@ -143,6 +144,12 @@ export async function POST(request: Request): Promise<Response> {
         elevations: geometry.elevations,
         coords: geometry.coords,
         profile: geometry.profile,
+        // Computed here rather than inside resampleCourse, which is held
+        // byte-identical to the Python parser by conformance.test.ts and has
+        // no business growing a field Python does not produce. Uploads get an
+        // outline for the same reason they get everything else: a feature that
+        // silently skips them is a gap a paying customer finds first.
+        outline: simplifyOutline(points),
         timezone,
         elevationSource,
         distanceM: geometry.distanceM,

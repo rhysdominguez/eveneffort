@@ -13,6 +13,7 @@ import {
   tempUnitLabel,
   windFromDisplay,
   windToDisplay,
+  compassPoint,
   windUnitLabel,
 } from "./weather";
 import { dewPointC, humidityAtTemp } from "@/lib/weather/progression";
@@ -257,5 +258,38 @@ describe("humidity as dew point", () => {
     // header), and a point of RH is far below anything the heat model resolves.
     const back = humidityAtTemp(20, tempFromDisplay(shownF, "F"));
     expect(Math.abs(back - 60)).toBeLessThan(1);
+  });
+});
+
+describe("compassPoint", () => {
+  it("names the point the wind blows from", () => {
+    expect(compassPoint(0)).toBe("N");
+    expect(compassPoint(90)).toBe("E");
+    expect(compassPoint(180)).toBe("S");
+    expect(compassPoint(225)).toBe("SW");
+  });
+
+  it("resolves to sixteen points, not eight", () => {
+    // A marathon turns often enough that WNW and NW are different answers
+    // about which straight is into the wind.
+    expect(compassPoint(292.5)).toBe("WNW");
+    expect(compassPoint(315)).toBe("NW");
+  });
+
+  it("rounds to the nearest point", () => {
+    expect(compassPoint(11)).toBe("N");
+    expect(compassPoint(12)).toBe("NNE");
+  });
+
+  it("wraps rather than rejecting an out-of-range bearing", () => {
+    // The value arrives from a forecast provider and from a free-text manual
+    // field alike, and a wrapped label beats a blank one.
+    expect(compassPoint(360)).toBe("N");
+    expect(compassPoint(-90)).toBe("W");
+    expect(compassPoint(450)).toBe("E");
+  });
+
+  it("is empty rather than wrong for a non-finite bearing", () => {
+    expect(compassPoint(NaN)).toBe("");
   });
 });

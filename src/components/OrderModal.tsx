@@ -45,7 +45,7 @@ export function OrderModal({ open, panelRef, resultsQuery, onClose }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-[var(--color-text-primary)]/40 p-4 print:hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-[var(--color-scrim)]/40 p-4 print:hidden">
       <div
         ref={panelRef}
         role="dialog"
@@ -115,7 +115,7 @@ export function OrderModal({ open, panelRef, resultsQuery, onClose }: Props) {
             type="button"
             onClick={handleOrder}
             disabled={pending}
-            className="w-full rounded-lg bg-[var(--color-red-primary)] px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-red-deep)] disabled:bg-[var(--color-border)] disabled:text-[var(--color-text-tertiary)]"
+            className="w-full rounded-lg bg-[var(--color-red-fill)] px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-red-fill-hover)] disabled:bg-[var(--color-border)] disabled:text-[var(--color-text-tertiary)]"
           >
             {pending ? "Starting checkout…" : `Order for ${PACEBAND_PRICE_LABEL}`}
           </button>

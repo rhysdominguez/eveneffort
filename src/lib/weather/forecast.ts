@@ -14,6 +14,8 @@ interface HourlyEntry {
     humidity?: number;
     windSpeed?: number;
     windDirection?: number;
+    cloudCover?: number;
+    precipitationProbability?: number;
   };
 }
 
@@ -36,11 +38,22 @@ export function buildForecastUrl(
   return `${TOMORROW_FORECAST_ENDPOINT}?${params.toString()}`;
 }
 
+// The four engine fields default to 0 the way they always have. The two
+// display fields deliberately do NOT: see the doc comments on
+// `WeatherConditions`. A missing cloud reading is unknown sky, not clear sky,
+// and the keys are omitted entirely rather than set to `undefined` so the JSON
+// written to the weather_window cache round-trips as the same shape.
 const toConditions = (entry: HourlyEntry): WeatherConditions => ({
   tempC: entry.values.temperature ?? 0,
   humidity: entry.values.humidity ?? 0,
   windSpeed: entry.values.windSpeed ?? 0,
   windDirection: entry.values.windDirection ?? 0,
+  ...(Number.isFinite(entry.values.cloudCover)
+    ? { cloudCover: entry.values.cloudCover }
+    : {}),
+  ...(Number.isFinite(entry.values.precipitationProbability)
+    ? { precipProbability: entry.values.precipitationProbability }
+    : {}),
 });
 
 /**
@@ -73,6 +86,37 @@ export function selectHourlyWindow(
   windowHours: number = 8,
   maxDeltaHours: number = MAX_TARGET_DELTA_HOURS,
 ): WeatherConditions[] | null {
+  const picked = selectHourlyWindowWithLead(
+    data,
+    targetISO,
+    windowHours,
+    0,
+    maxDeltaHours,
+  );
+  return picked ? picked.hours : null;
+}
+
+/**
+ * The same selection, plus the `leadHours` entries immediately BEFORE the start
+ * — what the weather timeline's pre-race row is built from.
+ *
+ * `hours` is byte-identical to what `selectHourlyWindow` returns: the start
+ * index is still chosen as the entry nearest the gun, so `hours[0]` remains the
+ * race start and the pacing engine cannot move by a millisecond. `lead` is a
+ * separate array in chronological order, so `lead[lead.length - 1]` is the hour
+ * before the gun.
+ *
+ * `lead` is legitimately EMPTY when the race starts within the next hour —
+ * Tomorrow.io's timeline begins at the current hour and there is no earlier
+ * entry to hold. That is "no pre-race row", not an error.
+ */
+export function selectHourlyWindowWithLead(
+  data: ForecastResponse,
+  targetISO?: string,
+  windowHours: number = 8,
+  leadHours: number = 1,
+  maxDeltaHours: number = MAX_TARGET_DELTA_HOURS,
+): { hours: WeatherConditions[]; lead: WeatherConditions[] } | null {
   const hourly = data.timelines?.hourly;
   if (!hourly || hourly.length === 0) return null;
 
@@ -94,5 +138,10 @@ export function selectHourlyWindow(
     }
   }
 
-  return hourly.slice(startIdx, startIdx + windowHours).map(toConditions);
+  return {
+    hours: hourly.slice(startIdx, startIdx + windowHours).map(toConditions),
+    lead: hourly
+      .slice(Math.max(0, startIdx - leadHours), startIdx)
+      .map(toConditions),
+  };
 }

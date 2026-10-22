@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { getCourseCatalog } from "@/db/queries";
 import { parseCompareParams } from "@/lib/compareParams";
 import { RaceComparison } from "@/components/RaceComparison";
@@ -17,8 +16,10 @@ export const metadata: Metadata = {
 
 // ROADMAP #8. Server component, same shape as /courses: the catalog is fetched
 // once here and the whole page is derived from it, so no geometry is fetched
-// and none is shipped. `CourseSummary.effort` has carried the conversion since
-// #3 — there is no new query and no new computation behind this route.
+// and none is shipped. `CourseSummary.cost` and `.altitude` carry the
+// conversion (ROADMAP #12 moved it off `.effort`, which is the pacing engine's
+// curve and was never right for comparing two courses) — there is no new query
+// and no new computation behind this route.
 //
 // `searchParams` makes it dynamic, which is right for a link someone shares:
 // the state has to be rendered server-side rather than appearing after
@@ -40,31 +41,17 @@ export default async function ComparePage({
   return (
     <main className="w-full flex-1">
       <section className="mx-auto w-full max-w-7xl space-y-8 px-6 py-16">
-        <header className="max-w-2xl space-y-4">
+        <header className="space-y-4">
           <p className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-tertiary)]">
             Race comparison
           </p>
           <h1 className="font-display text-3xl tracking-tight text-[var(--color-text-primary)] sm:text-4xl">
-            What is your time worth at a different race?
+            Race time conversion
           </h1>
           <p className="text-lg text-[var(--color-text-secondary)]">
-            A 3:20 at Boston is not a 3:20 at Berlin. Enter a finish time at one
-            course and see what the same effort buys you at another, measured
-            from each course&rsquo;s own elevation profile rather than a
-            hand-assigned difficulty tier.
-          </p>
-          <p className="text-sm text-[var(--color-text-tertiary)]">
-            Both times are run at the identical grade-adjusted pace, so they
-            cost the same energy by the Minetti model. What that does not
-            include is weather, altitude, and the toll a long descent takes on
-            your legs.{" "}
-            <Link
-              href="/methodology"
-              className="underline transition-colors hover:text-[var(--color-text-secondary)]"
-            >
-              How the cost is calculated
-            </Link>
-            .
+            Enter a finish time at one course to see what the same effort
+            buys you at another, using each course&rsquo;s own elevation
+            profile and the altitude it runs at.
           </p>
         </header>
 

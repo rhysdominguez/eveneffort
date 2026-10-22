@@ -1,0 +1,1006 @@
+# eveneffort — Product Roadmap
+
+**Goal:** the world's most advanced course-specific pacing calculator. No mainstream
+calculator should have a feature eveneffort lacks.
+
+This file is the tracker. **It is updated as part of every project's commit** — see
+Rule 10 in CLAUDE.md. A project is not done until its row here says so.
+
+Projects are ordered by **technical ease**, easiest first, so the cheapest wins ship
+first. Ease is judged on: does it touch the schema, does it need new data, does it
+need new human research, and does it touch the locked pacing algorithm.
+
+## Status board
+
+| # | Project | Phase | Ease | Status |
+|---|---------|-------|------|--------|
+| 1 | Split strategy (negative / positive, aggressive variants) | 1 | ●○○○○ | **Done** 2026-08-30 |
+| 2 | Conservative start options | 1 | ●○○○○ | **Reverted** 2026-09-08 — UI removed, see §2 |
+| 3 | Goal as pace or GAP pace | 1 | ●●○○○ | **Done** 2026-08-30 |
+| 4 | Dew point as the humidity input | 1 | ●●○○○ | **4a done** 2026-08-30 · 4b deferred |
+| 5 | Course difficulty rating + fastest-course ranking | 2 | ●○○○○ | **Done** 2026-08-30 |
+| 6 | Nav restructure (tools in the navbar) | 2 | ●●○○○ | **Done** 2026-08-31 |
+| 7 | Altitude penalty | 2 | ●●●○○ | **Done** 2026-09-16 |
+| 8 | Race comparison / time conversion calculator | 2 | ●●○○○ | **Done** 2026-09-04 |
+| 9 | Boston qualifier standards + per-race BQ status | 3 | ●●●●○ | **9a + 9b done** 2026-09-04 · 9c blocked |
+| 10 | Bring your own course (GPX / KML / Strava upload) | 3 | ●●●●● | **Done** 2026-09-04 |
+| 11 | Stop the calculator driving the address bar | 2 | ●●○○○ | **Done** 2026-09-17 |
+| 12 | Course cost model: fix the race-time conversion | 2 | ●●●○○ | **Done** 2026-09-18 |
+
+---
+
+# Phase 1 — pure math and form work
+
+No schema change, no new data, no new research. All four are confined to
+`src/lib/pacing/`, `src/lib/weather/`, `src/components/InputForm.tsx` and
+`src/lib/resultsParams.ts`.
+
+## 1. Split strategy — negative / positive, with aggressive variants
+
+**Status:** Done 2026-08-30 · **Ease:** ●○○○○
+
+The single biggest competitive gap. eveneffort offers exactly one strategy: pure
+even effort. FindMyMarathon offers even-pace, even-effort and four split levels;
+Garmin PacePro and ultraPacer both offer negative and positive.
+
+**What it entails**
+
+- A new pure module, `src/lib/pacing/strategy.ts`, exporting a bias function that
+  returns a per-segment multiplier given a strategy and the segment's fractional
+  distance through the race. A linear ramp is enough: `1 + b·(2·f − 1)` where `f`
+  is the fraction of total distance elapsed and `b` is the bias (e.g. ±0.015 for
+  standard, ±0.03 for aggressive).
+- Apply it in `computeElevationDurations` **before** `normalizePaces`
+  ([index.ts](src/lib/pacing/index.ts)). Because normalization is a single scalar
+  pass, the goal finish time stays exact for free — that property is what makes
+  this cheap.
+- `adjustmentFactor` and the Minetti math are **not touched** (Rule 1 stays clean).
+- Add `strategy` to `PacingInput` in [src/types/index.ts](src/types/index.ts), to
+  the URL params in `src/lib/resultsParams.ts`, and a select to the dashboard side
+  of [InputForm.tsx](src/components/InputForm.tsx). Default stays `even-effort`, so
+  every existing shared link and printed paceband keeps resolving identically.
+- Also add plain **even pace** (ignore grade entirely) as an option — it is one
+  branch and FindMyMarathon has it.
+
+**Tests:** even-effort output byte-identical to today; every strategy still sums
+exactly to the goal; negative-split second half is strictly faster than the first
+on a flat course; aggressive is strictly more biased than standard.
+
+**Shipped as planned**, with three notes:
+
+- The URL param for #2 is **`hold`**, not `start` — `start` was already taken by
+  the race start time. `split` is as planned. Both are emitted only when
+  off-default, so a default chart's query string is byte-for-byte what it was
+  before this landed.
+- The biases are read at each segment's **midpoint distance**, so km mode (43
+  segments) and miles mode (27) get the identical curve rather than one
+  quantized to whichever unit is on screen.
+- The controls are dashboard-only, alongside Weather and Fueling. The hero form
+  stays core setup + Calculate, and always builds the defaults.
+- **2026-09-08:** the split control became a **five-stop slider** (`RangeField`,
+  the same component fueling uses) — strong negative · negative · even effort
+  (default, centre) · positive · strong positive. Each stop still maps to one of
+  the existing `SplitStrategy` presets, so the engine, `SPLIT_BIAS`, the URL
+  format and printed pacebands are untouched. **`even-pace` ("ignore hills") was
+  dropped from the form** at the same time — it is a different axis and did not
+  belong on the slider; it still parses from older links and just lands the
+  slider on the middle stop.
+
+## 2. Conservative start options
+
+**Status:** Reverted 2026-09-08 (shipped 2026-08-30) · **Ease:** ●○○○○
+
+**The "Start" control was removed from the dashboard form on 2026-09-08** — a
+product call that the split-strategy selector is enough race-strategy surface for
+now, and a second dropdown next to it was more choice than clarity. The section
+heading is now just "Split Strategy". Only the `InputForm` UI went; the
+`strategy.ts` math (`startBias`, `START_SURCHARGE`, `START_TAU_KM`) and the
+`hold=` URL param parsing in `resultsParams.ts` are left in place so pacebands
+people have already paid for keep resolving, and re-adding the control later is a
+UI-only change. `input.start` is simply never set by the form now, so it defaults
+to `"even"` (a no-op surcharge).
+
+Evenly paced / conservative / very conservative first miles. FindMyMarathon has
+exactly this, and it is the most-given piece of real-world marathon advice.
+
+**What it entails**
+
+The same mechanism as #1 with a different curve shape: instead of a ramp across the
+whole race, a decaying penalty over roughly the first 5 km that pays itself back
+across the remainder. Ships into the same `strategy.ts` as a second, independent
+control — the two compose (a runner can want a conservative start *and* an even
+race thereafter). Same normalization guarantee, same test shape.
+
+Realistically this lands in the same session as #1.
+
+**It did.** The curve is `1 + s·e^(−d/2.5 km)`, s = 4% / 8%, so the penalty is
+spent over roughly the first 5 km and never hard-edges at a segment boundary the
+way a "first 3 miles" step would. Nothing computes the payback — `normalizePaces`
+does it for free, which is the same property that keeps the finish exact.
+
+## 3. Goal expressed as pace or normalized (GAP) pace
+
+**Status:** Done 2026-08-30 · **Ease:** ●●○○○
+
+Today the only way in is a finish time you must already know. ultraPacer accepts
+elapsed time, average pace, or normalized pace.
+
+**What shipped**
+
+- `src/lib/pacing/effort.ts` — a new PURE module that only reads the locked
+  algorithm. It computes a course's **flat-equivalent distance**,
+  `Σ(lengthKm × adjustmentFactor)`, and the four conversions either way.
+- The inversion turned out to be **exact, not approximate**, and that is worth
+  recording: because `normalizePaces` is a single scalar pass, every segment's
+  flat-equivalent pace is the *same* constant, `goalTime / Σ(lengthKm · adj)`.
+  So GAP → time is one multiply and the round-trip has no drift.
+  `effort.test.ts` asserts it segment-by-segment against the real engine.
+- Toggle labels are **Time / Pace / GAP**, and the mode's own value is what the
+  form holds canonically. That is the feature: switching course in GAP mode
+  holds the pace and moves the finish time.
+
+**Three things that differed from the plan**
+
+1. **It needed a catalog field.** The hero form only ever receives
+   `CourseSummary`, so GAP would have been dashboard-only. `CourseSummary.effort`
+   (two scalars, ~16 bytes/course) is computed server-side in `queries.ts` from
+   elevations that never reach the client — which is why GAP works on the
+   homepage too. This is **#5's core computation, built early**; see #5.
+2. **The two segmentations disagree by more than expected.** km and mile
+   segmentation give effort figures up to **0.43% apart** on Pikes Peak (minutes
+   over a marathon), not the tenth of a percent assumed. Both are shipped rather
+   than one standing in for the other.
+3. **Strategy (#1/#2) interacts, and safely.** The split/start biases re-weight
+   durations before the same normalization, so they change *when* effort is
+   spent, not how much the course demands. The per-segment identity holds only
+   at the default strategy; the race-average one — which is what the goal field
+   means — holds under all of them, `even-pace` included. Pinned by a
+   cross-feature test, because nothing else would have caught it.
+
+The mode is **not in the URL**: a shared link stays a finish time, so every
+existing link and printed paceband is untouched. The preference persists in
+localStorage (`prefs.goalMode`) instead.
+
+**Update 2026-09-08:** GAP was pulled from the hero form and is now dashboard-only
+after all — the hero is core race setup plus Calculate, and grade-adjusted pace
+only earns its place next to a chart. The `CourseSummary.effort` field (plan
+point 1) still ships; it feeds #5's rankings and the comparison page regardless.
+
+Still deliberately **not** in scope: race-time prediction from a recent result
+(Riegel/VDOT). Separate project, different claim.
+
+## 4. Dew point as the humidity input
+
+**Status:** 4a done 2026-08-30 · 4b still open · **Ease:** ●●○○○
+
+Dew point is what running science and coaches actually quote (Runners Connect,
+Running Writings, Coach Saltmarsh all take it). eveneffort takes relative humidity.
+
+**4a — shipped.** A `%`/`dew` toggle on the humidity field, reusing the existing
+Magnus pair in `src/lib/weather/progression.ts` rather than writing a second
+one. RH remains the canonical stored/URL value, so nothing downstream changed
+and no existing link moved. The preference joins `prefs.displayUnits`.
+
+Three details that were not obvious from the plan:
+
+- **Editing the temperature holds the DEW POINT, not the RH.** Someone who typed
+  a 12 °C dew point and then nudges the temperature expects their dew point to
+  stay put; RH is recomputed underneath. Stateless — derive dew from the
+  pre-change conditions and patch both fields at once. It is also the same
+  conservation `synthesizeHourly` already assumes across a race morning. RH mode
+  keeps the old behaviour exactly.
+- **The field's bounds have to change with the mode.** `NumericField` strips the
+  minus key outright whenever `min >= 0`, so leaving the RH bounds (0–100) in
+  place would make a below-freezing dew point literally untypeable. In dew mode
+  `min` is unset and `max` is the air temperature itself.
+- **Dew point is a temperature**, so it renders through the existing °C/°F
+  toggle rather than getting one of its own. A whole °F is a coarser step than a
+  whole percent, so editing in °F moves RH by up to ~1 point — well below what
+  the heat model resolves, but it is why the unit test asserts a band.
+
+**4b (deferred, medium):** replacing the NWS heat-index curve in
+`src/lib/weather/heat.ts` with a dew-point-based model. Worth considering
+separately against the Running Writings curve, which is fit to 3,891 marathoners
+across 754 races versus our hand-anchored piecewise line. That is a model change
+and needs its own justification and tests — 4a deliberately did not touch it, so
+every existing chart is byte-identical.
+
+---
+
+# Phase 2 — derived from data we already hold
+
+Still no new source data. These compute new things from the 44-point elevation
+arrays and the existing catalog.
+
+## 5. Course difficulty rating + fastest-course ranking
+
+**Status:** Done 2026-08-30 · **Ease:** ●○○○○ — the score came free from #3
+
+Color-coded flat / rolling / hilly / downhill classification in the UI, the way
+FindMyMarathon presents it, plus a "fastest courses" sort.
+
+**Already done, by #3 (2026-08-30).** The score this project was going to build
+is `effortMultiplier()` in [src/lib/pacing/effort.ts](src/lib/pacing/effort.ts),
+and it already ships to the client on `CourseSummary.effort` for the whole
+catalog. #3 needed it to turn a grade-adjusted pace into a finish time, so it
+was built once, there. Nothing about the computation is left to do.
+
+**The measured spread, which is what makes the thresholds designable** — across
+all 326 seeded courses:
+
+| | course | multiplier |
+|---|---|---|
+| easiest | REVEL Mt Charleston (~1,500 m net drop) | 0.936 |
+| | St. George | 0.969 |
+| typical road marathon | Berlin / Chicago | ≈1.000 |
+| | Blue Ridge | 1.006 |
+| hardest | Pikes Peak | 1.071 |
+
+Note how tight the middle is: the great majority of road courses sit within
+±0.5% of flat, so a naive even split into four buckets would put nearly
+everything in one. The banding needs to be chosen against this distribution, not
+against round numbers — that judgement is now the *main* remaining work.
+
+**What shipped, and the finding that reshaped it**
+
+The multiplier is the right number for *how fast a course is* and the wrong one
+for *how hilly it is*, and the table above is why: 308 of the 326 courses sit
+between 0.985 and 1.005, because climbing and descending very nearly cancel
+under Minetti. Prosecco climbs 194 m and scores 1.0008 — indistinguishable from
+pancake-flat Chicago. **Banding it four ways would have labelled 94% of the
+catalog identically.** So the project shipped two numbers on two axes instead of
+the one the plan assumed:
+
+- **Terrain** — total gain, loss and net change, in
+  [src/lib/pacing/terrain.ts](src/lib/pacing/terrain.ts), read off the raw
+  (unsmoothed) 44-point array. Gain and loss are per-kilometre figures — an
+  honest floor, not surveyed gain, and the module header says so; net change is
+  exact. This drives the six-way course-profile label.
+- **Speed** — `effortMultiplier`, unchanged from #3. This drives the ranking and
+  is what #8 will convert times with.
+
+Boston is the case that proves both are needed: it climbs enough to be
+**rolling** and still runs **0.6% faster than flat**, because the net drop more
+than pays for the Newton hills. One number cannot say that. (Since 2026-09-08 it
+*labels* as **Downhill** for that same reason — see the taxonomy note below —
+but the two-axis point stands: the label and the cost line say different things.)
+
+**The taxonomy now matches findmymarathon.com** (updated 2026-09-08). It was
+flat / rolling / hilly / mountainous on bands of 75 / 150 / 400 m, calibrated
+against races whose character is not in dispute; it is now the six labels
+runners already read on the biggest race-comparison site — **Very Flat / Mostly
+Flat / Rolling Hills / Downhill / Hilly / Very Hilly** — on gain bands of **25 /
+85 / 215 / 355 m**, splitting the catalog 20 / 118 / 120 / 28 / 22 / 18.
+`terrain.test.ts` pins that split, so no band edge can move quietly.
+
+Those cuts were **fitted, not chosen**. findmymarathon publishes no formula —
+their FAQ calls the profile "subjective… based on the course profiles, course
+elevations, runner opinions, and race organizer descriptions", i.e. a
+hand-assigned field. But their race feed exposes a label plus gain/loss per
+race, and **103 of those races join to our seeded courses by GPX start
+coordinate**, giving a ground-truth set to grid-search against: the shipped cuts
+score **77% exact agreement, 98% within one band**, where the old bands mapped
+naively scored 59%. Every surviving disagreement is an adjacent call, which is
+the irreducible part of reproducing a subjective field with a threshold.
+
+Two findings from that exercise are worth not rediscovering:
+
+- **The 44-point `gainM` is the best predictor we have** (r = 0.902 vs their
+  gain). Gain re-derived from the dense `profile` array is *worse* — r = 0.819
+  with 3 m hysteresis, r = 0.700 raw — because raw trace noise scales with the
+  recording device, not the terrain. Tokyo's 2,922-point profile yields 2,179 ft
+  of "gain" for a course everyone calls mostly flat. The coarse array's uniform
+  sampling is the whole point, and the taxonomy therefore needed **no schema,
+  query, seed or `CourseSummary` change**.
+- **`netM` is comparable across sites even though `gainM` is not.** Recording
+  noise inflates gain and loss together and cancels in the difference: Boston
+  nets −436 ft here against their −460, Marquette −806 against −810.
+
+**Downhill is an override, not a rung**, which is also how findmymarathon does
+it — Boston is listed there as Downhill despite 96 m of climbing, and is here
+now too. But **hills win when a course is both**: Big Sur drops 91 m and stays
+Hilly. That tie-break is theirs, not an invention — in their data every
+big-drop race that keeps a hill label instead (Big Sur, Loch Ness, Deadwood,
+Breckenridge) is one with large gain. `NET_DOWNHILL_M` moved −100 → **−75 m**
+(≈ −246 ft) in the same pass, which is where their labelling turns over and,
+more to the point, is what finally catches **CIM at −91 m** — the canonical
+net-downhill BQ course, which −100 m missed.
+
+**The second pill shows net change, not total gain** (updated 2026-09-08).
+"847 ft up" next to the terrain word read as a contradiction on a loop course
+that climbs hundreds of feet and returns to its start — the number never matched
+the elevation profile beside it. The second pill now always shows net change
+(finish minus start, exact at any resolution) — "Downhill" + "−436 ft net" for
+Boston — and the earlier green-when-downhill pill (which only appeared for the 27
+big descents) is retired. Total gain is still the input to the band label and
+still a sortable column in the ranking table; it just no longer sits on the
+badge.
+
+**The profile pill now carries a six-stop colour ramp** (updated 2026-09-08).
+This paragraph previously read "no palette was added… deliberately no four-step
+difficulty ramp", and that position lasted until the six findmymarathon labels
+landed: adopting their vocabulary brought their colour convention with it.
+It shipped first as three tiers — green / orange / red over the six labels —
+which was wrong for a reason worth recording: pairing the labels gave **Mostly
+Flat and Rolling Hills the same pill**, and those are the two biggest bands in
+the catalog (118 and 120 of 326 courses), so on 73% of races the colour told the
+runner nothing while still spending a colour. It is now one stop per profile,
+fastest → hardest: green, lime, gold, orange, red, red-deep. **Four of the six
+were tokens the palette already had** — only `--color-lime-primary` and
+`--color-gold-primary` are new. Hue falls monotonically at every step and every
+stop clears WCAG AA on white and on the elevated surface, which
+[src/app/globals.tokens.test.ts](src/app/globals.tokens.test.ts) enforces;
+findmymarathon's own hexes would fail it (their `#ff7800` is 2.65:1 on white,
+and they too give two labels one colour). `TERRAIN_TIER` is gone, replaced by
+`TERRAIN_ORDER`. The net-change pill is **still always neutral grey**: a net
+drop makes a course faster, but that is a fact about the course, not a verdict,
+and a second coloured pill competed with the profile pill for the eye.
+DESIGN.md carries the full argument and both positions it replaced.
+
+**Also shipped:** `/courses`, the sortable ranking (speed, climbing, net change,
+name), linked from the nav, the footer and the Course Library band, and in the
+sitemap. `metresToFeet` moved to
+[src/lib/units/elevation.ts](src/lib/units/elevation.ts), out of two copies in
+ElevationChart and its test.
+
+**Follow-up, 2026-09-16:** the ranking table gained the calendar's location
+filter (continent -> country -> state/province) plus a live count of what
+survives it. The cascade moved out of `src/components/home/calendarFilters.ts`
+to [src/lib/locationFilter.ts](src/lib/locationFilter.ts), generic over a
+structural `Locatable` rather than `EditionSummary`, and the three selects moved
+to [src/components/LocationFilterBar.tsx](src/components/LocationFilterBar.tsx)
+so both lists narrow through one control. The region level keeps hiding itself
+unless the chosen country has races in two or more of them, which today means
+the US, Canada and Australia.
+
+The whole row is now the click target, opening `/results` with that course set
+up. The race name stays a real `<a>` (keyboard, crawlers, right-click); the row
+handler only widens the target for a mouse, gets out of the way when the click
+already landed on the link, and opens a tab on a modified click. The href moved
+to `buildResultsHref` with `DEFAULT_FUELING`, because the hand-built query left
+`carbs` out and InputForm reads that absence as "the runner turned fueling off",
+so every row had been landing on a chart with the gel cues missing.
+
+**Narrowed deliberately:** the badge is on the results header only. The course
+picker, the race calendar and the map popups were dropped — the calendar would
+need a courseId→terrain map threaded in from the home page, since
+`EditionSummary` carries no geometry, and 326 badges on date chips is noise, not
+information.
+
+## 6. Nav restructure — put the tools in the navbar
+
+**Status:** Done 2026-08-31 · **Ease:** ●●○○○
+
+[SiteNav.tsx](src/components/SiteNav.tsx) currently contains the wordmark and
+nothing else — there are no nav links at all. A second calculator (#8) has nowhere
+to be linked from, so this is its prerequisite.
+
+**What it entails**
+
+- **The links, as data.** A `NAV_LINKS` const array at the top of the file, the way
+  [SiteFooter.tsx](src/components/SiteFooter.tsx) already holds `LINK_COLUMNS` — so #8
+  adds its route by appending one object rather than editing markup. Entries: Pacing
+  calculator → `/`, Race comparison → `/compare`, Methodology → `/methodology`.
+  **Ship #6 with two of them.** `/compare` does not exist until #8, and a nav link to a
+  404 is worse than a nav that grows by one line later; the array is the deliverable
+  here, the third entry lands with the page. Sentence case, to match the footer. The
+  footer's Product column now names the same two destinations, so reword it to say the
+  same words the nav does.
+- **Active state is free** — the component already calls `usePathname()` for `isHome`.
+  `aria-current="page"` plus `text-[var(--color-text-primary)]`, against
+  `text-[var(--color-text-secondary)]` for the rest. `/results` has no entry of its own
+  and should light up the pacing calculator: it is that tool's output, not a fourth
+  place.
+- **The height constraint is arithmetic, not taste.** The inner row is
+  `flex items-center` and its height today *is* the wordmark's 32px
+  (`text-[2rem] leading-none`); the padding it gives up compressing (24px → 8px a side,
+  32px total) is exactly the `mb-8` handed back. Any item taller than 32px raises both
+  states — the margin accounting still balances, but the bar is no longer the height it
+  was. So keep every item ≤ 32px: links at `text-sm py-1` are 28px, an icon button at
+  `h-8 w-8` is 32px on the nose. If something doesn't fit, shrink the control; do not
+  re-derive the padding/margin pair.
+- **The mobile treatment is the real work.** Below `sm` the link row is `hidden sm:flex`
+  and a 32px icon button opens a panel. The panel must be `absolute top-full inset-x-0`
+  off a now-`relative` `<nav>` — **never in flow**, since an in-flow panel changes the
+  bar's height and reintroduces exactly the scroll-anchor shake the compress accounting
+  exists to prevent. Reuse [usePopover.ts](src/hooks/usePopover.ts) as-is for Escape and
+  outside-pointer dismissal; it has no route-change behaviour, so add a `useEffect` on
+  `pathname` that closes, or a tapped link leaves the panel hanging over the new page.
+  Panel chrome follows the modal precedent in `DESIGN.md` (surface fill, a border, no
+  shadow) — the `*-on-dark` tokens are footer-only and stay there.
+- **The hamburger is a new glyph.** No icon library and none coming (Rule 5): every icon
+  in the repo is a hand-drawn `viewBox="0 0 20 20"` inline SVG at stroke `1.75`, and this
+  one matches or it looks foreign. `aria-hidden` on the SVG; `aria-label`,
+  `aria-expanded` and `aria-controls` on the button.
+- **Break at `sm`.** Only `sm:` and `lg:` appear anywhere in this codebase, and `sm` is
+  the seam [RaceCalendar.tsx](src/components/home/RaceCalendar.tsx) already uses for its
+  grid → agenda-list swap. Follow it rather than introducing `md:` for one component.
+- Nothing else moves: no new route, so no sitemap entry, and `print:hidden` is already on
+  the `<nav>` and stays — the paceband print output is untouched.
+
+**Tests:** there is no `SiteNav.test.tsx` and nothing in the repo mocks `next/navigation`
+yet, so this writes the first `vi.mock("next/navigation", …)`. Assert the link set
+renders; `sticky` present off home and absent on `/`; the compress classes still pair
+`py-6`↔`mb-0` and `py-2`↔`mb-8`; the mobile panel opens, closes on Escape, and closes on
+pathname change; `print:hidden` survives. Also rename the first case in
+[SiteFooter.test.tsx](src/components/SiteFooter.test.tsx) — "the content pages that
+previously had no nav route in" stops being true the moment this ships.
+
+**Shipped as planned**, with two notes:
+
+- The link array shipped with **three** entries, not two. #5's course rankings page
+  landed in the same stretch of work and took a slot; `/compare` is still deferred to #8
+  exactly as planned. Because entries are now demonstrably going to keep arriving, the
+  mobile panel's test counts its links against the desktop row rather than a literal —
+  #8 appends one object and touches no test.
+- `usePopover` needed the one thing it does not provide: it knows pointers and keys but
+  not routing, and a client-side navigation unmounts nothing in the nav, so a `useEffect`
+  on `pathname` closes the panel. Everything else — Escape, focus return, outside
+  pointer-down — came free. The height invariant held without any padding change: the
+  links are 20px of line box and the menu button is `h-8`, both inside the wordmark's
+  32px, so the `py`/`mb` pair is untouched.
+
+## 7. Altitude penalty
+
+**Status:** Done 2026-09-16 · **Ease:** ●●●○○
+
+Today `src/lib/weather/wind.ts` hardcodes sea-level pressure (101325 Pa), so a race
+at 2,000 m gets sea-level air density and no aerobic penalty at all. ultraPacer,
+Stryd and MyMarathonPace all model altitude.
+
+**No schema change and no new data.** `course.elevations` is already *absolute
+metres above sea level* (see the field comment in
+[src/db/schema.ts](src/db/schema.ts)) — the mean elevation of any course is a reduce
+over an array we already ship. This was the project's feared blocker and it is not one.
+
+**What it entails — two independent halves**
+
+- **7a — air density (easy, strictly a correctness fix).** Replace the hardcoded
+  pressure with the barometric formula evaluated at each segment's own elevation.
+  The drag model is already per-segment, so this slots in where the constant is. On
+  a high course this makes the runner *faster* (thinner air, less drag), which is
+  physically right and is the opposite sign to 7b.
+- **7b — aerobic cost (medium, needs care).** A VO2max-decrement curve above roughly
+  1,000–1,500 m. This is a real physiological model addition, needs a cited source
+  and its own test suite, and unlike 7a it will change results for every course
+  above the threshold. Must not silently change any sea-level course — assert that
+  in a test.
+- Consider surfacing acclimatization later as an input; out of scope here.
+
+**Shipped, both halves, as planned.** `src/lib/pacing/altitude.ts` is the new
+module; `src/lib/weather/wind.ts` gained `pressureAtElevationPa` for 7a. The
+prediction that there was no blocker held: no schema change, no new data, and
+the whole thing is a reduce over the 44 points the catalog already reads.
+
+What turned out differently:
+
+- **The threshold is a judgement call, not a lookup.** The plan said "roughly
+  1,000-1,500 m". The source chosen for the decrement (Wehrlin & Hallen 2006,
+  6.3% of VO2max per 1,000 m in trained endurance athletes) actually measured
+  the decline starting near **300 m**, which is lower than coaching practice
+  assumes and would have put a visible penalty on Madrid, Munich and a long
+  tail of ordinary European road races. Taking it literally was a bigger claim
+  than this product should make quietly, so the decrement runs from 1,000 m.
+  The argument is in the module header; if it is ever revisited, that is the
+  paragraph to argue with.
+- **The multiplier is averaged per kilometre, not evaluated at the mean
+  elevation.** It is convex and the threshold makes it piecewise, so a course
+  that starts low and climbs high is badly described by its mean. Costs one
+  more reduce, and gets Pikes Peak (2,960 m mean, 4,277 m high point) right.
+- **7a and 7b have opposite signs, so they shipped together**, as the plan
+  implied but did not say outright. Shipping only the air-density half would
+  have made Denver read *faster*, which is true of the drag and false of the
+  race.
+- **The sea-level guard the plan asked for is stronger than a unit test.**
+  `altitude.test.ts` walks every course file on disk, not the seven-course
+  fixture, because the fixture is the majors and is entirely at sea level: it
+  could not tell this model from one that returned 1.0 unconditionally.
+
+**Where it surfaces.** Not in the splits, deliberately, and this is the one
+open question left. Altitude is a thing *said about* a course today, not a
+thing *done to* a paceband:
+
+- A third pill on `DifficultyBadge`, beside the profile and net-change ones,
+  reading "6562 ft elevation". **Revised 2026-09-17:** it shipped as "6562 ft
+  up, 7.0% slower" and absent below the threshold (298 of 326 courses). Both
+  halves of that were wrong for the same reason: the penalty is already inside
+  the "vs flat" sentence directly beneath it, so the pill quoted a cost the
+  reader had no way to reconcile with the one next to it, and it went silent on
+  the low majority where the plain height is still worth knowing. The pill now
+  shows wherever altitude is supplied and says height only.
+- A sortable **Altitude** column on `/courses`, showing mean height for every
+  course. **Revised 2026-09-17** the same way: it printed "7.0% slower" with
+  the height as a subscript and an em dash on the low majority, one column
+  left of "vs flat", which is that same penalty multiplied by the grade cost.
+  It now prints feet, sorts on `meanM` rather than the multiplier (so the flat
+  block below the threshold no longer ties at exactly 1), and needs no
+  placeholder glyph, so `CourseRankingTable.tsx` came back out of
+  `PLACEHOLDER_GLYPH_ALLOWED` (Rule 11). `formatAltitudePenalty` had no callers
+  left and was deleted; `hasAltitudePenalty` stays in `altitude.ts` as the dead
+  band.
+- Folded into **"vs flat"** everywhere it appears, via `totalEffortMultiplier`
+  in `src/lib/units/effort.ts`. That is a display-layer product: `effort` stays
+  geometry-only on the wire and in `equivalentGoalTime`, so **no chart, no
+  split and no shared link moved**. The Minetti curve reads gradient alone and
+  is untouched (Rule 1).
+- A methodology section naming the source and the threshold.
+
+Sanity check against the seeded catalog: La Paz 20.2%, Leadville 18.1%, Pikes
+Peak 14.4%, Denver Colfax 4.1%, Boulderthon 3.9%. 28 of 326 courses clear the
+0.5% dead band.
+
+**Open: should the penalty extend the finish time?** `/compare` now says a 3:20
+at Berlin is worth more time at Boulder, but the pacing chart at Boulder still
+hands back exactly the goal you typed. Weather already sets the precedent for
+the other behaviour: heat and wind multipliers are applied after normalization
+and deliberately push the finish past the goal. Doing the same with altitude is
+a one-line change in `computePaceChart` and a real product decision, because it
+changes the headline number on the results page for ~28 courses. Not taken
+unilaterally.
+
+## 8. Race comparison / time conversion calculator
+
+**Status:** Done 2026-09-04 · **Ease:** ●●○○○
+
+"Your 3:20 at Boston is 3:14 at Berlin." FindMyMarathon has this; eveneffort holds
+better inputs for it than they do, across 326 courses.
+
+**What it entails**
+
+- The math is **already free**: each course's effort multiplier `E` ships on
+  `CourseSummary.effort` as of #3 (2026-08-30), so the conversion
+  `T_B = T_A × E_B / E_A` needs no new computation and no longer waits on #5.
+  `gapPaceFromGoalTime`/`goalTimeFromGapPace` in
+  [src/lib/pacing/effort.ts](src/lib/pacing/effort.ts) are the same conversion
+  in one direction each. Optionally layer the
+  weather model on top later ("...and 3:11 in Berlin's typical September
+  conditions"), which no competitor can do — but ship the geometry-only version first.
+- A new route, `src/app/compare/page.tsx`, plus its nav entry from #6.
+- Two course pickers: [CourseSearch.tsx](src/components/CourseSearch.tsx) is already
+  a standalone ARIA combobox and should be reused as-is, twice.
+- Shareable via query params, following the existing `src/lib/resultsParams.ts`
+  pattern. Add the route to the sitemap.
+- Most of the cost here is UI and page design, not math.
+
+**Shipped as planned.** `/compare` takes two courses and a finish time and
+answers with the equal-effort time at the other race. It originally also
+converted that time across the whole catalog in a sortable, filterable table
+(`EquivalentTimeTable`, plus the CTA and Copy link that followed it) — the
+pair conversion was cheap enough that the catalog view came almost free on
+top of it. **Removed 2026-09-17** at product direction to keep the page to
+the single-pair result; the component and its test were deleted rather than
+left dead in the tree.
+
+`equivalentGoalTime` in [effort.ts](src/lib/pacing/effort.ts) is the whole of
+the new math: the two existing conversions run back to back. Rule 1 sign-off
+was given for it as a purely additive export.
+
+**Five things worth recording:**
+
+1. **The conversion is pinned to the km segmentation, and the km/mi toggle is
+   display-only.** Following the display unit would have let flipping to miles
+   move the answer by up to 0.43% (minutes, on Pikes Peak) with no explanation
+   on screen. `effortMultiplier` had already made the same call for the same
+   reason; this now matches it.
+2. **That forced `sharedGapPace`.** The page claims both finishes are run at
+   the *same* grade-adjusted pace, and in mile mode the obvious
+   `gapPaceFromGoalTime(…, "miles")` quietly makes that false, because the
+   conversion is defined on km. GAP is one physical quantity — seconds per
+   flat-equivalent kilometre — so the mile figure is a **unit conversion of the
+   km one**, never a re-segmentation. Pinned by a test asserting the two are
+   *not* interchangeable.
+3. **The two directions are not additively symmetric.** Boston → Berlin is
+   +1:10; Berlin → Boston is −1:09. It is a ratio, so each direction takes its
+   percentage off a different base. The round trip is still exact. A component
+   test caught this and now documents it, because it looks like an off-by-one
+   and is not.
+4. **`parseCompareParams` has no failure case**, unlike `parseResultsParams`.
+   /results cannot render without a course; /compare renders two empty pickers,
+   which is its legitimate resting state — so a junk param degrades to a
+   default instead of replacing a usable page with an error.
+5. **The nav is at its budget.** Four links needed `gap-6 lg:gap-8` to stay on
+   one line at `sm`. The height invariant from #6 is untouched (links are still
+   20px of line box); a fifth tool needs a different answer, not a smaller gap.
+
+**Two small refactors came with it:** `formatVsFlat` moved out of
+`CourseRankingTable` into [src/lib/units/effort.ts](src/lib/units/effort.ts) so
+/compare could use it without pulling the ranking table into its bundle (the
+same move #5 made for `metresToFeet`), and `formatSignedHMS` joined
+`src/lib/units/time.ts` — a signed delta that drops a zero hour, since
+"0:05:22" reads as a duration rather than a difference. Both still hold after
+the catalog table's removal: `formatVsFlat` prints in `CourseStat` and
+`formatSignedHMS` prints the single result delta.
+
+**Deliberately not done:** the weather layer, exactly as this section says to
+defer it. The page states plainly that it converts terrain only.
+
+---
+
+# Phase 3 — new data or new architecture
+
+## 9. Boston qualifier standards + per-race BQ status
+
+**Status:** 9a + 9b done 2026-09-04 · 9c still blocked · **Ease:** ●●●●○
+
+Shipped as `/boston-qualifier` plus a verdict strip on the results page, over one
+pure module in [src/lib/bq/](src/lib/bq/). **The results-page strip was removed
+on 2026-09-20** during a design pass on that header: everything else there
+describes a race and a plan for running it, and the BQ verdict was the one row
+judging the runner instead, with no bearing on the chart under it. The page, the
+standards, the cut-offs and the net-downhill index are all untouched and still
+reachable at `/boston-qualifier`; only the second surface went. If it comes back,
+it needs a reason that is about the results page, not about the feature. **No schema change, no migration, no
+seed field, no `resultsParams` change** — which is not what the plan assumed, and
+the reason why is the main finding here.
+
+**9b turned out to be free, and that reshaped the project.** The plan costed 9b
+as "one boolean column plus human research across 326 races". Research during
+planning found that the per-race BQ fact that actually matters is not
+certification but the B.A.A.'s **net-downhill time index**, new for the 2027 race:
+a qualifying time run on a course with a big net drop has time *added to it*
+before it is compared against the standard — +5:00 from 1,500 ft, +10:00 from
+3,000 ft, ineligible from 6,000 ft. And that is computable from data already in
+hand:
+
+- `courseTerrain().netM` is finish minus start, and
+  [terrain.ts](src/lib/pacing/terrain.ts) is explicit that this one figure is
+  **exact at any resolution**, unlike `gainM`/`lossM`. It is precisely the
+  quantity the rule uses.
+- `CourseSummary.terrain` already ships to the client for all 326 courses, so the
+  index needed no query, no column and no research.
+
+Measured across the catalog: **2 courses at +10:00** (Eker I Run −5,462 ft, REVEL
+Mt Charleston −5,056 ft), **6 at +5:00** (St. George −2,491, N4 Elands −1,631,
+Estes Park −1,574, Mendoza −1,549, Utah Valley −1,526, Bhutan International
+−1,517), **none ineligible**. FindMyMarathon publishes the rule but ties it to no
+race; nobody does.
+
+**The cut-off is part of the product, not a footnote.** Meeting the standard only
+buys the right to apply — Boston turned away 8,887 qualified applicants for 2026.
+`BQ_CUTOFFS` carries what acceptance really required, 2012–2026, and the verdict
+reports a count across recent years rather than a prediction, because the cut-off
+turns on application volume nobody knows in advance.
+
+**Three things worth knowing before touching this again**
+
+1. **The index is an estimate and the UI must keep saying so.** Three courses sit
+   within ~110 ft of the 1,500 ft line (Utah Valley −1,526, Bhutan −1,517,
+   Deseret News −1,420 just under), which is well inside the error of a digitized
+   route. `nearThreshold` flags them rather than calling them.
+2. **Known data gap: Jack & Jill's Downhill reads −856 ft** in our geometry
+   (777 m → 516 m; the dense 1,274-point profile agrees, so the source route is
+   wrong, not the 44-point resample) against a published drop near 2,000 ft. It
+   is exactly the kind of race this rule targets and we currently index it at
+   zero. Only better geometry fixes it — see the adopt pipeline.
+3. **A time equal to the standard qualifies.** The comparison is `<=`, not `<`,
+   and `qualify.test.ts` pins it. An off-by-one there tells someone who ran
+   precisely 3:05:00 that they missed.
+
+**The certification boolean is deferred, deliberately.** `bq_certified` on
+`event_series` is still the only way to say "this race is a legitimate
+qualifier", and it still costs human research across 326 races with no bulk
+source. It was left out because the downhill index delivers the per-race value at
+zero cost, and a mostly-null column is a permanent schema commitment for little
+payoff. If it is picked up: USATF/AIMS certification is checkable per race, the
+sign-off pattern to copy is `data/import/decisions.json` + `qa.ts`, and a
+separate `data/bq/certifications.json` fits better than bolting it onto
+`StagedCourse` — the 326 seeded series would never pass back through `qa.ts`.
+
+**9c — qualifier statistics: still blocked, and now for a recorded reason.** "How
+many people BQ'd here" needs results data. RunSignup's API is Apache-licensed but
+that licence covers **the interface, not the content** — their content stays
+under the normal service agreement; Athlinks publishes an API with no bulk reuse
+grant either. Commercial reuse would need a direct agreement with each platform.
+That is the same unsettled-rights problem CLAUDE.md already flags for course
+data, and pacebands are paid product. **Do not start without settling that
+first** — the blocker is legal, not technical.
+
+## 10. Bring your own course — GPX / KML / Strava upload
+
+**Status:** Done 2026-09-04 · **Ease:** ●●●●● · **Hardest by far**
+
+**Design document: [docs/UPLOADED-COURSES.md](docs/UPLOADED-COURSES.md)** — written
+first, as this section asked for, because this is the project that decides
+something against Rule 6.
+
+**What shipped, and the four things that differed from the plan**
+
+1. **All three storage options were the wrong question.** The plan weighed
+   ephemeral state, a `user_course` table and URL-encoded geometry as if the hard
+   part were where to put the bytes. The actual insight is that
+   `COURSE_SLUG_RE` — `/^[a-z0-9][a-z0-9-]{0,63}$/` — already matches a token
+   shaped `u-<22 chars>`. So the results URL, `buildResultsQuery`,
+   `parseResultsParams` and the entire checkout ladder needed **no change at
+   all**; exactly one function, `getCourseBySlug`, learned one branch, and it was
+   already the single existence proof both `/results` and `/api/checkout` share.
+   The table was still the right choice — it just stopped being an architectural
+   fork and became a storage detail.
+2. **The port is byte-identical, and that was not free.** `resample.ts`
+   reproduces `parse_gpx.py` exactly, verified across **all 326 seeded courses**
+   with zero mismatches. The hazard nobody would have predicted: Python's
+   `round()` is half-to-**even**, JS `toFixed` is half-**away-from-zero**, and
+   they diverge on values like `66.25` that a smoothed elevation really does
+   produce. `roundHalfEven()` exists for that. `conformance.test.ts` pins twelve
+   courses chosen for the failure modes they expose, so the two implementations
+   cannot drift.
+3. **Rule 8 answered the paceband question itself.** Ordering clears
+   `expires_at` *before* the Stripe session exists — paying is what makes a
+   course permanent, which is the only way an expiring id and a printed link can
+   coexist. `makeUserCoursePermanent` throws rather than swallowing, uniquely
+   among this app's runtime writes: if the link cannot be promised, the order
+   fails instead. An abandoned checkout leaving a course permanent for free is
+   the accepted cost, bounded by the rate limit.
+4. **The DEM stage had to be re-cut for a live request.** The import pipeline's
+   full-track lookup is ~30 s; the upload route samples a ~100 m-decimated track
+   (~4 s) and interpolates back. Sampling density was never the limiting error —
+   reading the ground instead of the road is, and bridges dominate it.
+
+**Also worth recording:** `scripts/import/route.ts`, `dem.ts` and the library
+half of `elevate.ts` moved to `src/lib/course/` so the app can reach them without
+Next bundling `scripts/`; thin re-export shims mean no import script or its tests
+changed. Uploads never enter the catalog — not the picker, the map, `/courses` or
+`/compare` — and an uploaded course is never indexed. Rate limiting is the app's
+first (10/hour, keyed on a salted IP hash), and that hash is a stated departure
+from `weather_window`'s "carries nothing about who asked", disclosed in `/terms`.
+
+**Deliberately not done:** Strava OAuth. Strava exports routes as GPX and those
+files are accepted; an API integration needs the accounts Rule 6 refuses.
+
+<details>
+<summary>The original plan, kept for the record</summary>
+
+Flagged as Phase 2 in CLAUDE.md since before the database existed. ultraPacer,
+Garmin and Stryd all accept an uploaded course.
+
+**The parsing is the easy part; storage is the hard part.**
+
+- **Parsing — mostly already built.** `scripts/import/route.ts` already normalizes
+  `<rte>` exports, KML/KMZ and GeoJSON into single-track GPX, and
+  `scripts/import/elevate.ts` already fills missing elevation from a DEM (tagged
+  `dem:<dataset>`, never confused with surveyed elevation). Both are Node and could
+  be lifted behind a server route. The 44-point resampler is
+  `scripts/gpx_parser/parse_gpx.py` — **Python, and Rule 7 says app code is
+  TypeScript**. Either port the resampler to TS (the honest option) or accept a
+  Python runtime on the server (a real deployment change on Vercel). This decision
+  needs to be made before any code is written.
+- **Storage — the actual blocker.** Courses are database rows with permanent slugs
+  (Rule 8), and there is no auth and no user-owned data (Rule 6). An uploaded course
+  has nowhere to live. The options, none free:
+  1. Ephemeral in-session only — but that breaks the shareable `/results` URL, which
+     is a core property of the product, and breaks the checkout flow, which
+     validates `courseId` against the database ("no course, no charge").
+  2. A `user_course` table keyed by a random token — workable, keeps links
+     shareable, but it is user-generated content in a database that has been
+     public-read-only by design, and it needs size limits, rate limiting and an
+     abuse story.
+  3. Encode the geometry in the URL — too large for 44 points plus coordinates.
+- **Also needs:** upload UI, file size/type validation, a distance sanity check
+  (the parser's existing [41.5, 43.6] km window and the reasons it was widened
+  twice), and a decision on whether an uploaded course can be ordered as a physical
+  paceband at all.
+
+**Recommendation:** do not start this until 1–8 are done. It is the one project that
+forces a decision against Rule 6, and it deserves its own design document first.
+
+</details>
+
+---
+
+## 11. Stop the calculator driving the address bar
+
+**Status:** Done 2026-09-17 · **Ease:** ●●○○○
+
+Every edit on `/results` was written back into the URL by a 300 ms debounced
+`router.replace` in `Dashboard.tsx`, and `/compare` did the same with
+`window.history.replaceState`. Changing a goal time, a unit or a split strategy
+churned the address bar continuously. Mainstream calculators do not do this
+(McMillan's stays at `/dashboard/` however much you edit), and it made sharing an
+accident of the URL rather than a thing anyone chose.
+
+**What shipped**
+
+- Both write-backs deleted. The URL is now **read on arrival and never written**.
+  Nothing about the *inbound* contract moved: `resultsParams.ts`,
+  `compareParams.ts`, `results/page.tsx`'s parsing, `lib/orders.ts` and
+  `/api/checkout` are untouched, so every calendar link, ranking link and paid
+  paceband `resultsUrl` still resolves exactly as before. Order queries were
+  already built from `result.input` rather than the address bar, so the
+  fulfillment record in Stripe metadata (docs/FULFILLMENT.md) is unaffected.
+- **`/api/courses/[slug]`** is new, and is the part that was not obvious. The URL
+  write was not a mirror of state: it was the course-switching mechanism, because
+  new geometry only reached the browser when `router.replace` re-ran the server
+  component. `Dashboard` now fetches the geometry itself, one course at a time,
+  memoised per dashboard so flipping between two races costs one request each. It
+  wraps `getCourseBySlug`, so uploaded `u-` courses work without a second branch.
+- **`CopyLinkButton`** (shared by both pages) replaces the address bar as the way
+  to share: it serializes the current state through the same builders on press.
+  New funnel event `copy_link_clicked`, registered in both `lib/analytics.ts` and
+  `api/event/route.ts`.
+- **`Dashboard.test.tsx` is new.** There was no test for this component at all,
+  which is why the URL/geometry coupling was easy to miss. It now covers the
+  no-URL-writes guarantee, the fetch-on-switch path, the cache, out-of-order
+  responses and the failure path.
+
+**Turned out differently from the plan:** the failure path needed a visible
+**Try again** button. Re-picking the same course does not change the wanted id, so
+a failed fetch would otherwise have been unrecoverable without a reload.
+
+## 12. Course cost model — fix the race-time conversion
+
+**Status:** Done 2026-09-18 · **Ease:** ●●●○○
+
+`/compare` converted a 4:00:00 Boston into 4:01:06 at New York. FindMyMarathon
+says 4:03:20. The gap was not a tuning error, it was two structural faults, and
+the first investigation (damping) found only part of it.
+
+**What was wrong**
+
+`equivalentGoalTime` divided two `CourseEffort` figures, and `CourseEffort` is
+built from `adjustmentFactor` — the pacing engine's curve, damped to k = 0.35 and
+applied EQUALLY to climbs and descents. That curve was calibrated in May against
+published pace BANDS (see `PACE_BAND_PROBLEM_REPORT.md`) and is right for that
+job; `fmm.boston.regression.test.ts` still pins it to ±11 s. It was never right
+for comparing two courses:
+
+- **Symmetry.** Minetti's cost curve is close to symmetric at road grades, so
+  climbing and descending nearly cancel and a rolling course reduces to almost
+  exactly its flat distance. 292 of 326 seeded courses landed inside the ±0.5%
+  band `formatVsFlat` refuses to quote. Big Sur read 0.3% **faster** than flat.
+  Blue Ridge, measured at 3,371 ft of climbing and marketed as America's toughest
+  road marathon, read 0.6% harder.
+- **Altitude was computed and then not used.** `courseAltitude` has shipped since
+  #7 and `totalEffortMultiplier` already multiplied it in for DISPLAY, but the
+  conversion math read geometry alone. A mile-high course converted as though it
+  were at sea level.
+
+Measured against 44 published FindMyMarathon Course Scores, R² of the shipped
+model was **0.017**. Retuning the damping constant cannot fix that: the best any
+symmetric curve reaches is 0.027, because the defect is the shape, not the scale.
+
+| model | R² | RMS on a 4:00:00 conversion |
+|---|---|---|
+| shipped (k = 0.35, symmetric, no altitude) | 0.017 | 275 s |
+| any symmetric k, no altitude | 0.027 | 273 s |
+| symmetric + altitude | 0.381 | 218 s |
+| asymmetric, no altitude | 0.667 | 160 s |
+| **asymmetric + altitude (shipped)** | **0.925** | **76 s** |
+
+Both halves are needed and neither alone is enough.
+
+**What shipped**
+
+- **`src/lib/pacing/courseCost.ts`** — a SECOND grade-response curve,
+  `clamp(1 + k(g)·(C_r(g)/C_r(0) − 1), 0.6, 2.5)` with `k_up = 1.95` and
+  `k_down = 0.80`, fitted to the 44 Course Scores. `adjustment.ts`, `minetti.ts`,
+  `normalize.ts`, `index.ts` and `segments.ts` are untouched, so **no pace band,
+  no split, no paceband PDF and no shared `/results` link moves.** That
+  separation is the whole design: two questions, two curves, two external
+  references, two regression tests.
+- **`CourseCost` on `CourseSummary`**, beside `CourseEffort` rather than
+  replacing it. `effort` still inverts the engine exactly, which is what makes a
+  GAP goal round-trip; `cost` is what /compare and /courses read. Catalog cache
+  key bumped to `course-catalog-v3`.
+- **Altitude folded into the conversion** via `totalCostKm`, the one place grade
+  cost and air cost are combined. `totalEffortMultiplier` is now that number over
+  the marathon distance, so the figure the ranking table prints and the figure
+  the conversion divides are provably the same one.
+- **`equalEffortPace`** replaces the engine's GAP on /compare, and the label
+  changed from "Grade-adjusted pace" to "Equal-effort pace" because the number
+  now includes altitude and the old name would have been a lie on a mountain
+  course. It is the invariant the conversion holds fixed, so the page's claim is
+  now literally true rather than nearly true.
+- **`fmm.courseScore.regression.test.ts`** — the calibration set committed as a
+  test, the sibling of the Boston band pin. The fit itself is circular (the
+  coefficients came from this data), so what the test actually guards is that the
+  asymmetry and the altitude term cannot be quietly removed: both are asserted
+  against the alternatives they beat. Plus face-validity cases on courses runners
+  have opinions about.
+
+**Effect.** Boston 4:00:00 → New York now reads **4:02:30** against FMM's
+4:03:20, up from 4:01:06. Blue Ridge went from +170 s to +1,672 s (FMM: +1,472
+s). The catalog spans 0.875 (Eker I Run) to 1.682 (Pikes Peak) where it used to
+span 0.936 to 1.071, and 92 of 326 courses sit in the flat-equivalent band
+instead of 292.
+
+**Turned out differently from the plan**
+
+- **The 44 reference courses were QA'd against FMM's own published gain/loss
+  before being admitted**, and all 44 agree on net elevation change. Worth doing:
+  the compare tool fuzzy-matches names and a silent mismatch would have poisoned
+  the fit.
+- **The altitude exponent was left free in the fit and came back at exactly 1.0**,
+  which is an independent external check on the Wehrlin & Hallen model from #7
+  rather than a number anyone tuned.
+- **Deriving cost from `*.profile.json` instead of the 44-point array was
+  measured and deferred.** Resampling the dense profile at 500 m and refitting
+  gives R² 0.935 against 0.925 and RMS 71 s against 76 s: real, but small, and it
+  costs a schema column, a migration, a seed-time precompute and a stored derived
+  value that can go stale against the code. The catalog query deliberately does
+  not select `profile` (7-48 KB per row against 326 rows). Recorded below rather
+  than half-built.
+
+---
+
+# Explicitly deferred
+
+Gaps found in the competitive audit that are **not** on this roadmap, recorded so
+they are not rediscovered from scratch:
+
+- **Blocked by Rule 6 (no auth):** saved plans and history, coach rosters and
+  multi-athlete plans, pace-team bulk ordering, race-organizer course admin.
+- **Not yet prioritized:** race-time prediction from a recent result (Riegel/VDOT);
+  half marathon and other distances (the largest single market expansion, but
+  42.195 km and the 44-point array are load-bearing throughout); PDF and .FIT/Garmin
+  export; a live phone pace band with voice prompts (FindMyMarathon sells one at
+  $5.99); paceband SKU variants; 5K/checkpoint split views; fluid, sodium and
+  caffeine in the fueling plan; aid-station waypoints; finer segmentation
+  (elevation-change splits); surface and turn costs; post-race plan-vs-actual analysis.
+- **Evaluated and declined:** a fatigue / drift model. Late-race slowing is real but is
+  mostly a *consequence* of starting too fast, and the fastest strategy is even-to-slightly-
+  negative — so prescribing a fade would work against the goal. Projects #1 and #2 give the
+  runner that control directly. Do not reopen without new evidence.
+- **Refreshing `/results` returns the arrival state, not the edited one** (from #11,
+  2026-09-17). The address bar is frozen at whatever the page loaded with, so a
+  reload discards subsequent edits. Accepted deliberately: the alternative,
+  stripping the query after load, makes a refresh land on the "Missing or unknown
+  course" error page, since `courseId` is required. The fix if it ever bites is
+  session persistence for the dashboard form, extending the precedence already in
+  `lib/editions.ts` (URL wins, then the stored snapshot, then defaults) rather than
+  overturning it. `InputForm` deliberately does not set `persist` on the dashboard
+  today, and that is the line to change.
+- **Already computed but never shown:** the hourly weather series across the race —
+  the math consumes it, the UI never charts it. Cheap and differentiating.
+- **Goal stated as Pace or GAP**, switched off on 2026-09-17 behind
+  `GOAL_INPUT_MODES_ENABLED` in `src/lib/featureFlags.ts`. Not a retreat from the
+  feature: the dashboard sidebar could not carry the Time/Pace/GAP control and the
+  km/mi toggle on one line without them crowding each other, and the goal mode is
+  the one of the two a runner can do without, since every mode collapses to the
+  same `goalTimeSeconds` before it reaches the engine or a shared link. The code
+  and its full test suite stay live (`InputForm.goalMode.test.tsx` mocks the flag
+  on), so re-enabling is one constant. Re-enable once the goal row has somewhere
+  roomier to put it, not by squeezing it back in.
+
+- **findmymarathon's other two course axes**, deliberately not adopted alongside
+  its profile taxonomy on 2026-09-08. **Course Type** (Loop / Mostly Loop /
+  Multi-Loop / Out & Back / Mostly Out & Back / Multi Out & Back / Point to
+  Point) is derivable in principle from the stored `coords` array — start/finish
+  proximity plus self-intersection — but nothing in the app reads it today.
+  **Surface** (Road / Mostly Road / Trail / Mostly Trail) is **not derivable at
+  all**: it is nowhere in GPX and would need a per-course human field, i.e. the
+  same sign-off burden as `organizer` and for the same reason it is still null.
+  Neither blocks anything; note them here rather than half-building them.
+
+- **Course cost from the dense profile rather than the 44-point array** (from #12,
+  2026-09-18; **numbers corrected 2026-09-20** after an independent re-measurement
+  failed to reproduce them). Resampling `*.profile.json` **at 500 m does not help**:
+  it scores R² 0.9235 against FindMyMarathon's Course Scores and 77 s RMS on a
+  4-hour conversion, against the shipped 44-point array's 0.9246 and 76 s. The
+  spacing that helps is **1 km**: R² 0.9330, and 0.9297 under leave-one-out
+  cross-validation against the 44-point array's 0.9156, dropping RMS from 76 s to
+  72 s. Two traps for whoever picks this up:
+  - **Finer is worse, not better.** 250 m scores 0.9090. Below about a kilometre,
+    digitization noise in the source track reads as real climbing, and because the
+    cost curve is asymmetric that noise is charged at `k_up` and never refunded.
+    One kilometre is roughly where the noise stops dominating and real terrain
+    starts, which is the same scale the 44-point array already works at.
+  - **Normalise by the profile's own measured length, not by 42.195.** Dividing
+    the summed cost by the marathon distance instead of by the track's own length
+    lets digitization over-measurement leak straight into the multiplier and
+    collapses the fit to ~0.85 at either spacing.
+
+  Still deferred, and the 4 s it is worth on a 4-hour conversion is why: it needs a
+  stored, seed-time-computed column (the catalog must not select `profile`, which
+  is 7-48 KB per row), and a derived value in the database can drift from the code
+  that defines it. Revisit together with the item below, which is the larger error
+  of the two.
+- **Several source GPX files badly under-record climbing** (from #12,
+  2026-09-18). Our 44-point arrays retain between 7% and 53% of FindMyMarathon's
+  surveyed elevation gain, and the ratio varies per course rather than being a
+  constant we could calibrate out. New York is the worst of the majors: 293 ft of
+  gain in the source GPX against FMM's 966 ft, because the bridge climbs are
+  smoothed away before the parser ever sees them, and it stays the largest
+  road-course residual in the fit (-184 s on a 4-hour conversion) after the model
+  was corrected. California International is more extreme still at 112 ft against
+  663 ft. Part of what `k_up = 1.95` is doing is standing in for climbing the data
+  never recorded, which is the honest reason that coefficient is above 1. The fix
+  is re-sourcing individual GPX files, not a model change.

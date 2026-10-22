@@ -164,6 +164,11 @@ const DISCRIMINATING_WORDS = new Set([
  */
 export const MATCH_ALIASES: Record<string, string> = {
   ft: "fort",
+  // goandrace lists some events under their Italian names. "Tokio Marathon"
+  // shares no token at all with the seeded "Tokyo Marathon", so it scored 0.15
+  // and was about to be imported as a second, duplicate Tokyo course during the
+  // 2015-2024 archive sweep (2026-09-25).
+  tokio: "tokyo",
   mount: "mt",
   mtn: "mountain",
   intl: "international",
@@ -251,6 +256,27 @@ export function nameSimilarity(a: string, b: string): number {
  * agreement is worth a nudge but never a match on its own — "Springfield
  * Marathon" exists in three US states alone.
  */
+/**
+ * Brand names that are also the name of a city with its own seeded marathon.
+ *
+ * Zurich Insurance sponsors marathons all over Spain. "Zurich Rock 'n' Roll
+ * Running Series Madrid" and "Zurich San Sebastián Marathon" both score a
+ * perfect 1.00 against the seeded "Zürich Marathon", because the seeded name
+ * reduces to the single token {zurich} and a subset always scores 1.0. The
+ * 2015-2024 archive sweep on 2026-09-25 dropped both as duplicates.
+ *
+ * The rule below is deliberately as narrow as the evidence: it fires only when
+ * a *single* shared token carries the whole match AND that token is in this
+ * set AND the two cities disagree. Anything broader was measured against all
+ * 1,086 crawled events and would have let 52 genuine duplicates through, most
+ * of them races whose city legitimately differs from the seeded one (a
+ * point-to-point start town, or a city named in another language: "Lisboa"
+ * for Lisbon, "Parigi" for Paris, "Pafos" for Paphos).
+ *
+ * Add a word here only after seeing it cause a wrong skip.
+ */
+const SPONSOR_CITY_WORDS = new Set(["zurich"]);
+
 export function findNameMatch<T extends { name: string; citySlug: string }>(
   name: string,
   locality: string | null,
@@ -266,9 +292,19 @@ export function findNameMatch<T extends { name: string; citySlug: string }>(
   }
   if (!best || best.score < threshold) return null;
 
-  // A perfect token-subset score does not survive a differentiator that only
-  // one side carries — see the comment on DISCRIMINATING_WORDS.
+  // A match resting on one shared word, where that word is a sponsor that is
+  // also a city, is not evidence of a duplicate — see SPONSOR_CITY_WORDS.
   const candidateTokens = matchTokens(best.name);
+  const shared = [...nameTokens].filter((t) => candidateTokens.has(t));
+  if (
+    shared.length === 1 &&
+    SPONSOR_CITY_WORDS.has(shared[0]) &&
+    locality &&
+    nameSimilarity(locality, best.citySlug) <= 0.4
+  ) {
+    return null;
+  }
+
   for (const word of DISCRIMINATING_WORDS) {
     if (nameTokens.has(word) !== candidateTokens.has(word)) return null;
   }
@@ -286,6 +322,38 @@ export function findNameMatch<T extends { name: string; citySlug: string }>(
  * rather than be invented.
  */
 export const COUNTRY_NAMES: Record<string, string> = {
+  // Added 2026-09-23 with the world roster (ROADMAP #23): every country the
+  // six Wikipedia marathon lists name that this table did not already cover.
+  // A missing name is not cosmetic — qa.ts writes it straight into the city
+  // seed row, so without these a Ugandan race seeds `countryName: "UG"`.
+  BG: "Bulgaria",
+  BW: "Botswana",
+  GA: "Gabon",
+  GH: "Ghana",
+  GL: "Greenland",
+  JE: "Jersey",
+  JM: "Jamaica",
+  KG: "Kyrgyzstan",
+  KH: "Cambodia",
+  KP: "North Korea",
+  KW: "Kuwait",
+  LK: "Sri Lanka",
+  LR: "Liberia",
+  MD: "Moldova",
+  ME: "Montenegro",
+  MK: "North Macedonia",
+  MN: "Mongolia",
+  MO: "Macau",
+  PF: "French Polynesia",
+  PK: "Pakistan",
+  PS: "Palestine",
+  PW: "Palau",
+  QA: "Qatar",
+  RU: "Russia",
+  RW: "Rwanda",
+  UG: "Uganda",
+  UZ: "Uzbekistan",
+
   AE: "United Arab Emirates",
   AR: "Argentina",
   AT: "Austria",
@@ -301,6 +369,7 @@ export const COUNTRY_NAMES: Record<string, string> = {
   CL: "Chile",
   CN: "China",
   CO: "Colombia",
+  CU: "Cuba",
   CY: "Cyprus",
   CZ: "Czechia",
   DE: "Germany",
@@ -385,6 +454,7 @@ const ZONE_BY_COUNTRY: Record<string, string> = {
   CH: "Europe/Zurich",
   CN: "Asia/Shanghai",
   CO: "America/Bogota",
+  CU: "America/Havana",
   CY: "Asia/Nicosia",
   CZ: "Europe/Prague",
   DE: "Europe/Berlin",
@@ -449,6 +519,33 @@ const ZONE_BY_COUNTRY: Record<string, string> = {
   ZA: "Africa/Johannesburg",
   AR: "America/Argentina/Buenos_Aires",
   NZ: "Pacific/Auckland", // Chatham Islands differ
+
+  // Added with the world roster (ROADMAP #23). Greenland, Mongolia, French
+  // Polynesia and Russia are deliberately absent: they span zones, so they go
+  // through zoneByLongitude instead and their guess carries needsConfirmation.
+  BG: "Europe/Sofia",
+  BW: "Africa/Gaborone",
+  GA: "Africa/Libreville",
+  GH: "Africa/Accra",
+  JE: "Europe/Jersey",
+  JM: "America/Jamaica",
+  KG: "Asia/Bishkek",
+  KH: "Asia/Phnom_Penh",
+  KP: "Asia/Pyongyang",
+  KW: "Asia/Kuwait",
+  LK: "Asia/Colombo",
+  LR: "Africa/Monrovia",
+  MD: "Europe/Chisinau",
+  ME: "Europe/Podgorica",
+  MK: "Europe/Skopje",
+  MO: "Asia/Macau",
+  PK: "Asia/Karachi",
+  PS: "Asia/Gaza",
+  PW: "Pacific/Palau",
+  QA: "Asia/Qatar",
+  RW: "Africa/Kigali",
+  UG: "Africa/Kampala",
+  UZ: "Asia/Tashkent",
 };
 
 /**
@@ -495,6 +592,22 @@ function zoneByLongitude(
       return "Asia/Jayapura";
     case "CL":
       return "America/Santiago";
+    // Added with the world roster (ROADMAP #23). Each of these spans zones, so
+    // the answer below is the zone any marathon in the country is realistically
+    // in, returned through the banded path so the reviewer is told to confirm
+    // it rather than through ZONE_BY_COUNTRY, which asserts there is only one.
+    case "RU":
+      if (lon > 130) return "Asia/Vladivostok";
+      if (lon > 110) return "Asia/Irkutsk";
+      if (lon > 80) return "Asia/Krasnoyarsk";
+      if (lon > 60) return "Asia/Yekaterinburg";
+      return "Europe/Moscow";
+    case "GL":
+      return "America/Nuuk";
+    case "MN":
+      return "Asia/Ulaanbaatar";
+    case "PF":
+      return "Pacific/Tahiti";
     default:
       return null;
   }
@@ -561,6 +674,18 @@ export const DEFAULT_SOURCE_SITE = "goandrace.com";
  */
 export type ElevationSource = "gpx" | `dem:${string}`;
 
+/**
+ * How a course's *line* was obtained — a route file someone published, or a
+ * route we drew ourselves from a published course map and snapped to the road
+ * network (ROADMAP #23, trace.ts).
+ *
+ * Deliberately the same shape as ElevationSource, for the same reason: a traced
+ * course is a real course, but it is a different kind of data from a surveyed
+ * one, and the DEM precedent is that the difference gets recorded rather than
+ * blended in. See docs/COURSE-RIGHTS.md §4.
+ */
+export type GeometrySource = "gpx" | `traced:${string}`;
+
 /** One event as scraped, before any geometry exists. Written by fetch.ts. */
 export interface RawEvent {
   courseSlug: string;
@@ -580,6 +705,8 @@ export interface RawEvent {
   sourceSite?: string;
   /** Absent means "gpx": nothing but adopt.ts has ever produced anything else. */
   elevationSource?: ElevationSource;
+  /** Absent means "gpx". Set by adopt.ts for a traced entry only. */
+  geometrySource?: GeometrySource;
   /** Why a human vouched for this route file. Set by adopt.ts only. */
   routeNote?: string;
   /** Non-fatal notes from normalisation/elevation, surfaced by qa.ts. */
@@ -609,6 +736,8 @@ export interface StagedCourse {
     /** Absent on entries written before a second source existed. */
     site?: string;
     elevation?: ElevationSource;
+    /** Absent means "gpx" — see GeometrySource. */
+    geometry?: GeometrySource;
     note?: string;
   };
   stats: { totalKm: number | null; gainM: number | null };
@@ -687,4 +816,165 @@ export function flagNumber(
   const n = Number(raw);
   if (!Number.isFinite(n)) throw new Error(`${name} must be a number, got "${raw}"`);
   return n;
+}
+
+// ---------------------------------------------------------------------------
+// CSV
+//
+// Three committed worklists are CSV — the findmymarathon tracker, the world
+// roster and the unified backlog — because they are files a person opens,
+// sorts and edits by hand between pipeline runs. These moved here from
+// reconcile-csv.ts when backlog.ts and roster.ts needed the same reader
+// (ROADMAP #23); reconcile-csv.ts imports them back and is otherwise unchanged.
+// ---------------------------------------------------------------------------
+
+/** Minimal RFC-4180 reader — every one of these files quotes its city field. */
+export function parseCsv(text: string): string[][] {
+  const rows: string[][] = [];
+  let row: string[] = [];
+  let cur = "";
+  let quoted = false;
+  for (let i = 0; i < text.length; i += 1) {
+    const c = text[i];
+    if (quoted) {
+      if (c !== '"') cur += c;
+      else if (text[i + 1] === '"') {
+        cur += '"';
+        i += 1;
+      } else quoted = false;
+    } else if (c === '"') quoted = true;
+    else if (c === ",") {
+      row.push(cur);
+      cur = "";
+    } else if (c === "\n") {
+      row.push(cur);
+      rows.push(row);
+      row = [];
+      cur = "";
+    } else if (c !== "\r") cur += c;
+  }
+  if (cur || row.length) {
+    row.push(cur);
+    rows.push(row);
+  }
+  return rows;
+}
+
+export function toCsvField(value: string): string {
+  return /[",\n]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value;
+}
+
+/** Header row plus data rows, joined into a file body with a trailing newline. */
+export function toCsv(header: readonly string[], rows: readonly string[][]): string {
+  return [header, ...rows].map((r) => r.map(toCsvField).join(",")).join("\n") + "\n";
+}
+
+/** `"Kingwood, TX 01/01/2027"` -> `Kingwood`. */
+export function cityOf(field: string): string {
+  return field
+    .replace(/\s+\d{2}\/\d{2}\/\d{4}\s*$/, "")
+    .replace(/\s+TBD\s*$/, "")
+    .split(",")[0]
+    .trim();
+}
+
+// The findmymarathon CSV's fourth column is a US state, a Canadian province, or
+// findmymarathon's own country abbreviation — which is not ISO. Mapping it to a
+// real country code is what stops "Victoria Marathon" in British Columbia
+// matching Victoria Falls in Zimbabwe, and "B and A Marathon" in Maryland
+// matching Båstad in Sweden. Both scored above the name threshold on tokens
+// alone.
+export const US_STATES = new Set(
+  ("AL AK AZ AR CA CO CT DE DC FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO " +
+    "MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY").split(" "),
+);
+export const CA_PROVINCES = new Set("ON QC BC AB SK MB NS NB NL PE YT NT NU".split(" "));
+
+/** findmymarathon's non-ISO country abbreviations, as they appear in the file. */
+export const CSV_COUNTRY: Record<string, string> = {
+  GR: "DE", // Germany — Berlin, Hamburg and Frankfurt are all filed under GR
+  GC: "GR", // Greece
+  NR: "NL", // Netherlands
+  AG: "AR", // Argentina
+  AA: "AW", // Aruba
+  CI: "KY", // Cayman Islands
+  UK: "GB",
+  CL: "CO", // Colombia (Medellín); not Chile. "CO" is taken by Colorado
+  CU: "CW", // Curaçao (Willemstad); not Cuba
+};
+
+export function countryOf(state: string): string | null {
+  if (US_STATES.has(state)) return "US";
+  if (CA_PROVINCES.has(state)) return "CA";
+  if (!/^[A-Z]{2}$/.test(state)) return null;
+  return CSV_COUNTRY[state] ?? state;
+}
+
+/**
+ * The 27 cp1252 bytes 0x80-0x9F that are not Latin-1, keyed by the character
+ * they decode to. Mojibake is produced by cp1252 far more often than by pure
+ * Latin-1, and these are the bytes where the two disagree — the smart quotes
+ * and dashes that make "Savai\u2019i" arrive as "Savai\u00e2\u20ac\u2122i".
+ */
+const CP1252_REVERSE: Record<string, number> = {
+  "\u20AC": 0x80, "\u201A": 0x82, "\u0192": 0x83, "\u201E": 0x84,
+  "\u2026": 0x85, "\u2020": 0x86, "\u2021": 0x87, "\u02C6": 0x88,
+  "\u2030": 0x89, "\u0160": 0x8a, "\u2039": 0x8b, "\u0152": 0x8c,
+  "\u017D": 0x8e, "\u2018": 0x91, "\u2019": 0x92, "\u201C": 0x93,
+  "\u201D": 0x94, "\u2022": 0x95, "\u2013": 0x96, "\u2014": 0x97,
+  "\u02DC": 0x98, "\u2122": 0x99, "\u0161": 0x9a, "\u203A": 0x9b,
+  "\u0153": 0x9c, "\u017E": 0x9e, "\u0178": 0x9f,
+};
+
+/**
+ * Repair double-encoded UTF-8 in a scraped string.
+ *
+ * Not our bug and not our decoding: goandrace's pages declare `charset=UTF-8`,
+ * are served as UTF-8, and contain the bytes `C3 83 C2 BC` where "ü" belongs.
+ * That is "Ã¼" correctly encoded as UTF-8, i.e. the text was already mojibake
+ * before it was published. Zürich arrives as `ZÃ¼rich`, Tromsø as `TromsÃ¸`,
+ * Füssen as `FÃ¼ssen`.
+ *
+ * This matters because a locality becomes a city slug and a display name, and
+ * because `findNameMatch` compares the locality against the seeded citySlug to
+ * decide whether a race is a duplicate: `ZÃ¼rich` shares no token with
+ * `zurich-ch`, so the check silently loses its city evidence exactly where a
+ * sponsor-name collision needs it most (found during the 2015-2024 archive
+ * sweep, 2026-09-25).
+ *
+ * The repair is the exact inverse: take the string's code points as bytes and
+ * decode them as UTF-8. It is applied only when the string carries the
+ * tell-tale sequences and only when the round trip produces something that
+ * re-encodes to what we started with, so a name that legitimately contains "Ã"
+ * is left alone.
+ */
+export function repairMojibake(input: string): string {
+  // Any Latin-1 supplement character is enough to be worth testing: mojibake
+  // always contains at least one, and the round-trip check below is what
+  // actually decides. Triggering only on "Ã" or "Â" missed the cp1252 family
+  // entirely, where "Savai\u2019i" arrives as "Savai\u00e2\u20ac\u2122i" and
+  // carries neither.
+  if (!/[\u00A0-\u00FF]/.test(input)) return input;
+
+  const bytes = Uint8Array.from(
+    [...input].map((c) => CP1252_REVERSE[c] ?? c.codePointAt(0) ?? 0),
+  );
+  // A character that is neither a cp1252 high-range glyph nor a code point
+  // under 0x100 cannot have come from a single mis-decoded byte, so the string
+  // is not a straightforward double encoding. Leave it alone.
+  if ([...input].some((c) => CP1252_REVERSE[c] === undefined && (c.codePointAt(0) ?? 0) > 0xff)) {
+    return input;
+  }
+  try {
+    const decoded = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+    // Round-trip check: only accept a repair that is reversible, which is what
+    // makes this safe to run over every scraped string.
+    const toChar = new Map(Object.entries(CP1252_REVERSE).map(([c, b]) => [b, c]));
+    const reencoded = [...new TextEncoder().encode(decoded)]
+      .map((b) => toChar.get(b) ?? String.fromCharCode(b))
+      .join("");
+    return reencoded === input ? decoded : input;
+  } catch {
+    return input; // not valid UTF-8 underneath; it was never double-encoded
+  }
 }

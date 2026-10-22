@@ -1,6 +1,6 @@
 ---
 name: adopt-races
-description: Add marathon courses that goandrace.com does not list, by finding a course file on the organizer's own site and running it through scripts/import/adopt.ts. Sources candidate races from data/import/findmymarathon-tracker.csv (546 rows marked not-on-source as of 2026-08-17) — findmymarathon.com is a discovery roster only, never a geometry source: its elevation charts are rendered JPEGs with no coordinates. Use when the user asks to "adopt races", "add marathons not on goandrace", "find marathons from findmymarathon", "add races we're missing", or names a specific race already known to be absent from goandrace's calendar.
+description: Add marathon courses that goandrace.com does not list, by finding a course file on the organizer's own site and running it through scripts/import/adopt.ts. Sources candidates from the ranked data/import/backlog.csv (1,089 rows across 88 countries, ordered by reach) — findmymarathon.com is a discovery roster only, never a geometry source: its elevation charts are rendered JPEGs with no coordinates. Use when the user asks to "adopt races", "add marathons not on goandrace", "find marathons from findmymarathon", "add races we're missing", or names a specific race already known to be absent from goandrace's calendar.
 ---
 
 # adopt-races — add marathons goandrace.com does not have
@@ -20,8 +20,12 @@ yourself and report the outcome.
 
 goandrace's coverage is strong in the US and Italy and thin everywhere else.
 findmymarathon.com's own tracker — `data/import/findmymarathon-tracker.csv`,
-kept current by `npm run import:reconcile` — has **546 rows with no goandrace
-listing in any crawl**, overwhelmingly US regional. No amount of re-sweeping
+kept current by `npm run import:findmymarathon` + `npm run import:reconcile` —
+has **~550 rows with no goandrace listing in any crawl**, overwhelmingly US
+regional. Its `website` column is the organizer's site as findmymarathon links
+it, which is where step 1 below starts. The sibling skill `fill-marathon-gaps`
+works that tracker largest-field-first and routes each row to this skill,
+`import-races`, or a trace. No amount of re-sweeping
 goandrace reaches them, because they were never there.
 
 **findmymarathon.com itself is not a geometry source.** Its elevation charts
@@ -36,16 +40,31 @@ website instead.
 ## Selecting candidates
 
 ```bash
-npm run import:reconcile -- --adoptable
+npm run import:backlog                 # regenerate + re-rank (offline, fast)
+npm run import:backlog -- --top 20     # the next twenty worth working
+npm run import:backlog -- --country BR # ...narrowed to one country
+npm run import:backlog -- --stats      # which source class has been paying off
 ```
 
-Lists every `not-on-source` row grouped by state/country, soonest-agnostic.
-Pick a batch by whatever the user asked for — a region, a count, a specific
-race. If the user just says "find some more marathons," default to **5**:
-each race here costs a real web search and a still-runs check, not a shared
-calendar crawl, so this does not scale the way a goandrace `--limit 50` does.
-Prefer races with a date in the next 12 months — recent evidence they still
-run, and no still-runs check needed (see below).
+`data/import/backlog.csv` is the single worklist (ROADMAP #23). It merges the
+findmymarathon tracker's `not-on-source` rows, the international Wikipedia
+roster, and the races goandrace listed but which were rejected only for "event
+page links no course map" — **1,089 rows across 88 countries**, ordered by
+`reachScore` so a session takes the top N and stops rather than walking a CSV
+alphabetically. `reachBasis` says why each row scored what it did.
+
+Take the top N for whatever N the user asked for. If they just say "find some
+more marathons," default to **5**: each race here costs a real web search and a
+still-runs check, not a shared calendar crawl, so it does not scale the way a
+goandrace `--limit 50` does. Prefer rows with a date in the next 12 months:
+recent evidence they still run, and no still-runs check needed (see below).
+
+**Check goandrace before searching the open web.** Its archive back to 2015 is
+*not* exhausted and holds plenty of races the 2025-2029 window missed — Singapore,
+Riga, Kobe, Hanoi and Nicosia all came out of it in #23. A single
+`npm run import:fetch -- --url "<event page>"` is cheaper and better-vetted than
+any search. `npm run import:reconcile -- --adoptable` still lists the tracker's
+adoptable rows if you want that older view.
 
 ## Per-race research
 
@@ -57,15 +76,25 @@ For each candidate, in order:
    directly (Bend Marathon's `course-info.html` is the pattern — a plain
    `href="…course.gpx"`). A `filetype:gpx` WebSearch sometimes lands on it
    faster than browsing the site.
-2. **If the organizer publishes nothing, try a route host** (RunGo,
-   plotaroute, Strava routes) as a fallback, not a first choice — see Rights,
-   below, before using anything found there.
-3. **Confirm the race still runs**, same bar as an archived goandrace listing:
+2. **If the organizer publishes only a map image, trace it.** A JPG or PDF
+   course map is the common case, not the exception (Porto, Fukuoka and
+   Montreal all publish exactly that, and a USATF certification packet is a
+   raster PDF too). `npm run import:trace -- --waypoints <file>` draws the
+   route from the map and snaps it to the road network; the entry then goes in
+   `adoptions.json` with `routeSource: "traced"` and a `traceMethod`, and is
+   labelled all the way through QA and the seed files. **About one waypoint per
+   kilometre — more makes it much worse.** See `docs/COURSE-RIGHTS.md` §4.
+3. **Do NOT fall back to a route host.** Strava routes, plotaroute and RunGo are
+   **not admissible** for a new course (`docs/COURSE-RIGHTS.md` §5) and
+   `adopt.ts` refuses `routeSource: "route-host"` unless you pass
+   `--allow-route-host`. Only reach for that flag if the host genuinely *is* the
+   organizer, and write the reason into `routeNote`.
+4. **Confirm the race still runs**, same bar as an archived goandrace listing:
    a live site advertising a future date or open registration settles it.
    Skip this only when the race's own listed date is within about a year.
-4. **Get the exact next race date** off the organizer's site — this is what
+5. **Get the exact next race date** off the organizer's site — this is what
    `startDate` and the derived `recurrence` are built from.
-5. If nothing turns up after a genuine search, leave the row alone in the
+6. If nothing turns up after a genuine search, leave the row alone in the
    tracker and move to the next candidate. Not every race clears this bar;
    say so in the report rather than forcing a weak source.
 
@@ -149,9 +178,12 @@ Then set each `verdict` to `"ready"` or `"rejected"`, exactly as
 ```bash
 npm run import:promote -- --dry-run
 npm run import:promote
+npm run build:outlines   # REQUIRED — see below
 npm run test && npm run build && npm run db:seed
 rm -rf .next   # REQUIRED — see import-races SKILL.md for why
 ```
+
+`npm run build:outlines` writes the course silhouette (`<slug>.outline.json`, ROADMAP #21). It is a separate step because the outline is generated by TypeScript, not by `parse_gpx.py` — the upload route needs the same function at runtime. `courses.outline.integrity.test.ts` fails on a seeded course without one, so skipping it turns the suite red.
 
 Verify with the same Neon query `import-races` uses (`elev` 44, `crd` 44,
 `distance_m` 42195, `complete` true for every new slug).
@@ -194,16 +226,18 @@ still-runs or source-quality bar.
 
 ## Rights
 
-Prefer `routeSource: "organizer"` — the race's own site is the party that
-actually owns the route, and it is the cleanest available story (still not a
-guarantee of reuse — pacebands are a paid product, same open question
-`import-races` records for goandrace). A `route-host` entry is user-uploaded
-geometry and wants a second look before it ships. Where a site signals no to
-automated access — plotaroute sits behind Cloudflare with explicit
-content-signal reservations; RunGo's export needs a logged-in account — the
-answer is a person downloading the file under their own account and a
-`routeSource: "manual"` entry pointing at a repo-relative path, not a
-workaround inside this pipeline.
+**`docs/COURSE-RIGHTS.md` is the policy. Read it before adding a source class.**
+In short:
+
+- `routeSource: "organizer"` is the preferred value and the only one needing no
+  argument. The race's own site is the party that owns the route.
+- `routeSource: "traced"` is geometry we drew ourselves from a published map. It
+  is admissible and it is labelled, never blended in.
+- `routeSource: "route-host"` (Strava routes, plotaroute, RunGo) is **not
+  admissible** for a new course: the geometry is a third runner's upload, two of
+  the three signal no to automated access, and pacebands are paid product.
+  `adopt.ts` refuses it without `--allow-route-host`.
+- **Never crawl AIMS.** Its `robots.txt` disallows `/events` and `/members`.
 
 ## Hard rules
 

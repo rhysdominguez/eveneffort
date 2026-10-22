@@ -187,7 +187,7 @@ export function DatePicker({
                   aria-pressed={isSelected}
                   className={`flex h-7 items-center justify-center rounded-lg text-sm font-tabular transition-colors ${
                     isSelected
-                      ? "bg-[var(--color-red-primary)] text-white"
+                      ? "bg-[var(--color-red-fill)] text-white"
                       : inMonth
                         ? `text-[var(--color-text-primary)] hover:bg-[var(--color-bg-elevated)] ${isToday ? "bg-[var(--color-bg-elevated)] font-medium" : ""}`
                         : "text-[var(--color-text-tertiary)] hover:bg-[var(--color-bg-elevated)]"

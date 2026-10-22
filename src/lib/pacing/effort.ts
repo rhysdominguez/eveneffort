@@ -28,7 +28,7 @@
 //
 // Rule 1: this module only READS the locked pacing algorithm. adjustment.ts,
 // minetti.ts, normalize.ts and index.ts are not modified by it.
-import type { CourseEffort, Unit } from "@/types";
+import type { CourseAltitude, CourseCost, CourseEffort, Unit } from "@/types";
 import { adjustmentFactor } from "./adjustment";
 import { buildSegments, MARATHON_KM, MARATHON_MILES, MILE_IN_KM } from "./segments";
 
@@ -110,26 +110,84 @@ export function gapPaceFromGoalTime(
 }
 
 /**
- * The finish time on course `to` that costs the same effort as `seconds` on
- * course `from`: the two conversions above run back to back, which is exactly
- * T × E_to / E_from.
+ * Everything that makes one course cost more finish time than another: what
+ * its grades cost, and what its air costs. `CourseSummary` satisfies it, which
+ * is why every caller can pass a catalog row straight in.
+ */
+export interface CourseCostBasis {
+  cost: CourseCost;
+  altitude: CourseAltitude;
+}
+
+/**
+ * A course's ALL-IN cost in flat-equivalent, sea-level kilometres.
  *
- * "Same effort" is the claim, and it is the one the module header derives —
- * both finishes are run at the identical grade-adjusted pace, so both spend
- * the same metabolic cost per flat-equivalent kilometre. What it does NOT
- * model is everything outside the geometry: weather, altitude, and the extra
- * damage a long descent does to a runner's legs.
+ * The two factors are independent and multiply cleanly: `cost` asks how much
+ * more flat ground the profile makes you cover, `altitude` asks how much less
+ * oxygen you have while covering it. The Minetti curve reads gradient alone and
+ * is blind to height above sea level, so a course 2% harder on grade and 4%
+ * harder on air is 1.02 × 1.04.
  *
- * ALWAYS the km segmentation, matching `effortMultiplier` above. One figure
- * has to be canonical, km is the finer of the two, and a display-unit toggle
- * must not silently move the answer by the ~0.4% the two segmentations can
- * disagree by — a runner flipping km/mi is asking to re-read the number, not
- * to re-compute it.
+ * THE ONE PLACE the two are combined. `totalEffortMultiplier` in
+ * src/lib/units/effort.ts is this number over the marathon distance, so the
+ * figure /compare converts with and the figure the ranking table prints cannot
+ * drift apart.
+ */
+export function totalCostKm(course: CourseCostBasis): number {
+  return course.cost.km * course.altitude.multiplier;
+}
+
+/**
+ * The finish time on course `to` that costs the same as `seconds` on course
+ * `from`: exactly T × C_to / C_from.
+ *
+ * READS `cost`, NOT `effort`, and that distinction is the whole point. `effort`
+ * is the pacing engine's damped, behavioural curve, right for spreading a goal
+ * time over one race and wrong for comparing two: applied equally to climbs and
+ * descents it makes almost every road course reduce to its flat distance, and
+ * against 44 published FindMyMarathon Course Scores it explains 1.7% of the
+ * variance. `cost` (asymmetric) plus `altitude` explains 92.5%. The argument
+ * and the numbers are in the header of src/lib/pacing/courseCost.ts.
+ *
+ * What it still does NOT model: weather, surface, altitude ACCLIMATISATION as
+ * opposed to raw altitude, and the extra damage a long descent does to a
+ * runner's legs beyond the time it saves them.
+ *
+ * ALWAYS the km segmentation. One figure has to be canonical, km is the finer
+ * of the two, and a display-unit toggle must not silently move the answer by
+ * the ~0.4% the two segmentations can disagree by — a runner flipping km/mi is
+ * asking to re-read the number, not to re-compute it.
  */
 export function equivalentGoalTime(
   seconds: number,
-  from: CourseEffort,
-  to: CourseEffort,
+  from: CourseCostBasis,
+  to: CourseCostBasis,
 ): number {
-  return goalTimeFromGapPace(gapPaceFromGoalTime(seconds, from, "km"), to, "km");
+  return (seconds * totalCostKm(to)) / totalCostKm(from);
+}
+
+/**
+ * The equal-effort pace both sides of a conversion are run at: seconds per
+ * flat-equivalent, sea-level unit.
+ *
+ * This is the invariant `equivalentGoalTime` preserves, so it is the honest
+ * thing for /compare to print beside two times it calls equal. Derived from the
+ * km figure and then unit-converted rather than recomputed against the mile
+ * segmentation: it is one physical quantity and rendering it per mile is a unit
+ * conversion, whereas re-segmenting would make the two finishes print different
+ * paces while the page claims they are the same.
+ *
+ * NOT the same quantity as `gapPaceFromGoalTime` above, which inverts the
+ * PACING ENGINE and is what a GAP goal round-trips against. On the 321 of 326
+ * seeded courses that top out below 1,000 m the altitude term is exactly 1, but
+ * the grade curves still differ, so the two numbers are close without being
+ * equal and neither substitutes for the other.
+ */
+export function equalEffortPace(
+  goalTimeSeconds: number,
+  course: CourseCostBasis,
+  unit: Unit,
+): number {
+  const perKm = goalTimeSeconds / totalCostKm(course);
+  return unit === "km" ? perKm : perKm * MILE_IN_KM;
 }

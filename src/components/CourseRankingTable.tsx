@@ -5,14 +5,14 @@ import { useRouter } from "next/navigation";
 import type { CourseSummary } from "@/types";
 import { DEFAULT_FUELING } from "@/types";
 import { buildResultsHref } from "@/lib/resultsParams";
-import { isNetDownhill } from "@/lib/pacing/terrain";
-import { DifficultyBadge } from "@/components/DifficultyBadge";
-import { metresToFeet } from "@/lib/units/elevation";
 import {
-  formatAltitudePenalty,
-  formatVsFlat,
-  totalEffortMultiplier,
-} from "@/lib/units/effort";
+  TERRAIN_LABELS,
+  isNetDownhill,
+  terrainLabel,
+} from "@/lib/pacing/terrain";
+import { ProfileSparkline } from "@/components/ProfileSparkline";
+import { metresToFeet } from "@/lib/units/elevation";
+import { formatVsFlat, totalEffortMultiplier } from "@/lib/units/effort";
 import { formatFeet, formatSignedFeet } from "@/lib/chart/geometry";
 import { formatLocation } from "@/lib/location";
 import {
@@ -23,16 +23,20 @@ import {
 } from "@/lib/locationFilter";
 import { LocationFilterBar } from "@/components/LocationFilterBar";
 
-// Every course we hold, rankable. The catalog already carries `effort`,
-// `terrain` and `altitude` for the whole list (eight scalars per course), so
-// this needs no geometry and no new query — it sorts what the picker ships.
+// Every course we hold, rankable. The catalog already carries `cost`,
+// `effort`, `terrain` and `altitude` for the whole list (ten scalars per
+// course), so this needs no geometry and no new query — it sorts what the
+// picker ships.
 //
 // "vs flat" IS THE ALL-IN NUMBER: grade cost times altitude cost, via
-// `totalEffortMultiplier`. The Altitude column beside it is one of its two
-// factors shown on its own, because a runner scanning for a fast race needs to
-// know whether a course is hard underfoot or just high up — those call for
-// completely different preparation, and a single merged percentage hides which
-// one they are looking at.
+// `totalEffortMultiplier`, which reads `cost` and not `effort` — the pacing
+// engine's damped curve nearly cancels climbs against descents and used to
+// collapse 292 of 326 courses into one "flat-equivalent" tie (ROADMAP #12). The Altitude column beside it states the height
+// itself and nothing about what it costs, because a runner scanning for a fast
+// race needs to know whether a course is hard underfoot or just high up, and
+// those call for completely different preparation. It used to print the
+// thin-air penalty as a percentage too, which meant the same cost appeared in
+// two adjacent columns with no way to tell they were one claim.
 //
 // Sorting and filtering are the only state here, and both stay client-side:
 // the table is the whole page, the catalog is already in memory, and a round
@@ -75,13 +79,27 @@ const COLUMNS: readonly {
   label: string;
   /** Right-aligned for the numeric columns, matching the splits table. */
   numeric: boolean;
+  /** Fixed width, in the `<colgroup>`. Absent on Race, which takes the rest. */
+  width?: string;
 }[] = [
   { key: "name", label: "Race", numeric: false },
-  { key: "gain", label: "Climbing", numeric: true },
-  { key: "net", label: "Net change", numeric: true },
-  { key: "altitude", label: "Altitude", numeric: true },
-  { key: "speed", label: "vs flat", numeric: true },
+  { key: "gain", label: "Climbing", numeric: true, width: "w-32" },
+  { key: "net", label: "Net change", numeric: true, width: "w-32" },
+  { key: "altitude", label: "Altitude", numeric: true, width: "w-32" },
+  // Wider than its siblings: its longest string is "flat-equivalent".
+  { key: "speed", label: "vs flat", numeric: true, width: "w-36" },
 ];
+
+// COLUMN WIDTHS ARE DECISIONS, NOT A SIDE EFFECT. The table used the browser's
+// automatic layout, which shares spare width out in proportion to each column's
+// content, so the numeric columns came out 137 to 172 px wide for no reason
+// anyone chose, each two or three times wider than what it held, while the Race
+// column that actually needs room was squeezed. It is `table-fixed` now: the
+// three plain numeric columns are the same width so the numbers read as a grid,
+// the Terrain column is the 87 px thumbnail plus its padding, and Race is the
+// only column left to flex.
+const TERRAIN_WIDTH = "w-32";
+const CHEVRON_WIDTH = "w-10";
 
 /** The comparator for each column, in its natural first direction: fastest,
  *  flattest, biggest drop, A–Z. */
@@ -90,11 +108,11 @@ function compare(key: SortKey, a: CourseSummary, b: CourseSummary): number {
     case "speed":
       return totalEffortMultiplier(a) - totalEffortMultiplier(b);
     case "altitude":
-      // By the PENALTY, not the height: they order the same way, and the
-      // penalty is the column people are reading. Every low course ties at
-      // exactly 1 and falls back to whatever order it arrived in, which is
-      // alphabetical, so the flat block below the threshold stays readable.
-      return a.altitude.multiplier - b.altitude.multiplier;
+      // By the HEIGHT, which is what the column now prints. It shipped sorting
+      // on the thin-air penalty instead, which ordered identically above the
+      // threshold but tied every low course at exactly 1; the mean elevation
+      // separates them, so the flat block below the threshold now sorts too.
+      return a.altitude.meanM - b.altitude.meanM;
     case "gain":
       return a.terrain.gainM - b.terrain.gainM;
     case "net":
@@ -104,7 +122,18 @@ function compare(key: SortKey, a: CourseSummary, b: CourseSummary): number {
   }
 }
 
-export function CourseRankingTable({ catalog }: { catalog: CourseSummary[] }) {
+export function CourseRankingTable({
+  catalog,
+  profilePaths = {},
+}: {
+  catalog: CourseSummary[];
+  /**
+   * Course id -> the SVG path of its elevation thumbnail, built server-side
+   * (`getCourseProfilePaths`). Optional and per-course: a course with no entry
+   * shows its profile label alone, so the table degrades rather than breaks.
+   */
+  profilePaths?: Record<string, string>;
+}) {
   const [sort, setSort] = useState<SortKey>("speed");
   const [descending, setDescending] = useState(false);
   const [filter, setFilter] = useState<LocationFilter>(ALL_LOCATIONS);
@@ -175,12 +204,19 @@ export function CourseRankingTable({ catalog }: { catalog: CourseSummary[] }) {
       </p>
 
       <div className="overflow-x-auto rounded-2xl border border-[var(--color-border)]">
-        <table className="w-full min-w-3xl border-collapse text-sm">
+        <table className="w-full min-w-4xl table-fixed border-collapse text-sm">
           <caption className="sr-only">
             Courses in the chosen place, sortable by how fast each one runs, how
-            much it climbs, its net elevation change, and what its altitude
-            costs.
+            much it climbs, its net elevation change, and how high above sea
+            level it runs.
           </caption>
+          <colgroup>
+            {COLUMNS.map((col) => (
+              <col key={col.key} className={col.width} />
+            ))}
+            <col className={TERRAIN_WIDTH} />
+            <col className={CHEVRON_WIDTH} />
+          </colgroup>
           <thead className="bg-[var(--color-bg-elevated)]">
             <tr>
               {COLUMNS.map((col) => (
@@ -255,27 +291,26 @@ export function CourseRankingTable({ catalog }: { catalog: CourseSummary[] }) {
                 >
                   {formatSignedFeet(metresToFeet(course.terrain.netM))}
                 </td>
-                <td className="px-4 py-3 text-right font-tabular text-[var(--color-text-tertiary)]">
-                  {/* An em dash standing in for "nothing to report" — most of
-                      the catalog is below the threshold, and three hundred rows
-                      reading "0.0% slower" would bury the dozen that matter. */}
-                  {formatAltitudePenalty(course.altitude) ?? (
-                    <>
-                      <span aria-hidden>&mdash;</span>
-                      <span className="sr-only">No altitude penalty</span>
-                    </>
-                  )}
-                  {formatAltitudePenalty(course.altitude) && (
-                    <span className="mt-0.5 block text-xs text-[var(--color-text-tertiary)]">
-                      {formatFeet(metresToFeet(course.altitude.meanM))} avg
-                    </span>
-                  )}
+                <td className="px-4 py-3 text-right font-tabular text-[var(--color-text-secondary)]">
+                  {/* The height alone. This shipped as the thin-air penalty
+                      ("7.0% slower") with the height as a subscript and an em
+                      dash on the low majority; the penalty is already inside
+                      the "vs flat" figure in the next column, so printing it
+                      here charged the same cost to the reader twice. */}
+                  {formatFeet(metresToFeet(course.altitude.meanM))}
                 </td>
                 <td className="px-4 py-3 text-right font-tabular text-[var(--color-text-secondary)]">
                   {formatVsFlat(totalEffortMultiplier(course))}
                 </td>
                 <td className="px-4 py-3">
-                  <DifficultyBadge terrain={course.terrain} compact />
+                  {/* Just the line. The profile pill that used to sit beside it
+                      is gone by request: the shape is the column. The label
+                      survives as screen-reader text only, because the SVG is
+                      aria-hidden and the cell would otherwise announce nothing. */}
+                  <ProfileSparkline path={profilePaths[course.id]} />
+                  <span className="sr-only">
+                    {TERRAIN_LABELS[terrainLabel(course.terrain)]}
+                  </span>
                 </td>
                 {/* The affordance for the row click. Decorative only: the race
                     name beside it is the real link, and announcing this arrow

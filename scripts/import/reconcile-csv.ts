@@ -1,28 +1,30 @@
-// Reconcile the findmymarathon CSV against what this repo has actually shipped.
+// Reconcile findmymarathon.com's calendar against what this repo has actually
+// shipped, and write the tracker other sessions read.
 //
 //   node scripts/import/reconcile-csv.ts            # rewrite the tracker
 //   node scripts/import/reconcile-csv.ts --summary  # print counts, write nothing
 //   node scripts/import/reconcile-csv.ts --emit-batch csv-batch-01   # + a raw batch
 //   node scripts/import/reconcile-csv.ts --adoptable   # list the not-on-source races
+//   node scripts/import/reconcile-csv.ts --missing 25  # the 25 biggest races we lack
 //
-// The CSV is a 766-row list of US-centric marathon events, taken from
-// findmymarathon.com — which is a useful roster of what exists and NOT a
-// geometry source: its elevation charts are rendered JPEGs and it publishes no
-// route data (see README.md). Most of this list is therefore out of reach of
-// the bulk importer, whose only calendar is goandrace's ~377 forward events.
-// The point of this script is to say which rows those are, and why, in a form
-// that survives a session.
+// Input is data/import/findmymarathon-calendar.csv, the full snapshot of
+// https://findmymarathon.com/calendar-all.php that findmymarathon.ts writes
+// (every race, every field the site publishes). Output is
+// data/import/findmymarathon-tracker.csv: the same rows, each answering "do we
+// have this race, with its elevation profile, and if not what is the next
+// step". That file is the reference; point other sessions at it.
 //
-// 558 of them are `not-on-source`. Those are not dead — they are the worklist
-// for adopt.ts, which takes a course file from the organiser's own site one
-// race at a time.
+// findmymarathon is a roster, NOT a geometry source: its elevation charts are
+// rendered JPEGs and it publishes no route data (see README.md). Most of this
+// list is therefore out of reach of the bulk importer, whose only calendar is
+// goandrace's. The rows it cannot reach are `not-on-source`, and they are the
+// worklist for adopt.ts (organizer file, else a trace) rather than dead ends.
 //
-// Every status is recomputed from the repo on each run — seeded slugs come out
-// of slug-ledger.ts and series.ts, and source availability out of the raw
-// crawls in data/import/raw/. Nothing here is hand-maintained, so re-running it
-// after an import batch flips exactly the rows that batch landed and leaves the
-// rest alone. That is what makes "is this list finished yet" a question you can
-// answer by running a command rather than by reading a spreadsheet.
+// Every status is recomputed from the repo on each run: seeded courses out of
+// SERIES_SEED/CITY_SEED and the course files themselves, goandrace availability
+// out of the raw crawls in data/import/raw/, prior research out of backlog.csv.
+// Nothing here is hand-maintained except findmymarathon-matches.json (below),
+// so re-running after an import batch flips exactly the rows that batch landed.
 
 import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -32,165 +34,164 @@ import {
   DECISIONS_PATH,
   IMPORT_DIR,
   RAW_DIR,
-  REPO_ROOT,
+  countryOf,
   findNameMatch,
+  flagNumber,
   flagValue,
+  haversineKm,
   matchTokens,
   nameSimilarity,
+  parseCsv,
+  proposeCourseSlug,
+  toCsv,
   type RawBatch,
   type RawEvent,
 } from "./shared.ts";
+import { CALENDAR_CSV, CALENDAR_HEADER, type CalendarRow } from "./findmymarathon.ts";
+import { SERIES_SEED } from "../../src/db/seed/series.ts";
+import { CITY_SEED } from "../../src/db/seed/cities.ts";
+import { PUBLISHED_COURSE_SLUGS } from "../../src/db/seed/slug-ledger.ts";
 
-const SOURCE_CSV = join(IMPORT_DIR, "findmymarathon_766_entries_no_url.csv");
 const TRACKER_CSV = join(IMPORT_DIR, "findmymarathon-tracker.csv");
+const BACKLOG_CSV = join(IMPORT_DIR, "backlog.csv");
+/**
+ * Human rulings on matches the automatic rules get wrong, keyed
+ * `"<findmymarathon name>|<region>"`. A course slug asserts "this is ours"; null
+ * asserts "this is NOT the seeded race it looks like". Committed, and kept small:
+ * add an entry only after seeing the rules get a specific row wrong.
+ */
+const MATCHES_PATH = join(IMPORT_DIR, "findmymarathon-matches.json");
 
 /**
  * Terminal statuses are answers; open statuses are work. `queued` is the only
- * status that means "this can still become an import".
+ * status that means "the importer can do this unattended".
  */
 export type Status =
-  | "in-db" // already seeded — nothing to do
+  | "in-db" // seeded, with a complete 44-point elevation profile
   | "queued" // on goandrace with a GPX, waiting for a batch
   | "no-course-map" // listed on goandrace, no geometry published
   | "parser-rejected" // GPX fetched but failed parse_gpx.py's gates
-  | "not-on-source" // no goandrace listing in any crawl — adoptable, see below
-  | "past-event" // date already gone; not worth a slug
-  | "no-date" // TBD date, or no name to identify the race by
-  ;
+  | "not-on-source" // no goandrace listing in any crawl: adoptable
+  | "past-event" // listed date gone and nothing on goandrace; confirm it still runs
+  | "no-date"; // no name or date to identify the race by
 
-/**
- * `queued` is the only status this pipeline can act on unattended.
- *
- * `not-on-source` is no longer terminal — those races are adoptable one at a
- * time via adopt.ts, from a course file a human finds on the organiser's own
- * site. It is deliberately not counted as "open" here, because that number
- * answers "how much can the importer still do by itself", and adoption cannot
- * be done by itself. See `--adoptable`.
- */
 const OPEN: ReadonlySet<Status> = new Set<Status>(["queued"]);
 
-interface CsvRow {
-  name: string;
-  cityField: string;
-  state: string;
-  date: string;
-}
+/** What the tracker adds in front of the calendar's own columns. */
+const TRACKER_HEADER = [
+  // Kept first and spelled as before: backlog.ts reads these by name.
+  "Marathon Name", "City", "State/Country", "Date",
+  "inSystem", "status", "courseSlug", "matchBasis", "elevationSource", "nextStep",
+  "website", "sourceUrl", "latestFinishers", "profile", "courseType", "surface",
+  "hasElevationChart", "maxElevation", "minElevation", "finishLat", "finishLon",
+  "raceDates", "finishersByYear", "bostonQualifier", "bqPctByYear", "prScore",
+  "courseScore", "wmmQualifier", "usSizeRank", "meanTemp", "avgHigh", "avgLow",
+  "paceGroups", "registration", "detailUrl", "description", "note",
+] as const;
 
-interface TrackerRow extends CsvRow {
-  city: string;
-  courseSlug: string;
+interface TrackerRow {
+  src: CalendarRow;
   status: Status;
+  courseSlug: string;
+  matchBasis: string;
+  elevationSource: string;
+  nextStep: string;
   sourceUrl: string;
   note: string;
 }
 
-// ---------------------------------------------------------------- csv
-
-/** Minimal RFC-4180 reader — the source file quotes its city field. */
-function parseCsv(text: string): string[][] {
-  const rows: string[][] = [];
-  let row: string[] = [];
-  let cur = "";
-  let quoted = false;
-  for (let i = 0; i < text.length; i += 1) {
-    const c = text[i];
-    if (quoted) {
-      if (c !== '"') cur += c;
-      else if (text[i + 1] === '"') {
-        cur += '"';
-        i += 1;
-      } else quoted = false;
-    } else if (c === '"') quoted = true;
-    else if (c === ",") {
-      row.push(cur);
-      cur = "";
-    } else if (c === "\n") {
-      row.push(cur);
-      rows.push(row);
-      row = [];
-      cur = "";
-    } else if (c !== "\r") cur += c;
-  }
-  if (cur || row.length) {
-    row.push(cur);
-    rows.push(row);
-  }
-  return rows;
-}
-
-function toCsvField(value: string): string {
-  return /[",\n]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value;
-}
-
-/** `"Kingwood, TX 01/01/2027"` -> `Kingwood`. */
-function cityOf(field: string): string {
-  return field
-    .replace(/\s+\d{2}\/\d{2}\/\d{4}\s*$/, "")
-    .replace(/\s+TBD\s*$/, "")
-    .split(",")[0]
-    .trim();
-}
-
-// ------------------------------------------------------------- matching
-//
-// Token matching itself (stop words, alias folding, year-stripping, the
-// half/relay/trail differentiator guard) lives in shared.ts's
-// nameSimilarity/findNameMatch — fetch.ts uses the same functions to catch a
-// recurring race re-discovered under a new year's URL. Only what's specific
-// to this CSV (its US-state/CA-province/non-ISO country column) stays here.
-
-// The CSV writes "Ft. Lauderdale A1A" where goandrace writes "Publix Fort
-// Lauderdale A1A"; without alias folding that scores 0.67 and the row closes
-// out as unavailable while its GPX sits right there on the source.
-
-// The CSV's fourth column is a US state, a Canadian province, or findmymarathon's
-// own country abbreviation — which is not ISO. Mapping it to a real country code
-// is what stops "Victoria Marathon" in British Columbia matching Victoria Falls
-// in Zimbabwe, and "B and A Marathon" in Maryland matching Båstad in Sweden.
-// Both scored above the name threshold on tokens alone.
-const US_STATES = new Set(
-  ("AL AK AZ AR CA CO CT DE DC FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO " +
-    "MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY").split(" "),
-);
-const CA_PROVINCES = new Set("ON QC BC AB SK MB NS NB NL PE YT NT NU".split(" "));
-
-/** findmymarathon's non-ISO country abbreviations, as they appear in the file. */
-const CSV_COUNTRY: Record<string, string> = {
-  GR: "DE", // Germany — Berlin, Hamburg and Frankfurt are all filed under GR
-  GC: "GR", // Greece
-  NR: "NL", // Netherlands
-  AG: "AR", // Argentina
-  AA: "AW", // Aruba
-  CI: "KY", // Cayman Islands
-  UK: "GB",
-};
-
-function countryOf(state: string): string | null {
-  if (US_STATES.has(state)) return "US";
-  if (CA_PROVINCES.has(state)) return "CA";
-  if (!/^[A-Z]{2}$/.test(state)) return null;
-  return CSV_COUNTRY[state] ?? state;
-}
-
 // ---------------------------------------------------------------- repo state
 
-function seededSlugs(): string[] {
-  const ledger = readFileSync(join(REPO_ROOT, "src/db/seed/slug-ledger.ts"), "utf8");
-  return [...ledger.matchAll(/^\s+"([a-z0-9-]+)",/gm)].map((m) => m[1]);
+interface SeededCourse {
+  seriesSlug: string;
+  name: string;
+  courseSlug: string;
+  cityName: string;
+  countryCode: string;
+  regionCode: string | null;
+  /** Start and finish of the committed course line. Empty if no coords file. */
+  ends: [number, number][];
 }
 
-function seededSeries(): { slug: string; name: string }[] {
-  const src = readFileSync(join(REPO_ROOT, "src/db/seed/series.ts"), "utf8");
-  return [...src.matchAll(/slug:\s*"([^"]+)",\s*\n\s*name:\s*"([^"]+)"/g)].map((m) => ({
-    slug: m[1],
-    name: m[2],
-  }));
+function seededCourses(): SeededCourse[] {
+  const cities = new Map(CITY_SEED.map((c) => [c.slug, c]));
+  return SERIES_SEED.map((s) => {
+    const city = cities.get(s.citySlug);
+    return {
+      seriesSlug: s.slug,
+      name: s.name,
+      courseSlug: s.courseSlug,
+      cityName: city?.name ?? "",
+      countryCode: city?.countryCode ?? "",
+      regionCode: city?.regionCode ?? null,
+      ends: courseEnds(s.courseSlug),
+    };
+  });
+}
+
+function courseEnds(slug: string): [number, number][] {
+  const path = join(COURSE_DIR, `${slug}.coords.json`);
+  if (!existsSync(path)) return [];
+  const coords = JSON.parse(readFileSync(path, "utf8")) as [number, number][];
+  return coords.length ? [coords[0], coords[coords.length - 1]] : [];
 }
 
 /**
- * Source slugs the GPX parser has already produced a course for. Survives the
- * rename a slug gets at enrichment, which the ledger alone cannot tell you.
+ * "Fully in the system" means the pacing chart can actually be drawn: 44 finite
+ * elevations, the coordinate line and the outline. A seeded series whose files
+ * are incomplete is reported, not counted.
  */
+function courseComplete(slug: string): boolean {
+  const elev = join(COURSE_DIR, `${slug}.json`);
+  if (!existsSync(elev)) return false;
+  const values = JSON.parse(readFileSync(elev, "utf8")) as unknown;
+  const ok44 = Array.isArray(values) && values.length === 44 && values.every(Number.isFinite);
+  return (
+    ok44 &&
+    existsSync(join(COURSE_DIR, `${slug}.coords.json`)) &&
+    existsSync(join(COURSE_DIR, `${slug}.outline.json`))
+  );
+}
+
+interface Decision {
+  courseSlug?: string;
+  verdict?: string;
+  reasons?: string[];
+  source?: { eventUrl?: string; elevation?: string; geometry?: string; site?: string };
+}
+
+function decisions(): Decision[] {
+  if (!existsSync(DECISIONS_PATH)) return [];
+  return (JSON.parse(readFileSync(DECISIONS_PATH, "utf8")) as { courses?: Decision[] }).courses ?? [];
+}
+
+/** `gpx`, `dem:srtm30m`, `traced:…` — where a shipped course's profile came from. */
+function elevationSources(all: Decision[]): Map<string, string> {
+  const out = new Map<string, string>();
+  for (const d of all) {
+    if (!d.courseSlug) continue;
+    const parts = [d.source?.elevation ?? "gpx"];
+    if (d.source?.geometry && d.source.geometry !== "gpx") parts.push(d.source.geometry);
+    out.set(d.courseSlug, parts.join(" + "));
+  }
+  return out;
+}
+
+/**
+ * Verdicts already recorded against an event URL. A course the parser threw out
+ * is not work waiting to happen; re-fetching it re-derives the same measurement.
+ */
+function priorVerdicts(all: Decision[]): Map<string, { verdict: string; reason: string }> {
+  const byUrl = new Map<string, { verdict: string; reason: string }>();
+  for (const c of all) {
+    const url = c.source?.eventUrl;
+    if (!url || !c.verdict) continue;
+    byUrl.set(url, { verdict: c.verdict, reason: (c.reasons ?? []).join("; ") });
+  }
+  return byUrl;
+}
+
+/** Source slugs the GPX parser produced a course for; survives a rename at enrichment. */
 function parsedSourceSlugs(): Set<string> {
   return new Set(
     readdirSync(COURSE_DIR)
@@ -199,33 +200,10 @@ function parsedSourceSlugs(): Set<string> {
   );
 }
 
-/**
- * Verdicts already recorded against an event URL. A course the parser threw out
- * is not work waiting to happen — its GPX is quarantined and re-fetching it just
- * re-derives the same measurement. The event URL is the key because the slug is
- * the thing that changes.
- */
-function priorVerdicts(): Map<string, { verdict: string; reason: string }> {
-  const byUrl = new Map<string, { verdict: string; reason: string }>();
-  if (!existsSync(DECISIONS_PATH)) return byUrl;
-  const file = JSON.parse(readFileSync(DECISIONS_PATH, "utf8")) as {
-    courses?: {
-      source?: { eventUrl?: string };
-      verdict?: string;
-      reasons?: string[];
-    }[];
-  };
-  for (const c of file.courses ?? []) {
-    const url = c.source?.eventUrl;
-    if (!url || !c.verdict) continue;
-    byUrl.set(url, { verdict: c.verdict, reason: (c.reasons ?? []).join("; ") });
-  }
-  return byUrl;
-}
-
-/** Every event any crawl has ever seen, newest file wins on duplicate URLs. */
+/** Every event any goandrace crawl has seen, newest file wins on duplicate URLs. */
 function crawledEvents(): RawEvent[] {
   const byUrl = new Map<string, RawEvent>();
+  if (!existsSync(RAW_DIR)) return [];
   for (const file of readdirSync(RAW_DIR)) {
     if (!file.endsWith(".json")) continue;
     let parsed: unknown;
@@ -245,166 +223,391 @@ function crawledEvents(): RawEvent[] {
   return [...byUrl.values()];
 }
 
+/** What the adoption work already concluded about a race, from backlog.csv. */
+function backlogAttempts(): Map<string, { status: string; sourceClass: string; at: string; note: string }> {
+  const out = new Map<string, { status: string; sourceClass: string; at: string; note: string }>();
+  if (!existsSync(BACKLOG_CSV)) return out;
+  const rows = parseCsv(readFileSync(BACKLOG_CSV, "utf8"));
+  const header = rows.shift() ?? [];
+  const col = (r: string[], n: string) => r[header.indexOf(n)] ?? "";
+  for (const r of rows) {
+    if (r.length < header.length) continue;
+    if (!col(r, "sourceClass") && col(r, "status") !== "no-source") continue;
+    out.set(col(r, "raceSlug"), {
+      status: col(r, "status"),
+      sourceClass: col(r, "sourceClass"),
+      at: col(r, "lastAttemptedAt"),
+      note: col(r, "note"),
+    });
+  }
+  return out;
+}
+
+function loadMatches(): Record<string, string | null> {
+  if (!existsSync(MATCHES_PATH)) return {};
+  const file = JSON.parse(readFileSync(MATCHES_PATH, "utf8")) as { matches?: Record<string, string | null> };
+  return file.matches ?? {};
+}
+
+// ---------------------------------------------------------------- matching
+//
+// The old reconciler decided "in-db" by name alone, before it looked at
+// geography, and 30-odd rows came out wrong: all eight "Bound for Boston"
+// qualifiers matched Boston, London OH matched London, York PA matched New
+// York City, Athens AR/GA/OH matched Athens in Greece, Victoria BC matched
+// Victoria Falls. A shared name is necessary, never sufficient. The rules now:
+//
+//   1. Same country, and for the US and Canada the same state/province.
+//   2. Name similarity >= 0.85 with findNameMatch's half/trail/relay guard.
+//   3. Place: findmymarathon's finish line within 25 km of our course's start
+//      or finish; or, when either side has no coordinate, the host city agrees
+//      or the names are identical. A same-name race further than 60 km away is
+//      a different race, whatever its name.
+
+const NEAR_KM = 25;
+const FAR_KM = 60;
+
+/** Token overlap against the LARGER set: "Colorado Springs" vs "Colorado" is 0.5, not 1.0. */
+function strictSimilarity(a: string, b: string): number {
+  const A = matchTokens(a);
+  const B = matchTokens(b);
+  if (A.size === 0 || B.size === 0) return 0;
+  let shared = 0;
+  for (const t of A) if (B.has(t)) shared += 1;
+  return shared / Math.max(A.size, B.size);
+}
+
+function finishOf(r: CalendarRow): [number, number] | null {
+  const lat = Number(r.finishLat);
+  const lon = Number(r.finishLon);
+  return r.finishLat && r.finishLon && Number.isFinite(lat) && Number.isFinite(lon) ? [lat, lon] : null;
+}
+
+function kmTo(point: [number, number] | null, s: SeededCourse): number | null {
+  if (!point || s.ends.length === 0) return null;
+  return Math.min(...s.ends.map((e) => haversineKm(point, e)));
+}
+
+/** Same country, same US/CA subdivision, and not provably far apart. */
+function placeAgrees(r: CalendarRow, s: SeededCourse): boolean {
+  const country = countryOf(r.region);
+  if (country && s.countryCode && s.countryCode !== country) return false;
+  if ((country === "US" || country === "CA") && s.regionCode && s.regionCode !== `${country}-${r.region}`) return false;
+  const km = kmTo(finishOf(r), s);
+  return km === null || km <= FAR_KM;
+}
+
+function seededMatch(r: CalendarRow, seeded: SeededCourse[]): { course: SeededCourse; basis: string } | null {
+  const finish = finishOf(r);
+  let best: { course: SeededCourse; basis: string; rank: number } | null = null;
+
+  for (const s of seeded) {
+    if (!placeAgrees(r, s)) continue;
+    if (!findNameMatch(r.name, r.city, [{ name: s.name, citySlug: s.cityName }], 0.85)) continue;
+    if (nameSimilarity(r.name, s.name) < 0.85) continue; // the city nudge alone must not carry it
+
+    const km = kmTo(finish, s);
+    if (km !== null && km > FAR_KM) continue;
+    const cityAgrees = nameSimilarity(r.city, s.cityName) > 0.4;
+    const exactName = strictSimilarity(r.name, s.name) >= 0.99;
+    const near = km !== null && km <= NEAR_KM;
+    if (!(near || cityAgrees || (km === null && exactName))) continue;
+
+    const rank = (near ? 2 : 0) + (cityAgrees ? 1 : 0) + strictSimilarity(r.name, s.name);
+    const where = km !== null ? `${km.toFixed(1)} km` : cityAgrees ? "same city" : "same name, no coords";
+    if (!best || rank > best.rank) {
+      best = { course: s, rank, basis: `name ${nameSimilarity(r.name, s.name).toFixed(2)} · ${where}` };
+    }
+  }
+  return best;
+}
+
+/** A seeded course close to this race's finish that did NOT match by name: worth a look. */
+function nearbyUnmatched(r: CalendarRow, seeded: SeededCourse[]): string {
+  const finish = finishOf(r);
+  if (!finish) return "";
+  let best: { s: SeededCourse; km: number } | null = null;
+  for (const s of seeded) {
+    const km = kmTo(finish, s);
+    if (km !== null && km <= 3 && (!best || km < best.km)) best = { s, km };
+  }
+  return best ? `seeded ${best.s.courseSlug} starts/finishes ${best.km.toFixed(1)} km away; same race under another name?` : "";
+}
+
 // ---------------------------------------------------------------- classify
 
-function classify(
-  row: CsvRow,
-  series: { slug: string; name: string }[],
-  slugs: Set<string>,
-  parsed: Set<string>,
-  verdicts: Map<string, { verdict: string; reason: string }>,
-  events: RawEvent[],
-): TrackerRow {
-  const city = cityOf(row.cityField);
-  const label = row.name || (city ? `${city} Marathon` : "");
-  const base: TrackerRow = {
-    ...row,
-    city,
+const NEXT_STEP: Record<Status, string> = {
+  "in-db": "",
+  queued: "goandrace has a GPX: import:reconcile --emit-batch, then parse/qa/promote",
+  "no-course-map": "goandrace lists it without a map: adopt from the organizer site, else trace",
+  "parser-rejected": "goandrace GPX failed the parser: adopt a better file from the organizer, else trace",
+  "not-on-source": "adopt: organizer's course file, else trace the published map (elevation from DEM if the file has none)",
+  "past-event": "last listed date is over a year old: confirm it still runs, then adopt",
+  "no-date": "identify the race first",
+};
+
+interface Context {
+  seeded: SeededCourse[];
+  complete: (slug: string) => boolean;
+  elevation: Map<string, string>;
+  ledger: Set<string>;
+  parsed: Set<string>;
+  verdicts: Map<string, { verdict: string; reason: string }>;
+  /** goandrace event URL -> the course slug it finally shipped as. */
+  shippedByUrl: Map<string, string>;
+  events: RawEvent[];
+  attempts: ReturnType<typeof backlogAttempts>;
+  matches: Record<string, string | null>;
+  yearAgo: string;
+}
+
+function classify(src: CalendarRow, ctx: Context): TrackerRow {
+  const row = (status: Status, extra: Partial<TrackerRow> = {}): TrackerRow => ({
+    src,
+    status,
     courseSlug: "",
-    status: "not-on-source",
+    matchBasis: "",
+    elevationSource: "",
+    nextStep: NEXT_STEP[status],
     sourceUrl: "",
     note: "",
+    ...extra,
+  });
+  const inDb = (courseSlug: string, matchBasis: string, note = ""): TrackerRow => {
+    if (!ctx.complete(courseSlug)) {
+      return row("in-db", {
+        courseSlug,
+        matchBasis,
+        nextStep: "seeded but course files incomplete: rebuild the 44-point profile / outline",
+        note,
+      });
+    }
+    return row("in-db", {
+      courseSlug,
+      matchBasis,
+      elevationSource: ctx.elevation.get(courseSlug) ?? "gpx",
+      note,
+    });
   };
 
-  if (!label) {
-    return { ...base, status: "no-date", note: "no race name in the source row" };
-  }
+  if (!src.name) return row("no-date", { note: "no race name in the source row" });
 
-  // Seeded already? Name match against SERIES_SEED, or a direct ledger hit on
-  // the slug the importer would have proposed for this name.
-  let bestSeries = { score: 0, slug: "", name: "" };
-  for (const s of series) {
-    const score = nameSimilarity(label, s.name);
-    if (score > bestSeries.score) bestSeries = { score, slug: s.slug, name: s.name };
+  // 0. A human ruling beats every rule below.
+  const key = `${src.name}|${src.region}`;
+  if (key in ctx.matches) {
+    const ruled = ctx.matches[key];
+    if (ruled) return inDb(ruled, "manual (findmymarathon-matches.json)");
   }
-  const guess = [...matchTokens(label)].join("-");
-  const ledgerHit = [...slugs].find((s) => s === guess || s === `${guess}-marathon`);
-  if (bestSeries.score >= 0.99 || ledgerHit) {
-    return {
-      ...base,
-      status: "in-db",
-      courseSlug: ledgerHit ?? bestSeries.slug,
-      note: bestSeries.name,
-    };
-  }
+  const ruledOut = key in ctx.matches && ctx.matches[key] === null;
 
-  const year = row.date.match(/\d{4}/)?.[0];
-  if (!year) {
-    return { ...base, status: "no-date", note: `date is "${row.date}"` };
+  // 1. Seeded already, by name + place.
+  if (!ruledOut) {
+    const hit = seededMatch(src, ctx.seeded);
+    if (hit) return inDb(hit.course.courseSlug, hit.basis, hit.course.name);
   }
-  // A past CSV date does not mean the race is gone — it means this specific
-  // running already happened. Annual races recur, and goandrace's GPX for a
-  // past edition measures the same course as next year's. So this checks the
-  // source before giving up: only fall back to "past-event" once nothing on
-  // goandrace answers for this row either.
-  const isPast = Number(year) < new Date().getFullYear();
+  const nearby = nearbyUnmatched(src, ctx.seeded);
 
-  // On goandrace? findNameMatch wants a city on the candidate, which RawEvent
-  // calls `locality`; a country *disagreement* is disqualifying in a way a
-  // city agreement never gets to be, so that's filtered before scoring rather
-  // than folded into the shared match — country isn't reliable enough data on
-  // fetch.ts's side to belong in the generic function.
-  const country = countryOf(row.state);
-  const inCountry = country
-    ? events.filter((e) => !e.countryCode || e.countryCode === country)
-    : events;
+  // 2. On goandrace? A country disagreement is disqualifying before scoring.
+  const country = countryOf(src.region);
+  const inCountry = country ? ctx.events.filter((e) => !e.countryCode || e.countryCode === country) : ctx.events;
   const candidates = inCountry.map((e) => ({ ...e, name: e.name ?? "", citySlug: e.locality ?? "" }));
-  const hit = findNameMatch(label, city, candidates, 0.85);
-  if (!hit) {
-    return isPast
-      ? { ...base, status: "past-event", note: `listed ${row.date}` }
-      : { ...base, status: "not-on-source", note: "no goandrace listing in any crawl" };
+  let event = findNameMatch(src.name, src.city, candidates, 0.85);
+  // goandrace's listing carries a country but its region is free text, so a
+  // hit that resolves to a course we already seed is checked against that
+  // course's actual place: "Mesa Falls Marathon" (Ashton, ID) name-matches the
+  // goandrace listing for the Mesa Marathon (AZ), which we seed. Same name,
+  // different race; the listing is not this row's.
+  //
+  // The listing's slug is the *source* slug; enrichment often renamed it
+  // (goandrace's `the-colorado-marathon` shipped as `colorado-marathon`), so
+  // the shipped slug is resolved through decisions.json by event URL first.
+  // Without that, "Colorado Springs Marathon" matched the Fort Collins race.
+  const shippedSlug = event ? (ctx.shippedByUrl.get(event.eventUrl) ?? event.courseSlug) : "";
+  const seededTwin = event ? ctx.seeded.find((s) => s.courseSlug === shippedSlug) : undefined;
+  if (event && seededTwin && !placeAgrees(src, seededTwin)) event = null;
+
+  // Prior adoption research, so nobody repeats a search that already failed.
+  const attempt = ctx.attempts.get(event?.courseSlug ?? "") ?? ctx.attempts.get(proposeCourseSlug(src.name));
+  const attemptNote = attempt
+    ? `researched ${attempt.at || "earlier"}: ${attempt.sourceClass || attempt.status}${attempt.note ? ` (${attempt.note})` : ""}`
+    : "";
+  const notes = (...n: string[]) => n.filter(Boolean).join("; ");
+  const researched = attempt?.status === "no-source" || attempt?.sourceClass === "none-found";
+
+  if (event) {
+    const shared = { sourceUrl: event.eventUrl, courseSlug: event.courseSlug };
+    // The name match can miss what the slug catches ("Bear Lake Utah" vs
+    // goandrace's "Bear Lake Trifecta", shipped as `bear-lake-trifecta`); the
+    // parser's `<slug>.source.sha256` stamp outlives the rename.
+    if (!ruledOut && seededTwin) {
+      const renamed = shippedSlug !== event.courseSlug ? ` (renamed from ${event.courseSlug})` : "";
+      return inDb(shippedSlug, `goandrace listing${renamed}`);
+    }
+    if (!ruledOut && ctx.ledger.has(event.courseSlug)) {
+      return inDb(event.courseSlug, `goandrace ${event.courseSlug}`);
+    }
+    if (!ruledOut && ctx.parsed.has(event.courseSlug)) {
+      return row("in-db", {
+        ...shared,
+        matchBasis: `goandrace ${event.courseSlug} (renamed at enrichment)`,
+        note: `already imported from ${event.courseSlug}`,
+        elevationSource: "gpx",
+      });
+    }
+    const prior = ctx.verdicts.get(event.eventUrl);
+    // fetch.ts's duplicate guard is name+city only, and it threw out real races
+    // as copies of seeded ones: San Antonio as "Rock 'n' Roll San Diego", every
+    // Bound for Boston as Boston. Reaching this line means the place check
+    // above found no seeded twin, so that verdict was wrong; the listing is
+    // worth another pass rather than being filed as a dead end.
+    if (prior?.verdict === "rejected" && /already-seeded/.test(prior.reason)) {
+      return row(event.gpxUrl ? "queued" : "no-course-map", {
+        ...shared,
+        nextStep: `goandrace rejected it as a duplicate, wrongly (different place): re-import with import:fetch -- --url ${event.eventUrl}${event.gpxUrl ? "" : ", or adopt if the listing has no map"}`,
+        note: notes(prior.reason, attemptNote, nearby),
+      });
+    }
+    if (prior?.verdict === "rejected") {
+      return row(event.gpxUrl ? "parser-rejected" : "no-course-map", {
+        ...shared,
+        nextStep: researched ? "worked: no usable source found; revisit only if one appears" : NEXT_STEP[event.gpxUrl ? "parser-rejected" : "no-course-map"],
+        note: notes(prior.reason || "rejected at QA", attemptNote, nearby),
+      });
+    }
+    if (event.gpxUrl) return row("queued", { ...shared, note: notes(event.name ?? "", nearby) });
+    return row("no-course-map", {
+      ...shared,
+      nextStep: researched ? "worked: no usable source found; revisit only if one appears" : NEXT_STEP["no-course-map"],
+      note: notes(event.error ?? "goandrace publishes no course map for this event", attemptNote, nearby),
+    });
   }
 
-  const event = hit;
-  const shared = { ...base, sourceUrl: event.eventUrl, courseSlug: event.courseSlug };
-
-  // The name match can miss what the slug catches: the CSV calls it "Bear Lake
-  // Utah Marathon", goandrace calls it Bear Lake Trifecta Utah, and we shipped
-  // it as `bear-lake-trifecta`. The parser's `<slug>.source.sha256` stamp is
-  // left behind under the *source* slug when a course is renamed at enrichment,
-  // which makes it the one durable link back to the event it came from.
-  if (slugs.has(event.courseSlug) || parsed.has(event.courseSlug)) {
-    return { ...shared, status: "in-db", note: `already imported from ${event.courseSlug}` };
-  }
-
-  // A verdict already recorded is the answer; do not re-queue settled work.
-  const prior = verdicts.get(event.eventUrl);
-  if (prior?.verdict === "rejected") {
-    return { ...shared, status: "parser-rejected", note: prior.reason || "rejected at QA" };
-  }
-
-  if (event.gpxUrl) return { ...shared, status: "queued", note: event.name };
-  return {
-    ...shared,
-    status: "no-course-map",
-    note: event.error ?? "goandrace publishes no course map for this event",
-  };
+  if (!src.date) return row("no-date", { note: notes("no date on findmymarathon", nearby) });
+  // A past date means this running happened and findmymarathon has not listed
+  // the next one yet: not that the race is gone. Worth a still-runs check.
+  // findmymarathon keeps showing the last running until the next date is
+  // posted, so a date earlier this year is normal. Only a date more than a
+  // year old suggests the race may have stopped.
+  const status: Status = src.date < ctx.yearAgo ? "past-event" : "not-on-source";
+  return row(status, {
+    nextStep: researched ? "worked: no usable source found; revisit only if one appears" : NEXT_STEP[status],
+    note: notes(attemptNote, nearby),
+  });
 }
 
 // ---------------------------------------------------------------- main
 
+function loadCalendar(): CalendarRow[] {
+  if (!existsSync(CALENDAR_CSV)) {
+    throw new Error(`${CALENDAR_CSV} is missing: run node scripts/import/findmymarathon.ts first`);
+  }
+  const table = parseCsv(readFileSync(CALENDAR_CSV, "utf8"));
+  const header = table.shift() ?? [];
+  return table
+    .filter((r) => r.length >= header.length)
+    .map((r) => Object.fromEntries(CALENDAR_HEADER.map((h) => [h, r[header.indexOf(h)] ?? ""])) as CalendarRow);
+}
+
 function main(argv: string[]): void {
-  const summaryOnly = argv.includes("--summary");
+  const calendar = loadCalendar();
+  const all = decisions();
+  const completeCache = new Map<string, boolean>();
+  const ctx: Context = {
+    seeded: seededCourses(),
+    complete: (slug) => {
+      if (!completeCache.has(slug)) completeCache.set(slug, courseComplete(slug));
+      return completeCache.get(slug) ?? false;
+    },
+    elevation: elevationSources(all),
+    ledger: new Set(PUBLISHED_COURSE_SLUGS),
+    parsed: parsedSourceSlugs(),
+    verdicts: priorVerdicts(all),
+    shippedByUrl: new Map(
+      all
+        .filter((d) => d.courseSlug && d.source?.eventUrl && d.verdict === "ready")
+        .map((d) => [d.source?.eventUrl ?? "", d.courseSlug ?? ""]),
+    ),
+    events: crawledEvents(),
+    attempts: backlogAttempts(),
+    matches: loadMatches(),
+    yearAgo: new Date(Date.now() - 365 * 86_400_000).toISOString().slice(0, 10),
+  };
+  let rows = calendar.map((r) => classify(r, ctx));
 
-  const text = readFileSync(SOURCE_CSV, "utf8").replace(/^﻿/, "");
-  const table = parseCsv(text).filter((r) => r.length >= 4 && r.some((c) => c.trim()));
-  table.shift(); // header
-  const csv: CsvRow[] = table.map((r) => ({
-    name: r[0].trim(),
-    cityField: r[1].trim(),
-    state: r[2].trim(),
-    date: r[3].trim(),
-  }));
-
-  const series = seededSeries();
-  const slugs = new Set(seededSlugs());
-  const events = crawledEvents();
-  const parsedSlugs = parsedSourceSlugs();
-  const verdicts = priorVerdicts();
-  const rows = csv.map((r) => classify(r, series, slugs, parsedSlugs, verdicts, events));
+  // One seeded course, several rows claiming it: "Irving Frost Marathon" and
+  // "Seattle Ghost Marathon" are different races in the same city as the
+  // Irving and Seattle marathons we seed, and nothing about place can tell
+  // them apart. The row whose name is closest keeps the course; the others are
+  // re-classified with it ruled out. A genuine double listing (a race run on
+  // two days over one course) is settled in findmymarathon-matches.json.
+  const claims = new Map<string, TrackerRow[]>();
+  for (const r of rows) {
+    if (r.status !== "in-db" || !r.courseSlug || r.matchBasis.startsWith("manual")) continue;
+    claims.set(r.courseSlug, [...(claims.get(r.courseSlug) ?? []), r]);
+  }
+  const demoted = new Set<CalendarRow>();
+  for (const [slug, claimants] of claims) {
+    if (claimants.length < 2) continue;
+    const seriesName = ctx.seeded.find((s) => s.courseSlug === slug)?.name ?? slug;
+    const ranked = [...claimants].sort(
+      (a, b) => strictSimilarity(b.src.name, seriesName) - strictSimilarity(a.src.name, seriesName),
+    );
+    for (const loser of ranked.slice(1)) demoted.add(loser.src);
+  }
+  if (demoted.size) {
+    rows = rows.map((r) => {
+      if (!demoted.has(r.src)) return r;
+      const key = `${r.src.name}|${r.src.region}`;
+      const again = classify(r.src, { ...ctx, matches: { ...ctx.matches, [key]: null } });
+      return { ...again, note: [`name resembles seeded ${r.courseSlug}, kept apart as a different race`, again.note].filter(Boolean).join("; ") };
+    });
+  }
 
   const counts = new Map<Status, number>();
   for (const r of rows) counts.set(r.status, (counts.get(r.status) ?? 0) + 1);
-  const open = rows.filter((r) => OPEN.has(r.status)).length;
+  const have = rows.filter((r) => r.status === "in-db").length;
 
-  console.log(`source        ${csv.length} rows`);
-  console.log(`crawl pool    ${events.length} goandrace events (${events.filter((e) => e.gpxUrl).length} with GPX)`);
-  console.log(`seeded        ${slugs.size} course slugs in the ledger`);
-  console.log("");
+  console.log(`findmymarathon ${calendar.length} races (${CALENDAR_CSV.split("/").pop()})`);
+  console.log(`crawl pool     ${ctx.events.length} goandrace events (${ctx.events.filter((e) => e.gpxUrl).length} with GPX)`);
+  console.log(`seeded         ${ctx.seeded.length} series`);
+  console.log(`\nin the system  ${have} / ${calendar.length} (${Math.round((100 * have) / calendar.length)}%)\n`);
   for (const [status, n] of [...counts].sort((a, b) => b[1] - a[1])) {
-    console.log(`  ${status.padEnd(16)} ${String(n).padStart(4)}${OPEN.has(status) ? "  <- open" : ""}`);
+    console.log(`  ${status.padEnd(16)} ${String(n).padStart(4)}${OPEN.has(status) ? "  <- importable now" : ""}`);
   }
-  console.log("");
-  console.log(open === 0 ? "No rows left to import." : `${open} rows still importable.`);
+  const dup = new Map<string, string[]>();
+  for (const r of rows) if (r.status === "in-db" && r.courseSlug && !r.matchBasis.startsWith("manual")) dup.set(r.courseSlug, [...(dup.get(r.courseSlug) ?? []), r.src.name]);
+  const shared = [...dup].filter(([, names]) => names.length > 1);
+  if (shared.length) {
+    console.log("\none course answering for several findmymarathon rows (check these):");
+    for (const [slug, names] of shared) console.log(`  ${slug.padEnd(34)} ${names.join(" | ")}`);
+  }
 
-  // not-on-source used to be the end of the conversation. It is now the adopt.ts
-  // worklist, so print it as work rather than leaving it filed under "answers".
-  const adoptable = rows.filter((r) => r.status === "not-on-source");
-  if (adoptable.length > 0) {
-    console.log(
-      `${adoptable.length} more are adoptable one at a time — no goandrace listing, but the\n` +
-        `organiser often publishes a course file. See --adoptable and adoptions.json.`,
-    );
-  }
+  const missing = rows.filter((r) => r.status !== "in-db" && r.status !== "no-date");
   if (argv.includes("--adoptable")) {
-    const byRegion = new Map<string, TrackerRow[]>();
-    for (const r of adoptable) {
-      byRegion.set(r.state, [...(byRegion.get(r.state) ?? []), r]);
-    }
-    console.log("\nadoptable, by state/country:\n");
-    for (const [region, list] of [...byRegion].sort((a, b) => b[1].length - a[1].length)) {
-      console.log(`  ${region.padEnd(5)} ${String(list.length).padStart(3)}`);
-      for (const r of list) console.log(`        ${r.date}  ${r.name}`);
+    const adoptable = rows.filter((r) => r.status === "not-on-source");
+    console.log(`\n${adoptable.length} adoptable (no goandrace listing):\n`);
+    for (const r of adoptable) console.log(`  ${r.src.date}  ${r.src.region.padEnd(3)} ${r.src.name}  ${r.src.website}`);
+  }
+  const top = flagValue(argv, "--missing");
+  if (top !== null) {
+    const n = flagNumber(argv, "--missing", 25);
+    const ranked = [...missing]
+      .filter((r) => !r.nextStep.startsWith("worked"))
+      .sort((a, b) => (Number(b.src.latestFinishers) || 0) - (Number(a.src.latestFinishers) || 0));
+    console.log(`\n${n} largest races we do not have (by latest finishers):\n`);
+    for (const r of ranked.slice(0, n)) {
+      console.log(
+        `  ${(r.src.latestFinishers || "?").padStart(6)}  ${r.src.date}  ${`${r.src.name} (${r.src.city}, ${r.src.region})`.padEnd(58)} ${r.status}`,
+      );
+      console.log(`          ${r.sourceUrl || r.src.website || "(no website listed)"}`);
     }
   }
 
-  // The queued rows are spread across every crawl we have ever run, but qa.ts
-  // assesses exactly one raw batch file. Gathering them into a synthetic batch
-  // is what lets a slice of this CSV enter the normal pipeline unchanged.
+  // The queued rows are spread across every crawl we have run, but qa.ts
+  // assesses exactly one raw batch file; this gathers them into one.
   const emit = flagValue(argv, "--emit-batch");
   if (emit) {
-    const byUrl = new Map(events.map((e) => [e.eventUrl, e]));
+    const byUrl = new Map(ctx.events.map((e) => [e.eventUrl, e]));
     const queued = rows
       .filter((r) => r.status === "queued")
       .map((r) => byUrl.get(r.sourceUrl))
@@ -412,24 +615,61 @@ function main(argv: string[]): void {
     const batch: RawBatch = {
       batch: emit,
       fetchedAt: new Date().toISOString(),
-      query: { source: "findmymarathon CSV reconciliation", rows: String(queued.length) },
+      query: { source: "findmymarathon reconciliation", rows: String(queued.length) },
       events: queued,
     };
     const path = join(RAW_DIR, `${emit}.raw.json`);
     writeFileSync(path, `${JSON.stringify(batch, null, 2)}\n`);
-    console.log(`\nwrote ${path} — ${queued.length} events`);
+    console.log(`\nwrote ${path}: ${queued.length} events`);
     console.log(`\nnext: npm run import:parse -- --only ${queued.map((e) => e.courseSlug).join(",")} --report data/import/reports/${emit}.qa.json`);
   }
 
-  if (summaryOnly) return;
+  if (argv.includes("--summary")) return;
 
-  const header = "Marathon Name,City,State/Country,Date,courseSlug,status,sourceUrl,note";
-  const body = rows.map((r) =>
-    [r.name, r.cityField, r.state, r.date, r.courseSlug, r.status, r.sourceUrl, r.note]
-      .map(toCsvField)
-      .join(","),
-  );
-  writeFileSync(TRACKER_CSV, `${[header, ...body].join("\n")}\n`);
+  const body = rows.map((r) => {
+    const s = r.src;
+    const byName: Record<(typeof TRACKER_HEADER)[number], string> = {
+      "Marathon Name": s.name,
+      City: s.city,
+      "State/Country": s.region,
+      Date: s.date,
+      inSystem: r.status === "in-db" && r.elevationSource ? "yes" : "no",
+      status: r.status,
+      courseSlug: r.courseSlug,
+      matchBasis: r.matchBasis,
+      elevationSource: r.elevationSource,
+      nextStep: r.nextStep,
+      sourceUrl: r.sourceUrl,
+      note: r.note,
+      website: s.website,
+      latestFinishers: s.latestFinishers,
+      profile: s.profile,
+      courseType: s.courseType,
+      surface: s.surface,
+      hasElevationChart: s.hasElevationChart,
+      maxElevation: s.maxElevation,
+      minElevation: s.minElevation,
+      finishLat: s.finishLat,
+      finishLon: s.finishLon,
+      raceDates: s.raceDates,
+      finishersByYear: s.finishersByYear,
+      bostonQualifier: s.bostonQualifier,
+      bqPctByYear: s.bqPctByYear,
+      prScore: s.prScore,
+      courseScore: s.courseScore,
+      wmmQualifier: s.wmmQualifier,
+      usSizeRank: s.usSizeRank,
+      meanTemp: s.meanTemp,
+      avgHigh: s.avgHigh,
+      avgLow: s.avgLow,
+      paceGroups: s.paceGroups,
+      registration: s.registration,
+      detailUrl: s.detailUrl,
+      description: s.description,
+    };
+    return TRACKER_HEADER.map((h) => byName[h]);
+  });
+  writeFileSync(TRACKER_CSV, toCsv(TRACKER_HEADER, body));
   console.log(`\nwrote ${TRACKER_CSV}`);
 }
 

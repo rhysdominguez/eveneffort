@@ -48,8 +48,8 @@ export function editionLabel(
   parts.push(formatDateDisplay(edition.raceDateISO).replace(`, ${edition.year}`, ""));
 
   const tags: string[] = [];
-  if (isPastISO(edition.raceDateISO, todayISO)) tags.push("past");
-  if (edition.dateConfidence !== "confirmed") tags.push("estimated");
+  if (isPastISO(edition.raceDateISO, todayISO)) tags.push("Past");
+  if (edition.dateConfidence !== "confirmed") tags.push("Estimated");
 
   const label = parts.join(" · ");
   return tags.length > 0 ? `${label} (${tags.join(", ")})` : label;

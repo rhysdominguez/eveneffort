@@ -1,5 +1,11 @@
 import type { CourseSummary } from "@/types";
 import { formatDateDisplay } from "@/lib/units/date";
+import { haversineKm } from "@/lib/geo/haversine";
+
+// `haversineKm` moved to src/lib/geo/haversine.ts when the interactive course
+// map (ROADMAP #22) needed the same formula. Re-exported here so this module's
+// existing importers and its own tests keep their import path.
+export { haversineKm };
 
 // Pure data layer for the course map. Everything here is DOM-free and
 // WebGL-free on purpose: `CourseMap.tsx` cannot be unit tested (jsdom has no
@@ -162,26 +168,6 @@ export function boundsOf(catalog: CourseSummary[]): Bounds | null {
     [west, south],
     [east, north],
   ];
-}
-
-const EARTH_RADIUS_KM = 6371;
-const toRadians = (deg: number): number => (deg * Math.PI) / 180;
-
-/** Great-circle distance in kilometres between two lat/lon points. */
-export function haversineKm(
-  aLat: number,
-  aLon: number,
-  bLat: number,
-  bLon: number,
-): number {
-  const dLat = toRadians(bLat - aLat);
-  const dLon = toRadians(bLon - aLon);
-  const h =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(toRadians(aLat)) *
-      Math.cos(toRadians(bLat)) *
-      Math.sin(dLon / 2) ** 2;
-  return 2 * EARTH_RADIUS_KM * Math.asin(Math.min(1, Math.sqrt(h)));
 }
 
 /**

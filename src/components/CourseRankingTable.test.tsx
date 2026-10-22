@@ -3,7 +3,7 @@ import { render, fireEvent, within } from "@testing-library/react";
 import { CourseRankingTable } from "./CourseRankingTable";
 import { FIXTURE_CATALOG } from "@/data/courses.fixture";
 import { parseResultsParams } from "@/lib/resultsParams";
-import { effortMultiplier } from "@/lib/pacing/effort";
+import { totalEffortMultiplier } from "@/lib/units/effort";
 
 // The row click navigates, so the router is the only thing that has to be
 // faked. `vi.hoisted` so the mock factory can reach the spy.
@@ -44,7 +44,7 @@ describe("CourseRankingTable", () => {
   it("opens sorted fastest-first", () => {
     const { container } = table();
     const expected = [...FIXTURE_CATALOG]
-      .sort((a, b) => effortMultiplier(a.effort) - effortMultiplier(b.effort))
+      .sort((a, b) => totalEffortMultiplier(a) - totalEffortMultiplier(b))
       .map((c) => c.displayName);
     expect(order(container)).toEqual(expected);
   });
@@ -116,12 +116,15 @@ describe("CourseRankingTable", () => {
     }
   });
 
-  it("renders a terrain badge on every row", () => {
+  it("names each row's profile for screen readers, and shows no pill", () => {
     const { container } = table();
     for (const row of Array.from(container.querySelectorAll("tbody tr"))) {
-      expect(row.textContent).toMatch(
+      const cell = row.querySelectorAll("td")[5];
+      const label = cell.querySelector(".sr-only");
+      expect(label?.textContent).toMatch(
         /Very Flat|Mostly Flat|Rolling Hills|Downhill|Hilly|Very Hilly/,
       );
+      expect(cell.textContent).toBe(label?.textContent);
     }
   });
 
@@ -186,7 +189,7 @@ describe("CourseRankingTable", () => {
       .getAllByRole("link")[0]
       .getAttribute("href");
 
-    // A cell with no link in it: the terrain badge.
+    // A cell with no link in it: the terrain cell.
     fireEvent.click(first.querySelectorAll("td")[4]);
     expect(push).toHaveBeenCalledWith(href);
   });
@@ -223,9 +226,10 @@ describe("CourseRankingTable", () => {
   });
 });
 
-// The Altitude column (ROADMAP #7). FIXTURE_CATALOG is the seven majors, all
-// of them near sea level, so these assert the ABSENCE case that the whole
-// catalog's low courses depend on, plus a high course spliced in by hand.
+// The Altitude column (ROADMAP #7). It prints a height and never a penalty,
+// so a sea-level course reads "23 ft" rather than a placeholder.
+// FIXTURE_CATALOG is the seven majors, all of them near sea level, plus a high
+// course spliced in by hand.
 describe("the altitude column", () => {
   /** The altitude cell is the fourth, after race, climbing and net change. */
   const altitudeCells = (container: HTMLElement): string[] =>
@@ -238,17 +242,17 @@ describe("the altitude column", () => {
     expect(header(container, "altitude")).toBeTruthy();
   });
 
-  it("says nothing at all for a sea-level catalog", () => {
+  it("gives a sea-level catalog its height and claims no penalty", () => {
     const { container } = table();
-    // Every major is below the threshold, so every cell is the placeholder
-    // plus its screen-reader text, and no percentage is claimed anywhere.
+    // Every major is below the threshold, so no percentage is claimed
+    // anywhere, but each row still says how high it runs.
     for (const cell of altitudeCells(container)) {
       expect(cell).not.toMatch(/%/);
-      expect(cell).toContain("No altitude penalty");
+      expect(cell).toMatch(/^-?\d+ ft$/);
     }
   });
 
-  it("reports the penalty and the height for a high course", () => {
+  it("reports the mean height for a high course", () => {
     const high = {
       ...FIXTURE_CATALOG[0],
       id: "high-course",
@@ -263,8 +267,8 @@ describe("the altitude column", () => {
     );
     expect(row).toBeTruthy();
     const cell = row!.querySelectorAll("td")[3].textContent ?? "";
-    expect(cell).toContain("7.0% slower");
-    expect(cell).toContain("6562 ft avg");
+    expect(cell).toBe("6562 ft");
+    expect(cell).not.toContain("slower");
   });
 
   it("folds the penalty into vs flat, which is the all-in number", () => {
@@ -285,5 +289,86 @@ describe("the altitude column", () => {
     const vsFlat = row!.querySelectorAll("td")[4].textContent ?? "";
     expect(vsFlat).toMatch(/harder/);
     expect(parseFloat(vsFlat)).toBeGreaterThan(6);
+  });
+});
+
+// The Terrain column's elevation thumbnail (ROADMAP #15). The table draws paths
+// it is handed and does no geometry of its own, so what is worth pinning is the
+// wiring: which row gets which path, that the label survives, and that it stays
+// inert.
+describe("the elevation thumbnail", () => {
+  const paths = Object.fromEntries(
+    FIXTURE_CATALOG.map((c) => [c.id, `M0 ${c.id.length} L2 3`]),
+  );
+
+  const renderWithPaths = () =>
+    render(<CourseRankingTable catalog={FIXTURE_CATALOG} profilePaths={paths} />);
+
+  /** The terrain cell is the sixth, after the five sortable columns. */
+  const terrainCell = (row: Element) => row.querySelectorAll("td")[5];
+
+  // The badge draws its own icon SVG in the same cell, so the thumbnail is
+  // selected by what marks it rather than by being an svg.
+  const SPARK = "svg[data-profile-sparkline]";
+
+  it("gives each row the path built for its own course", () => {
+    const { container } = renderWithPaths();
+    for (const row of Array.from(container.querySelectorAll("tbody tr"))) {
+      const name = within(row as HTMLElement).getAllByRole("link")[0]
+        .textContent;
+      const course = FIXTURE_CATALOG.find((c) => c.displayName === name)!;
+      expect(
+        terrainCell(row).querySelector(`${SPARK} path`)?.getAttribute("d"),
+      ).toBe(paths[course.id]);
+    }
+  });
+
+  it("is the only thing visible in the terrain cell", () => {
+    const { container } = renderWithPaths();
+    for (const row of Array.from(container.querySelectorAll("tbody tr"))) {
+      const cell = terrainCell(row);
+      expect(cell.querySelectorAll("svg")).toHaveLength(1);
+      expect(cell.querySelector(SPARK)).toBeTruthy();
+    }
+  });
+
+  it("is non-interactive: hidden from assistive tech, with no tooltip or handler", () => {
+    const { container } = renderWithPaths();
+    const svg = container.querySelector(`tbody ${SPARK}`)!;
+    expect(svg.getAttribute("aria-hidden")).toBe("true");
+    expect(svg.querySelector("title")).toBeNull();
+    expect(svg.getAttribute("focusable")).toBe("false");
+    expect(container.querySelectorAll(`tbody ${SPARK} a, tbody ${SPARK} [tabindex]`)).toHaveLength(0);
+  });
+
+  it("degrades to the screen-reader label alone when a course has no path", () => {
+    const [first, ...rest] = FIXTURE_CATALOG;
+    const partial = Object.fromEntries(rest.map((c) => [c.id, paths[c.id]]));
+    const { container } = render(
+      <CourseRankingTable catalog={FIXTURE_CATALOG} profilePaths={partial} />,
+    );
+    const rows = Array.from(container.querySelectorAll("tbody tr"));
+    const firstRow = rows.find((r) => r.textContent?.includes(first.displayName))!;
+    expect(terrainCell(firstRow).querySelector(SPARK)).toBeNull();
+    expect(terrainCell(firstRow).textContent).toMatch(/Flat|Hills|Hilly|Downhill/);
+    expect(container.querySelectorAll(`tbody ${SPARK}`)).toHaveLength(rest.length);
+  });
+
+  it("renders no thumbnails, and does not throw, when no paths are supplied", () => {
+    const { container } = table();
+    expect(container.querySelectorAll(`tbody ${SPARK}`)).toHaveLength(0);
+  });
+
+  it("follows the row through a sort, since each path is keyed by course", () => {
+    const { container } = renderWithPaths();
+    fireEvent.click(header(container, "Climbing"));
+    for (const row of Array.from(container.querySelectorAll("tbody tr"))) {
+      const name = within(row as HTMLElement).getAllByRole("link")[0]
+        .textContent;
+      const course = FIXTURE_CATALOG.find((c) => c.displayName === name)!;
+      expect(
+        terrainCell(row).querySelector(`${SPARK} path`)?.getAttribute("d"),
+      ).toBe(paths[course.id]);
+    }
   });
 });

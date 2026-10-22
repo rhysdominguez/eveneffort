@@ -1,18 +1,23 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, fireEvent } from "@testing-library/react";
-import { effortSummary, SummaryHeader } from "./SummaryHeader";
+import { SummaryHeader } from "./SummaryHeader";
 import { courseTerrain } from "@/lib/pacing/terrain";
-import { courseEffort, effortMultiplier } from "@/lib/pacing/effort";
 import { loadGeometry } from "@/data/courses.fixture";
-import { bqStatus } from "@/lib/bq/qualify";
 import type { PacingResult } from "@/hooks/usePacingChart";
 import type { PacingInput } from "@/types";
 import { startCheckout } from "@/lib/checkout";
+import { parseResultsParams } from "@/lib/resultsParams";
+import { courseHills } from "@/lib/pacing/hills";
 
 // Opening the modal now fires a beacon and can start a Stripe redirect —
 // neither of which jsdom can do. Stub both at the module boundary.
 vi.mock("@/lib/analytics", () => ({ track: vi.fn() }));
 vi.mock("@/lib/checkout", () => ({ startCheckout: vi.fn() }));
+// maplibre-gl needs a WebGL context jsdom does not have. The overlay has its
+// own suite; here only the triggers and the focus handoff matter.
+vi.mock("@/components/CourseMapCanvas", () => ({
+  CourseMapCanvas: () => <div data-testid="canvas" />,
+}));
 
 // The results column is client-rendered, so this is the only way to assert the
 // adjusted-finish stat actually appears (and only when weather is applied).
@@ -29,6 +34,12 @@ const resultWith = (
   input,
   adjustedFinishSeconds: 10800,
   weatherApplied: false,
+  segmentDurations: [],
+  segmentLengthsKm: [],
+  heatMultipliers: [],
+  dryHeatMultipliers: [],
+  windMultipliers: [],
+  hourlySeries: [],
   ...overrides,
 });
 
@@ -141,6 +152,65 @@ describe("SummaryHeader", () => {
     expect(params.get("unit")).toBe("km");
   });
 
+  it("copies a link that rebuilds this exact band", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, "clipboard", {
+      value: { writeText },
+      configurable: true,
+    });
+
+    // Deliberately NOT the input the page was loaded with: the whole reason
+    // this button exists is that the address bar no longer follows the form,
+    // so what it copies has to come from the result on screen.
+    const edited: PacingInput = {
+      ...input,
+      goalTimeSeconds: 12345,
+      unit: "miles",
+      fueling: { carbsPerHour: 75 },
+    };
+    const { getByText } = render(
+      <SummaryHeader
+        result={resultWith({ input: edited })}
+        courseName="Boston Marathon"
+      />,
+    );
+    fireEvent.click(getByText("Copy link"));
+    await vi.waitFor(() => expect(writeText).toHaveBeenCalled());
+
+    const copied = writeText.mock.calls[0][0] as string;
+    expect(copied.startsWith(window.location.origin)).toBe(true);
+
+    // The proof that matters: what got copied is a link /results will accept,
+    // describing the edited state rather than the arrival state.
+    const parsed = parseResultsParams(
+      Object.fromEntries(
+        new URLSearchParams(copied.slice(copied.indexOf("?") + 1)),
+      ),
+    );
+    expect(parsed.ok).toBe(true);
+    if (parsed.ok) {
+      expect(parsed.input.courseId).toBe("boston");
+      expect(parsed.input.goalTimeSeconds).toBe(12345);
+      expect(parsed.input.unit).toBe("miles");
+      expect(parsed.input.fueling?.carbsPerHour).toBe(75);
+    }
+    await vi.waitFor(() => expect(getByText("Copied")).toBeDefined());
+  });
+
+  it("says so rather than lying when the clipboard is unavailable", () => {
+    // navigator.clipboard is undefined over plain http, which is every LAN
+    // preview of this app.
+    Object.defineProperty(navigator, "clipboard", {
+      value: undefined,
+      configurable: true,
+    });
+    const { getByText } = render(
+      <SummaryHeader result={resultWith()} courseName="Boston Marathon" />,
+    );
+    fireEvent.click(getByText("Copy link"));
+    return vi.waitFor(() => expect(getByText("Copy failed")).toBeDefined());
+  });
+
   it("switches distance and pace units with the imperial toggle", () => {
     const { container } = render(
       <SummaryHeader
@@ -157,25 +227,31 @@ describe("SummaryHeader", () => {
 describe("SummaryHeader — course difficulty", () => {
   const boston = courseTerrain(loadGeometry("boston").elevations);
 
-  it("shows the terrain badge and what the course costs", () => {
+  it("shows the terrain badge", () => {
     const { container } = render(
       <SummaryHeader
         result={resultWith()}
         courseName="Boston Marathon"
         terrain={boston}
-        effortMultiplier={effortMultiplier(
-          courseEffort(loadGeometry("boston").elevations),
-        )}
       />,
     );
     const text = container.textContent ?? "";
     expect(text).toContain("Downhill");
     expect(text).toContain("−436 ft net");
-    // The point of pairing the two: Boston's 96 m of climbing would read as
-    // "Rolling Hills" on gain alone, but the net drop outranks it AND is what
-    // makes the course run faster than flat. The profile word and the cost
-    // line say different things.
-    expect(text).toContain("Costs 0.6% less than a flat course");
+  });
+
+  // The grey "Costs 0.6% less than a flat course" line was removed on
+  // 2026-09-20. The same figure is the "vs flat" column on /courses, and a
+  // header that already shows a profile pill does not need it said in prose.
+  it("carries no cost-versus-flat sentence", () => {
+    const { container } = render(
+      <SummaryHeader
+        result={resultWith()}
+        courseName="Boston Marathon"
+        terrain={boston}
+      />,
+    );
+    expect(container.textContent ?? "").not.toMatch(/flat course|Costs/);
   });
 
   it("omits the whole block when no terrain is passed", () => {
@@ -184,41 +260,112 @@ describe("SummaryHeader — course difficulty", () => {
     );
     const text = container.textContent ?? "";
     expect(text).not.toContain("Downhill");
-    expect(text).not.toContain("flat course");
   });
 
-  // The BQ verdict rides the same optional-prop path as terrain: Dashboard
-  // computes it only when a profile is stored, and the paceband's own render
-  // path passes neither.
-  it("stays silent about Boston when no profile has been set", () => {
-    const { container } = render(
-      <SummaryHeader result={resultWith()} courseName="Boston Marathon" />,
-    );
-    expect(container.textContent ?? "").not.toContain("Boston qualifier");
-  });
-
-  it("shows the verdict when a BQ status is supplied", () => {
+  // The Boston verdict row was removed from this header on 2026-09-20. It still
+  // exists on /boston-qualifier, which is where a judgement of the RUNNER
+  // belongs; this header describes a race and a plan for it.
+  it("passes no judgement on the runner's Boston standard", () => {
     const { container } = render(
       <SummaryHeader
         result={resultWith()}
         courseName="Boston Marathon"
-        bq={bqStatus({ finishSeconds: 10800, age: 41, division: "men" })}
+        terrain={boston}
       />,
     );
-    // 3:00:00 against a 3:05:00 standard.
-    expect(container.textContent ?? "").toContain("Boston qualifier");
-    expect(container.textContent ?? "").toContain("5:00 under");
-  });
-});
-
-describe("effortSummary", () => {
-  it("names the direction and the size of the cost", () => {
-    expect(effortSummary(1.071)).toBe("Costs 7.1% more than a flat course");
-    expect(effortSummary(0.938)).toBe("Costs 6.2% less than a flat course");
+    expect(container.textContent ?? "").not.toMatch(
+      /qualifier|Misses|standard|downhill index/,
+    );
   });
 
-  it("refuses to quote a difference inside the digitization noise", () => {
-    expect(effortSummary(1.004)).toBe("Costs about the same as a flat course");
-    expect(effortSummary(0.997)).toBe("Costs about the same as a flat course");
+  // The interactive course map (ROADMAP #22). Two entry points open one
+  // dialog, because the silhouette they expand is hidden under `sm` and a
+  // phone would otherwise have none. The overlay itself is stubbed: its own
+  // suite covers what it renders, and it pulls in maplibre-gl, which jsdom
+  // cannot construct.
+  describe("course map entry points", () => {
+    const geometry = loadGeometry("boston");
+    const mapProps = {
+      outline: geometry.outline,
+      elevations: geometry.elevations,
+      hills: courseHills(geometry.elevations),
+    };
+
+    it("offers no map when the geometry for one is missing", () => {
+      const { queryByRole } = render(
+        <SummaryHeader
+          result={resultWith()}
+          courseName="Boston Marathon"
+          outline={geometry.outline}
+        />,
+      );
+      expect(queryByRole("button", { name: "Course map" })).toBeNull();
+      expect(
+        queryByRole("button", { name: "Open the full course map" }),
+      ).toBeNull();
+    });
+
+    it("offers both triggers once the geometry is there", () => {
+      const { getByRole } = render(
+        <SummaryHeader
+          result={resultWith()}
+          courseName="Boston Marathon"
+          {...mapProps}
+        />,
+      );
+      for (const name of ["Course map", "Open the full course map"]) {
+        const trigger = getByRole("button", { name });
+        expect(trigger.getAttribute("aria-haspopup")).toBe("dialog");
+        expect(trigger.getAttribute("aria-expanded")).toBe("false");
+      }
+    });
+
+    it("opens the dialog from the icon button and closes it again", () => {
+      const { getByRole, queryByRole } = render(
+        <SummaryHeader
+          result={resultWith()}
+          courseName="Boston Marathon"
+          {...mapProps}
+        />,
+      );
+      expect(queryByRole("dialog")).toBeNull();
+      const trigger = getByRole("button", { name: "Course map" });
+      fireEvent.click(trigger);
+      expect(getByRole("dialog")).not.toBeNull();
+      expect(trigger.getAttribute("aria-expanded")).toBe("true");
+      fireEvent.click(getByRole("button", { name: "Close map" }));
+      expect(queryByRole("dialog")).toBeNull();
+    });
+
+    it("opens the same dialog from the silhouette", () => {
+      const { getByRole } = render(
+        <SummaryHeader
+          result={resultWith()}
+          courseName="Boston Marathon"
+          {...mapProps}
+        />,
+      );
+      fireEvent.click(getByRole("button", { name: "Open the full course map" }));
+      expect(getByRole("dialog")).not.toBeNull();
+    });
+
+    it("returns focus to whichever trigger opened it", () => {
+      const { getByRole } = render(
+        <SummaryHeader
+          result={resultWith()}
+          courseName="Boston Marathon"
+          {...mapProps}
+        />,
+      );
+      const outline = getByRole("button", { name: "Open the full course map" });
+      fireEvent.click(outline);
+      fireEvent.click(getByRole("button", { name: "Close map" }));
+      expect(document.activeElement).toBe(outline);
+
+      const icon = getByRole("button", { name: "Course map" });
+      fireEvent.click(icon);
+      fireEvent.click(getByRole("button", { name: "Close map" }));
+      expect(document.activeElement).toBe(icon);
+    });
   });
 });
